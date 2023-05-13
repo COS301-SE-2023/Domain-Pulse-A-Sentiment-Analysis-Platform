@@ -1,0 +1,21 @@
+# Ignore Pipfiles
+Pipfile
+Pipfile.lock
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+db.sqlite3
+media/
+staticfiles/
+
+# VSCode
+.vscode/
