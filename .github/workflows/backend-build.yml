@@ -19,9 +19,8 @@ jobs:
         run: pip install --upgrade pip
       - name: Install dependencies
         run: pip3 freeze > requirements.txt && pip3 install -r requirements.txt 
-
-      - name: yy
-        run: pip install python3-venv
+      - name: create virtual environment
+        run: python3 -m venv venv
       - name: yyy
         run: source venv/bin/activate
       - name: build backend code
