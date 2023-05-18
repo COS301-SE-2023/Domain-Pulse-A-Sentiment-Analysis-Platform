@@ -14,4 +14,4 @@ jobs:
       - name: Install dependencies
         run: pip3 freeze > requirements.txt && pip3 install -r requirements.txt
       - name: build backend code
-        run: python manage.py runserver
+        run: cd backend/engine && python manage.py runserver 
