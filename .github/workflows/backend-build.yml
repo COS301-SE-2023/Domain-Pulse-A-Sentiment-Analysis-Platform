@@ -11,6 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: install django
+        run: pip3 install django --upgrade 
       - name: Install dependencies
         run: pip3 freeze > requirements.txt && pip3 install -r requirements.txt
       - name: build backend code
