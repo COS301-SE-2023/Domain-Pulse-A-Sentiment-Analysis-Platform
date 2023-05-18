@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: 3.8
       - name: install django
-        run: pip3 install django --upgrade 
+        run: pip install --upgrade pip
       - name: Install dependencies
         run: pip3 freeze > requirements.txt && pip3 install -r requirements.txt
       - name: build backend code
