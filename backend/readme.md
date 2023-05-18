@@ -46,3 +46,8 @@ path('appname/', include('appname.urls'))
 ]
 
 You are now good to go! Test it by running the django project and using your browser to make a request to that endpoint
+
+## What packages do I need?
+
+pipenv install django
+pipenv install vaderSentiment
