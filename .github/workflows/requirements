@@ -1,4 +1,4 @@
 pipenv install django
 pipenv shell
 pipenv install vaderSentiment
-pip install virtualenv
+pipenv install virtualenv
