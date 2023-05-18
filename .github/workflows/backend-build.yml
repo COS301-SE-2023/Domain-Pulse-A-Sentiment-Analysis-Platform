@@ -13,6 +13,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: pip install -r requirements.txt
-        run2: pip freeze > requirements.txt
       - name: build backend code
         run: python manage.py runserver
