@@ -36,7 +36,9 @@ urlpatterns = [
 path("endpointname/", views.function_name)
 ]
 
-In the main app of the project (ie: the one of the same name of the project), register the app in the settings.py of warehouse|engine|profilemanager (in INSTALLED_APPS), it will look something like this:
+In the main app of the project (ie: the one of the same name of the project), register the app in the settings.py of warehouse|engine|profilemanager (in INSTALLED_APPS).
+
+Next update the urls.py in the main app. It will look something like this:
 
 urlpatterns = [
 path('admin/', admin.site.urls),
@@ -44,3 +46,8 @@ path('appname/', include('appname.urls'))
 ]
 
 You are now good to go! Test it by running the django project and using your browser to make a request to that endpoint
+
+## What packages do I need?
+
+pipenv install django
+pipenv install vaderSentiment
