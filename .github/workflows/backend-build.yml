@@ -18,6 +18,10 @@ jobs:
       - name: install django
         run: pip install --upgrade pip
       - name: Install dependencies
-        run: pip3 freeze > requirements.txt && pip3 install -r requirements.txt &&  source venv/bin/activate
+        run: pip3 freeze > requirements.txt && pip3 install -r requirements.txt 
+      - name: build backend code
+        run: cd backend/engine && python manage.py makemigrations && python manage.py migrate
+      - name: activate virtual environment
+        run: cd backend/engine && source venv/bin/activate
       - name: build backend code
         run: cd backend/engine && python manage.py runserver 
