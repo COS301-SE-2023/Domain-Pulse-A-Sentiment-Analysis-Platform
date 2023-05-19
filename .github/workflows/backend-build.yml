@@ -17,15 +17,10 @@ jobs:
           python-version: 3.8
       - name: install pipenv
         run: pip install pipenv
-      - name: show current directory
+        run: export PATH="$HOME/.local/bin:$PATH"
         run: ls
-      - name: enter virtual environment
-        run: cd backend && pipenv shell
       - name: install django
         run: pipenv install django
-      - name: check engine
-        run: python engine/manage.py check
-      - name: check profilemanager
-        run: python profilemanager/manage.py check 
-      - name: check warehouse
-        run: python warehouse/manage.py check 
+      - name: check all django projects
+        run: cd backend
+        run: pipenv run check_all
