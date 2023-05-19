@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'frontend/**'
+      - 'testcicd'
   pull_request:
     branches:
       - main
