@@ -22,10 +22,10 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           export PIPENV_PIPFILE=$HOME/backend
       - name: install dependancies
-check_all        run: | 
+        run: | 
           ls
           pipenv install
       - name: check all django projects
         run: |
           cat Pipfile
-          pipenv run 
+          pipenv run check_all
