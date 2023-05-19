@@ -5,6 +5,7 @@ on:
     branches:
       - 'frontend/**'
       - 'testcicd'
+      - main
   pull_request:
     branches:
       - main
