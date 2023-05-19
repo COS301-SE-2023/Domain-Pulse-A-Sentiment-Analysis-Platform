@@ -5,7 +5,7 @@ on:
       - "**"
   pull_request:
     branches:
-      - testcicd
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
