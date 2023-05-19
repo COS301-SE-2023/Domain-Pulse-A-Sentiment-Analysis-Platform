@@ -32,6 +32,11 @@ jobs:
         run: cat Pipfile
         with:
           command: check_all
+
+      - name: Test
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: check_all
           
 
             
