@@ -30,20 +30,9 @@ jobs:
           pipenv install
       - name: check all django projects
         run: |
-        [[source]]
-        url = "https://pypi.python.org/simple"
-        verify_ssl = true
-        name = "pypi"
+          cat Pipfile
+        with:
+          command: check_all
+          
 
-        [scripts]
-        check_all = "bash ./scripts/test.sh"
-        run_engine = "python engine/manage.py runserver"
-
-        [packages]
-        django = "*"
-
-        [dev-packages]
-
-        [requires]
-        python_version = "3.8"
             
