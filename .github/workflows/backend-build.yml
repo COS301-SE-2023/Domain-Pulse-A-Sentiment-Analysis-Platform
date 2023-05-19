@@ -1,1 +1,31 @@
-
+name: Check backend code builds
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - testcicd
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: install pipenv
+        run: |
+          cd backend
+          pip install pipenv
+          export PATH="$HOME/.local/bin:$PATH"
+          export PIPENV_PIPFILE=$HOME/backend
+      - name: install dependancies
+        run: | 
+          ls
+          pipenv install
+      - name: check all django projects
+        run: |
+          cat Pipfile
+          pipenv run check_all
