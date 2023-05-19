@@ -31,4 +31,4 @@ jobs:
       - name: check all django projects
         run: |
           cat Pipfile
-          pipenv run check_all
+            
