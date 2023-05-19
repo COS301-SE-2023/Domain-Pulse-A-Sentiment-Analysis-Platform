@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [scripts]
-check_all = "bash ./scripts/test.sh"
+check_all = "bash backend/scripts/check_all.sh"
 run_engine = "python engine/manage.py runserver"
 
 [packages]
