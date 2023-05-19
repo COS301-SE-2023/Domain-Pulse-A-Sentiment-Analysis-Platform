@@ -23,5 +23,6 @@ jobs:
       - name: install django
         run: pipenv install django
       - name: check all django projects
-        run: cd backend
-        run: pipenv run check_all
+        run: |
+          cd backend
+          pipenv run check_all
