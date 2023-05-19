@@ -22,6 +22,8 @@ jobs:
           pipenv install
           pipenv sync
           python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
+          export PATH="$HOME/.local/bin:$PATH"
+          export PIPENV_PIPFILE=$HOME/backend
       - name: install dependancies
         run: | 
           ls
