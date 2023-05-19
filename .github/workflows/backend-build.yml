@@ -32,10 +32,6 @@ jobs:
         run: |
           cat Pipfile
           pipenv run check_all
-      - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff --format=github --target-version=py37 .
-        
+
 
             
