@@ -11,8 +11,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: install dependancies
+      - name: setup
         uses: actions/checkout@v3
+      - name: install dependancies
+        
         run: |
           cd npm
           npm ci
