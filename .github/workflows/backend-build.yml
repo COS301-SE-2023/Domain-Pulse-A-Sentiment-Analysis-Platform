@@ -29,8 +29,7 @@ jobs:
           ls
           pipenv install
       - name: check all django projects
-        run: |
-          cat Pipfile
+        run: cat Pipfile
         with:
           command: check_all
           
