@@ -1,0 +1,20 @@
+---
+name: Check frontend code builds
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install dependancies
+        uses: actions/checkout@v3
+        run: |
+          cd npm
+          npm ci
+          ng build --configuration=production
+
