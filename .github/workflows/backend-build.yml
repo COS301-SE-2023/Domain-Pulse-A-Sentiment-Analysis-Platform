@@ -28,12 +28,9 @@ jobs:
         run: | 
           ls
           pipenv install
-      
-
-      - name: Test
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: check_all
-          
+      - name: check all django projects
+        run: |
+          cat Pipfile
+          pipenv run check_all
 
             
