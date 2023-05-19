@@ -22,6 +22,7 @@ jobs:
       - name: install dependancies
         run: | 
           cd backend
+          ls
           pipenv install
       - name: check all django projects
         run: |
