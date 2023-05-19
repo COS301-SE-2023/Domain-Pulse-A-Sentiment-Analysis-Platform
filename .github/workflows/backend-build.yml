@@ -17,6 +17,8 @@ jobs:
           python-version: 3.8
       - name: install pipenv
         run: pip install pipenv
+      - name: show current directory
+        run: ls
       - name: enter virtual environment
         run: cd backend && pipenv shell
       - name: install django
