@@ -16,7 +16,7 @@ jobs:
       - name: install dependancies
         
         run: |
-          cd npm
+          
           npm ci
           ng build --configuration=production
 
