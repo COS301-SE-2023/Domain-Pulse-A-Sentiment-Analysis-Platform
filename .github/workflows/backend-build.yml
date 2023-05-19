@@ -16,9 +16,10 @@ jobs:
         with:
           python-version: 3.8
       - name: install pipenv
-        run: pip install pipenv
-        run: export PATH="$HOME/.local/bin:$PATH"
-        run: ls
+        run: |
+          pip install pipenv
+          export PATH="$HOME/.local/bin:$PATH"
+          ls
       - name: install django
         run: pipenv install django
       - name: check all django projects
