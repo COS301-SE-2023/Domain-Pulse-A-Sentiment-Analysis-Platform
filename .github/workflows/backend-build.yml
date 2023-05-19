@@ -18,7 +18,7 @@ jobs:
       - name: install pipenv
         run: |
           cd backend
-          pipenv install
+          pip install pipenv
           export PATH="$HOME/.local/bin:$PATH"
           export PIPENV_PIPFILE=$HOME/backend
       - name: install dependancies
