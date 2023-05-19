@@ -20,8 +20,8 @@ jobs:
           cd backend
           pip install pipenv
           python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
-          ENV WORKON_HOME /root
-          ENV PIPENV_PIPFILE /Pipfile
+          export PATH="$HOME/.local/bin:$PATH"
+          export PIPENV_PIPFILE=$HOME/backend
       - name: install dependancies
         run: | 
           ls
