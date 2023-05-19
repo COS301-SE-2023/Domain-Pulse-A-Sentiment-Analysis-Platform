@@ -17,14 +17,15 @@ jobs:
           python-version: 3.8
       - name: install pipenv
         run: |
+          cd backend
           pip install pipenv
           export PATH="$HOME/.local/bin:$PATH"
           export PIPENV_PIPFILE=$HOME/backend
       - name: install dependancies
         run: | 
-          cd backend
           ls
           pipenv install
       - name: check all django projects
         run: |
+          cat Pipfile
           pipenv run check_all
