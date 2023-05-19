@@ -5,7 +5,7 @@ on:
       - "**"
   pull_request:
     branches:
-      - main
+      - testcicd
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,10 +22,10 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           export PIPENV_PIPFILE=$HOME/backend
       - name: install dependancies
-        run: | 
+check_all        run: | 
           ls
           pipenv install
       - name: check all django projects
         run: |
           cat Pipfile
-          pipenv run check_all
+          pipenv run 
