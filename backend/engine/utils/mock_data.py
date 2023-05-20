@@ -14,20 +14,28 @@ starbucks_rosebank_tripadvisor = [
    
     "Coffee is always Good , but unfortunately the food is not up to Starbucks quality Like overseas , the food is premade and delivered , so if you eat a toasted cheese it just get heated up in the microwave",
     
-    "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
+    "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking."
 ]
 
-# Some comments on a F! Facebook post about Aston Martin
-f1_facebook_comments = [
-    "I feel Lance will learn a lot from Alonso and become a much better driver.",
-    "Lol - only because Alonso see’s him as no threat. Unfortunately lance is a bit quicker than most think and deffo gets his elbows out and a little bit more…. Its only a matter of time before her crashes into fernando…. The the great Spanish sulk will begin.",
-    "Fernando has a good car to drive and is mentoring Lance while he's looking toward the next phase of his career. Team principal?",
-    "Humiliating?",
-    "I heard Alonzo was so impressed with a Canadian factual story during operation Anaconda in Afghanistan that he just realized that disrespecting Canadians is an injustice to this planet.",
-    "If stroll senior ever wants his team to win a constructors title he'll have to drop his son for a decent driver",
-    "Team dynamic?? 🤔 $troll is getting owned.. Bring in Danny Ric",
-    "Did you expect anything different, they are in the same team!! 🙂",
-    "Alonso knows there is no challenge from him…..ever. 😂🤣"
+# Some comments instagram after Leinster lost to Munster at home in the URC semi-finals
+leinster_loss_to_munster_insta = [
+    "Frank Murphy is a disgrace. How can a man who used to play for Munster be allowed to ref this",
+    
+    "Gutted",
+    
+    "Another loss at the knock out stages. You Leinster coaching just not listening. Keep playing 2nd choice teams and keep getting knocked out. Will lose in the HC AS as well",
+    
+    "Embarrassing and disrespectful to the URC by Leinster. Shouldn’t be allowed shelve half the squad for a semi final absolute joke.?",
+    
+    "Check all these Leinster fans “c team” “second team” why full of excuses💀",
+   
+    "Who decided to put a cork man in as ref in a Munster and Leinster semi 11-5 was the tally of penalties given Leinster made a mistake in over looking Munster to rest a few internationals before larochelle come to town",
+   
+    "This is where complacency gets us! Not fielding a full strength team in a semi final. Ffs!",
+    
+    "They are cheats munster",
+    
+    "I'm a Leinster fan but today was Munster's day, a well deserved win for them, brilliant match, full of excitement."
 ]
 
 
