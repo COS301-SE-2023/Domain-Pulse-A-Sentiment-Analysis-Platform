@@ -1,7 +1,7 @@
 ## How to set up environment
 
 pipenv install django (install django and dependencies)
-pipenv shell (to take you into the virtual environment in the terminal - all command must be issues from the venv)
+pipenv shell (to take you into the virtual environment in the terminal - all commands must be issues from the venv)
 
 ## To run servers (locally)
 
@@ -51,3 +51,9 @@ You are now good to go! Test it by running the django project and using your bro
 
 pipenv install django
 pipenv install vaderSentiment
+
+## How to install dependencies/packages?
+
+In the root directory issue the command:
+pipenv install newpackagename
+where newpackagename is the name of the package you want to install
