@@ -24,7 +24,7 @@ jobs:
           ng build --configuration=development
     
       - name: Run tests and collect coverage
-        run: ng test
+        run: npm run test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
