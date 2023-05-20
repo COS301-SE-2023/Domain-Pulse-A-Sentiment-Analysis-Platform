@@ -41,11 +41,11 @@ def get_sentiment_metrics(request: HttpRequest, source_id):
     <h1>Computed Sentiment Metrics</h1>
 
     <h3>Aggregated Metrics</h3>
-    <h6>Positive Ratio : {agg_positiveRatio}</h6>
-    <h6>Neutral Ratio : {agg_neutralRatio}</h6>
-    <h6>Negative Ratio : {agg_negativeRatio}</h6>
-    <h6>Overall Score : {agg_overallScore}</h6>
-    <h6>Classification : {agg_classification}</h6>
+    <h4>Positive Ratio : {agg_positiveRatio}</h4>
+    <h4>Neutral Ratio : {agg_neutralRatio}</h4>
+    <h4>Negative Ratio : {agg_negativeRatio}</h4>
+    <h4>Overall Score : {agg_overallScore}</h4>
+    <h4>Classification : {agg_classification}</h4>
 
     <h3>Individual Data and Metrics</h3>
     {individuals_data}
