@@ -1,10 +1,10 @@
- name: Upload to codecov
+name: Upload to codecov
 on:
   push:
     branches:
-      - 'frontend/**'
-      - 'dev'
-      - 'backend/**'
+      - frontend/**
+      - dev
+      - backend/**
       - main
   pull_request:
     branches:
@@ -16,13 +16,11 @@ jobs:
       - name: setup
         uses: actions/checkout@v3
       - name: install dependancies
-        
         run: |
           cd frontend
           npm install
           npm link @angular/cli
           ng build --configuration=development
- 
       - name: Install dependencies
         run: npm ci
       - name: Run tests and collect coverage
