@@ -77,7 +77,7 @@ def process_sentiment_records(source_id):
     if source_id == 1:
         data = mock_data.starbucks_rosebank_tripadvisor
     elif source_id == 2:
-        data = mock_data.f1_facebook_comments
+        data = mock_data.leinster_loss_to_munster_insta
     elif source_id == 3:
         data = mock_data.bitcoin_article
     elif source_id == 4:
