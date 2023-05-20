@@ -20,9 +20,9 @@ jobs:
           cd frontend
           npm install
           npm link @angular/cli
+          npm ci
           ng build --configuration=development
-      - name: Install dependencies
-        run: npm ci
+    
       - name: Run tests and collect coverage
         run: ng test --no-watch --code-coverage
       - name: Upload coverage to Codecov
