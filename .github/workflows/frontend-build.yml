@@ -1,0 +1,26 @@
+---
+name: Check frontend code builds
+on:
+  push:
+    branches:
+      - 'frontend/**'
+      - 'testcicd'
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup
+        uses: actions/checkout@v3
+      - name: install dependancies
+        
+        run: |
+          cd frontend
+          npm install
+          npm link @angular/cli
+          npm ci
+          ng build --configuration=development
+

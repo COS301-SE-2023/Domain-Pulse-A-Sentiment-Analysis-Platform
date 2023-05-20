@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'domain-pulse';
+  title = 'Domain Pulse';
+
+
 }
