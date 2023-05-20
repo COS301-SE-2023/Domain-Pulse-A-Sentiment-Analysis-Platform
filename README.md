@@ -2,6 +2,7 @@
 [![Issues][issues-shield]][issues-url]
 [![Check backend code builds](https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/actions/workflows/backend-build.yml/badge.svg?branch=main)](https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/actions/workflows/backend-build.yml)
 [![Check frontend code builds](https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/actions/workflows/frontend-build.yml/badge.svg?branch=main)](https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/actions/workflows/frontend-build.yml)
+[![codecov](https://codecov.io/gh/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/branch/main/graph/badge.svg?token=3VZEDJQL0Z)](https://codecov.io/gh/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform)
 
 <----------------------------------------------------Technologies------------------------------------------------------------>
 <div>
