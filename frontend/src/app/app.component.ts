@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BackendService } from './backend.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,8 @@ export class AppComponent {
   title = 'Domain Pulse';
 
   showAddSourcesModal = false;
+  selectedDomain$ = this.backendService.selectedDomain$;
+  constructor(private backendService: BackendService) {}
 
   toggleAddSourcesModal() {
     if (!this.showAddSourcesModal) {

@@ -17,6 +17,7 @@
     </div>
 
     <div
+      *ngIf="selectedDomain$ | async as selectedDomain"
       class="source-manager flex-row align-center"
       style="
         background-color: aliceblue;
@@ -27,7 +28,7 @@
       "
     >
       <div
-        *ngFor="let source of [1, 2, 3, 4]"
+        *ngFor="let source of selectedDomain.sources"
         class="source-cat flex-column center"
         style="
           border-radius: 25px;
@@ -42,7 +43,7 @@
           height="100px"
           style="border-radius: 50%"
         />
-        <p>source_name</p>
+        <p>{{ source.source_name }}</p>
       </div>
       <div
         (click)="toggleAddSourcesModal()"
