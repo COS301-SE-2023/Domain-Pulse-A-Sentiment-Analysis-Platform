@@ -40,10 +40,12 @@
           src="../assets/facebook-logo.png"
           alt="Source logo"
           height="100px"
+          style="border-radius: 50%"
         />
         <p>source_name</p>
       </div>
       <div
+        (click)="toggleAddSourcesModal()"
         class="source-cat flex-column center"
         style="
           border-radius: 25px;
@@ -67,3 +69,72 @@
     ></div>
   </div>
 </div>
+
+<dp-modal-container
+  [modalDisplay]="showAddSourcesModal"
+  (close)="toggleAddSourcesModal()"
+>
+  <div class="flex-row" style="width: 60vw; height: 60vh; color: black">
+    <div class="flex-column center" style="flex-basis: 55%; gap: 1.1rem">
+      <p style="color: blue; font-size: 26pt; font-weight: 500">Add a Source</p>
+
+      <div class="flex-row" style="width: 80%">
+        <p style="font-size: 44pt; color: rgb(168, 168, 168)">1</p>
+        <div class="flex-column" style="width: 100%">
+          <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
+            Source Name:
+          </p>
+          <input
+            type="text"
+            style="
+              border: solid rgb(133, 133, 133) 2px;
+              height: 30px;
+              border-radius: 10px;
+            "
+          />
+        </div>
+      </div>
+
+      <div class="flex-row" style="width: 80%">
+        <p style="font-size: 44pt; color: rgb(168, 168, 168)">3</p>
+        <div class="flex-column" style="width: 100%">
+          <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
+            Source url:
+          </p>
+          <input
+            type="text"
+            style="
+              border: solid rgb(133, 133, 133) 2px;
+              height: 30px;
+              border-radius: 10px;
+            "
+          />
+        </div>
+      </div>
+
+      <button
+        style="
+          width: 130px;
+          height: 40px;
+          border-radius: 25px;
+          background-color: rgb(70, 133, 201);
+          color: white;
+          font-size: 17pt;
+          font-weight: 500;
+          margin-top: 1rem;
+        "
+      >
+        Confirm
+      </button>
+    </div>
+    <div
+      class="picture"
+      style="
+        flex-basis: 45%;
+        background-color: blue;
+        border-top-right-radius: 25px;
+        border-bottom-right-radius: 25px;
+      "
+    ></div>
+  </div>
+</dp-modal-container>
