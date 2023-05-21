@@ -28,4 +28,16 @@ export class SidebarComponent {
       selected: false,
     },
   ];
+
+  showAddDomainModal = false;
+
+  toggleDomainModal(): void {
+    if (!this.showAddDomainModal) {
+      // this.windows[0].scrolling = false;
+      this.showAddDomainModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showAddDomainModal = false;
+    }
+  }
 }
