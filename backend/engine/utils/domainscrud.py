@@ -21,6 +21,58 @@ domains_db = [
             }
         ]
     },
+     {
+        "user_id" : 2,
+        "domains" : [
+            {
+                "domain_id":2,
+                "domain_name":"GodOfWar",
+                "sources" : [
+                    {
+                        "source_id":2,
+                        "source_name":"Reddit"
+                    }
+                ]
+            },
+             {
+                "domain_id":3,
+                "domain_name":"LeinsterRugby",
+                "sources" : [
+                    {
+                        "source_id":3,
+                        "source_name":"Instagram"
+                    }
+                ]
+            }
+        ]
+    },
+     {
+        "user_id" : 3,
+        "domains" : [
+            {
+                "domain_id":4,
+                "domain_name":"Bitcoin",
+                "sources" : [
+                    {
+                        "source_id":8,
+                        "source_name":"Facebook"
+                    },
+                    {
+                        "source_id":9,
+                        "source_name":"Reddit"
+                    }
+                ]
+            }
+        ]
+    },
+     {
+        "user_id" : 4,
+        "domains" : []
+    },
+     {
+        "user_id" : 5,
+        "domains" : []
+    },
 ]
 
 
