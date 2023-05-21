@@ -1,10 +1,14 @@
 <div class="flex-row app-container">
   <dp-sidebar style="flex-basis: 20%"></dp-sidebar>
   <div class="flex-column" style="flex-basis: 83%; gap: 1.3rem">
-    <div class="header flex-row">
-      <h1>_logo_</h1>
+    <div class="header flex-row" style="gap: 1.2rem">
+      <img
+        src="../assets/starbucks-logo-69391AB0A9-seeklogo.com.png"
+        alt="Starbucks loog"
+        height="100px"
+      />
       <div class="flex-column">
-        <h2>Domain Name</h2>
+        <h2>Starbucks</h2>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
           magni ea sint, repellendus quam dolor consequatur sequi.
@@ -13,9 +17,44 @@
     </div>
 
     <div
-      class="source-manager flex-row"
-      style="background-color: aliceblue; border-radius: 25px; height: 160px"
-    ></div>
+      class="source-manager flex-row align-center"
+      style="
+        background-color: aliceblue;
+        border-radius: 25px;
+        height: 160px;
+        gap: 1.4rem;
+        padding: 0 1.2rem;
+      "
+    >
+      <div
+        *ngFor="let source of [1, 2, 3, 4]"
+        class="source-cat flex-column center"
+        style="
+          border-radius: 25px;
+          height: 80%;
+          width: 180px;
+          background-color: rgba(191, 200, 228, 0.39);
+        "
+      >
+        <img
+          src="../assets/facebook-logo.png"
+          alt="Source logo"
+          height="100px"
+        />
+        <p>source_name</p>
+      </div>
+      <div
+        class="source-cat flex-column center"
+        style="
+          border-radius: 25px;
+          height: 80%;
+          width: 180px;
+          background-color: rgba(191, 200, 228, 0.39);
+        "
+      >
+        <p style="font-size: 80pt">+</p>
+      </div>
+    </div>
 
     <div
       class="source-manager flex-row"
