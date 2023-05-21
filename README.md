@@ -124,7 +124,7 @@
     </td>
     <td style="vertical-align: top; width: 70%; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Thomas Blendulf</b></h2>
-      Description here
+      I'm a computer science student with a passion and dedication to the work that I do. Whenever I am faced with a challenge I always give my best attempt at completing, learning about and mastering the problem at hand. What drives me to create projects such as that of Domain Pulse is a love for the creation of software and solutions that have meaningful and visible usage and effect for those it is made for.
       <br><br>
       <a href="https://github.com/TomBlendSoftware" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
