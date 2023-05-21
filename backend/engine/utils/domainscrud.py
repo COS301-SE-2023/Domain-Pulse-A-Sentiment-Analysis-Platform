@@ -98,7 +98,7 @@ def add_domain(user_id, domain_name):
         if entry["user_id"] == user_id:
             entry["domains"].append({"domain_id": next_domain_id(), "domain_name":domain_name,"sources":[]})
             return get_domains(user_id)
-
+    return get_domains(user_id)
 
 def remove_domain(user_id, domain_id):
     user_id = int(user_id)
@@ -111,7 +111,7 @@ def remove_domain(user_id, domain_id):
                     print("managed to get there")
                     entry["domains"].remove(domain)
                     return get_domains(user_id)
-
+    return get_domains(user_id)
 
 def get_domains(user_id):
     user_id = int(user_id)
@@ -119,7 +119,7 @@ def get_domains(user_id):
     for entry in domains_db:
         if entry["user_id"] == user_id:
             return entry
-
+    return {}
 
 def add_source(user_id, domain_id, source_name):
     user_id = int(user_id)
@@ -131,7 +131,7 @@ def add_source(user_id, domain_id, source_name):
                 if int(domain["domain_id"]) == domain_id:
                     domain["sources"].append({"source_id":next_source_id(), "source_name":source_name})
                     return get_domains(user_id)
-
+    return get_domains(user_id)
 
 def remove_source(user_id, domain_id, source_id):
     user_id = int(user_id)
@@ -146,4 +146,4 @@ def remove_source(user_id, domain_id, source_id):
                        if source["source_id"] == source_id:
                            domain["sources"].remove(source)
                            return get_domains(user_id)
-    
+    return get_domains(user_id)
