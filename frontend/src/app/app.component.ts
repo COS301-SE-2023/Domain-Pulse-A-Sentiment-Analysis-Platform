@@ -11,7 +11,18 @@ export class AppComponent {
 
   showAddSourcesModal = false;
   selectedDomain$ = this.backendService.selectedDomain$;
+
+  newSouceName = '';
+
   constructor(private backendService: BackendService) {}
+
+  addNewSource() {
+    console.log(this.newSouceName);
+    this.backendService.addNewSource(this.newSouceName);
+    this.newSouceName = '';
+
+    this.toggleAddSourcesModal();
+  }
 
   toggleAddSourcesModal() {
     if (!this.showAddSourcesModal) {

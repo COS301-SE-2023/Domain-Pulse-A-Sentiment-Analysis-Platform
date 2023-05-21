@@ -86,6 +86,7 @@
             Source Name:
           </p>
           <input
+            [(ngModel)]="newSouceName"
             type="text"
             style="
               border: solid rgb(133, 133, 133) 2px;
@@ -114,6 +115,7 @@
       </div>
 
       <button
+        (click)="addNewSource()"
         style="
           width: 130px;
           height: 40px;

@@ -7,10 +7,11 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { ModalContainerComponent } from './modal-container/modal-container.component';
 import { BackendService } from './backend.service';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, SidebarComponent, ModalContainerComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, FormsModule, AppRoutingModule, HttpClientModule],
   providers: [BackendService],
   bootstrap: [AppComponent],
 })

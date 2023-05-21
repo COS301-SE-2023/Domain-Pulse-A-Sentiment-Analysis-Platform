@@ -21,6 +21,7 @@ interface Domain {
 export class BackendService {
   private baseUrl = 'http://localhost:8000/';
   private getDomainsUrl = 'domains/get_domains/1';
+
   private _domains = new BehaviorSubject<Domain[]>([]);
   private _selectedDomain = new BehaviorSubject<Domain | null>(null);
   readonly domains$ = this._domains.asObservable();
@@ -57,5 +58,28 @@ export class BackendService {
 
       this._domains.next(domainArr);
     });
+  }
+
+  addNewSource(sourceName: string) {
+    console.log('addNewSource');
+    console.log(sourceName);
+    console.log(this._selectedDomain.value);
+    console.log(this._selectedDomain.value?.id);
+    console.log(this._selectedDomain.value?.sources);
+
+    //add_source/<user_id>/<domain_id>/<source_name>
+
+    if (this._selectedDomain.value) {
+      let domainID = this._selectedDomain.value.id;
+      const addSourceUrl =
+        this.baseUrl + `domains/add_source/1/${domainID}/${sourceName}`;
+
+      this._selectedDomain.value.sources.push({
+        source_id: 0,
+        source_name: sourceName,
+      });
+
+      this.http.get(addSourceUrl).subscribe();
+    }
   }
 }
