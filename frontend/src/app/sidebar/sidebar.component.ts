@@ -34,6 +34,11 @@ export class SidebarComponent {
 
   showAddDomainModal = false;
 
+  addNewDomain(): void {
+    this.backendService.addNewDomain();
+    this.toggleDomainModal();
+  }
+
   constructor(private backendService: BackendService) {}
 
   toggleDomainModal(): void {

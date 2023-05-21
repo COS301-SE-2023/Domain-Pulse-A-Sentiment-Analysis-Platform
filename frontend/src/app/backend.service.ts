@@ -82,4 +82,16 @@ export class BackendService {
       this.http.get(addSourceUrl).subscribe();
     }
   }
+
+  addNewDomain() {
+    let newMockDomain: Domain = {
+      id: 13,
+      name: 'Formula 1',
+      imageUrl: '../assets/f1-logo.png',
+      selected: false,
+      sources: [],
+    };
+
+    this._domains.value.push(newMockDomain);
+  }
 }
