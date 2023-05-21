@@ -108,7 +108,7 @@
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Caden Dobson</b></h2>
-      Description here
+      I am an ambitious, resilient and driven individual who always strives to succeed in any given task. My interests are Computer science,           Quantitative Finance, Big data analytics, Artificial intelligence and Statistics. I am inventive and incorporate creative thinking into           achieving logical solutions to problems. I am an avid learner who endeavours to deepen my knowledge in any field possible. I work well in         high pressure environments and always ensure that I put my best foot forward.
       <br><br>
       <a href="https://github.com/cadendobson" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
