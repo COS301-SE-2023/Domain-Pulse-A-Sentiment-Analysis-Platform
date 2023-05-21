@@ -17,7 +17,7 @@ def score_to_classification(score):
     elif 0.1 <= score < 0.25:
         overall_sentiment = "SOMEWHAT_POSTIVE"
     elif 0.25 <= score < 0.75:
-        overall_sentiment = "POSTIVE"
+        overall_sentiment = "POSITIVE"
     elif 0.75 <= score <= 1:
         overall_sentiment = "VERY_POSTIVE"
     return overall_sentiment
