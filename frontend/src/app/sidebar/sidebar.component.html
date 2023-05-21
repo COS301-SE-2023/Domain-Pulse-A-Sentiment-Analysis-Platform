@@ -1,12 +1,19 @@
 <div class="flex-column center" style="gap: 1rem">
   <h1>domain_pulse_logo</h1>
   <div
-    *ngFor="let i of [1, 2, 3, 4]"
-    class="flex-row"
-    style="gap: 1rem; height: 50px"
+    *ngFor="let domain of domains"
+    class="flex-row align-center"
+    style="
+      gap: 1.2rem;
+      height: 50px;
+      width: 60%;
+      padding: 0 2rem;
+      border-radius: 25px;
+    "
+    [ngStyle]="{ 'background-color': domain.selected ? 'rgb(70 133 201)' : '' }"
   >
-    <p>_picture_</p>
-    <p>Domain_name</p>
+    <img [src]="domain.imageUrl" alt="Source logo" height="44px" />
+    <p>{{ domain.name }}</p>
   </div>
   <div
     class="flex-row center"
