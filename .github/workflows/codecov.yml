@@ -33,16 +33,26 @@ jobs:
           files: frontend/coverage/lcov-report/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
           
-      - name: Setup Python
-        uses: actions/setup-python@master
-        
-      - name: install dependancies
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: install pipenv
         run: |
-         pip install pipenv
-         pipenv install 
-         cd backend/engine
-         coverage run manage.py test  
-         coverage lcov   
+          cd backend
+          pip install pipenv
+          pipenv install
+          pipenv sync
+          python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
+
+      - name: install dependancies
+        run: | 
+          ls
+          pipenv install
+
+
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
