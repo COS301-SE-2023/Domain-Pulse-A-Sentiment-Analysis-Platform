@@ -9,6 +9,8 @@ run_engine = "python engine/manage.py runserver"
 
 [packages]
 django = "*"
+vadersentiment = "*"
+coverage = "*"
 
 [dev-packages]
 
