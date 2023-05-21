@@ -35,11 +35,19 @@ jobs:
           
       - name: Setup Python
         uses: actions/setup-python@master
-        with:
-         python-version: 3.8
-      - name: Generate Report
+        
+      - name: install dependancies
         run: |
-         pip install coverage
-         coverage run -m unittest
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2
+         pipenv install 
+         cd backend/engine
+         coverage run manage.py test  
+         coverage lcov   
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: backend/engine/coverage.lcov
+          token: ${{ secrets.CODECOV_TOKEN }}
+        
+        
+        
+
