@@ -2,10 +2,7 @@ name: Upload to codecov
 on:
   push:
     branches:
-      - frontend/**
-      - dev
-      - backend/**
-      - main
+    - "**"
   pull_request:
     branches:
       - main
