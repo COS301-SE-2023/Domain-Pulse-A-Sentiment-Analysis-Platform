@@ -58,7 +58,7 @@
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
       <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/8fcb7fb2-2998-4f46-ba5a-fb9e6a5edf91" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
-    <td style="vertical-align: top; width: 70%; border: 0; padding: 10px;">
+    <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Christiaan Lombard</b></h2>
       I have a keen interest in machine learning, design and statistics, aswell as how they're amalgamation can result in something unexpectedly beautiful. I enjoy taking on a challenge and with industry experience in design and video editing, aswell as quantative analysis - I feel qualified to take on any project that comes my way.
       <br><br>
@@ -74,7 +74,7 @@
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
       <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/b220e274-a784-4a65-b4cc-a9c03810a4f2" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
-    <td style="vertical-align: top; width: 70%; border: 0; padding: 10px;">
+    <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Luke Lawson</b></h2> 
       Description here
       <br><br>
@@ -90,7 +90,7 @@
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
       <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/10074d73-dd39-4261-920c-5fdb29f20fd8" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
-    <td style="vertical-align: top; width: 70%; border: 0; padding: 10px;">
+    <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
       Description here
       <br><br>
@@ -106,7 +106,7 @@
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
       <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/8024c567-63b0-4cab-8eb5-cfb3321c56e5)" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
-    <td style="vertical-align: top; width: 70%; border: 0; padding: 10px;">
+    <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Caden Dobson</b></h2>
       Description here
       <br><br>
@@ -122,7 +122,7 @@
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
       <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/08444ee2-9f7f-4822-83b2-0a18143855ce" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
-    <td style="vertical-align: top; width: 70%; border: 0; padding: 10px;">
+    <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Thomas Blendulf</b></h2>
       I'm a computer science student with a passion and dedication to the work that I do. Whenever I am faced with a challenge I always give my best attempt at completing, learning about and mastering the problem at hand. What drives me to create projects such as that of Domain Pulse is a love for the creation of software and solutions that have meaningful and visible usage and effect for those it is made for.
       <br><br>
