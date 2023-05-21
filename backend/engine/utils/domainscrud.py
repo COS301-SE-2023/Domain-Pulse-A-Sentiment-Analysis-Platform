@@ -12,12 +12,25 @@ domains_db = [
             {
                 "domain_id":1,
                 "domain_name":"Starbucks",
+                "image_url": "starbucks-logo-69391AB0A9-seeklogo.com.png",
                 "sources" : [
                     {
                         "source_id":1,
                         "source_name":"Facebook"
                     }
                 ]
+            },
+            {
+                "domain_id":10,
+                "domain_name":"Apple",
+                "image_url": "apple-1-logo-png-transparent.png",
+                "sources" : []
+            },
+            {
+                "domain_id":11,
+                "domain_name":"McDonalds",
+                "image_url": "donalds-logo.png",
+                "sources" : []
             }
         ]
     },

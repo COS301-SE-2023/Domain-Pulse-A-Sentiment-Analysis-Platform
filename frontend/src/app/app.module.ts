@@ -5,18 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ModalContainerComponent } from './modal-container/modal-container.component';
+import { BackendService } from './backend.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SidebarComponent,
-    ModalContainerComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent, SidebarComponent, ModalContainerComponent],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  providers: [BackendService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,7 +1,7 @@
 <div class="flex-column center" style="gap: 1rem">
   <h1>domain_pulse_logo</h1>
   <div
-    *ngFor="let domain of domains"
+    *ngFor="let domain of domains$ | async"
     class="flex-row align-center"
     style="
       gap: 1.2rem;

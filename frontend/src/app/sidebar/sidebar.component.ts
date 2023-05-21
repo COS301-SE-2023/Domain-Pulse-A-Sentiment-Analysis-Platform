@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'dp-sidebar',
@@ -6,6 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./sidebar.component.sass'],
 })
 export class SidebarComponent {
+  domains$ = this.backendService.domains$;
+
   domains = [
     {
       name: 'apple',
@@ -30,6 +33,8 @@ export class SidebarComponent {
   ];
 
   showAddDomainModal = false;
+
+  constructor(private backendService: BackendService) {}
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
