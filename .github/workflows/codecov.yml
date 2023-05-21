@@ -38,6 +38,7 @@ jobs:
         
       - name: install dependancies
         run: |
+         pip install pipenv
          pipenv install 
          cd backend/engine
          coverage run manage.py test  
