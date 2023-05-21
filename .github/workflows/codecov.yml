@@ -40,10 +40,10 @@ jobs:
           cd backend
           pip install pipenv
           pipenv install
-          pipenv shell
           pipenv sync
           python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
           cd engine
+          pipenv shell
           coverage run manage.py test  
           coverage lcov 
       - name: install dependancies
