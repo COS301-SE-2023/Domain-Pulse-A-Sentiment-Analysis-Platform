@@ -76,7 +76,7 @@
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Luke Lawson</b></h2> 
-      Description here
+      I am an avid problem and puzzle solver – as such, I have a firm appreciation and aptitude for all things quantitative and analytical. I love being able to put what I know into practice by building something cool - especially if it means I get to challenge myself or learn something new. I consider it 'mission-critical' to hold on to a sense of humour no matter what! I'm particularly interested in machine learning - especially when applied to novel and fascinating domains such as sentiment analysis.
       <br><br>
       <a href="https://github.com/LukeLawsonSoftware" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
