@@ -72,7 +72,7 @@
   </tr>
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/a1390c17-a9c1-4895-bc73-7410827bd450" width="400" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/b220e274-a784-4a65-b4cc-a9c03810a4f2" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
     <td style="vertical-align: top; width: 70%; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Luke Lawson</b></h2> 
