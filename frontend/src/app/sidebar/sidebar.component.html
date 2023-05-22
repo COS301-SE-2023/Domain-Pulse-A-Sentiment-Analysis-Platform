@@ -7,7 +7,8 @@
     style="margin-top: 2rem; margin-bottom: 0.8rem"
   />
   <div
-    *ngFor="let domain of domains"
+    *ngFor="let domain of domains$ | async"
+    (click)="selectDomain(domain)"
     class="flex-row align-center"
     style="
       gap: 1.2rem;
@@ -21,6 +22,7 @@
     <img [src]="domain.imageUrl" alt="Source logo" height="44px" />
     <p>{{ domain.name }}</p>
   </div>
+
   <div
     (click)="toggleDomainModal()"
     class="flex-row center"
@@ -52,6 +54,7 @@
             Choose a name
           </p>
           <input
+            [(ngModel)]="newDomainName"
             type="text"
             style="
               border: solid rgb(133, 133, 133) 2px;
@@ -83,20 +86,23 @@
         <p style="font-size: 44pt; color: rgb(168, 168, 168)">3</p>
         <div class="flex-column" style="width: 100%">
           <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
-            Select or upload an icon (optional)
+            Select Domain image:
           </p>
-          <input
-            type="text"
+          <select
+            [(ngModel)]="newDomainImageName"
             style="
               border: solid rgb(133, 133, 133) 2px;
               height: 30px;
               border-radius: 10px;
             "
-          />
+          >
+            <option value="f1-logo.png">Formula 1</option>
+          </select>
         </div>
       </div>
 
       <button
+        (click)="addNewDomain()"
         style="
           width: 130px;
           height: 40px;

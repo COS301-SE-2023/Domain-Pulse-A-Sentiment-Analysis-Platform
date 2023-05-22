@@ -1,14 +1,18 @@
 <div class="flex-row app-container">
   <dp-sidebar style="flex-basis: 20%"></dp-sidebar>
-  <div class="flex-column" style="flex-basis: 83%; gap: 1.3rem">
+  <div
+    *ngIf="selectedDomain$ | async as selectedDomain"
+    class="flex-column"
+    style="flex-basis: 83%; gap: 1.3rem"
+  >
     <div class="header flex-row" style="gap: 1.2rem">
       <img
-        src="../assets/starbucks-logo-69391AB0A9-seeklogo.com.png"
+        [src]="'../assets/' + selectedDomain.imageUrl"
         alt="Starbucks loog"
         height="100px"
       />
       <div class="flex-column">
-        <h2>Starbucks</h2>
+        <h2>{{ selectedDomain.name }}</h2>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
           magni ea sint, repellendus quam dolor consequatur sequi.
@@ -27,7 +31,7 @@
       "
     >
       <div
-        *ngFor="let source of [1, 2, 3, 4]"
+        *ngFor="let source of selectedDomain.sources"
         class="source-cat flex-column center"
         style="
           border-radius: 25px;
@@ -37,12 +41,12 @@
         "
       >
         <img
-          src="../assets/facebook-logo.png"
+          [src]="'../assets/' + source.source_image_name"
           alt="Source logo"
           height="100px"
           style="border-radius: 50%"
         />
-        <p>source_name</p>
+        <p>{{ source.source_name }}</p>
       </div>
       <div
         (click)="toggleAddSourcesModal()"
@@ -85,6 +89,7 @@
             Source Name:
           </p>
           <input
+            [(ngModel)]="newSouceName"
             type="text"
             style="
               border: solid rgb(133, 133, 133) 2px;
@@ -92,6 +97,27 @@
               border-radius: 10px;
             "
           />
+        </div>
+      </div>
+
+      <div class="flex-row" style="width: 80%">
+        <p style="font-size: 44pt; color: rgb(168, 168, 168)">2</p>
+        <div class="flex-column" style="width: 100%">
+          <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
+            Source Type:
+          </p>
+          <select
+            [(ngModel)]="newSourcePlatform"
+            style="
+              border: solid rgb(133, 133, 133) 2px;
+              height: 30px;
+              border-radius: 10px;
+            "
+          >
+            <option value="facebook">facebook</option>
+            <option value="instagram">instagram</option>
+            <option value="reddit">reddit</option>
+          </select>
         </div>
       </div>
 
@@ -113,6 +139,7 @@
       </div>
 
       <button
+        (click)="addNewSource()"
         style="
           width: 130px;
           height: 40px;
