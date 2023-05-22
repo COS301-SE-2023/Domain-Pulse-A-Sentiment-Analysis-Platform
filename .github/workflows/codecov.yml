@@ -1,0 +1,64 @@
+name: Upload to codecov
+on:
+  push:
+    branches:
+    - "**"
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup
+        uses: actions/checkout@v3
+      - name: install dependancies
+        run: |
+          cd frontend
+          npm install
+          npm link @angular/cli
+          npm ci
+          ng build --configuration=development
+    
+      - name: Run tests and collect coverage
+        run: |
+           cd frontend
+           ng test --no-watch --code-coverage --browsers ChromeHeadless
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: frontend/coverage/lcov-report/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: install pipenv
+        run: |
+          cd backend
+          pip install pipenv
+          pipenv install
+          pipenv sync
+          python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
+          cd engine
+          pipenv shell
+          coverage run manage.py test  
+          coverage lcov 
+      - name: install dependancies
+        run: | 
+          ls
+          pipenv install
+
+
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: backend/engine/coverage.lcov
+          token: ${{ secrets.CODECOV_TOKEN }}
+        
+        
+        
+
