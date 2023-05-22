@@ -88,7 +88,7 @@
   </tr>
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/10074d73-dd39-4261-920c-5fdb29f20fd8" width="400" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://avatars.githubusercontent.com/u/53999613?v=4" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
