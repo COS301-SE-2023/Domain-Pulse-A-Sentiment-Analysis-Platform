@@ -108,7 +108,7 @@ def remove_domain(user_id, domain_id):
         if entry["user_id"] == user_id:
             for domain in list(entry["domains"]):
                 if int(domain["domain_id"]) == domain_id:
-                    print("managed to get there")
+                    # print("managed to get there")
                     entry["domains"].remove(domain)
                     return get_domains(user_id)
     return get_domains(user_id)
