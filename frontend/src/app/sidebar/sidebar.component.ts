@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BackendService } from '../backend.service';
+import { BackendService, Domain } from '../backend.service';
 
 @Component({
   selector: 'dp-sidebar',
@@ -37,16 +37,6 @@ export class SidebarComponent {
 
   showAddDomainModal = false;
 
-  addNewDomain(): void {
-    console.log('addNewDomain');
-    console.log(this.newDomainName, this.newDomainImageName);
-    this.backendService.addNewDomain(
-      this.newDomainName,
-      this.newDomainImageName
-    );
-    this.toggleDomainModal();
-  }
-
   constructor(private backendService: BackendService) {}
 
   toggleDomainModal(): void {
@@ -57,5 +47,19 @@ export class SidebarComponent {
       // this.windows[0].scrolling = true;
       this.showAddDomainModal = false;
     }
+  }
+
+  addNewDomain(): void {
+    console.log('addNewDomain');
+    console.log(this.newDomainName, this.newDomainImageName);
+    this.backendService.addNewDomain(
+      this.newDomainName,
+      this.newDomainImageName
+    );
+    this.toggleDomainModal();
+  }
+
+  selectDomain(domain: Domain) {
+    this.backendService.selectDomain(domain);
   }
 }

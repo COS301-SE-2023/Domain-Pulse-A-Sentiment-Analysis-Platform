@@ -2,6 +2,7 @@
   <h1>domain_pulse_logo</h1>
   <div
     *ngFor="let domain of domains$ | async"
+    (click)="selectDomain(domain)"
     class="flex-row align-center"
     style="
       gap: 1.2rem;
@@ -15,6 +16,7 @@
     <img [src]="domain.imageUrl" alt="Source logo" height="44px" />
     <p>{{ domain.name }}</p>
   </div>
+
   <div
     (click)="toggleDomainModal()"
     class="flex-row center"

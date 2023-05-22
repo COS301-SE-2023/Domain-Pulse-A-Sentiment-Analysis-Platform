@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
-interface Sources {
+export interface Sources {
   source_id: number;
   source_name: string;
   source_image_name: string;
 }
 
-interface Domain {
+export interface Domain {
   id: number;
   name: string;
   imageUrl: string;
@@ -49,6 +49,7 @@ export class BackendService {
           id: domain.domain_id,
           name: domain.domain_name,
           imageUrl: '../assets/' + domain.image_url,
+          sources: domain.sources,
           selected: selected,
         };
       });
@@ -119,5 +120,15 @@ export class BackendService {
 
       this._domains.value.push(domain);
     });
+  }
+
+  selectDomain(domain: Domain) {
+    for (let i = 0; i < this._domains.value.length; i++) {
+      this._domains.value[i].selected = false;
+      if (this._domains.value[i].id === domain.id) {
+        this._selectedDomain.next(this._domains.value[i]);
+        this._domains.value[i].selected = true;
+      }
+    }
   }
 }
