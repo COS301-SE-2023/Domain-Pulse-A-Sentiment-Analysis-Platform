@@ -51,6 +51,52 @@
 <br>
 <br>
 
+# Repository Breakdown
+
+```
+domain-pulse/
+├── .github/workflows / - Contains the github actions for the project
+│   ├── backend-build.yml
+│   └── frontend-build.yml
+├── backend/ - Contains 3 django projects for the backend
+│   ├── engine/ - Contains the engine project, nlp and data analysis happens here
+│   │   ├── analyser/
+│   │   ├── domains/
+│   │   ├── engine/
+│   │   ├── utils/
+│   │   └── manage.py
+│   ├── profilemanager/ - Contains the profilemanager project, manages user profiles
+│   │   ├── profilemanager/
+│   │   └── manage.py
+│   ├── warehouse/ - Contains the warehouse project, manages storing of data
+│   │   ├── query/
+│   │   └── warehouse/
+│   ├── scripts/ - Scripts for running CI/CD and testing
+│   │   └── check_all.ah
+│   └── REAMDME.md
+├── documentation/
+│   └── README.md
+├── frontend/ - Contains the angular frontend
+│   ├── node_modules
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── modal-container/
+│   │   │   └── sidebar/
+│   │   └── assets/
+│   ├── .gitignore
+│   ├── angular.json
+│   ├── package.json
+│   ├── package-lock.json
+│   └── README.md
+├── Pipfile
+├── Pipfile.lock
+└── README.md
+```
+
+<br>
+<br>
+
+
 # 👨‍💻Meet the team
 
 <table style="border-width: 1px; width: 100%; font-family: Arial, sans-serif; border-collapse: collapse;">
