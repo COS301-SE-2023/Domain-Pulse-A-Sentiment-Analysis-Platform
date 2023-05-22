@@ -41,6 +41,7 @@ jobs:
           pipenv install
           cd backend/engine
           pipenv run python3 manage.py test
+          pip install coverage
           python -m coverage run manage.py test
           python -m coverage lcov 
     
