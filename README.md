@@ -92,13 +92,16 @@
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
-      Description here
+      I am a software developer and graphic designer with a passion for creating intuitive and visually stunning designs. I am a hardworking and dedicated individual who is always willing to learn and improve. I am also a team player and enjoy working with others to achieve a common goal. I am currently working towards being a Cloud Architect. I consider the 2 areas of knowledge i specialize in to be the angular framework and the rust programming language. I also know how to use the adobe suite of products to create presentable media.
       <br><br>
       <a href="https://github.com/thuthuka111" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
       </a>
       <a href="https://www.linkedin.com/in/thuthuka-khumalo-95a63b1a4/" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/fluency/24/000000/linkedin.png"  width="30" height="30">
+      </a>
+      <a href="https://portfolio.thuthuka.me/" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
+        <img src="https://portfolio.thuthuka.me/favicon.ico" width="30" height="30" alt="Portfolio">
       </a>
     </td>
   </tr>
