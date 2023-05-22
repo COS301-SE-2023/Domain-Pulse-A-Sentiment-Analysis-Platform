@@ -172,7 +172,7 @@ domain-pulse/
   </tr>
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="[https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/08444ee2-9f7f-4822-83b2-0a18143855ce](https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/1c2ebc6c-4843-4499-b6ff-7267541001e4)" width="400" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/1c2ebc6c-4843-4499-b6ff-7267541001e4" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Thomas Blendulf</b></h2>
