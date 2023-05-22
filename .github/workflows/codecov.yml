@@ -39,7 +39,7 @@ jobs:
         run: |
           pip install pipenv
           pipenv install
-          pipenv shell 
+          python3 -m pipenv shell
           cd backend/engine
           coverage run manage.py test  
           coverage lcov 
