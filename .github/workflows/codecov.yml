@@ -41,13 +41,9 @@ jobs:
           pipenv install
           cd backend/engine
           pipenv run python3 manage.py test
-          export PATH="$HOME/.local/bin:$PATH"
-          coverage run manage.py test  
-          coverage lcov 
+          python -m coverage run manage.py test
+          python -m coverage lcov 
     
-
-
-
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
