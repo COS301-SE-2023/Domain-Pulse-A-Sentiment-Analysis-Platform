@@ -41,12 +41,10 @@ jobs:
           pipenv install
           cd backend/engine
           pipenv run python3 manage.py test
+          export PATH="$HOME/.local/bin:$PATH"
           coverage run manage.py test  
           coverage lcov 
-      - name: install dependancies
-        run: | 
-          ls
-          pipenv install
+    
 
 
 
