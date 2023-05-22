@@ -39,8 +39,8 @@ jobs:
         run: |
           pip install pipenv
           pipenv install
-          pipenv run python backend/engine/manage.py test
           cd backend/engine
+          pipenv run python3 manage.py test
           coverage run manage.py test  
           coverage lcov 
       - name: install dependancies
