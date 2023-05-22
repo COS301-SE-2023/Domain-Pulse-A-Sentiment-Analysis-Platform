@@ -1,5 +1,11 @@
 <div class="flex-column center" style="gap: 1rem">
-  <h1>domain_pulse_logo</h1>
+  <img
+    src="../assets/dp-logo-white.png"
+    alt="Domain Pulse Logo"
+    height="auto"
+    width="85%"
+    style="margin-top: 2rem; margin-bottom: 0.8rem"
+  />
   <div
     *ngFor="let domain of domains$ | async"
     (click)="selectDomain(domain)"

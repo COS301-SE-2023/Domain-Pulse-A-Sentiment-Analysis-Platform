@@ -11,6 +11,7 @@ run_engine = "python engine/manage.py runserver"
 django = "*"
 vadersentiment = "*"
 django-cors-headers = "*"
+coverage = "*"
 
 [dev-packages]
 
