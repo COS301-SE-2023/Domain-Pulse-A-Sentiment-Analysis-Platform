@@ -10,8 +10,8 @@ def add_domain(request, user_id, domain_name):
 def remove_domain(request, user_id, domain_id):
     return JsonResponse(domainscrud.remove_domain(user_id, domain_id))
 
-def add_source(request, user_id, domain_id, source_name):
-    return JsonResponse(domainscrud.add_source(user_id, domain_id, source_name))
+def add_source(request, user_id, domain_id, source_name, source_image_name):
+    return JsonResponse(domainscrud.add_source(user_id, domain_id, source_name, source_image_name))
 
 def remove_source(request, user_id, domain_id, source_id):
     return JsonResponse(domainscrud.remove_source(user_id, domain_id, source_id))

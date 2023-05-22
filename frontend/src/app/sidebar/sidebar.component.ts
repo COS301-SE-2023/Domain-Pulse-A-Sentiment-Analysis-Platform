@@ -32,6 +32,8 @@ export class SidebarComponent {
     },
   ];
 
+  newDomainName = '';
+
   showAddDomainModal = false;
 
   addNewDomain(): void {

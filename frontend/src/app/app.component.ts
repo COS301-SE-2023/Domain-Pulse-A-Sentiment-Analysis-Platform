@@ -13,12 +13,13 @@ export class AppComponent {
   selectedDomain$ = this.backendService.selectedDomain$;
 
   newSouceName = '';
+  newSourcePlatform = '';
 
   constructor(private backendService: BackendService) {}
 
   addNewSource() {
-    console.log(this.newSouceName);
-    this.backendService.addNewSource(this.newSouceName);
+    console.log('platform: ' + this.newSourcePlatform);
+    this.backendService.addNewSource(this.newSouceName, this.newSourcePlatform);
     this.newSouceName = '';
 
     this.toggleAddSourcesModal();

@@ -16,7 +16,8 @@ domains_db = [
                 "sources" : [
                     {
                         "source_id":1,
-                        "source_name":"Facebook"
+                        "source_name":"Facebook",
+                        "source_image_name":"facebook-logo.png"
                     }
                 ]
             },
@@ -43,7 +44,8 @@ domains_db = [
                 "sources" : [
                     {
                         "source_id":2,
-                        "source_name":"Reddit"
+                        "source_name":"Reddit",
+                        "source_image_name":"reddit-logo.png"
                     }
                 ]
             },
@@ -53,7 +55,8 @@ domains_db = [
                 "sources" : [
                     {
                         "source_id":3,
-                        "source_name":"Instagram"
+                        "source_name":"Instagram",
+                        "source_image_name":"instagram-Icon.png"
                     }
                 ]
             }
@@ -68,11 +71,13 @@ domains_db = [
                 "sources" : [
                     {
                         "source_id":8,
-                        "source_name":"Facebook"
+                        "source_name":"Facebook",
+                        "source_image_name":"facebook-logo.png"
                     },
                     {
                         "source_id":9,
-                        "source_name":"Reddit"
+                        "source_name":"Reddit",
+                        "source_image_name":"reddit-logo.png"
                     }
                 ]
             }
@@ -134,7 +139,7 @@ def get_domains(user_id):
             return entry
     return {}
 
-def add_source(user_id, domain_id, source_name):
+def add_source(user_id, domain_id, source_name, source_image_name):
     user_id = int(user_id)
     domain_id = int(domain_id)
     
@@ -142,7 +147,7 @@ def add_source(user_id, domain_id, source_name):
         if int(entry["user_id"]) == user_id:
             for domain in list(entry["domains"]):
                 if int(domain["domain_id"]) == domain_id:
-                    domain["sources"].append({"source_id":next_source_id(), "source_name":source_name})
+                    domain["sources"].append({"source_id":next_source_id(), "source_name":source_name, "source_image_name":source_image_name})
                     return get_domains(user_id)
     return get_domains(user_id)
 

@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 interface Sources {
   source_id: number;
   source_name: string;
+  source_image_name: string;
 }
 
 interface Domain {
@@ -60,7 +61,21 @@ export class BackendService {
     });
   }
 
-  addNewSource(sourceName: string) {
+  addNewSource(sourceName: string, newSourcePlatform: string) {
+    let source_image_name = '';
+    console.log(newSourcePlatform);
+    switch (newSourcePlatform) {
+      case 'facebook':
+        source_image_name = 'facebook-logo.png';
+        break;
+      case 'instagram':
+        source_image_name = 'instagram-Icon.png';
+        break;
+      case 'reddit':
+        source_image_name = 'reddit-logo.png';
+        break;
+    }
+
     console.log('addNewSource');
     console.log(sourceName);
     console.log(this._selectedDomain.value);
@@ -72,11 +87,13 @@ export class BackendService {
     if (this._selectedDomain.value) {
       let domainID = this._selectedDomain.value.id;
       const addSourceUrl =
-        this.baseUrl + `domains/add_source/1/${domainID}/${sourceName}`;
+        this.baseUrl +
+        `domains/add_source/1/${domainID}/${sourceName}/${source_image_name}`;
 
       this._selectedDomain.value.sources.push({
         source_id: 0,
         source_name: sourceName,
+        source_image_name: source_image_name,
       });
 
       this.http.get(addSourceUrl).subscribe();
