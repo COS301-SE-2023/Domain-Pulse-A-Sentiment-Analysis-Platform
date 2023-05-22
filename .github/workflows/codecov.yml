@@ -37,10 +37,9 @@ jobs:
           python-version: 3.8
       - name: install pipenv
         run: |
-          cd backend
           pip install pipenv
-          pipenv sync
-          pipenv shell
+          pipenv install
+          pipenv shell 
           cd backend/engine
           coverage run manage.py test  
           coverage lcov 
