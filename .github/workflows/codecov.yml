@@ -39,11 +39,9 @@ jobs:
         run: |
           cd backend
           pip install pipenv
-          pipenv install
           pipenv sync
-          python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
-          cd engine
           pipenv shell
+          cd backend/engine
           coverage run manage.py test  
           coverage lcov 
       - name: install dependancies
