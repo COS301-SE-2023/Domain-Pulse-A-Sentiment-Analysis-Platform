@@ -56,7 +56,7 @@
 <table style="border-width: 1px; width: 100%; font-family: Arial, sans-serif; border-collapse: collapse;">
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/8fcb7fb2-2998-4f46-ba5a-fb9e6a5edf91" width="800" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/8fcb7fb2-2998-4f46-ba5a-fb9e6a5edf91" width="800" height="auto" style="display: block; margin: 0 auto; border-radius: 50%">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Christiaan Lombard</b></h2>
@@ -88,7 +88,7 @@
   </tr>
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://avatars.githubusercontent.com/u/53999613?v=4" width="400" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://avatars.githubusercontent.com/u/53999613?v=4" width="400" height="auto" style="display: block; margin: 0 auto; border-radius: 50%">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
@@ -123,7 +123,7 @@
   </tr>
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/08444ee2-9f7f-4822-83b2-0a18143855ce" width="400" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/08444ee2-9f7f-4822-83b2-0a18143855ce" width="400" height="auto" style="display: block; margin: 0 auto; border-radius: 50%">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Thomas Blendulf</b></h2>
