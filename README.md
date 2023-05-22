@@ -11,7 +11,7 @@
     <br />
     <a href=""><strong>📄Explore the docs (SRS) »</strong></a>
     <br />
-    <a href=""><strong>📌Our Project Board »</strong></a>
+    <a href="https://github.com/orgs/COS301-SE-2023/projects/6"><strong>📌Our Project Board »</strong></a>
     
   </p>
 </div>
@@ -105,7 +105,7 @@ domain-pulse/
 <table style="border-width: 1px; width: 100%; font-family: Arial, sans-serif; border-collapse: collapse;">
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/8fcb7fb2-2998-4f46-ba5a-fb9e6a5edf91" width="800" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/b0c39f63-7c73-43e5-b173-180d20053b7a" width="800" height="auto" style="display: block; margin: 0 auto;">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Christiaan Lombard</b></h2>
@@ -137,7 +137,7 @@ domain-pulse/
   </tr>
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/10074d73-dd39-4261-920c-5fdb29f20fd8" width="400" height="auto" style="display: block; margin: 0 auto;">
+      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/08c9863c-a8c4-4a44-bee2-941bb6af7552" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
@@ -172,7 +172,7 @@ domain-pulse/
   </tr>
   <tr>
     <td style="vertical-align: top; width:auto; border: 0; padding: 10px;">
-      <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/08444ee2-9f7f-4822-83b2-0a18143855ce" width="400" height="auto" style="display: block; margin: 0 auto;">
+      <img src="[https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/08444ee2-9f7f-4822-83b2-0a18143855ce](https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/1c2ebc6c-4843-4499-b6ff-7267541001e4)" width="400" height="auto" style="display: block; margin: 0 auto;">
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Thomas Blendulf</b></h2>
