@@ -109,12 +109,12 @@ def next_domain_id():
     DOMAIN_ID_COUNTER += 1
     return DOMAIN_ID_COUNTER
 
-def add_domain(user_id, domain_name):
+def add_domain(user_id, domain_name, domain_image_name):
     user_id = int(user_id)
 
     for entry in domains_db:
         if entry["user_id"] == user_id:
-            entry["domains"].append({"domain_id": next_domain_id(), "domain_name":domain_name,"sources":[]})
+            entry["domains"].append({"domain_id": next_domain_id(), "domain_name":domain_name, "image_url": domain_image_name,"sources":[]})
             return get_domains(user_id)
     return get_domains(user_id)
 

@@ -4,8 +4,8 @@ from utils import domainscrud
 
 # Create your views here.
 
-def add_domain(request, user_id, domain_name):
-    return JsonResponse(domainscrud.add_domain(user_id, domain_name))
+def add_domain(request, user_id, domain_name, domain_image_name):
+    return JsonResponse(domainscrud.add_domain(user_id, domain_name, domain_image_name))
 
 def remove_domain(request, user_id, domain_id):
     return JsonResponse(domainscrud.remove_domain(user_id, domain_id))

@@ -33,11 +33,17 @@ export class SidebarComponent {
   ];
 
   newDomainName = '';
+  newDomainImageName = '';
 
   showAddDomainModal = false;
 
   addNewDomain(): void {
-    this.backendService.addNewDomain();
+    console.log('addNewDomain');
+    console.log(this.newDomainName, this.newDomainImageName);
+    this.backendService.addNewDomain(
+      this.newDomainName,
+      this.newDomainImageName
+    );
     this.toggleDomainModal();
   }
 

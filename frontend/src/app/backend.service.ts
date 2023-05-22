@@ -100,15 +100,24 @@ export class BackendService {
     }
   }
 
-  addNewDomain() {
-    let newMockDomain: Domain = {
-      id: 13,
-      name: 'Formula 1',
-      imageUrl: '../assets/f1-logo.png',
-      selected: false,
-      sources: [],
-    };
+  addNewDomain(newDomainName: string, domain_image_name: string) {
+    //add_domain/<user_id>/<domain_name>/<domain_image_name>
 
-    this._domains.value.push(newMockDomain);
+    const addDomainUrl = `${this.baseUrl}domains/add_domain/1/${newDomainName}/${domain_image_name}`;
+    this.http.get(addDomainUrl).subscribe((data: any) => {
+      let domains = data.domains;
+      const domainsSize = domains.length;
+      let newDomain = domains[domainsSize - 1];
+
+      let domain: Domain = {
+        id: newDomain.domain_id,
+        name: newDomain.domain_name,
+        imageUrl: '../assets/' + newDomain.image_url,
+        selected: false,
+        sources: [],
+      };
+
+      this._domains.value.push(domain);
+    });
   }
 }

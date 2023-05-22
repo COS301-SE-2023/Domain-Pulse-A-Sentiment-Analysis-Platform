@@ -46,6 +46,7 @@
             Choose a name
           </p>
           <input
+            [(ngModel)]="newDomainName"
             type="text"
             style="
               border: solid rgb(133, 133, 133) 2px;
@@ -74,19 +75,21 @@
       </div>
 
       <div class="flex-row" style="width: 80%">
-        <p style="font-size: 44pt; color: rgb(168, 168, 168)">3</p>
+        <p style="font-size: 44pt; color: rgb(168, 168, 168)">2</p>
         <div class="flex-column" style="width: 100%">
           <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
-            Select or upload an icon (optional)
+            Select Domain image:
           </p>
-          <input
-            type="text"
+          <select
+            [(ngModel)]="newDomainImageName"
             style="
               border: solid rgb(133, 133, 133) 2px;
               height: 30px;
               border-radius: 10px;
             "
-          />
+          >
+            <option value="f1-logo.png">Formula 1</option>
+          </select>
         </div>
       </div>
 
