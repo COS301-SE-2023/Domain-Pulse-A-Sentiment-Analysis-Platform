@@ -111,7 +111,7 @@ export class BackendService {
       let newDomain = domains[domainsSize - 1];
 
       let domain: Domain = {
-        id: newDomain.domain_id,
+        id: newDomain.domain_id + 1,
         name: newDomain.domain_name,
         imageUrl: '../assets/' + newDomain.image_url,
         selected: false,

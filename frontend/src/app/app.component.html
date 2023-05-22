@@ -1,14 +1,18 @@
 <div class="flex-row app-container">
   <dp-sidebar style="flex-basis: 20%"></dp-sidebar>
-  <div class="flex-column" style="flex-basis: 83%; gap: 1.3rem">
+  <div
+    *ngIf="selectedDomain$ | async as selectedDomain"
+    class="flex-column"
+    style="flex-basis: 83%; gap: 1.3rem"
+  >
     <div class="header flex-row" style="gap: 1.2rem">
       <img
-        src="../assets/starbucks-logo-69391AB0A9-seeklogo.com.png"
+        [src]="'../assets/' + selectedDomain.imageUrl"
         alt="Starbucks loog"
         height="100px"
       />
       <div class="flex-column">
-        <h2>Starbucks</h2>
+        <h2>{{ selectedDomain.name }}</h2>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
           magni ea sint, repellendus quam dolor consequatur sequi.
@@ -17,7 +21,6 @@
     </div>
 
     <div
-      *ngIf="selectedDomain$ | async as selectedDomain"
       class="source-manager flex-row align-center"
       style="
         background-color: aliceblue;
