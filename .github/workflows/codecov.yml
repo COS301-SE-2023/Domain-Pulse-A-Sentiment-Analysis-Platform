@@ -40,9 +40,8 @@ jobs:
           pip install pipenv
           pipenv install
           cd backend/engine
-          pipenv run python3 manage.py test
           pip install coverage
-          coverage run manage.py test
+          coverage pipenv run python3 manage.py test
           coverage lcov 
     
       - name: Upload coverage to Codecov
