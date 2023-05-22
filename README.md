@@ -96,6 +96,9 @@ domain-pulse/
 <br>
 <br>
 
+# Branching Strategy
+<h3><b> Git Feature Workflow with Develop Branch </b></h3>
+<p>Within this strategy, master (main) branch will always contain a system state that is ready to be deployed and used in production. A seperate development (dev) branch is created from the master branch and is what all developers will branch off of to create components and features within the system. This ensures a production-ready and stable branch is always available and is protected by ensuring developers push to a development branch as opposed to altering said master branch. Once the system is deemed ready to deploy the development branch shall be merged into the master branch.</p>
 
 # 👨‍💻Meet the team
 
