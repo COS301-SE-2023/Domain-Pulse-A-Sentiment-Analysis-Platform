@@ -55,28 +55,28 @@
 
 ```
 domain-pulse/
-├── .github/workflows / - Contains the github actions for the project
+├── .github/workflows / #Contains the github actions for the project
 │   ├── backend-build.yml
 │   └── frontend-build.yml
-├── backend/ - Contains 3 django projects for the backend
-│   ├── engine/ - Contains the engine project, nlp and data analysis happens here
+├── backend/ #Contains 3 django projects for the backend
+│   ├── engine/ #Contains the engine project, nlp and data analysis happens here
 │   │   ├── analyser/
 │   │   ├── domains/
 │   │   ├── engine/
 │   │   ├── utils/
 │   │   └── manage.py
-│   ├── profilemanager/ - Contains the profilemanager project, manages user profiles
+│   ├── profilemanager/ #Contains the profilemanager project, manages user profiles
 │   │   ├── profilemanager/
 │   │   └── manage.py
-│   ├── warehouse/ - Contains the warehouse project, manages storing of data
+│   ├── warehouse/ #Contains the warehouse project, manages storing of data
 │   │   ├── query/
 │   │   └── warehouse/
-│   ├── scripts/ - Scripts for running CI/CD and testing
+│   ├── scripts/ #Scripts for running CI/CD and testing
 │   │   └── check_all.ah
 │   └── REAMDME.md
 ├── documentation/
 │   └── README.md
-├── frontend/ - Contains the angular frontend
+├── frontend/ #Contains the angular frontend
 │   ├── node_modules
 │   ├── src/
 │   │   ├── app/
