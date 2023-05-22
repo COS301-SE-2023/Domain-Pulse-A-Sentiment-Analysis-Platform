@@ -5,6 +5,7 @@ name = "pypi"
 
 [scripts]
 check_all = "bash backend/scripts/check_all.sh"
+coverage_gen = "bash backend/scripts/coverage.sh"
 run_engine = "python engine/manage.py runserver"
 
 [packages]

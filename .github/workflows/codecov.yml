@@ -39,10 +39,9 @@ jobs:
         run: |
           pip install pipenv
           pipenv install
+          pipenv run coverage_gen
           cd backend/engine
-          pip install coverage
-          coverage pipenv run python3 manage.py test
-          coverage lcov 
+          pipenv run python3 manage.py test
     
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
