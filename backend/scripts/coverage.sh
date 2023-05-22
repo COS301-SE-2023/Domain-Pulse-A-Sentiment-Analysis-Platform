@@ -1,3 +1,3 @@
 cd backend/engine
-coverage manage.py test
+coverage run --source='.' manage.py test
 coverage lcov 
