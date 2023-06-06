@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest
 from utils import domainscrud
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import (
+    csrf_exempt,
+    ensure_csrf_cookie,
+    csrf_protect,
+)
+from django.middleware.csrf import get_token
 
 # Create your views here.
 
@@ -28,8 +33,13 @@ def get_domains(request, user_id):
     return JsonResponse(domainscrud.get_domains(user_id))
 
 
-@csrf_exempt
+@csrf_protect
 def post_function(request: HttpRequest):
     print(request.method)
     response = JsonResponse({"it": "worked!"})
     return response
+
+
+@ensure_csrf_cookie
+def receive_token(request: HttpRequest):
+    return JsonResponse({"hi": "there"})

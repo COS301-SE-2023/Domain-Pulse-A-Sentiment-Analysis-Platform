@@ -11,4 +11,5 @@ urlpatterns = [
     path("remove_source/<user_id>/<domain_id>/<source_id>", views.remove_source),
     path("get_domains/<user_id>", views.get_domains),
     path("post_request", views.post_function),
+    path("get_token", views.receive_token),
 ]
