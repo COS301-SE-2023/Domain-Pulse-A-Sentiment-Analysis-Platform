@@ -37,22 +37,10 @@ jobs:
           python-version: 3.8
       - name: install pipenv
         run: |
-          cd backend
           pip install pipenv
           pipenv install
-          pipenv sync
-          python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
-          cd engine
-          pipenv shell
-          coverage run manage.py test  
-          coverage lcov 
-      - name: install dependancies
-        run: | 
-          ls
-          pipenv install
-
-
-
+          pipenv run coverage_gen
+    
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
