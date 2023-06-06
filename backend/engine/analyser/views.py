@@ -1,25 +1,34 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
-from utils import sentiment_analysis, mock_data
+from utils import sentiment_analysis, mock_data, preprocessing
 
 # Create your views here.
 
 
 def get_sentiment_metrics(request: HttpRequest, source_id):
     source_id = int(source_id)
-    aggregated_sentiment = sentiment_analysis.process_sentiment_records(
-        source_id)
+    aggregated_sentiment = sentiment_analysis.process_sentiment_records(source_id)
 
     individuals = list(aggregated_sentiment.get("individuals"))
 
     individuals_data = ""
     for i in individuals:
         individuals_data += f"<p>{ i['data'] }</p>"
-        individuals_data += f"<p><b>Positive Ratio: { i['metrics']['positiveRatio'] }</b></p>"
-        individuals_data += f"<p><b>Neutral Ratio: { i['metrics']['neutralRatio'] }</b></p>"
-        individuals_data += f"<p><b>Negative Ratio: { i['metrics']['negativeRatio'] }</b></p>"
-        individuals_data += f"<p><b>Overall Score: { i['metrics']['overallScore'] }</b></p>"
-        individuals_data += f"<p><b>Classification: { i['metrics']['classification'] }</b></p>"
+        individuals_data += (
+            f"<p><b>Positive Ratio: { i['metrics']['positiveRatio'] }</b></p>"
+        )
+        individuals_data += (
+            f"<p><b>Neutral Ratio: { i['metrics']['neutralRatio'] }</b></p>"
+        )
+        individuals_data += (
+            f"<p><b>Negative Ratio: { i['metrics']['negativeRatio'] }</b></p>"
+        )
+        individuals_data += (
+            f"<p><b>Overall Score: { i['metrics']['overallScore'] }</b></p>"
+        )
+        individuals_data += (
+            f"<p><b>Classification: { i['metrics']['classification'] }</b></p>"
+        )
         individuals_data += "</br></br>"
 
     agg_positiveRatio = aggregated_sentiment["positiveRatio"]
@@ -55,3 +64,9 @@ def get_sentiment_metrics(request: HttpRequest, source_id):
     """
 
     return HttpResponse(response)
+
+
+def testing_preprocessing(request: HttpRequest):
+    sample_text = "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)"
+    returnData = preprocessing.process_data(sample_text)
+    return JsonResponse({"original": sample_text, "processed": returnData})

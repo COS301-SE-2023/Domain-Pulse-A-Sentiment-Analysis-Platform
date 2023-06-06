@@ -13,6 +13,8 @@ django = "*"
 vadersentiment = "*"
 django-cors-headers = "*"
 coverage = "*"
+nltk = "*"
+autocorrect = "*"
 
 [dev-packages]
 
