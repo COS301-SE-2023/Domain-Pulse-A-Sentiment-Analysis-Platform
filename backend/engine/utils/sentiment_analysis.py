@@ -144,7 +144,15 @@ def aggregate_sentiment_data(sentiment_data):
 
     summed_overall_score = 0
 
-    emotions = {}
+    emotions = {
+        "anger": 0,
+        "disgust": 0,
+        "fear": 0,
+        "joy": 0,
+        "neutral": 0,
+        "sadness": 0,
+        "surprise": 0,
+    }
 
     summed_positive_ratio = 0
     summed_neutral_ratio = 0
@@ -157,11 +165,8 @@ def aggregate_sentiment_data(sentiment_data):
         summed_overall_score += item["general"]["score"]
 
         # Emotions
-        for label, score in item["emotions"]:
-            if label not in emotions:
-                emotions[label] = score
-            else:
-                emotions[label] += score
+        for label, score in dict(item["emotions"]).items():
+            emotions[label] += score
 
         # Toxicity
         summed_toxicity += item["toxicity"]["score"]
@@ -186,6 +191,12 @@ def aggregate_sentiment_data(sentiment_data):
     else:
         overall_cat = "VERY_NEGATIVE"
 
+    summed_emotion_scores = 0
+    for score in emotions.values():
+        summed_emotion_scores += score
+    for label, score in emotions.items():
+        emotions[label] = round(score / summed_emotion_scores, 4)
+
     agg_toxicity_score = round(summed_toxicity / num_individuals, 4)
     toxic_label = ""
     if agg_toxicity_score < 0.25:
@@ -202,6 +213,7 @@ def aggregate_sentiment_data(sentiment_data):
     return {
         "overall": {
             "general": {"category": overall_cat, "score": agg_overall_score},
+            "emotions": emotions,
             "toxicity": {"level_of_toxic": toxic_label, "score": agg_toxicity_score},
             "ratios": {
                 "positive": agg_positive_ratio,
