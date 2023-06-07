@@ -98,7 +98,23 @@ def replace_worst(top_three, new_emotion_name, new_score):
 
 
 def summarize_toxicity(toxicity):
-    pass
+    label = toxicity[0]["label"]
+    score = int(toxicity[0]["score"])
+
+    if label != "toxic":
+        score = score * -1
+
+    score = round((score + 1) / 2, 4)
+
+    new_label = ""
+    if score < 0.25:
+        new_label = "Non-toxic"
+    elif 0.25 <= score <= 0.75:
+        new_label = "Neutral"
+    else:
+        new_label = "Toxic"
+
+    return {"level_of_toxic": new_label, "score": score}
 
 
 def analyse_content(data):
@@ -112,28 +128,10 @@ def analyse_content(data):
 
     metrics = {
         "data": originalData,
-        "overall": {
-            "category": general,
-            "intensity": general["score"],
-        },
-        "emotions": {
-            "anger": emotions[0][0]["score"],
-            "digust": emotions[0][1]["score"],
-            "fear": emotions[0][2]["score"],
-            "joy": emotions[0][3]["score"],
-            "neutral": emotions[0][4]["score"],
-            "sadness": emotions[0][5]["score"],
-            "surprise": emotions[0][6]["score"],
-        },
-        "toxicity": {
-            "isToxic": toxicity[0]["label"] == "toxic",
-            "intensity": toxicity[0]["score"],
-        },
-        "ratios": {
-            "positive": vader["pos"],
-            "neutral": vader["neu"],
-            "negative": vader["neg"],
-        },
+        "general": summarize_general(general),
+        "emotions": summarize_emotions(emotions),
+        "toxicity": summarize_toxicity(toxicity),
+        "ratios": summarize_vader(vader),
     }
 
     return metrics
@@ -142,29 +140,7 @@ def analyse_content(data):
 def aggregate_sentiment_data(sentiment_data):
     sentiment_data = list(sentiment_data)
 
-    summedNegRatio = 0
-    summedNeuRatio = 0
-    summedPosRatio = 0
-    summedOverallScore = 0
-
-    for entry in sentiment_data:
-        metrics = entry["metrics"]
-        summedNegRatio += metrics["negativeRatio"]
-        summedNeuRatio += metrics["neutralRatio"]
-        summedPosRatio += metrics["positiveRatio"]
-        summedCompound += metrics["overallScore"]
-
-    num = len(sentiment_data)
-    aggregated_data = {
-        "positiveRatio": round(summedPosRatio / num, 4),
-        "neutralRatio": round(summedNeuRatio / num, 4),
-        "negativeRatio": round(summedNegRatio / num, 4),
-        "overallScore": round(summedCompound / num, 4),
-        "classification": score_to_classification(summedCompound / num),
-        "individuals": list(sentiment_data),
-    }
-
-    return aggregated_data
+    return {}
 
 
 def process_sentiment_records(source_id):
