@@ -24,9 +24,9 @@ def tokenize(data: str):
 
 
 # Spelling Correction
-def correct_spelling(word: str):
-    spell = Speller(lang="en")
-    return spell(word)
+# def correct_spelling(word: str):
+#     spell = Speller(lang="en")
+#     return spell(word)
 
 
 # Stopword removal
@@ -51,8 +51,6 @@ def process_data(raw_text: str):
     new_data = remove_whitespace(raw_text)
     new_data = remove_urls(new_data)
     tokens = tokenize(new_data)
-    for index, token in enumerate(tokens):
-        tokens[index] = correct_spelling(token)
     tokens = remove_stopwords(tokens)
     for index, token in enumerate(tokens):
         tokens[index] = lemmatize_word(token)

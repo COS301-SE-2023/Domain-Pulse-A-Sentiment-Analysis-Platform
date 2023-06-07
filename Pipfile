@@ -17,6 +17,7 @@ nltk = "*"
 autocorrect = "*"
 torch = "*"
 transformers = "*"
+happytransformer = "*"
 
 [dev-packages]
 

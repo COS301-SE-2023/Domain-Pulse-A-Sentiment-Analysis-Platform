@@ -1,23 +1,23 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from utils import mock_data, preprocessing
+from transformers import pipeline
 
-from transformers import (
-    pipeline,
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    TextClassificationPipeline,
-    DistilBertTokenizer,
-    DistilBertForSequenceClassification,
-)
 
-# from happytransformer import HappyTextClassification
-
+# VADER scores
 ANALYSER = SentimentIntensityAnalyzer()
 # To classify emotion
-emotion_classifier = pipeline(
+EMOTION_CLASSIFIER = pipeline(
     "text-classification",
     model="j-hartmann/emotion-english-distilroberta-base",
     return_all_scores=True,
+)
+# For toxicity
+toxic_classifier = pipeline(
+    "text-classification", model="martin-ha/toxic-comment-model"
+)
+# General positive or negative
+general_classifier = pipeline(
+    "text-classification", model="distilbert-base-uncased-finetuned-sst-2-english"
 )
 
 
@@ -107,6 +107,6 @@ def process_sentiment_records(source_id):
     data = list(data)
     scores = []
     for d in data:
-        # processed_data = preprocessing.process_data(d)
-        scores.append(analyse_content(d))
+        processed_data = preprocessing.process_data(d)
+        scores.append(analyse_content(processed_data))
     return aggregate_sentiment_data(scores)
