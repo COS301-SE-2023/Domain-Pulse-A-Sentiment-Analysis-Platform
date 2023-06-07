@@ -58,7 +58,43 @@ def summarize_vader(vader_metrics):
 
 
 def summarize_emotions(emotions):
-    pass
+    top_three = []
+    emotion_list = emotions[0]
+    for emotion in emotion_list:
+        name = emotion["label"]
+        score = emotion["score"]
+        if len(top_three) < 3:
+            top_three.append({"label": name, "score": score})
+        elif have_better(top_three, score):
+            top_three = replace_worst(top_three, name, score)
+
+    totalScore = 0
+    for emotion in top_three:
+        emotion["score"] = round(emotion["score"], 4)
+        totalScore += emotion["score"]
+
+    retDict = {}
+    for emotion in top_three:
+        retDict[emotion["label"]] = round(emotion["score"] / totalScore, 4)
+    return retDict
+
+
+def have_better(top_three, curr_score):
+    for i in top_three:
+        if i["score"] < curr_score:
+            return True
+    return False
+
+
+def replace_worst(top_three, new_emotion_name, new_score):
+    index_of_worst = -1
+    curr_worst_score = 2
+    for index, i in enumerate(top_three):
+        if i["score"] < curr_worst_score:
+            index_of_worst = index
+            curr_worst_score = i["score"]
+    top_three[index_of_worst] = {"label": new_emotion_name, "score": new_score}
+    return top_three
 
 
 def summarize_toxicity(toxicity):
@@ -77,7 +113,7 @@ def analyse_content(data):
     metrics = {
         "data": originalData,
         "overall": {
-            "category": score_to_classification(general),
+            "category": general,
             "intensity": general["score"],
         },
         "emotions": {
