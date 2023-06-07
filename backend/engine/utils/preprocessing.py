@@ -1,8 +1,6 @@
 import nltk
-from autocorrect import Speller
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from nltk.stem import PorterStemmer
 import re
 
 
@@ -54,4 +52,4 @@ def process_data(raw_text: str):
     tokens = remove_stopwords(tokens)
     for index, token in enumerate(tokens):
         tokens[index] = lemmatize_word(token)
-    return tokens
+    return " ".join(tokens)

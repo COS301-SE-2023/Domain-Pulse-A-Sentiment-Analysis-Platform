@@ -12,55 +12,71 @@ EMOTION_CLASSIFIER = pipeline(
     return_all_scores=True,
 )
 # For toxicity
-toxic_classifier = pipeline(
+TOXIC_CLASSIFIER = pipeline(
     "text-classification", model="martin-ha/toxic-comment-model"
 )
 # General positive or negative
-general_classifier = pipeline(
+GENERAL_CLASSIFIER = pipeline(
     "text-classification", model="distilbert-base-uncased-finetuned-sst-2-english"
 )
 
 
-def score_to_classification(score):
-    overall_sentiment = ""
-    if -1 <= score <= -0.75:
-        overall_sentiment = "VERY_NEGATIVE"
-    elif -0.75 < score <= -0.25:
-        overall_sentiment = "NEGATIVE"
-    elif -0.25 < score <= -0.1:
-        overall_sentiment = "SOMEWHAT_NEGATIVE"
-    elif -0.1 < score < 0.1:
-        overall_sentiment = "NEUTRAL"
-    elif 0.1 <= score < 0.25:
-        overall_sentiment = "SOMEWHAT_POSTIVE"
-    elif 0.25 <= score < 0.75:
-        overall_sentiment = "POSITIVE"
-    elif 0.75 <= score <= 1:
-        overall_sentiment = "VERY_POSTIVE"
-    return overall_sentiment
+def score_to_classification(general_metrics):
+    category = general_metrics[0]["label"]
+    intensity = general_metrics[0]["score"]
+
+    if category == "POSITIVE":
+        if 0 <= intensity < 0.25:
+            return "SOMEWHAT_POSITIVE"
+        elif 0.25 <= intensity < 0.75:
+            return "POSITIVE"
+        else:
+            return "VERY_POSITIVE"
+    else:
+        if 0 <= intensity < 0.25:
+            return "SOMEWHAT_NEGATIVE"
+        elif 0.25 <= intensity < 0.75:
+            return "NEGATIVE"
+        else:
+            return "VERY_NEGATIVE"
 
 
 def analyse_content(data):
-    results = ANALYSER.polarity_scores(data)
-    emotions = emotion_classifier(data)
-    negative = results["neg"]
-    neutral = results["neu"]
-    positive = results["pos"]
-    compound = results["compound"]
+    originalData = data
+    data = preprocessing.process_data(data)
 
-    sentimentData = {
-        "data": data,
-        "metrics": {
-            "positiveRatio": positive,
-            "neutralRatio": neutral,
-            "negativeRatio": negative,
-            "overallScore": compound,
-            "classification": score_to_classification(compound),
-            "emotions": emotions,
+    vader = ANALYSER.polarity_scores(data)
+    emotions = EMOTION_CLASSIFIER(data)
+    toxicity = TOXIC_CLASSIFIER(data)
+    general = GENERAL_CLASSIFIER(data)
+
+    metrics = {
+        "data": originalData,
+        "overall": {
+            "category": score_to_classification(general),
+            "intensity": general["score"],
+        },
+        "emotions": {
+            "anger": emotions[0][0]["score"],
+            "digust": emotions[0][1]["score"],
+            "fear": emotions[0][2]["score"],
+            "joy": emotions[0][3]["score"],
+            "neutral": emotions[0][4]["score"],
+            "sadness": emotions[0][5]["score"],
+            "surprise": emotions[0][6]["score"],
+        },
+        "toxicity": {
+            "isToxic": toxicity[0]["label"] == "toxic",
+            "intensity": toxicity[0]["score"],
+        },
+        "ratios": {
+            "positive": vader["pos"],
+            "neutral": vader["neu"],
+            "negative": vader["neg"],
         },
     }
-    print(emotions)
-    return sentimentData
+
+    return metrics
 
 
 def aggregate_sentiment_data(sentiment_data):
@@ -107,6 +123,5 @@ def process_sentiment_records(source_id):
     data = list(data)
     scores = []
     for d in data:
-        processed_data = preprocessing.process_data(d)
-        scores.append(analyse_content(processed_data))
+        scores.append(analyse_content(d))
     return aggregate_sentiment_data(scores)

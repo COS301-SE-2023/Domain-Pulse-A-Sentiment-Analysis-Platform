@@ -14,10 +14,8 @@ vadersentiment = "*"
 django-cors-headers = "*"
 coverage = "*"
 nltk = "*"
-autocorrect = "*"
 torch = "*"
 transformers = "*"
-happytransformer = "*"
 
 [dev-packages]
 
