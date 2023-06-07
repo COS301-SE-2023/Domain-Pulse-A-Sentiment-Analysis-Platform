@@ -13,6 +13,7 @@ django = "*"
 vadersentiment = "*"
 django-cors-headers = "*"
 coverage = "*"
+happytransformer = "*"
 
 [dev-packages]
 
