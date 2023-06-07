@@ -21,24 +21,48 @@ GENERAL_CLASSIFIER = pipeline(
 )
 
 
-def score_to_classification(general_metrics):
+def summarize_general(general_metrics):
     category = general_metrics[0]["label"]
     intensity = general_metrics[0]["score"]
 
+    fineCat = ""
+
     if category == "POSITIVE":
         if 0 <= intensity < 0.25:
-            return "SOMEWHAT_POSITIVE"
+            fineCat = "SOMEWHAT_POSITIVE"
         elif 0.25 <= intensity < 0.75:
-            return "POSITIVE"
+            fineCat = "POSITIVE"
         else:
-            return "VERY_POSITIVE"
+            fineCat = "VERY_POSITIVE"
     else:
         if 0 <= intensity < 0.25:
-            return "SOMEWHAT_NEGATIVE"
+            fineCat = "SOMEWHAT_NEGATIVE"
         elif 0.25 <= intensity < 0.75:
-            return "NEGATIVE"
+            fineCat = "NEGATIVE"
         else:
-            return "VERY_NEGATIVE"
+            fineCat = "VERY_NEGATIVE"
+
+        intensity = int(intensity) * -1
+
+    score = round((intensity + 1) / 2, 4)
+
+    return {"category": fineCat, "score": score}
+
+
+def summarize_vader(vader_metrics):
+    return {
+        "postive": vader_metrics["pos"],
+        "neutral": vader_metrics["neu"],
+        "negative": vader_metrics["neg"],
+    }
+
+
+def summarize_emotions(emotions):
+    pass
+
+
+def summarize_toxicity(toxicity):
+    pass
 
 
 def analyse_content(data):
@@ -85,7 +109,7 @@ def aggregate_sentiment_data(sentiment_data):
     summedNegRatio = 0
     summedNeuRatio = 0
     summedPosRatio = 0
-    summedCompound = 0
+    summedOverallScore = 0
 
     for entry in sentiment_data:
         metrics = entry["metrics"]
