@@ -1,5 +1,6 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from utils import mock_data, preprocessing
+from preprocessor import preprocessing
+from utils import mock_data
 from transformers import pipeline
 
 

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
-from utils import sentiment_analysis, mock_data, preprocessing
+from analysismodels import sentiment_analysis
+from preprocessor import preprocessing
+from utils import mock_data
 
 # Create your views here.
 

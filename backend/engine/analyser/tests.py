@@ -3,7 +3,7 @@ from django.test import TestCase
 # Create your tests here.
 from django.test import TestCase, Client
 from django.urls import reverse
-from utils import sentiment_analysis
+from analysismodels import sentiment_analysis
 
 # class SentimentAnalysisTests(TestCase):
 #     def test_classification(self):
