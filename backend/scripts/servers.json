@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "Engine (Thuthuka)",
+      "cwd": "/home/thuthuka/domain-pulse/backend/engine",
+      "args": "runserver 0.0.0.0:8001",
+      "script": "manage.py",
+      "exec_mode": "fork",
+      "interpreter": "/home/thuthuka/.local/share/virtualenvs/domain-pulse-VOHCXxwA/bin/python3"
+    }
+  ]
+}
