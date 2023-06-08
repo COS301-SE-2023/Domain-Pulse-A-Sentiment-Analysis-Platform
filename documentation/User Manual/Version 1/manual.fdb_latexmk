@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1686255420 "/mnt/c/Users/chris/Documents/Latex/main.tex" "main.pdf" "main" 1686255420 0
+["pdflatex"] 1686257733 "/mnt/c/Users/chris/Documents/Capstone 2/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/User Manual/Version 1/manual.tex" "manual.pdf" "manual" 1686257734 0
   "/home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1136768653 1288 655e228510b4c2a1abe905c368440826 ""
   "/home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmr17.tfm" 1136768653 1292 296a67155bdbfc32aa9c636f21e91433 ""
@@ -24,11 +24,11 @@
   "/home/chris/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1686194079 92919 301c388eedcd10ac9a90bfa0e39394eb ""
   "/home/chris/.TinyTeX/texmf-var/web2c/pdftex/pdflatex.fmt" 1686194109 6484163 49d28c0adb5695eb97378b680028ce3b ""
   "/home/chris/.TinyTeX/texmf.cnf" 1686194058 637 edd806fb06a89761a6034e1968af9017 ""
-  "/mnt/c/Users/chris/Documents/Latex/main.tex" 1686255419 290 7e0971b3ca25b2408ff7324e837644c8 ""
-  "main.aux" 1686255420 232 73202de9ca6d1a90d9fe839ce95b5f75 "pdflatex"
-  "main.tex" 1686255419 290 7e0971b3ca25b2408ff7324e837644c8 ""
+  "/mnt/c/Users/chris/Documents/Capstone 2/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/User Manual/Version 1/manual.tex" 1686257731 298 8722ed8ddff9c859d35f3fce09eb3180 ""
+  "manual.aux" 1686257734 232 73202de9ca6d1a90d9fe839ce95b5f75 "pdflatex"
+  "manual.tex" 1686257731 298 8722ed8ddff9c859d35f3fce09eb3180 ""
   (generated)
-  "main.aux"
-  "main.log"
-  "main.pdf"
+  "manual.aux"
+  "manual.log"
+  "manual.pdf"
   (rewritten before read)
