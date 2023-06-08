@@ -1,5 +1,6 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from utils import mock_data, preprocessing
+from preprocessor import preprocessing
+from utils import mock_data
 from transformers import pipeline
 
 
@@ -42,7 +43,7 @@ def summarize_general(general_metrics):
         else:
             fineCat = "VERY_NEGATIVE"
 
-        intensity = int(intensity) * -1
+        intensity = intensity * -1
 
     score = round((intensity + 1) / 2, 4)
 
@@ -51,7 +52,7 @@ def summarize_general(general_metrics):
 
 def summarize_vader(vader_metrics):
     return {
-        "postive": vader_metrics["pos"],
+        "positive": vader_metrics["pos"],
         "neutral": vader_metrics["neu"],
         "negative": vader_metrics["neg"],
     }
@@ -99,11 +100,12 @@ def replace_worst(top_three, new_emotion_name, new_score):
 
 def summarize_toxicity(toxicity):
     label = toxicity[0]["label"]
-    score = int(toxicity[0]["score"])
+    score = toxicity[0]["score"]
 
     if label != "toxic":
         score = score * -1
 
+    print(toxicity)
     score = round((score + 1) / 2, 4)
 
     new_label = ""
