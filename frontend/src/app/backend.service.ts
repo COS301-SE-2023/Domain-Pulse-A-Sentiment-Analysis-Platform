@@ -20,7 +20,7 @@ export interface Domain {
   providedIn: 'root',
 })
 export class BackendService {
-  private engineBaseUrl = 'http://localhost:8001/';
+  private engineBaseUrl = `http://${window.location.hostname}:8001/`;
   private getDomainsUrl = 'domains/get_domains/1';
 
   private _domains = new BehaviorSubject<Domain[]>([]);
