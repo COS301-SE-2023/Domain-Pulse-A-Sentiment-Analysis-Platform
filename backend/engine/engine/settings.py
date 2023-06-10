@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-m)!b_a)sc(p6i0r)6hniwi4dxki+l1!qq@v&cera7sq4y7sv(6
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '154.73.32.89'
+    '154.73.32.89',
+    '.domain-pulse.co.za',
+    '.dp.cos301.thuthuka.me',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = False
@@ -34,7 +36,11 @@ CORS_ORIGIN_WHITELIST = (
        'http://localhost:4200',
        'http://127.0.0.1:4200',
        'http://154.73.32.89',
-       'http://154.73.32.89:4200'
+       'http://154.73.32.89:4200',
+)
+CORS_ORIGIN_REGEX_WHITELIST = (
+    '^(https?:\/\/)?((\w(-\w)*)+\.)*thuthuka\.me$',
+    '^(https?:\/\/)?((\w(-\w)*)+\.)*domain-pulse\.co\.za$',
 )
 
 # Application definition
