@@ -15,3 +15,11 @@ staticfiles/
 
 # VSCode
 .vscode/
+
+# Latex
+documentation/**/*.aux
+documentation/**/*.fdb_latexmk
+documentation/**/*.fls
+documentation/**/*.log
+documentation/**/*.toc
+documentation/**/*.synctex.gz
