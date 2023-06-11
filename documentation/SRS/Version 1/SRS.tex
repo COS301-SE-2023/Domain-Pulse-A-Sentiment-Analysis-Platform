@@ -135,15 +135,126 @@ The objectives of the Domain Pulse project are to develop a comprehensive web ap
 
 \section{Functional Requirements}
 
+\subsection{Authentication}
+\begin{itemize}
+  \item Registration
+        \begin{itemize}
+          \item Can register using username and password
+          \item Can register using Google account
+        \end{itemize}
+  \item Login
+        \begin{itemize}
+          \item Can login using username and password
+          \item Can login using Google account
+        \end{itemize}
+  \item Log out
+        \begin{itemize}
+          \item A user has a means whereby they can log out of their account
+        \end{itemize}
+  \item Update password
+        \begin{itemize}
+          \item If a user has forgotten their password, they may securely reset it
+        \end{itemize}
+  \item Remove account
+        \begin{itemize}
+          \item A user can delete their account
+        \end{itemize}
+\end{itemize}
+
+\subsection{Domain management}
+\begin{itemize}
+  \item A user may create and domains with custom names, the domain acts as a 'folder' for a number of sources of data
+  \item A user may add a description for a domain
+  \item A user may add an image or select an icon to represent the domain
+  \item A user may remove a domain
+  \item Within a domain, the following operations can be performed
+        \begin{itemize}
+          \item Add a data source (ex: Comments on a specified Instagram account) by selecting a source type and specifying additional parameters relevant for that source
+          \item Remove a data source
+          \item Refresh the data for the whole domain or a singular source
+          \item Edit a source type or source URL
+          \item Optional: Add, edit, and remove groups of keywords to track
+        \end{itemize}
+  \item A user can delete domains (deleting the sources within the domain too)
+\end{itemize}
+
+\subsection{Data Visualization and Statistics}
+\begin{itemize}
+  \item A user can view a select sample of data that was retrieved from their specified sources
+  \item A user can view all the statistics (derived from sentiment and meta data) for different sources contained within the domain or all the combined sources
+  \item A user can view data visualizations for sentiment data, meta-data, and optionally: Time-series data
+\end{itemize}
+
+\subsection{Sentiment Analysis}
+\begin{itemize}
+  \item Sentiment analysis can be performed within any of the following groupings
+        \begin{itemize}
+          \item For the domain as a whole (this includes all data across all specified sources)
+          \item Per data source (this considers all the data retrieved from one specific source)
+        \end{itemize}
+  \item The results of sentiment analysis on a grouping are returned as follows
+        \begin{itemize}
+          \item The ratios of positive, negative, and neutral sentiment
+          \item An objectivity-subjectivity score
+          \item An overall sentiment score (from negative to positive)
+          \item An overall categorization within the following groups
+                \begin{itemize}
+                  \item Very negative
+                  \item Negative
+                  \item Negative-to-Neutral
+                  \item Neutral
+                  \item Neutral-to-Positive
+                  \item Positive
+                  \item Very positive
+                \end{itemize}
+        \end{itemize}
+  \item Meta-data is returned whenever a user performs sentiment analysis on an entire domain
+        \begin{itemize}
+          \item The meta-data to be returned is as follows
+                \begin{itemize}
+                  \item Which analysis sources were consulted (ex: Twitter, Instagram, etc.)
+                  \item How many pieces of data from each source were considered
+                  \item An indication of the timeframe over which the data was produced
+                  \item Whether new data needed to be retrieved from the web
+                  \item Display metrics pertaining to how quickly data was retrieved
+                  \item Optional: Based on the number of and type of sources consulted, provide the user an estimate of how good a source the data is for sentiment analysis
+                \end{itemize}
+        \end{itemize}
+  \item Optional: Time-series data
+        \begin{itemize}
+          \item Time-series data is returned whenever a user performs sentiment analysis
+          \item The following time-series data will be returned
+                \begin{itemize}
+                  \item The change in sentiment score (negative to positive) over a period of time.
+                  \item A prediction of the future trend of the sentiment of the domain
+                \end{itemize}
+        \end{itemize}
+\end{itemize}
+
+\subsection{User Profiles}
+\begin{itemize}
+  \item The domains a user wants to track are stored, this includes:
+        \begin{itemize}
+          \item The sources for the domain
+          \item Optional: The keywords to specifically monitor
+        \end{itemize}
+  \item Personalization and preferences
+        \begin{itemize}
+          \item User can specify either dark mode or light mode
+          \item User can upload a profile image
+          \item User can change their first name and last name
+        \end{itemize}
+\end{itemize}
+
 \subsection{Requirements}
 
 \subsection{Use Case Diagrams}
 \begin{center}
-    \includegraphics[width=13cm]{../../Images/uc1.1.png}
-    \includegraphics[width=13cm]{../../Images/uc1.2.png}
-    \includegraphics[width=13cm]{../../Images/uc1.3.png}
-    \includegraphics[width=13cm]{../../Images/uc1.4.png}
-    \includegraphics[width=13cm]{../../Images/uc1.5.png}
+  \includegraphics[width=13cm]{../../Images/uc1.1.png}
+  \includegraphics[width=13cm]{../../Images/uc1.2.png}
+  \includegraphics[width=13cm]{../../Images/uc1.3.png}
+  \includegraphics[width=13cm]{../../Images/uc1.4.png}
+  \includegraphics[width=13cm]{../../Images/uc1.5.png}
 \end{center}
 
 
@@ -172,14 +283,14 @@ The objectives of the Domain Pulse project are to develop a comprehensive web ap
 \subsection{Quality Requirements}
 
 \begin{itemize}
-    \item Security
-    \item Usability
-    \item Accessibility
-    \item Scalability
-    \item Availability
-    \item Modifiability
-    \item Performance
-  \end{itemize}
+  \item Security
+  \item Usability
+  \item Accessibility
+  \item Scalability
+  \item Availability
+  \item Modifiability
+  \item Performance
+\end{itemize}
 
 \subsection{Architectural Patterns and Tactics}
 
@@ -190,33 +301,33 @@ Below we discuss which architectural patterns and tactics we will use to meet th
 \subsubsection*{Usability}
 
 \begin{itemize}
-    \item User-Centred Design Approach
-    \begin{itemize}
-    \item Consider the end-user throughout the design process and design the system accordingly.
-    \item Make the terminology easy to understand but still meaningful, considering users with no technical knowledge about NLP (Natural Language Processing).
-    \item Examples of end-users: R\&D specialists, social media managers, project leaders, executives, consultants.
-    \end{itemize}
-    \item Clear and Intuitive Interface
-    \begin{itemize}
-    \item Reduce clutter on the dashboard.
-    \item Ensure that the meaning and purpose of actions is clear through the use of descriptive and minimalistic icons.
-    \item Provide user feedback as they navigate through the application.
-    \item Utilize a user workflow of top-to-bottom, left-to-right navigation, ensuring that the process of completing steps feels natural and ordered.
-    \end{itemize}
-    \item Usability Testing
-    \begin{itemize}
-    \item Test the system with representative users.
-    \item Collect and implement feedback.
-    \end{itemize}
+  \item User-Centred Design Approach
+        \begin{itemize}
+          \item Consider the end-user throughout the design process and design the system accordingly.
+          \item Make the terminology easy to understand but still meaningful, considering users with no technical knowledge about NLP (Natural Language Processing).
+          \item Examples of end-users: R\&D specialists, social media managers, project leaders, executives, consultants.
+        \end{itemize}
+  \item Clear and Intuitive Interface
+        \begin{itemize}
+          \item Reduce clutter on the dashboard.
+          \item Ensure that the meaning and purpose of actions is clear through the use of descriptive and minimalistic icons.
+          \item Provide user feedback as they navigate through the application.
+          \item Utilize a user workflow of top-to-bottom, left-to-right navigation, ensuring that the process of completing steps feels natural and ordered.
+        \end{itemize}
+  \item Usability Testing
+        \begin{itemize}
+          \item Test the system with representative users.
+          \item Collect and implement feedback.
+        \end{itemize}
 \end{itemize}
 
 \subsubsection*{Accessibility}
 
 \begin{itemize}
-    \item Implement a Dark Mode
-    \begin{itemize}
-    \item Cater to visually impaired and cognitive disabilities by providing a simple, distraction-free, high contrast user interface.
-    \end{itemize}
+  \item Implement a Dark Mode
+        \begin{itemize}
+          \item Cater to visually impaired and cognitive disabilities by providing a simple, distraction-free, high contrast user interface.
+        \end{itemize}
 \end{itemize}
 
 \subsubsection*{Scalability}
@@ -227,7 +338,7 @@ Below we discuss which architectural patterns and tactics we will use to meet th
 
 \subsubsection*{Performance}
 
-  
+
 
 
 \newpage
