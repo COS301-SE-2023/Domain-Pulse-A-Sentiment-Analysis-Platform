@@ -19,8 +19,7 @@ jobs:
         
         run: |
           cd frontend
-          npm install
-          npm link @angular/cli
           npm ci
+          npm link @angular/cli
           ng build --configuration=development
 
