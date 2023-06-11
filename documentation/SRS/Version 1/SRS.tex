@@ -272,6 +272,88 @@ The objectives of the Domain Pulse project are to develop a comprehensive web ap
 
 \section{Database Design}
 
+\subsection{ProfileManager}
+
+\subsection{User}
+\begin{itemize}
+  \item \texttt{username} : string
+  \item \texttt{first\_name} : string
+  \item \texttt{last\_name} : string
+  \item \texttt{email} : string
+  \item \texttt{password} : string
+  \item \texttt{userID} : string
+\end{itemize}
+
+\subsection{Profile}
+\begin{itemize}
+  \item \texttt{profileIcon} : string
+  \item \texttt{mode} : \texttt{ModeEnum}
+  \item \texttt{domainIDs} : string []
+\end{itemize}
+
+\subsection{ModeEnum}
+\begin{itemize}
+  \item \texttt{LIGHT}
+  \item \texttt{DARK}
+\end{itemize}
+
+\subsection{DataWarehouse}
+
+\subsection{SentimentRecord}
+\begin{itemize}
+  \item \texttt{timestamp} : \texttt{Timestamp}
+  \item \texttt{content} : string
+  \item \texttt{sentimentMetrics} : \texttt{SentimentMetrics}
+  \item \texttt{sourceID} : string
+\end{itemize}
+
+\subsection{SentimentMetrics}
+\begin{itemize}
+  \item \texttt{overallScore} : number
+  \item \texttt{positiveRatio} : number
+  \item \texttt{neutralRatio} : number
+  \item \texttt{negativeRatio} : number
+  \item \texttt{objSubjScore} : number
+  \item \texttt{classification} : \texttt{SentimentClassificationEnum}
+\end{itemize}
+
+\subsection{SentimentClassificationEnum}
+\begin{itemize}
+  \item \texttt{VERY\_NEGATIVE}
+  \item \texttt{NEGATIVE}
+  \item \texttt{SOMEWHAT\_NEGATIVE}
+  \item \texttt{NEUTRAL}
+  \item \texttt{SOMEWHAT\_POSITIVE}
+  \item \texttt{POSITIVE}
+  \item \texttt{VERY\_POSITIVE}
+\end{itemize}
+
+\subsection{AnalysisEngine}
+
+\subsection{Domain}
+\begin{itemize}
+  \item \texttt{Name} : string
+  \item \texttt{sources} : \texttt{Source} []
+  \item \texttt{description} : string
+  \item \texttt{icon} : string
+\end{itemize}
+
+\subsection{Source}
+\begin{itemize}
+  \item \texttt{platform} : \texttt{PlatformEnum}
+  \item \texttt{queryString} : string
+\end{itemize}
+
+\subsection{PlatformEnum}
+\begin{itemize}
+  \item \texttt{TWITTER}
+  \item \texttt{FACEBOOK}
+  \item \texttt{INSTAGRAM}
+  \item \texttt{REDDIT}
+  \item \texttt{GOOGLE\_REVIEWS}
+  \item \texttt{GOOGLE\_NEWS}
+\end{itemize}
+
 \newpage
 
 \section{Class Diagram}
