@@ -362,23 +362,29 @@ The objectives of the Domain Pulse project are to develop a comprehensive web ap
 
 \section{Architectural Requirements}
 
-\subsection{Quality Requirements}
-
+\subsection*{Quality Requirements}
 \begin{itemize}
-  \item Security
-  \item Usability
-  \item Accessibility
-  \item Scalability
-  \item Availability
-  \item Modifiability
-  \item Performance
+\item Security
+\item Usability
+\item Accessibility
+\item Scalability
+\item Availability
+\item Modifiability
+\item Performance
 \end{itemize}
 
-\subsection{Architectural Patterns and Tactics}
-
-Below we discuss which architectural patterns and tactics we will use to meet the quality requirements. The patterns and tactics are in bold.
+\subsection*{Architectural Patterns and Tactics}
+\begin{itemize}
+  \item Below we discuss which architectural patterns and tactics we will use to meet the quality requirements. The patterns and tactics are in bold.
+\end{itemize}
 
 \subsubsection*{Security}
+\begin{itemize}
+\item Authentication system of Django that encrypts data created and sent pertaining to user data (email, password, etc.).
+\item Use POST if possible as opposed to GET.
+\item Our virtual machine on which we deploy shall have extensive firewalls set up so as to prevent foreign attacks of our system.
+\item Access to the virtual machine can only be performed by members of our group using SSH and by logging into the machine with private details.
+\end{itemize}
 
 \subsubsection*{Usability}
 
@@ -404,25 +410,99 @@ Below we discuss which architectural patterns and tactics we will use to meet th
 \end{itemize}
 
 \subsubsection*{Accessibility}
-
 \begin{itemize}
-  \item Implement a Dark Mode
-        \begin{itemize}
-          \item Cater to visually impaired and cognitive disabilities by providing a simple, distraction-free, high contrast user interface.
-        \end{itemize}
+\item Implement a dark mode to cater for visually impaired and cognitive disabilities by providing a simple, free-from-distraction, high contrast user interface.
 \end{itemize}
 
 \subsubsection*{Scalability}
+\begin{itemize}
+\item By employing elements of the microservices architecture, we intend to improve the application’s ability to cope with high amounts of traffic from multiple concurrent users.
+\item Microservices allow for service isolation. Since services will be in isolation of each other, we may prevent issues in one service from impacting others. Ex: should one service experience high traffic, it can be scaled independently without affecting other services. Furthermore since this bottleneck will be isolated to an individually deployed system, it will impact other services to a minimal degree.
+\end{itemize}
 
 \subsubsection*{Availability}
+\begin{itemize}
+\item By leveraging aspects of the microservices architecture, we can improve the availability of the application.
+\item The microservices architecture promotes fault isolation, meaning issues in one service are less likely to propagate to other services. This increases the overall resilience of the system.
+\item Consequently, this will improve the overall availability of the system since even if a single deployed system fails, the other deployed units are still able to function (to an extent).
+\end{itemize}
 
 \subsubsection*{Modifiability}
+\begin{itemize}
+\item Furthermore, use of the microservices architecture will improve the ease with which us as developers can modify or extend the existing system.
+\item By promoting separation of concerns (architectural tactic) it is easier for
+\item For example: since the service that performs sentiment analysis on the data is deployed independently of the service responsible for fetching and aggregating data from external APIs, it is easy to extend the types of sources a user may consult for analysis, without making any changes to the analysis engine itself. Similarly, changes to user profiles are totally irrelevant to the other services of the system
+\item Consequently, easy modifiability of the system is accomplished 
+\end{itemize}
 
-\subsubsection*{Performance}
+\subsection*{Performance}
+\begin{itemize}
+  \item By employing the architectural tactic of caching can we improve the performance of the system. Caching is accomplished as follows:
+  \begin{itemize}
+    \item Once sentiment analysis is performed on data, those computed sentiment metrics are stored along with the actual data
+    \item Consequently, the next time the user wants to perform analysis on the data, data for which sentiment metrics have already been computed do not need to be computed again, since they have been ‘cached’ by the database
+    \item While this is not true caching (since the sentiment metrics once computed are permanently persisted) it does ensure that sentiment analysis overhead is drastically reduced since analysis will never be performed more than once for the same piece of data
+  \end{itemize}
+  \item Furthermore, by using the architectural tactic of database optimization, we can improve performance of the system by reducing the execution time of database queries. Database optimization is achieved via the following means
+  \begin{itemize}
+    \item By tightly grouping data that is highly related/dependent, we design the database in such a way that (slow) compound queries are not necessary. For example: a NoSQL document-based database is used to store the domains a user manages. Since the purpose of these domains is effectively to act as collections of sources, it is much more efficient to make the list of sources in a domain a list attribute on the domain stored in the database itself, rather than have a separate collection or database for the sources. Hence, whenever a domain is retrieved, so are the sources it contains, without the overhead of writing another query or a complex join to fetch the corresponding sources
+    \item Playing into the advantages of the microservices architecture, we are able to leverage different database technologies for different deployed systems depending on what is more fit for purpose. For example, in our context, persisting user profiles and authentication data is much more naturally and efficiently done by the use of a SQL database, as opposed to using a NoSQL database (which the other deployed systems make use of). Subsequently, we may achieve faster database queries on user profile and authentication related data, improving performance
+  \end{itemize}
+
+\end{itemize}
 
 
 
+\subsection*{Constraints}
 
+\textbf{Technical Constraints}
+\begin{itemize}
+  \item We are required to make use of a NoSQL document-based database in our application (upon specification from Southern Cross Solutions), however, upon request and their advice (given our architecture), it is acceptable to use a SQL database for microservices where we deem it necessary.
+  \item All technology used for development must be free and open source (upon specification from Southern Cross Solutions).
+\end{itemize}
+
+\textbf{Performance Constraints}
+\begin{itemize}
+  \item There are no specific, measurable metrics of performance that the application is required to conform to; however, the following guidelines must be adhered to:
+    \begin{itemize}
+      \item The user must not wait for an inordinate amount of time for the data to be refreshed, including fetching new data from external APIs and performing analysis on that data.
+      \item Viewing metrics for different sources and domains should feel seamless, with minimal waiting time involved in fetching the data.
+      \item The web app needs to feel user-friendly, easy-to-use, and responsive.
+    \end{itemize}
+\end{itemize}
+
+\textbf{Security Constraints}
+\begin{itemize}
+  \item User credentials must be stored with utmost care, ensuring that sensitive user information cannot be leaked and that another user may not gain unauthorized access to a user's account.
+  \item The SSH keys provided to the team by Southern Cross Solutions cannot, under any circumstance, be leaked publicly and must only be sent across a secure platform.
+\end{itemize}
+
+\textbf{Regulatory Constraints}
+\begin{itemize}
+  \item Need to conform to the Terms of Service as specified by each external API we make use of.
+  \item Need to ensure compliance with POPIA if we were to associate content with the person who posted it.
+  \item Need to adhere to Southern Cross Solutions' company policy regarding keeping SSH keys to virtual machines secure.
+\end{itemize}
+
+\textbf{Cost Constraints}
+\begin{itemize}
+  \item No budget allocated for the project as of yet.
+  \item Potentially a \$50 credit to make use of AWS services.
+  \item Southern Cross Solutions have not confirmed whether they will supply a budget to make use of paid external APIs (such as that for Twitter) - this is an issue that will be addressed further along in development.
+\end{itemize}
+
+\textbf{Time Constraints}
+\begin{itemize}
+  \item Need to have the final product delivered before the final demonstration and Project Day (approximately 6 months).
+  \item Need to conform to milestone deadlines as set out by the requirements for demos 1 to 4.
+\end{itemize}
+
+Architectural Diagram
+
+\begin{center}
+  \includegraphics[width=13cm]{../../Images/pic.png}
+
+\end{center}
 \newpage
 
 \section{Quality Requirements}
