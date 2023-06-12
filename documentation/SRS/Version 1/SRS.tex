@@ -131,6 +131,243 @@ The objectives of the Domain Pulse project are to develop a comprehensive web ap
 
 \section{User Stories}
 
+\subsection{First Iteration}
+\begin{table}[htbp]
+\caption{User Story: Add a domain}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to add a domain (business, product, etc...) to my list of domains, so that I can view and track customers' sentiment of it. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I provided the name of the domain I wish to track,\\
+& When I click the 'add domain' button,\\
+& Then the domain is added to my list. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Remove a domain}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to remove a domain (business, product, etc...) from my list of domains, so that I can remove unimportant or unneeded domains. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I have selected the domain I wish to remove,\\
+& When I click the 'remove domain' button,\\
+& Then the domain is removed from my list. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Selecting a website theme}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user, I want to change the theme to light or dark mode for my personal preference, so that I can more enjoy my use of the web-app. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I am within the web-app,\\
+& When I click the 'Change Theme' button,\\
+& Then the theme of the page is changed. \\
+\hline
+\end{tabular}
+\end{table}
+\begin{table}[htbp]
+\caption{User Story: Log out of an account}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user, I want to log out of my account, so that I can log in on another or have more security of others not viewing my domains. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I am currently signed into an account,\\
+& When I click the 'Sign Out' button,\\
+& Then I am signed out of my account and placed on the login page. \\
+\hline
+\end{tabular}
+\end{table}
+\begin{table}[htbp]
+\caption{User Story: Add a source}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to add a source (Twitter, Instagram, etc...) for sentiment data to my list of sources, so that I can view and track customers' sentiment on said source. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I provided the name/link to the source I wish to use,\\
+& When I click the 'add source' button,\\
+& Then the source is added to my list of sources. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Select a domain}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to select a domain (business, product, etc...) from my list of domains, so that I can view and track customers' sentiment regarding it and other pieces of meta-data regarding the sentiment. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I have the domain I wish to view in my list of domains,\\
+& When I click the domain's name in the list,\\
+& Then the sources from where I pull data from are listed and the overall sentiment is displayed. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Register an account}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user, I want to create an account, so that I help my domains perform better by understanding if customers are satisfied by tracking customer sentiment. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I have provided my email and password on the 'register' page,\\
+& When I click the 'Register' button,\\
+& Then my account is created and I am logged in. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Update Password}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user, I want to update my password, so that I can ensure the safety of my account or change it to one I shall remember. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I am logged into an account,\\
+& When I click the 'Update Password' button,\\
+& Then I am prompted to verify by email if I want to update my password and enter my new password. \\
+\hline
+\end{tabular}
+\end{table}
+\begin{table}[htbp]
+\caption{User Story: Remove a source}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to remove a source (Twitter, Instagram, etc…) for sentiment data from my list of sources, so as to remove an unhelpful or unwanted source of data. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I have selected the source I wish to remove,\\
+& When I click the 'remove source' button,\\
+& Then the source is removed from my list of sources. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Select a domain}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to select a domain (business, product, etc...) from my list of domains, so that I can view and track customers' sentiment regarding it. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I have the domain I wish to view in my list of domains,\\
+& When I click the domain's name in the list,\\
+& Then display the overall sentiment and list of sources selected for that domain. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Log into an account}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user, I want to log into my account, so that I help my domains perform better by understanding if customers are satisfied by tracking customer sentiment. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I am not currently signed into an account, on the 'log-in' page and have my account details entered,\\
+& When I click the 'Log In' button,\\
+& Then I am logged into my account that stores my previously created domains and sources. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Forgot Password}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user, I want to update my password, so that I can change it to one I shall remember and access my account. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I am on the log-in screen,\\
+& When I click the 'Forgot Password' button,\\
+& Then I am prompted to verify by email if I want to update my password and enter my new password. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Select a source}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to select a source (Twitter, Facebook, etc...) from my list of sources for a domain, so that I can view and track customers' sentiment regarding my domain within the source. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I have selected a domain and have provided sources for said domain,\\
+& When I click the source in the list,\\
+& Then the overall sentiment specific to the source is displayed. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: Select a statistic}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to select a statistic (sentiment or metadata) from all available statistics, so that I can gain a better insight into how that statistic compares to other statistics and how it affects the overall sentiment. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that sentiment analysis has been performed,\\
+& When I click on a specific statistic,\\
+& Then a visualization of the statistic is displayed. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: View source data}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to be able to see examples of data that was retrieved from my sources, so that I can confirm that the correct source was specified and correctly retrieved. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that sentiment analysis has been performed,\\
+& When I am viewing the source of a domain,\\
+& Then the raw source data is also displayed. \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{User Story: View source data sentiments}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to be able to see what the application predicts people think based on what they have said, so that I can confirm the validity of the application’s predictions and trust the system. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that sentiment analysis has been performed,\\
+& When I am viewing the examples raw source data of a domain,\\
+& Then the predicted sentiment is displayed along with it. \\
+\hline
+\end{tabular}
+\end{table}
+\newpage
+\subsection{Later Iterations}
+\begin{table}[htbp]
+\caption{User Story: View Time Series data}
+\begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{User Story} & As a user/business manager, I want to view the time series data of a domain's sentiment from customers, so that I can understand when customers most enjoyed or disliked my product. \\
+\hline
+\textbf{Acceptance Criteria} & 
+Given that I have selected the domain I wish to see time series data on,\\
+& When I click the 'Time Series' button,\\
+& Then the page displays a graph of customer sentiment of the selected domain over a period of time. \\
+\hline
+\end{tabular}
+\end{table}
+
 \newpage
 
 \section{Functional Requirements}
@@ -263,6 +500,28 @@ The objectives of the Domain Pulse project are to develop a comprehensive web ap
 \newpage
 
 \section{Service Contract}
+
+\subsection{Provided Software}
+As per the agreement between the client and development team, the software "Domain Pulse: A Sentiment Analysis Platform" shall be developed and deployed within the given timeframe. The system will allow users to register, create domains, add sources for the domains, and view aggregated and analyzed sentiment data from the sources.
+
+\subsection{Technology Stack}
+The system will be developed using Django as the backend web framework and Angular for the frontend UI. MongoDB, a NoSQL database, will be used for sentiment data storage, while PostgreSQL will be employed for user data storage. The system will be deployed and hosted on a client-provided virtual machine.
+
+\subsection{Project Management}
+The project will be managed using the Agile methodology, with weekly meetings between team members for effective communication and task coordination. GitHub Project Boards will be used to track tasks and progress. Biweekly meetings with the client will be conducted to provide progress reports and sprint reviews.
+
+\subsection{Module Agreement}
+The developed system will consist of external services and libraries within the codebase, comprising no more than 15% of the total developed codebase. The team will ensure compliance with The University of Pretoria's Plagiarism and Code of Conduct policies, ensuring the originality and ownership of the produced code.
+
+\subsection{Timeline}
+The project will be completed within the provided timeframes of the COS 301 Capstone Project, and all required information and progress updates will be provided during the respective demos.
+
+\subsection{Security}
+Encryption will be implemented on all endpoints within the project to ensure secure data transmission between the server and the client. The virtual machine hosting the system will be secured and protected using measures such as firewalls. POST requests will be preferred over GET requests for enhanced data security.
+
+\subsection{Law and User Privacy}
+The software will comply with South African regulations, including laws such as the Protection of Personal Information Act (POPIA). User privacy and data will be protected and secured as required by the regulations.
+
 
 \newpage
 
@@ -442,6 +701,36 @@ Below we discuss which architectural patterns and tactics we will use to meet th
 \newpage
 
 \section{Technology Requirements}
+
+\subsection{Development Environment}
+For development, our team members shall be developing within VS Code on Linux to ensure consistency within the produced code and testing of our software. Having all members using VS Code also allows for the use of software such as Live Share for collaborative development to improve efficiency within development.
+
+\subsection{Version Control}
+Git will be used for version control, using a clear and simple branching strategy that allows members to easily work on distinct components of our system while also allowing the reverting to previous versions as a 'fail-safe'. Meanwhile, GitHub will be used to host the Git repository.
+
+\subsection{Programming Languages}
+Within our team, many (if not all) members have a high proficiency in coding in Python. Python is considered one of the best programming languages for Machine Learning and data analysis, which are aspects on which our system will heavily rely. Therefore, Python is our programming language of choice.
+
+\subsection{Frameworks and Libraries}
+We have decided to use Django as our web framework for the creation of our app due to its simplicity, efficiency, and secure data transmission capabilities. Within our Django project, we will be utilizing Python's proficiency in data analysis and machine learning by using the powerful Vader and Grafana libraries, which allow us to perform sentiment analysis on text and visualize our data, respectively. For the front-end development, we will be using Angular due to its versatility and ability to create high-quality user interfaces.
+
+\subsection{Database Systems}
+For our database systems, we will be using MongoDB as a document-based NoSQL database for data collection of comments, posts, and other content related to user data. Additionally, PostgreSQL will be used as an SQL database for storing user profiles and authentication data for ease of access and querying.
+
+\subsection{Testing and Quality Assurance Tools}
+We will perform various forms of testing to ensure the quality of our software. For front-end testing, Cypress will be used, and for unit testing, we will utilize the built-in Unittest library of Python, which is recommended for Django.
+
+\subsection{Deployment and Infrastructure}
+For deployment, our clients have provided a Linux-based virtual machine where we can deploy our software. We will use one virtual machine for the testing environment and another for the production environment to ensure a separation of concerns. Additionally, a domain may be acquired for ease of customer access to the software.
+
+\subsection{Collaboration and Communication Tools}
+To ensure effective communication within our team, we have a private WhatsApp group for important announcements, a private Discord server for more specific announcements and discussions, and a GitHub Project Board to track work progress. For communication with our clients, we have set up a Slack workspace for quick communication.
+
+\subsection{Security and Encryption}
+Our system is secured using technologies such as Django's authentication system, which encrypts user data. We prioritize the use of POST over GET for more secure data transmission. Our virtual machine is protected by extensive firewalls to prevent foreign attacks, and access is restricted to authorized members of our team using SSH and private login details.
+
+\subsection{Continuous Integration and Deployment Tools}
+We will utilize CI/CD technologies such as Codecov and GitHub Actions to ensure thorough testing and checking before deployment. GitHub Actions will automate the building, testing, and deployment processes, while Codecov will provide insights into test results and failures. We have been provided with separate production and testing environments to deploy and check the application's functionality.
 
 \newpage
 
