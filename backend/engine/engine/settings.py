@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-m)!b_a)sc(p6i0r)6hniwi4dxki+l1!qq@v&cera7sq4y7sv(6
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     '154.73.32.89',
     '.domain-pulse.co.za',
     '.dp.cos301.thuthuka.me',
