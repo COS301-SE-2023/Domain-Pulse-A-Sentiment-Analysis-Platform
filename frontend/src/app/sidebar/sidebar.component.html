@@ -9,31 +9,14 @@
   <div
     *ngFor="let domain of domains$ | async"
     (click)="selectDomain(domain)"
-    class="flex-row align-center"
-    style="
-      gap: 1.2rem;
-      height: 50px;
-      width: 60%;
-      padding: 0 2rem;
-      border-radius: 25px;
-    "
-    [ngStyle]="{ 'background-color': domain.selected ? 'rgb(70 133 201)' : '' }"
+    class="domain flex-row align-center"
+    [ngClass]="{ 'selected-domain': domain.selected }"
   >
     <img [src]="domain.imageUrl" alt="Source logo" height="44px" />
     <p>{{ domain.name }}</p>
   </div>
 
-  <div
-    (click)="toggleDomainModal()"
-    class="flex-row center"
-    style="
-      gap: 2rem;
-      height: 50px;
-      background-color: rgba(187, 208, 231, 0.418);
-      width: 80%;
-      border-radius: 50px;
-    "
-  >
+  <div (click)="toggleDomainModal()" class="add-domain-btn flex-row center">
     <p style="font-size: 30pt">+</p>
     <p>add domain</p>
   </div>
@@ -54,13 +37,9 @@
             Choose a name
           </p>
           <input
+            class="default-input"
             [(ngModel)]="newDomainName"
             type="text"
-            style="
-              border: solid rgb(133, 133, 133) 2px;
-              height: 30px;
-              border-radius: 10px;
-            "
           />
         </div>
       </div>
@@ -71,14 +50,7 @@
           <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
             Add A Description
           </p>
-          <input
-            type="text"
-            style="
-              border: solid rgb(133, 133, 133) 2px;
-              height: 30px;
-              border-radius: 10px;
-            "
-          />
+          <input class="default-input" type="text" />
         </div>
       </div>
 
@@ -88,34 +60,13 @@
           <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
             Select Domain image:
           </p>
-          <select
-            [(ngModel)]="newDomainImageName"
-            style="
-              border: solid rgb(133, 133, 133) 2px;
-              height: 30px;
-              border-radius: 10px;
-            "
-          >
+          <select class="default-input" [(ngModel)]="newDomainImageName">
             <option value="f1-logo.png">Formula 1</option>
           </select>
         </div>
       </div>
 
-      <button
-        (click)="addNewDomain()"
-        style="
-          width: 130px;
-          height: 40px;
-          border-radius: 25px;
-          background-color: rgb(70, 133, 201);
-          color: white;
-          font-size: 17pt;
-          font-weight: 500;
-          margin-top: 1rem;
-        "
-      >
-        Confirm
-      </button>
+      <button class="new-domain-btn" (click)="addNewDomain()">Confirm</button>
     </div>
     <div
       class="picture"

@@ -20,50 +20,29 @@
       </div>
     </div>
 
-    <div
-      class="source-manager flex-row align-center"
-      style="
-        background-color: aliceblue;
-        border-radius: 25px;
-        height: 160px;
-        gap: 1.4rem;
-        padding: 0 1.2rem;
-      "
-    >
+    <div class="source-selector flex-row align-center">
       <div
         *ngFor="let source of selectedDomain.sources"
         class="source-cat flex-column center"
-        style="
-          border-radius: 25px;
-          height: 80%;
-          width: 180px;
-          background-color: rgba(191, 200, 228, 0.39);
-        "
       >
         <img
           [src]="'../assets/' + source.source_image_name"
-          alt="Source logo"
           height="100px"
           style="border-radius: 50%"
         />
         <p>{{ source.source_name }}</p>
       </div>
+
       <div
         (click)="toggleAddSourcesModal()"
         class="source-cat flex-column center"
-        style="
-          border-radius: 25px;
-          height: 80%;
-          width: 180px;
-          background-color: rgba(191, 200, 228, 0.39);
-        "
       >
         <p style="font-size: 80pt">+</p>
       </div>
     </div>
 
     <div
-      class="source-manager flex-row"
+      class="statistic-selector flex-row"
       style="background-color: aliceblue; border-radius: 25px; height: 160px"
     ></div>
 
@@ -88,15 +67,7 @@
           <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
             Source Name:
           </p>
-          <input
-            [(ngModel)]="newSouceName"
-            type="text"
-            style="
-              border: solid rgb(133, 133, 133) 2px;
-              height: 30px;
-              border-radius: 10px;
-            "
-          />
+          <input class="default-input" [(ngModel)]="newSouceName" type="text" />
         </div>
       </div>
 
@@ -127,32 +98,11 @@
           <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
             Source url:
           </p>
-          <input
-            type="text"
-            style="
-              border: solid rgb(133, 133, 133) 2px;
-              height: 30px;
-              border-radius: 10px;
-            "
-          />
+          <input class="default-input" type="text" />
         </div>
       </div>
 
-      <button
-        (click)="addNewSource()"
-        style="
-          width: 130px;
-          height: 40px;
-          border-radius: 25px;
-          background-color: rgb(70, 133, 201);
-          color: white;
-          font-size: 17pt;
-          font-weight: 500;
-          margin-top: 1rem;
-        "
-      >
-        Confirm
-      </button>
+      <button class="new-source-btn" (click)="addNewSource()">Confirm</button>
     </div>
     <div
       class="picture"
