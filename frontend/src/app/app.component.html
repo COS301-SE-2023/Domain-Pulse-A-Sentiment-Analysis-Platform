@@ -1,9 +1,13 @@
 <div class="flex-row app-container">
-  <dp-sidebar style="flex-basis: 20%"></dp-sidebar>
+  <dp-sidebar
+    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (mouseenter)="openSidebar()"
+    (mouseleave)="colapseSidebar()"
+  ></dp-sidebar>
   <div
     *ngIf="selectedDomain$ | async as selectedDomain"
     class="flex-column"
-    style="flex-basis: 83%; gap: 1.3rem; height: 90%;"
+    style="width: 100%; gap: 1.3rem; height: 90%"
   >
     <div class="header flex-row" style="gap: 1.2rem">
       <img
