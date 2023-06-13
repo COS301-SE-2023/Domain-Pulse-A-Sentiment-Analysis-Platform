@@ -1,5 +1,6 @@
 <div class="flex-row app-container">
   <dp-sidebar
+    [expanded]="!sidebarCollapsed"
     [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
     (mouseenter)="openSidebar()"
     (mouseleave)="colapseSidebar()"

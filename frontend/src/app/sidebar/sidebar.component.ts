@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BackendService, Domain } from '../backend.service';
 
 @Component({
@@ -7,6 +7,8 @@ import { BackendService, Domain } from '../backend.service';
   styleUrls: ['./sidebar.component.sass'],
 })
 export class SidebarComponent {
+  @Input() expanded = false;
+
   domains$ = this.backendService.domains$;
 
   domains = [

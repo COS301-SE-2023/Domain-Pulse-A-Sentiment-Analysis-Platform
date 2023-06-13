@@ -1,9 +1,18 @@
 <div class="flex-column center" style="gap: 1rem">
   <img
+    *ngIf="expanded"
     src="../assets/dp-logo-white.png"
     alt="Domain Pulse Logo"
     height="auto"
     width="85%"
+    style="margin-top: 2rem; margin-bottom: 0.8rem"
+  />
+  <img
+    *ngIf="!expanded"
+    src="../assets/logos/logo-small.png"
+    alt="Domain Pulse Logo"
+    height="auto"
+    width="50%"
     style="margin-top: 2rem; margin-bottom: 0.8rem"
   />
   <div
@@ -11,14 +20,15 @@
     (click)="selectDomain(domain)"
     class="domain flex-row align-center"
     [ngClass]="{ 'selected-domain': domain.selected }"
+    [ngStyle]="{ padding: expanded ? '0 2rem' : '4px' }"
   >
     <img [src]="domain.imageUrl" alt="Source logo" height="44px" />
-    <p>{{ domain.name }}</p>
+    <p *ngIf="expanded">{{ domain.name }}</p>
   </div>
 
   <div (click)="toggleDomainModal()" class="add-domain-btn flex-row center">
     <p style="font-size: 30pt">+</p>
-    <p>add domain</p>
+    <p *ngIf="expanded">add domain</p>
   </div>
 </div>
 
