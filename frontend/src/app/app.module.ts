@@ -9,9 +9,10 @@ import { ModalContainerComponent } from './modal-container/modal-container.compo
 import { BackendService } from './backend.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { StatisticSelectorComponent } from './statistic-selector/statistic-selector.component';
 
 @NgModule({
-  declarations: [AppComponent, SidebarComponent, ModalContainerComponent],
+  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
