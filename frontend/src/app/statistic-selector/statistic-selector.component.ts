@@ -15,5 +15,5 @@ export class StatisticSelectorComponent {
   objectivityScore = 12;
   subjectivityScore = 87;
 
-  analysedSum = 23_000;
+  analysedSum = "23k";
 }
