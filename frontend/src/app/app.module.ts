@@ -10,9 +10,11 @@ import { BackendService } from './backend.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { StatisticSelectorComponent } from './statistic-selector/statistic-selector.component';
+import { GraphSelectorComponent } from './graph-selector/graph-selector.component';
+import { CommentsViewComponent } from './comments-view/comments-view.component';
 
 @NgModule({
-  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent],
+  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent, GraphSelectorComponent, CommentsViewComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
