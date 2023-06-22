@@ -372,70 +372,72 @@ Given that I have selected the domain I wish to see time series data on,\\
 
 \section{Functional Requirements}
 
+(grouped by subsystems)
+
 \subsection{Authentication}
-\begin{itemize}
+\begin{enumerate}
   \item Registration
-        \begin{itemize}
+        \begin{enumerate}
           \item Can register using username and password
           \item Can register using Google account
-        \end{itemize}
+        \end{enumerate}
   \item Login
-        \begin{itemize}
+        \begin{enumerate}
           \item Can login using username and password
           \item Can login using Google account
-        \end{itemize}
+        \end{enumerate}
   \item Log out
-        \begin{itemize}
+        \begin{enumerate}
           \item A user has a means whereby they can log out of their account
-        \end{itemize}
+        \end{enumerate}
   \item Update password
-        \begin{itemize}
+        \begin{enumerate}
           \item If a user has forgotten their password, they may securely reset it
-        \end{itemize}
+        \end{enumerate}
   \item Remove account
-        \begin{itemize}
+        \begin{enumerate}
           \item A user can delete their account
-        \end{itemize}
-\end{itemize}
+        \end{enumerate}
+\end{enumerate}
 
 \subsection{Domain management}
-\begin{itemize}
+\begin{enumerate}
   \item A user may create and domains with custom names, the domain acts as a 'folder' for a number of sources of data
   \item A user may add a description for a domain
   \item A user may add an image or select an icon to represent the domain
   \item A user may remove a domain
   \item Within a domain, the following operations can be performed
-        \begin{itemize}
+        \begin{enumerate}
           \item Add a data source (ex: Comments on a specified Instagram account) by selecting a source type and specifying additional parameters relevant for that source
           \item Remove a data source
           \item Refresh the data for the whole domain or a singular source
           \item Edit a source type or source URL
           \item Optional: Add, edit, and remove groups of keywords to track
-        \end{itemize}
+        \end{enumerate}
   \item A user can delete domains (deleting the sources within the domain too)
-\end{itemize}
+\end{enumerate}
 
 \subsection{Data Visualization and Statistics}
-\begin{itemize}
+\begin{enumerate}
   \item A user can view a select sample of data that was retrieved from their specified sources
   \item A user can view all the statistics (derived from sentiment and meta data) for different sources contained within the domain or all the combined sources
   \item A user can view data visualizations for sentiment data, meta-data, and optionally: Time-series data
-\end{itemize}
+\end{enumerate}
 
 \subsection{Sentiment Analysis}
-\begin{itemize}
+\begin{enumerate}
   \item Sentiment analysis can be performed within any of the following groupings
-        \begin{itemize}
+        \begin{enumerate}
           \item For the domain as a whole (this includes all data across all specified sources)
           \item Per data source (this considers all the data retrieved from one specific source)
-        \end{itemize}
+        \end{enumerate}
   \item The results of sentiment analysis on a grouping are returned as follows
-        \begin{itemize}
+        \begin{enumerate}
           \item The ratios of positive, negative, and neutral sentiment
           \item An objectivity-subjectivity score
           \item An overall sentiment score (from negative to positive)
           \item An overall categorization within the following groups
-                \begin{itemize}
+                \begin{enumerate}
                   \item Very negative
                   \item Negative
                   \item Negative-to-Neutral
@@ -443,45 +445,45 @@ Given that I have selected the domain I wish to see time series data on,\\
                   \item Neutral-to-Positive
                   \item Positive
                   \item Very positive
-                \end{itemize}
-        \end{itemize}
+                \end{enumerate}
+        \end{enumerate}
   \item Meta-data is returned whenever a user performs sentiment analysis on an entire domain
-        \begin{itemize}
+        \begin{enumerate}
           \item The meta-data to be returned is as follows
-                \begin{itemize}
+                \begin{enumerate}
                   \item Which analysis sources were consulted (ex: Twitter, Instagram, etc.)
                   \item How many pieces of data from each source were considered
                   \item An indication of the timeframe over which the data was produced
                   \item Whether new data needed to be retrieved from the web
                   \item Display metrics pertaining to how quickly data was retrieved
                   \item Optional: Based on the number of and type of sources consulted, provide the user an estimate of how good a source the data is for sentiment analysis
-                \end{itemize}
-        \end{itemize}
+                \end{enumerate}
+        \end{enumerate}
   \item Optional: Time-series data
-        \begin{itemize}
+        \begin{enumerate}
           \item Time-series data is returned whenever a user performs sentiment analysis
           \item The following time-series data will be returned
-                \begin{itemize}
+                \begin{enumerate}
                   \item The change in sentiment score (negative to positive) over a period of time.
                   \item A prediction of the future trend of the sentiment of the domain
-                \end{itemize}
-        \end{itemize}
-\end{itemize}
+                \end{enumerate}
+        \end{enumerate}
+\end{enumerate}
 
 \subsection{User Profiles}
-\begin{itemize}
+\begin{enumerate}
   \item The domains a user wants to track are stored, this includes:
-        \begin{itemize}
+        \begin{enumerate}
           \item The sources for the domain
           \item Optional: The keywords to specifically monitor
-        \end{itemize}
+        \end{enumerate}
   \item Personalization and preferences
-        \begin{itemize}
+        \begin{enumerate}
           \item User can specify either dark mode or light mode
           \item User can upload a profile image
           \item User can change their first name and last name
-        \end{itemize}
-\end{itemize}
+        \end{enumerate}
+\end{enumerate}
 
 \subsection{Requirements}
 
@@ -533,7 +535,7 @@ The software will comply with South African regulations, including laws such as 
 
 \subsection{ProfileManager}
 
-\subsection{User}
+\subsubsection{User}
 \begin{itemize}
   \item \texttt{username} : string
   \item \texttt{first\_name} : string
@@ -543,14 +545,14 @@ The software will comply with South African regulations, including laws such as 
   \item \texttt{userID} : string
 \end{itemize}
 
-\subsection{Profile}
+\subsubsection{Profile}
 \begin{itemize}
   \item \texttt{profileIcon} : string
   \item \texttt{mode} : \texttt{ModeEnum}
   \item \texttt{domainIDs} : string []
 \end{itemize}
 
-\subsection{ModeEnum}
+\subsubsection{ModeEnum}
 \begin{itemize}
   \item \texttt{LIGHT}
   \item \texttt{DARK}
@@ -558,7 +560,7 @@ The software will comply with South African regulations, including laws such as 
 
 \subsection{DataWarehouse}
 
-\subsection{SentimentRecord}
+\subsubsection{SentimentRecord}
 \begin{itemize}
   \item \texttt{timestamp} : \texttt{Timestamp}
   \item \texttt{content} : string
@@ -566,7 +568,7 @@ The software will comply with South African regulations, including laws such as 
   \item \texttt{sourceID} : string
 \end{itemize}
 
-\subsection{SentimentMetrics}
+\subsubsection{SentimentMetrics}
 \begin{itemize}
   \item \texttt{overallScore} : number
   \item \texttt{positiveRatio} : number
@@ -576,7 +578,7 @@ The software will comply with South African regulations, including laws such as 
   \item \texttt{classification} : \texttt{SentimentClassificationEnum}
 \end{itemize}
 
-\subsection{SentimentClassificationEnum}
+\subsubsection{SentimentClassificationEnum}
 \begin{itemize}
   \item \texttt{VERY\_NEGATIVE}
   \item \texttt{NEGATIVE}
@@ -589,7 +591,7 @@ The software will comply with South African regulations, including laws such as 
 
 \subsection{AnalysisEngine}
 
-\subsection{Domain}
+\subsubsection{Domain}
 \begin{itemize}
   \item \texttt{Name} : string
   \item \texttt{sources} : \texttt{Source} []
@@ -597,13 +599,13 @@ The software will comply with South African regulations, including laws such as 
   \item \texttt{icon} : string
 \end{itemize}
 
-\subsection{Source}
+\subsubsection{Source}
 \begin{itemize}
   \item \texttt{platform} : \texttt{PlatformEnum}
   \item \texttt{queryString} : string
 \end{itemize}
 
-\subsection{PlatformEnum}
+\subsubsection{PlatformEnum}
 \begin{itemize}
   \item \texttt{TWITTER}
   \item \texttt{FACEBOOK}
@@ -616,28 +618,19 @@ The software will comply with South African regulations, including laws such as 
 \newpage
 
 \section{Class Diagram}
-\begin{itemize}
-  \item Class Diagram
-\end{itemize}
-\begin{center}
-  \includegraphics[width=13cm]{../../Images/pic2.png}
-  \begin{flushleft}
-    \textbf{Design Patterns:}
-    \end{flushleft}
-    
-    While the nature of the architecture does not lend itself to the Object-Oriented paradigm, two design patterns have been identified (and noted within the class diagram) - namely:
-    
-    \textbf{Facade:} The \textit{QueryEngine} effectively acts as a \textit{Facade} to the \textit{SourceConnector}, the \textit{Analysis Engine}, and conceptually, to the database. This ensures that the \textit{QueryEngine} acts as a uniform interface to the frontend web-app (as well as the rest of the application in general) for the retrieval of data. That is, the rest of the system need not interact with the complicated underlying systems, but rather can communicate uniformly with the \textit{QueryEngine} (which abstracts out the complicated query logic involved with retrieving data from the database, from external APIs, or sending data for sentiment analysis in the \textit{AnalysisEngine}).
-    
-    \textbf{Template Method:} Conceptually, the \textit{Template Method} design pattern is applied as follows: When a user defines a source, the source is categorized based on its type (e.g., Facebook, Reddit, etc). Each of these types of sources has different APIs with different parameters (and thus have different query strings). While the parent \textit{Source} class specifies the operation to build a query string, the individual, specific type of source defines exactly how that string may be built. i.e., The \textit{Source} is effectively a template for the construction of external API query strings, while the derivatives of the \textit{Source} (e.g., Reddit, Facebook, etc.) define how that template is "filled in" to construct the query string.
 
-\end{center}
+  \includegraphics[width=13cm]{../../Images/pic2.png}\\\\  
+  \textbf{Design Patterns:} While the nature of the architecture does not lend itself to the Object-Oriented paradigm, two design patterns have been identified (and noted within the class diagram) - namely:\\\\
+  \textbf{Facade:} The \textit{QueryEngine} effectively acts as a \textit{Facade} to the \textit{SourceConnector}, the \textit{Analysis Engine}, and conceptually, to the database. This ensures that the \textit{QueryEngine} acts as a uniform interface to the frontend web-app (as well as the rest of the application in general) for the retrieval of data. That is, the rest of the system need not interact with the complicated underlying systems, but rather can communicate uniformly with the \textit{QueryEngine} (which abstracts out the complicated query logic involved with retrieving data from the database, from external APIs, or sending data for sentiment analysis in the \textit{AnalysisEngine}).\\\\
+  \textbf{Template Method:} Conceptually, the \textit{Template Method} design pattern is applied as follows: When a user defines a source, the source is categorized based on its type (e.g., Facebook, Reddit, etc). Each of these types of sources has different APIs with different parameters (and thus have different query strings). While the parent \textit{Source} class specifies the operation to build a query string, the individual, specific type of source defines exactly how that string may be built. i.e., The \textit{Source} is effectively a template for the construction of external API query strings, while the derivatives of the \textit{Source} (e.g., Reddit, Facebook, etc.) define how that template is "filled in" to construct the query string.
+
+
 
 \newpage
 
 \section{Architectural Requirements}
 
-\subsection*{Quality Requirements}
+\subsection{Quality Requirements}
 \begin{itemize}
 \item Security
 \item Usability
@@ -648,7 +641,7 @@ The software will comply with South African regulations, including laws such as 
 \item Performance
 \end{itemize}
 
-\subsection*{Architectural Patterns and Tactics}
+\subsection{Architectural Patterns and Tactics}
 \begin{itemize}
   \item Below we discuss which architectural patterns and tactics we will use to meet the quality requirements. The patterns and tactics are in bold.
 \end{itemize}
@@ -728,7 +721,7 @@ The software will comply with South African regulations, including laws such as 
 
 
 
-\subsection*{Constraints}
+\subsection{Constraints}
 
 \textbf{Technical Constraints}
 \begin{itemize}
