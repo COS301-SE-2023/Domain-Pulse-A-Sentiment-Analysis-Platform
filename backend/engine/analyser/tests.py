@@ -1,4 +1,5 @@
 from django.test import TestCase
+from utils import mock_data
 import mock
 
 # Create your tests here.
@@ -155,5 +156,17 @@ class SentimentAnalysisTests(TestCase):
     # ----------------------------------------------------------------
 
     # ---------------------- INTEGRATION TESTS -----------------------
+
+    def test_process_data_integration(self):
+        test_data = []
+        test_data += mock_data.bitcoin_article
+        test_data += mock_data.the_witcher_reviews_reddit
+        test_data += mock_data.lance_reddit_data
+        test_data += mock_data.starbucks_rosebank_tripadvisor
+        test_data += mock_data.leinster_loss_to_munster_insta
+        test_data += [""]
+
+        for t in test_data:
+            assert len(t) >= len(preprocessing.process_data(t))
 
     # ----------------------------------------------------------------
