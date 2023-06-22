@@ -1,65 +1,109 @@
 from django.test import TestCase
+import mock
 
 # Create your tests here.
 from django.test import TestCase, Client
 from django.urls import reverse
-from analysismodels import sentiment_analysis
+from preprocessor import preprocessing
+from processor import processing
 
-# class SentimentAnalysisTests(TestCase):
-#     def test_classification(self):
-#         score1 = -0.8
-#         score2 = -0.5
-#         score3 = -0.15
-#         score4 = 0.09
-#         score5 = 0.18
-#         score6 = 0.7
-#         score7 = 0.9
 
-#         assert sentiment_analysis.score_to_classification(score1) == "VERY_NEGATIVE"
-#         assert sentiment_analysis.score_to_classification(score2) == "NEGATIVE"
-#         assert sentiment_analysis.score_to_classification(score3) == "SOMEWHAT_NEGATIVE"
-#         assert sentiment_analysis.score_to_classification(score4) == "NEUTRAL"
-#         assert sentiment_analysis.score_to_classification(score5) == "SOMEWHAT_POSTIVE"
-#         assert sentiment_analysis.score_to_classification(score6) == "POSITIVE"
-#         assert sentiment_analysis.score_to_classification(score7) == "VERY_POSTIVE"
+def mocked_have_better(dummy, dummy2):
+    return True
 
-#     def test_analyse_content(self):
-#         sentence = "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)"
-#         result = sentiment_analysis.analyse_content(sentence)
 
-#         data = result["data"]
-#         metrics = result["metrics"]
+def mocked_replace_worst(input, dummy, dummy2):
+    return input
 
-#         assert data == sentence
-#         assert 1 >= metrics["positiveRatio"] >= 0
-#         assert 1 >= metrics["neutralRatio"] >= 0
-#         assert 1 >= metrics["negativeRatio"] >= 0
-#         assert 1 >= metrics["overallScore"] >= 0 # has a positive score
-#         assert "POSTIVE" in str(metrics["classification"])
 
-#     def test_aggregate_sentiment_data(self):
-#         sentence1 = "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)"
-#         sentence2 ="I had an amazing valentines, it was my first time at Starbucks and every one was so nice and the service was amazing. They even allow pets at the outside setting, I love it"
-#         sentence3 ="The best Starbucks in South Africa. Great for getting some work done and they have an expert barista in Bibo! He’s an absolute wizard who’s super knowledgeable, ask for him by name!"
-#         sentence4 ="The Starbucks layout is lovely and cozy, it makes you want to just sit and enjoy. The baristas are also so great and kind and full of positive energy :)"
-#         sentence5 ="Doesn't have a Starbucks vibe at all. It's dirty and not very well maintained. I didn't get a receipt and when I asked for it they had excuses etc. To be honest, it's the worst Starbucks I've ever been to."
-#         dataList = [sentiment_analysis.analyse_content(sentence1), sentiment_analysis.analyse_content(sentence2),sentiment_analysis.analyse_content(sentence3),sentiment_analysis.analyse_content(sentence4),sentiment_analysis.analyse_content(sentence5)]
-#         result=sentiment_analysis.aggregate_sentiment_data(dataList)
-#         sentiments = ["VERY_NEGATIVE","NEGATIVE","SOMEWHAT_NEGATIVE","NEUTRAL","SOMEWHAT_POSTIVE","POSITIVE","VERY_POSTIVE"]
+class SentimentAnalysisTests(TestCase):
+    # -------------------------- UNIT TESTS --------------------------
 
-#         assert 1 >= result["positiveRatio"] >= 0
-#         assert 1 >= result["neutralRatio"] >= 0
-#         assert 1 >= result["negativeRatio"] >= 0
-#         assert 1 >= result["overallScore"] >= 0 # has a positive score
-#         assert result["classification"] in sentiments
-#         assert list(result["individuals"]) == dataList
+    def test_summarize_general(self):
+        gen_metrics1 = [{"label": "POSITIVE", "score": 0.11117471}]
+        gen_metrics2 = [{"label": "POSITIVE", "score": 0.6666246266}]
+        gen_metrics3 = [{"label": "POSITIVE", "score": 0.88882464288}]
+        gen_metrics4 = [{"label": "NEGATIVE", "score": 0.111246111}]
+        gen_metrics5 = [{"label": "NEGATIVE", "score": 0.66624624666}]
+        gen_metrics6 = [{"label": "NEGATIVE", "score": 0.888824688}]
 
-#     def test_process_sentiment_records(self):
-#         result=sentiment_analysis.process_sentiment_records(1)
-#         sentiments = ["VERY_NEGATIVE","NEGATIVE","SOMEWHAT_NEGATIVE","NEUTRAL","SOMEWHAT_POSTIVE","POSITIVE","VERY_POSTIVE"]
-#         assert 1 >= result["positiveRatio"] >= 0
-#         assert 1 >= result["neutralRatio"] >= 0
-#         assert 1 >= result["negativeRatio"] >= 0
-#         assert 1 >= result["overallScore"] >= 0 # has a positive score
-#         assert result["classification"] in sentiments
-#         assert len(result["individuals"]) >0
+        assert (
+            processing.summarize_general(gen_metrics1)["category"]
+            == "SOMEWHAT_POSITIVE"
+        )
+        assert processing.summarize_general(gen_metrics2)["category"] == "POSITIVE"
+        assert processing.summarize_general(gen_metrics3)["category"] == "VERY_POSITIVE"
+
+        assert (
+            0
+            < processing.summarize_general(gen_metrics1)["score"]
+            < processing.summarize_general(gen_metrics2)["score"]
+            < processing.summarize_general(gen_metrics3)["score"]
+            < 1
+        )
+
+        assert (
+            processing.summarize_general(gen_metrics4)["category"]
+            == "SOMEWHAT_NEGATIVE"
+        )
+        assert processing.summarize_general(gen_metrics5)["category"] == "NEGATIVE"
+        assert processing.summarize_general(gen_metrics6)["category"] == "VERY_NEGATIVE"
+
+        assert (
+            1
+            > processing.summarize_general(gen_metrics4)["score"]
+            > processing.summarize_general(gen_metrics5)["score"]
+            > processing.summarize_general(gen_metrics6)["score"]
+            > 0
+        )
+
+        assert (
+            processing.summarize_general(gen_metrics3)["score"]
+            > processing.summarize_general(gen_metrics4)["score"]
+        )
+
+    def test_summarize_vader(self):
+        test = {"pos": 0.1, "neu": 0.7, "neg": 0.2}
+        result = processing.summarize_vader(test)
+        assert (
+            result["positive"] == test["pos"]
+            and result["negative"] == test["neg"]
+            and result["neutral"] == test["neu"]
+        )
+
+    @mock.patch("processor.processing.have_better", side_effect=mocked_have_better)
+    @mock.patch("processor.processing.replace_worst", side_effect=mocked_replace_worst)
+    def test_summarize_emotions(self, mocked1, mocked2):
+        emotions = [
+            [
+                {"label": "anger", "score": 0.004419783595949411},
+                {"label": "disgust", "score": 0.0016119900392368436},
+                {"label": "fear", "score": 0.0004138521908316761},
+                {"label": "joy", "score": 0.9771687984466553},
+                {"label": "neutral", "score": 0.005764586851000786},
+                {"label": "sadness", "score": 0.002092392183840275},
+                {"label": "surprise", "score": 0.008528684265911579},
+            ]
+        ]
+
+        result = processing.summarize_emotions(emotions)
+        assert result["anger"] + result["disgust"] + result["fear"] == 1
+
+    def test_summarize_toxicity(self):
+        toxicity_non = [{"label": "non-toxic", "score": 0.946453869342804}]
+
+        toxicity_neu = [{"label": "toxic", "score": 0.009464538693428}]
+
+        toxicity_tox = [{"label": "toxic", "score": 0.946453869342804}]
+
+        result1 = processing.summarize_toxicity(toxicity_non)
+        result2 = processing.summarize_toxicity(toxicity_neu)
+        result3 = processing.summarize_toxicity(toxicity_tox)
+
+        assert result1["level_of_toxic"] == "Non-toxic"
+        assert result2["level_of_toxic"] == "Neutral"
+        assert result3["level_of_toxic"] == "Toxic"
+
+        assert result1["score"] < result2["score"] < result3["score"]
+
+    # ----------------------------------------------------------------
