@@ -39,7 +39,7 @@ def mocked_summarize_toxicity(dummy):
 class SentimentAnalysisTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
-    def test_summarize_general(self):
+    def test_summarize_general_unit(self):
         gen_metrics1 = [{"label": "POSITIVE", "score": 0.11117471}]
         gen_metrics2 = [{"label": "POSITIVE", "score": 0.6666246266}]
         gen_metrics3 = [{"label": "POSITIVE", "score": 0.88882464288}]
@@ -82,7 +82,7 @@ class SentimentAnalysisTests(TestCase):
             > processing.summarize_general(gen_metrics4)["score"]
         )
 
-    def test_summarize_vader(self):
+    def test_summarize_vader_unit(self):
         test = {"pos": 0.1, "neu": 0.7, "neg": 0.2}
         result = processing.summarize_vader(test)
         assert (
@@ -93,7 +93,7 @@ class SentimentAnalysisTests(TestCase):
 
     @mock.patch("processor.processing.have_better", side_effect=mocked_have_better)
     @mock.patch("processor.processing.replace_worst", side_effect=mocked_replace_worst)
-    def test_summarize_emotions(self, mocked1, mocked2):
+    def test_summarize_emotions_unit(self, mocked1, mocked2):
         emotions = [
             [
                 {"label": "anger", "score": 0.004419783595949411},
@@ -109,7 +109,7 @@ class SentimentAnalysisTests(TestCase):
         result = processing.summarize_emotions(emotions)
         assert result["anger"] + result["disgust"] + result["fear"] == 1
 
-    def test_summarize_toxicity(self):
+    def test_summarize_toxicity_unit(self):
         toxicity_non = [{"label": "non-toxic", "score": 0.946453869342804}]
 
         toxicity_neu = [{"label": "toxic", "score": 0.009464538693428}]
@@ -141,7 +141,7 @@ class SentimentAnalysisTests(TestCase):
     @mock.patch(
         "preprocessor.preprocessing.process_data", side_effect=mocked_process_data
     )
-    def test_analyse_content(self, mock1, mock2, mock3, mock4, mock5):
+    def test_analyse_content_unit(self, mock1, mock2, mock3, mock4, mock5):
         data = "This is some test data!"
 
         result = processing.analyse_content(data)
@@ -151,5 +151,9 @@ class SentimentAnalysisTests(TestCase):
         assert result["emotions"] == {}
         assert result["toxicity"] == {}
         assert result["ratios"] == {}
+
+    # ----------------------------------------------------------------
+
+    # ---------------------- INTEGRATION TESTS -----------------------
 
     # ----------------------------------------------------------------
