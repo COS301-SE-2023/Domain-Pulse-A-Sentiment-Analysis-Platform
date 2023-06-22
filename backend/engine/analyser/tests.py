@@ -142,6 +142,14 @@ class SentimentAnalysisTests(TestCase):
         "preprocessor.preprocessing.process_data", side_effect=mocked_process_data
     )
     def test_analyse_content(self, mock1, mock2, mock3, mock4, mock5):
-        pass
+        data = "This is some test data!"
+
+        result = processing.analyse_content(data)
+
+        assert result["data"] == data
+        assert result["general"] == {}
+        assert result["emotions"] == {}
+        assert result["toxicity"] == {}
+        assert result["ratios"] == {}
 
     # ----------------------------------------------------------------
