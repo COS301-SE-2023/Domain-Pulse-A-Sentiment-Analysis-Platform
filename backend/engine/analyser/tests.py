@@ -16,6 +16,26 @@ def mocked_replace_worst(input, dummy, dummy2):
     return input
 
 
+def mocked_process_data(dummy):
+    return dummy
+
+
+def mocked_summarize_vader(dummy):
+    return {}
+
+
+def mocked_summarize_general(dummy):
+    return {}
+
+
+def mocked_summarize_emotions(dummy):
+    return {}
+
+
+def mocked_summarize_toxicity(dummy):
+    return {}
+
+
 class SentimentAnalysisTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
@@ -105,5 +125,23 @@ class SentimentAnalysisTests(TestCase):
         assert result3["level_of_toxic"] == "Toxic"
 
         assert result1["score"] < result2["score"] < result3["score"]
+
+    @mock.patch(
+        "processor.processing.summarize_vader", side_effect=mocked_summarize_vader
+    )
+    @mock.patch(
+        "processor.processing.summarize_general", side_effect=mocked_summarize_general
+    )
+    @mock.patch(
+        "processor.processing.summarize_emotions", side_effect=mocked_summarize_emotions
+    )
+    @mock.patch(
+        "processor.processing.summarize_toxicity", side_effect=mocked_summarize_toxicity
+    )
+    @mock.patch(
+        "preprocessor.preprocessing.process_data", side_effect=mocked_process_data
+    )
+    def test_analyse_content(self, mock1, mock2, mock3, mock4, mock5):
+        pass
 
     # ----------------------------------------------------------------
