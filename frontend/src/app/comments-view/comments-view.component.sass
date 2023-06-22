@@ -1,6 +1,28 @@
+@import '../../global.sass'
+
 :host
-    background-color: aliceblue
-    border-radius: 25px
-    flex-basis: 98%
-    padding: 1rem 2.8rem
-    overflow-x: scroll
+  background-color: white
+  border-radius: 25px
+  flex-basis: 98%
+  padding: 1rem 2.8rem
+  overflow-y: scroll
+  scrollbar-width: 5px
+  scrollbar-height: 90%
+  scrollbar-color: $grey-subtle
+
+  padding: 40px
+  padding-top: 0px // Adjust the value as per your preference
+
+  &::-webkit-scrollbar
+    width: 6px
+    
+
+  &::-webkit-scrollbar-track
+    background-color: transparent
+
+  &::-webkit-scrollbar-thumb
+    background-color: $grey-subtle
+    border-radius: 3px
+
+  &::-webkit-scrollbar-thumb:hover
+    background-color: $grey-item
