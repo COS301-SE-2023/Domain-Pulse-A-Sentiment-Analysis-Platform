@@ -1,15 +1,31 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from analysismodels import sentiment_analysis
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # from preprocessor import preprocessing
 # from utils import mock_data
 
+
 # Create your views here.
 
 
+# Uses the mock data
 def get_sentiment_metrics(request: HttpRequest, source_id):
     return JsonResponse(sentiment_analysis.process_sentiment_records(int(source_id)))
+
+
+# Perform analysis on given data
+@csrf_exempt
+def perform_analysis(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        new_records = raw_data["data"]
+        return JsonResponse(
+            {"metrics": sentiment_analysis.process_new_data(new_records)}
+        )
+    return JsonResponse({"status": "FAILURE"})
 
 
 #     source_id = int(source_id)

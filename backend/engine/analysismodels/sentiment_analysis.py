@@ -105,7 +105,7 @@ def summarize_toxicity(toxicity):
     if label != "toxic":
         score = score * -1
 
-    print(toxicity)
+    # print(toxicity)
     score = round((score + 1) / 2, 4)
 
     new_label = ""
@@ -225,6 +225,13 @@ def aggregate_sentiment_data(sentiment_data):
         },
         "individual_data": sentiment_data,
     }
+
+
+def process_new_data(new_data: list):
+    scores = []
+    for item in new_data:
+        scores.append(analyse_content(item))
+    return scores
 
 
 def process_sentiment_records(source_id):
