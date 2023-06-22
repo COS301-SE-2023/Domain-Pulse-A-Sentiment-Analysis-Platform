@@ -10,15 +10,15 @@
     class="flex-column"
     style="width: 100%; gap: 1.3rem;"
   >
-    <div class="header flex-row" style="gap: 1.2rem">
+    <div class="header flex-row centered" style="gap: 1.2rem">
       <img
         [src]="'../assets/' + selectedDomain.imageUrl"
         alt="Starbucks loog"
-        height="100px"
+        height="80%"
       />
       <div class="flex-column">
-        <h2>{{ selectedDomain.name }}</h2>
-        <p>
+        <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
+        <p class = "domainDesc">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
           magni ea sint, repellendus quam dolor consequatur sequi.
         </p>
@@ -32,7 +32,7 @@
       >
         <img
           [src]="'../assets/' + source.source_image_name"
-          height="100px"
+          height="60px"
           style="border-radius: 50%"
         />
         <p>{{ source.source_name }}</p>

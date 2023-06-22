@@ -1,3 +1,5 @@
+@import '../global.sass'
+
 :host
     display: flex
     justify-content: center
@@ -10,6 +12,30 @@
     width: 97%
     height: 96%
     gap: 2.3rem
+
+.header
+  display: flex
+  justify-content: left
+  align-items: left
+  height: 15%
+
+.centered
+  flex-direction: row
+  align-items: center
+
+.domainTitle
+    margin-top: 0
+    margin-bottom: 0
+    font-family: $openSans
+    font-weight: 700
+    font-size: 30pt
+
+.domainSubtitle
+    margin-top: 0
+    margin-bottom: 0
+    font-family: $sourceSans
+    font-weight: 400
+    font-size: 15pt
 
 .source-selector
     background-color: aliceblue
