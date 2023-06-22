@@ -169,4 +169,15 @@ class SentimentAnalysisTests(TestCase):
         for t in test_data:
             assert len(t) >= len(preprocessing.process_data(t))
 
+    def test_analyse_content_integration(self):
+        data = "This is some test data!"
+
+        result = processing.analyse_content(data)
+
+        assert result["data"] == data
+        assert result["general"] != {}
+        assert result["emotions"] != {}
+        assert result["toxicity"] != {}
+        assert result["ratios"] != {}
+
     # ----------------------------------------------------------------
