@@ -1,14 +1,46 @@
 import { Component, Input } from '@angular/core';
 import { BackendService, Domain } from '../backend.service';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+} from '@angular/animations';
 
 @Component({
   selector: 'dp-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.sass'],
+  animations: [
+    trigger('logoSwitch', [
+      state(
+        'small',
+        style({
+          width: '50px',
+          height: '50px',
+          backgroundColor: 'green',
+        })
+      ),
+      state(
+        'large',
+        style({ width: '100px', height: '50px', backgroundColor: 'red' })
+      ),
+      transition('small <=> large', [animate('0.3s')]),
+      // transition(':enter', [style({ transform: 'scale(0.5)' }), animate(100)]),
+      // transition(':leave', [animate(100, style({ transform: 'scale(0.5)' }))]),
+    ]),
+  ],
 })
 export class SidebarComponent {
-  @Input() expanded = false;
+  logoState = 'small';
+  @Input() set expanded(value: boolean) {
+    setTimeout(() => {
+      this.logoState = value ? 'large' : 'small';
+    }, 1);
+  }
 
+  // change logoState based on expanded
   domains$ = this.backendService.domains$;
 
   domains = [

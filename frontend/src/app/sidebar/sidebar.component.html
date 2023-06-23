@@ -1,20 +1,25 @@
 <div class="flex-column center" style="gap: 1rem">
-  <img
+  <div [@logoSwitch]="logoState" class="flex-row center">
+
+  </div>
+  <!-- <img
+    @logoSwitch
     *ngIf="expanded"
     src="../assets/dp-logo-white.png"
     alt="Domain Pulse Logo"
     height="auto"
     width="85%"
     style="margin-top: 2rem; margin-bottom: 0.8rem"
-  />
-  <img
+  /> -->
+  <!-- <img
+    @logoSwitch
     *ngIf="!expanded"
     src="../assets/logos/logo-small.png"
     alt="Domain Pulse Logo"
     height="auto"
     width="50%"
     style="margin-top: 2rem; margin-bottom: 0.8rem"
-  />
+  /> -->
   <div
     *ngFor="let domain of domains$ | async"
     (click)="selectDomain(domain)"

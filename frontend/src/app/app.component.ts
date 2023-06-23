@@ -6,6 +6,9 @@ import {
   style,
   animate,
   transition,
+  group,
+  animateChild,
+  query,
 } from '@angular/animations';
 @Component({
   selector: 'app-root',
@@ -16,16 +19,22 @@ import {
       state(
         'collapsed',
         style({
-          maxWidth: '5%',
+          width: '5%',
         })
       ),
       state(
         'notCollapsed',
         style({
-          maxWidth: '20%',
+          width: '20%',
         })
       ),
-      transition('collapsed <=> notCollapsed', [animate('0.3s ease-in-out')]),
+      transition(
+        'collapsed <=> notCollapsed',
+        group([
+          query('@logoSwitch', [animateChild()]),
+          animate('0.3s ease-in-out'),
+        ])
+      ),
     ]),
   ],
 })
@@ -51,10 +60,8 @@ export class AppComponent {
 
   toggleAddSourcesModal() {
     if (!this.showAddSourcesModal) {
-      // this.windows[0].scrolling = false;
       this.showAddSourcesModal = true;
     } else {
-      // this.windows[0].scrolling = true;
       this.showAddSourcesModal = false;
     }
   }
