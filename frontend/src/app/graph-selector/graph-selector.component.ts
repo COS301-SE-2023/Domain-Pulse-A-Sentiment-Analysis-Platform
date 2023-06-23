@@ -147,6 +147,8 @@ export class GraphSelectorComponent {
       const chartContainerHeight = this.chartContainer.nativeElement.offsetHeight;
       const offset = chartContainerHeight / 4;
       this.myChart.nativeElement.style.transform = `translateY(${offset}px)`;
+    }else{
+      this.myChart.nativeElement.style.transform = `translateY(0px)`;
     }
   }
   
