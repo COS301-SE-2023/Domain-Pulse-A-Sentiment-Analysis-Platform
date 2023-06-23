@@ -1,4 +1,4 @@
-@import '../../global.sass'
+@use "styles"
 
 :host
     display: flex
@@ -18,7 +18,7 @@
     height: 100%
 
 .statistic-category-selected
-    background-color: $highlight-blue
+    background-color: styles.$highlight-blue
     border-radius: 25px
     padding: 0.5rem 1rem
 
@@ -33,10 +33,10 @@
     :nth-child(1)
         font-size: 15pt
         font-weight: bold
-        font-family: $openSans
-        color: $secondary-blue
+        font-family: 'Open Sans'
+        color: styles.$secondary-blue
     :nth-child(2)
         font-size: 19pt
-        font-family: $sourceSans
-        color: $secondary-blue
+        font-family: 'Source Sans 3'
+        color: styles.$secondary-blue
         font-weight: 300

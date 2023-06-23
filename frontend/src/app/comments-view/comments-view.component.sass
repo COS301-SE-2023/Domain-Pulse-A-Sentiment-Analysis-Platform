@@ -1,4 +1,4 @@
-@import '../../global.sass'
+@use 'styles'
 
 :host
   background-color: white
@@ -8,21 +8,20 @@
   overflow-y: scroll
   scrollbar-width: 5px
   scrollbar-height: 90%
-  scrollbar-color: $grey-subtle
+  scrollbar-color: styles.$grey-subtle
 
   padding: 40px
   padding-top: 0px // Adjust the value as per your preference
 
   &::-webkit-scrollbar
     width: 6px
-    
 
   &::-webkit-scrollbar-track
     background-color: transparent
 
   &::-webkit-scrollbar-thumb
-    background-color: $grey-subtle
+    background-color: styles.$grey-subtle
     border-radius: 3px
 
   &::-webkit-scrollbar-thumb:hover
-    background-color: $grey-item
+    background-color: styles.$grey-item
