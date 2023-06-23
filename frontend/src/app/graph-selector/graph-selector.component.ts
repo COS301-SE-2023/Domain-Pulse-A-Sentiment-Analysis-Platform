@@ -144,8 +144,8 @@ export class GraphSelectorComponent {
     // ...
     this.chart = new Chart(ctx, currentGraph);
     if (this.chart && this.chart.config.type === 'doughnut') {
-      const chartContainerHeight = this.chartContainer.nativeElement.offsetHeight;
-      const offset = chartContainerHeight / 4;
+      
+      const offset = 50;
       this.myChart.nativeElement.style.transform = `translateY(${offset}px)`;
     }else{
       this.myChart.nativeElement.style.transform = `translateY(0px)`;
