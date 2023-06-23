@@ -17,27 +17,26 @@ import {
       state(
         'small',
         style({
-          width: '50px',
-          height: '50px',
-          backgroundColor: 'green',
+          transform: 'scale(0.5)',
         })
       ),
-      state(
-        'large',
-        style({ width: '100px', height: '50px', backgroundColor: 'red' })
-      ),
-      transition('small <=> large', [animate('0.3s')]),
-      // transition(':enter', [style({ transform: 'scale(0.5)' }), animate(100)]),
-      // transition(':leave', [animate(100, style({ transform: 'scale(0.5)' }))]),
+      transition(':enter', [
+        style({ transform: 'scale(0.5)', opacity: 0 }),
+        animate(300),
+      ]),
+      transition(':leave', [
+        animate(300, style({ transform: 'scale(0.5)' })),
+        style({ opacity: 0 }),
+      ]),
     ]),
   ],
 })
 export class SidebarComponent {
   logoState = 'small';
+  _expanded = false;
   @Input() set expanded(value: boolean) {
-    setTimeout(() => {
-      this.logoState = value ? 'large' : 'small';
-    }, 1);
+    // TODO have a seprate controller for the small logo and the large logo
+    this._expanded = value;
   }
 
   // change logoState based on expanded
