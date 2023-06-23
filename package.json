@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "chart.js": "^2.9.4"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.37"
+  }
+}
