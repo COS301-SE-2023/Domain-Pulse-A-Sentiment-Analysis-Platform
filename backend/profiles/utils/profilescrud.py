@@ -82,6 +82,20 @@ def edit_profile_mode(id, mode):
     profile.save()
     return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
 
+def change_password(request,id,oldpass,newpass):
+    if request.user.is_authenticated:
+        id = int(id)
+        user= User.objects.get(id=id)
+        if user.check_password(oldpass):
+            user.set_password(newpass)
+            user.save()
+            return {"status":"SUCCESS"}
+        else:
+            return {"status":"FAILURE"}
+    else:
+            return {"status":"FAILURE"}
+        
+
 
 def add_domain_to_profile(id, domain_id):
     id = int(id)
@@ -115,14 +129,20 @@ def get_profile(id):
     return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
 
 def login_user(request,username,password):
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        login(request,user)
+    if not request.user.is_authenticated:
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request,user)
+            return {"status": "SUCCESS"}
+        else:
+            return {"status": "FAILURE"}
+    else:
+            return {"status": "FAILURE"}
+
+def logout_user(request):
+    if request.user.is_authenticated:
+        logout(request)
         return {"status": "SUCCESS"}
     else:
         return {"status": "FAILURE"}
-
-def logout_user(request):
-    logout(request)
-    return {"status": "SUCCESS"}
 

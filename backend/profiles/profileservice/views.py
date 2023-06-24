@@ -15,6 +15,11 @@ def login_user(request: HttpRequest):
         return JsonResponse(profilescrud.login_user(request,request.POST["username"],request.POST["password"]))
     return JsonResponse({"status": "FAILURE"})
 
+def change_password(request: HttpRequest):
+    if request.method == "POST":
+        return JsonResponse(profilescrud.change_password(request,request.POST["id"], request.POST["oldpassword"],request.POST["newpassword"]))
+    return JsonResponse({"status": "FAILURE"})
+
 def logout_user(request: HttpRequest):
     return JsonResponse(profilescrud.logout_user(request))
 
