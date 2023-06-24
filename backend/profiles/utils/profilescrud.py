@@ -146,3 +146,20 @@ def logout_user(request):
     else:
         return {"status": "FAILURE"}
 
+def delete_user(request,username,password):
+    if request.user.is_authenticated:
+        user = User.objects.get(username = username)
+        
+        if request.user == user:
+            if user.check_password(password):
+                user.delete()
+                logout(request)
+                return {"status": "SUCCESS"}
+            else:
+                return {"status": "FAILURE"}
+        else:
+            return {"status": "FAILURE"}
+        return {"status": "SUCCESS"}
+    else:
+        return {"status": "FAILURE"}
+

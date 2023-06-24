@@ -26,8 +26,15 @@ def logout_user(request: HttpRequest):
 def create_profile(request, user_id, profileIcon, mode):
     return JsonResponse(profilescrud.create_profile(user_id, profileIcon, mode))
 
+def delete_user(request):
+    if request.method == "POST":
+        return JsonResponse(profilescrud.delete_user(request,request.POST["username"],request.POST["password"]))
+    return JsonResponse({"status": "FAILURE"})
+
 def swap_mode(request, id):
-    return JsonResponse(profilescrud.swap_mode(id))
+    if request.method == "POST":
+        return JsonResponse(profilescrud.swap_mode(id))
+    return JsonResponse({"status": "FAILURE"})
 
 def edit_profile_picture(request, id, pictureURL):
     return JsonResponse(profilescrud.edit_profile_picture(id, pictureURL))
