@@ -85,32 +85,30 @@ def edit_profile_mode(id, mode):
 def add_domain_to_profile(id, domain_id):
     id = int(id)
     domain_id = int(domain_id)
-    for entry in profiles_db:
-        if int(entry["id"]) == id:
-            entry["domainIDs"].append(domain_id)
-    return get_profile(id)
+    profile= profile_models.Profiles.objects.get(id=id)
+    if domain_id not in profile.domainIDs:
+        profile.domainIDs.append(domain_id)
+        profile.save()
+    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
 
 
 def remove_domain_from_profile(id, domain_id):
     id = int(id)
     domain_id = int(domain_id)
-    for entry in profiles_db:
-        if int(entry["id"]) == id:
-            entry["domainIDs"].remove(domain_id)
-    return get_profile(id)
+    profile= profile_models.Profiles.objects.get(id=id)
+    if domain_id in profile.domainIDs:
+        profile.domainIDs.remove(domain_id)
+        profile.save()
+    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
 
 
 def get_domains_for_user(id):
     id = int(id)
-    for entry in profiles_db:
-        if entry["id"] == id:
-            return entry["domainIDs"]
-    return []
+    profile= profile_models.Profiles.objects.get(id=id)
+    return {"id":profile.id, "domainIDs":profile.domainIDs}
 
 
 def get_profile(id):
     id = int(id)
-    for entry in profiles_db:
-        if entry["id"] == id:
-            return entry
-    return {}
+    profile= profile_models.Profiles.objects.get(id=id)
+    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}

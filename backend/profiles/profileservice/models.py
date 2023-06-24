@@ -10,5 +10,5 @@ class Profiles(models.Model):
     id = models.AutoField(primary_key=True)
     mode = models.BooleanField()
     profileIcon = models.URLField(max_length=200)
-    domainIDs = ArrayField(models.TextField(max_length=10))
+    domainIDs = ArrayField(models.IntegerField())
     # userID = models.TextField(max_length=10)
