@@ -16,6 +16,7 @@ currIndex = 0
 
 for index, file in enumerate(full_data):
     data = json.load(file)
+    print(file)
 
     arr = data["metrics"]
 
@@ -27,7 +28,7 @@ for index, file in enumerate(full_data):
 
         db[str(id)] = item
 
-    file.close()
+        with open("temp" + str(id) + ".json", "w") as outfile:
+            json.dump(item, outfile)
 
-with open("db.json", "w") as outfile:
-    json.dump(db, outfile)
+    file.close()
