@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from profileservice import models as profile_models
 
 LIGHT = False
@@ -112,3 +113,16 @@ def get_profile(id):
     id = int(id)
     profile= profile_models.Profiles.objects.get(id=id)
     return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+
+def login_user(request,username,password):
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request,user)
+        return {"status": "SUCCESS"}
+    else:
+        return {"status": "FAILURE"}
+
+def logout_user(request):
+    logout(request)
+    return {"status": "SUCCESS"}
+

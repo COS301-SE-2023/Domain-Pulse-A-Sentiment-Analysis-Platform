@@ -5,12 +5,18 @@ import json
 from utils import profilescrud
 
 # Create your views here.
-@csrf_exempt
 def create_user(request: HttpRequest):
     if request.method == "POST":
-        raw_data = json.loads(request.body)
-        return JsonResponse(profilescrud.create_user(raw_data["username"],raw_data["email"],raw_data["password"]))
+        return JsonResponse(profilescrud.create_user(request.POST["username"],request.POST["email"],request.POST["password"]))
     return JsonResponse({"status": "FAILURE"})
+
+def login_user(request: HttpRequest):
+    if request.method == "POST":
+        return JsonResponse(profilescrud.login_user(request,request.POST["username"],request.POST["password"]))
+    return JsonResponse({"status": "FAILURE"})
+
+def logout_user(request: HttpRequest):
+    return JsonResponse(profilescrud.logout_user(request))
 
 def create_profile(request, user_id, profileIcon, mode):
     return JsonResponse(profilescrud.create_profile(user_id, profileIcon, mode))
