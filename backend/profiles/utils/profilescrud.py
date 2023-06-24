@@ -100,36 +100,48 @@ def change_password(request,id,oldpass,newpass):
         
 
 
-def add_domain_to_profile(id, domain_id):
-    id = int(id)
-    domain_id = int(domain_id)
-    profile= profile_models.Profiles.objects.get(id=id)
-    if domain_id not in profile.domainIDs:
-        profile.domainIDs.append(domain_id)
-        profile.save()
-    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+def add_domain_to_profile(request,id, domain_id):
+    if request.user.is_authenticated:
+        id = int(id)
+        domain_id = int(domain_id)
+        profile= profile_models.Profiles.objects.get(id=id)
+        if domain_id not in profile.domainIDs:
+            profile.domainIDs.append(domain_id)
+            profile.save()
+        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+    else:
+        return {"status":"FAILURE"}
 
 
-def remove_domain_from_profile(id, domain_id):
-    id = int(id)
-    domain_id = int(domain_id)
-    profile= profile_models.Profiles.objects.get(id=id)
-    if domain_id in profile.domainIDs:
-        profile.domainIDs.remove(domain_id)
-        profile.save()
-    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+def remove_domain_from_profile(request,id, domain_id):
+    if request.user.is_authenticated:
+        id = int(id)
+        domain_id = int(domain_id)
+        profile= profile_models.Profiles.objects.get(id=id)
+        if domain_id in profile.domainIDs:
+            profile.domainIDs.remove(domain_id)
+            profile.save()
+        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+    else:
+        return {"status":"FAILURE"}
 
 
-def get_domains_for_user(id):
-    id = int(id)
-    profile= profile_models.Profiles.objects.get(id=id)
-    return {"id":profile.id, "domainIDs":profile.domainIDs}
+def get_domains_for_user(request,id):
+    if request.user.is_authenticated:
+        id = int(id)
+        profile= profile_models.Profiles.objects.get(id=id)
+        return {"id":profile.id, "domainIDs":profile.domainIDs}
+    else:
+        return {"status":"FAILURE"}
 
 
-def get_profile(id):
-    id = int(id)
-    profile= profile_models.Profiles.objects.get(id=id)
-    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+def get_profile(request,id):
+    if request.user.is_authenticated:
+        id = int(id)
+        profile= profile_models.Profiles.objects.get(id=id)
+        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+    else:
+        return {"status":"FAILURE"}
 
 def login_user(request,username,password):
     if not request.user.is_authenticated:

@@ -47,13 +47,21 @@ def edit_profile_mode(request, id, mode):
     return JsonResponse({"status": "FAILURE"})    
 
 def get_profile(request, id):
-    return JsonResponse(profilescrud.get_profile(id))
+    if request.method == "POST":
+        return JsonResponse(profilescrud.get_profile(request,request.POST["id"]))
+    return JsonResponse({"status": "FAILURE"})   
 
 def add_domain_to_profile(request,id, domain_id):
-    return JsonResponse(profilescrud.add_domain_to_profile(id, domain_id))
+    if request.method == "POST":
+        return JsonResponse(profilescrud.add_domain_to_profile(request, request.POST["id"], request.POST["domain_id"]))
+    return JsonResponse({"status": "FAILURE"})   
 
 def remove_domain_from_profile(request,id, domain_id):
-    return JsonResponse(profilescrud.remove_domain_from_profile(id, domain_id))
+    if request.method == "POST":
+        return JsonResponse(profilescrud.remove_domain_from_profile(request,request.POST["id"], request.POST["domain_id"]))
+    return JsonResponse({"status": "FAILURE"})
 
 def get_domains_for_user(request, id):
-    return JsonResponse(profilescrud.get_domains_for_user(id))
+    if request.method == "POST":
+        return JsonResponse(profilescrud.get_domains_for_user(request,request.POST["id"]))
+    return JsonResponse({"status": "FAILURE"})
