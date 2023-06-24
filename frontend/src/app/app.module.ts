@@ -14,9 +14,10 @@ import { GraphSelectorComponent } from './graph-selector/graph-selector.componen
 import { CommentsViewComponent } from './comments-view/comments-view.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { MainComponent } from './main/main.component';
 
 @NgModule({
-  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent, GraphSelectorComponent, CommentsViewComponent, LoginPageComponent, RegisterPageComponent],
+  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent, GraphSelectorComponent, CommentsViewComponent, LoginPageComponent, RegisterPageComponent, MainComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
