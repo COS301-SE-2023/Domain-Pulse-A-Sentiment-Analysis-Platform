@@ -27,7 +27,6 @@ export class CommentsViewComponent {
           ratings: ["15%", "Somewhat Negative"]
         }
       ];
-      
     }
 
     getRatingColor(score: string): string {
