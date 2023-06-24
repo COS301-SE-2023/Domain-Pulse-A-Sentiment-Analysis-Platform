@@ -11,7 +11,7 @@ import {
   query,
 } from '@angular/animations';
 import { AppState, DisplayDomain } from '../app.state';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -47,12 +47,17 @@ export class MainComponent {
   title = 'Domain Pulse';
 
   showAddSourcesModal = false;
-  selectedDomain$ = this.backendService.selectedDomain$;
+  @Select(AppState.selectedDomain)
+  selectedDomain$!: Observable<DisplayDomain | null>;
 
   newSouceName = '';
   newSourcePlatform = '';
 
-  constructor(private backendService: BackendService) {}
+  constructor(private backendService: BackendService, private store: Store) {
+    this.selectedDomain$.subscribe((domain) => {
+      console.log('selected domain: ' + domain?.name);
+    });
+  }
 
   addNewSource() {
     console.log('platform: ' + this.newSourcePlatform);

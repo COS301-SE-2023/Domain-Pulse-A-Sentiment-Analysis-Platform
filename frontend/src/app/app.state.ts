@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { AppApi } from './app.api';
 import { GetDomains, SetDomain } from './app.actions';
-
 export interface Source {
   source_id: number;
   source_name: string;
-  source_image_name: string;
+  sourceImageUrl: string;
 }
 export interface DisplayDomain {
   id: number;
@@ -58,6 +57,7 @@ export class Comment {
 interface AppStateModel {
   profileId: number;
   domains?: DisplayDomain[];
+  selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
   overallSentimentScores?: SentimentScores;
   comments?: Comment[];
@@ -80,6 +80,12 @@ export class AppState {
   @Selector()
   static domains(state: AppStateModel) {
     if (state.domains && state.domains.length > 0) return state.domains;
+    return undefined;
+  }
+
+  @Selector()
+  static selectedDomain(state: AppStateModel) {
+    if (state.selectedDomain) return state.selectedDomain;
     return undefined;
   }
 
@@ -109,12 +115,12 @@ export class AppState {
           name: domain.domain_name,
           imageUrl: '../assets/' + domain.image_url,
           sources: domain.sources.map((source: any) => {
-            return {
-              id: source.source_id,
-              name: source.source_name,
-              url: source.source_url,
-              selected: false,
+            let newSource: Source = {
+              source_id: source.source_id,
+              source_name: source.source_name,
+              sourceImageUrl: source.source_image_name,
             };
+            return newSource;
           }),
           selected: false,
         };
@@ -140,8 +146,9 @@ export class AppState {
       domain.selected = false;
     }
     state.domain.selected = true;
-    // ctx.patchState({
-    //   domains: domains,
-    // });
+    ctx.patchState({
+      domains: domains,
+      selectedDomain: state.domain,
+    });
   }
 }
