@@ -17,6 +17,8 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { MainComponent } from './main/main.component';
 import { NgxsModule } from '@ngxs/store';
 import { AppState } from './app.state';
+import { AppApi } from './app.api';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 
 @NgModule({
   declarations: [
@@ -37,8 +39,12 @@ import { AppState } from './app.state';
     AppRoutingModule,
     HttpClientModule,
     NgxsModule.forRoot([AppState]),
+    NgxsLoggerPluginModule.forRoot({
+      collapsed: true,
+      // disabled: ENVIRONMENT == 'production',
+    }),
   ],
-  providers: [BackendService],
+  providers: [AppApi, BackendService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -7,6 +7,10 @@ import {
   animate,
   transition,
 } from '@angular/animations';
+import { Select, Store } from '@ngxs/store';
+import { AppState, DisplayDomain } from '../app.state';
+import { Observable } from 'rxjs';
+import { SetDomain } from '../app.actions';
 
 @Component({
   selector: 'dp-sidebar',
@@ -32,6 +36,8 @@ import {
   ],
 })
 export class SidebarComponent {
+  @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
+
   logoState = 'small';
   _expanded = false;
   @Input() set expanded(value: boolean) {
@@ -40,7 +46,7 @@ export class SidebarComponent {
   }
 
   // change logoState based on expanded
-  domains$ = this.backendService.domains$;
+  // domains$ = this.backendService.domains$;
 
   domains = [
     {
@@ -70,7 +76,7 @@ export class SidebarComponent {
 
   showAddDomainModal = false;
 
-  constructor(private backendService: BackendService) {}
+  constructor(private backendService: BackendService, private store: Store) {}
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
@@ -92,7 +98,7 @@ export class SidebarComponent {
     this.toggleDomainModal();
   }
 
-  selectDomain(domain: Domain) {
-    this.backendService.selectDomain(domain);
+  selectDomain(domain: DisplayDomain) {
+    this.store.dispatch(new SetDomain(domain));
   }
 }

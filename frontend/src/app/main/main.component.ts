@@ -10,6 +10,9 @@ import {
   animateChild,
   query,
 } from '@angular/animations';
+import { AppState, DisplayDomain } from '../app.state';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-main',

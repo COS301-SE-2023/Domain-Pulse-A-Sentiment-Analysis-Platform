@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
-import { State } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { AppApi } from './app.api';
+import { GetDomains, SetDomain } from './app.actions';
 
+export interface Source {
+  source_id: number;
+  source_name: string;
+  source_image_name: string;
+}
 export interface DisplayDomain {
   id: number;
   name: string;
   selected: boolean;
+  imageUrl: string;
+  sources: Source[];
 }
 
 export interface DisplaySource {
@@ -50,7 +59,7 @@ interface AppStateModel {
   profileId: number;
   domains?: DisplayDomain[];
   sources?: DisplaySource[];
-  sentimentScores?: SentimentScores;
+  overallSentimentScores?: SentimentScores;
   comments?: Comment[];
 }
 
@@ -61,4 +70,78 @@ interface AppStateModel {
   },
 })
 @Injectable()
-export class AppState {}
+export class AppState {
+  constructor(private readonly appApi: AppApi, private readonly store: Store) {
+    setTimeout(() => {
+      this.store.dispatch(new GetDomains());
+    }, 300); // put this dispatch in the right place
+  }
+
+  @Selector()
+  static domains(state: AppStateModel) {
+    if (state.domains && state.domains.length > 0) return state.domains;
+    return undefined;
+  }
+
+  @Selector()
+  static sources(state: AppStateModel) {
+    if (state.sources && state.sources.length > 0) return state.sources;
+    return undefined;
+  }
+
+  @Selector()
+  static overallSentimentScores(state: AppStateModel) {
+    if (state.overallSentimentScores) return state.overallSentimentScores;
+    return undefined;
+  }
+
+  @Action(GetDomains)
+  getDomains(ctx: StateContext<AppStateModel>) {
+    this.appApi.getDomains(ctx.getState().profileId).subscribe((res: any) => {
+      let domainArr: DisplayDomain[] = res.domains.map((domain: any) => {
+        // let selected = false;
+        // if (firstt) {
+        //   selected = true;
+        //   firstt = false;
+        // }
+        return {
+          id: domain.domain_id,
+          name: domain.domain_name,
+          imageUrl: '../assets/' + domain.image_url,
+          sources: domain.sources.map((source: any) => {
+            return {
+              id: source.source_id,
+              name: source.source_name,
+              url: source.source_url,
+              selected: false,
+            };
+          }),
+          selected: false,
+        };
+      });
+
+      ctx.patchState({
+        domains: domainArr,
+      });
+
+      if (domainArr.length > 0)
+        this.store.dispatch(new SetDomain(domainArr[0]));
+
+      console.log(domainArr);
+    });
+  }
+
+  @Action(SetDomain)
+  setDomain(ctx: StateContext<AppStateModel>, state: SetDomain) {
+    let domains = ctx.getState().domains;
+    if (!domains) return;
+
+    for (let domain of domains) {
+      domain.selected = false;
+    }
+    state.domain.selected = true;
+    // ctx.patchState({
+    //   domains: domains,
+    // });
+  }
+}
