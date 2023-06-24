@@ -1,11 +1,12 @@
 <h2 style="margin-top: 0;">Sample data</h2>
 <div class="flex-column" style="gap: 1rem" >
-    <div class="flex-column" *ngFor="let i of [1, 2, 3, 4, 6, 7, 8, 8]">
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta cumque omnis, voluptates sapiente corporis
-            facere dignissimos tenetur!</p>
-        <div class="flex-row" style="gap: 5px;">
-            <div style="width: 40px; height: 10px; background-color: red;"></div>
-            <div style="width: 40px; height: 10px; background-color: rgb(255, 196, 0);"></div>
+    <div class="flex-column" *ngFor="let comment of comments">
+        <p>{{comment.comment}}</p>
+        <div class="flex-row"  style="padding-top:10px">
+            <div class="tag-container">
+              <div class = "tag" [ngClass]="getRatingColor(comment.ratings[0])" *ngFor="let rating of comment.ratings">{{ rating }}</div>
+            </div>
         </div>
+        <hr>
     </div>
 </div>
