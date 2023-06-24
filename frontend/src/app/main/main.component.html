@@ -64,14 +64,17 @@
     [modalDisplay]="showAddSourcesModal"
     (close)="toggleAddSourcesModal()"
   >
-    <div class="flex-row" style="width: 60vw; height: 60vh; color: black">
-      <div class="flex-column center" style="flex-basis: 55%; gap: 1.1rem">
-        <p style="color: blue; font-size: 26pt; font-weight: 500">Add a Source</p>
+    <div class="flex-row" style="width: 70vw; height: 70vh; color: black">
+      <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
+        <div class="heading-container">
+          <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleAddSourcesModal()">
+          <p class="modal-heading">Add a Source</p>
+        </div>
   
         <div class="flex-row" style="width: 80%">
-          <p style="font-size: 44pt; color: rgb(168, 168, 168)">1</p>
+          <p class = "modal-step-tag">1</p>
           <div class="flex-column" style="width: 100%">
-            <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
+            <p class = "step-heading">
               Source Name:
             </p>
             <input class="default-input" [(ngModel)]="newSouceName" type="text" />
@@ -79,9 +82,9 @@
         </div>
   
         <div class="flex-row" style="width: 80%">
-          <p style="font-size: 44pt; color: rgb(168, 168, 168)">2</p>
+          <p class = "modal-step-tag">2</p>
           <div class="flex-column" style="width: 100%">
-            <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
+            <p class = "step-heading">
               Source Type:
             </p>
             <select
@@ -100,25 +103,19 @@
         </div>
   
         <div class="flex-row" style="width: 80%">
-          <p style="font-size: 44pt; color: rgb(168, 168, 168)">3</p>
+          <p class = "modal-step-tag">3</p>
           <div class="flex-column" style="width: 100%">
-            <p style="font-size: 17pt; font-weight: 500; color: rgb(46, 46, 46)">
+            <p class = "step-heading">
               Source url:
             </p>
             <input class="default-input" type="text" />
           </div>
         </div>
   
-        <button class="new-source-btn" (click)="addNewSource()">Confirm</button>
+        <button class="new-source-btn" (click)="addNewSource()">confirm</button>
       </div>
       <div
         class="picture"
-        style="
-          flex-basis: 45%;
-          background-color: blue;
-          border-top-right-radius: 25px;
-          border-bottom-right-radius: 25px;
-        "
       ></div>
     </div>
   </dp-modal-container>
