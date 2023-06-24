@@ -1,4 +1,4 @@
 from django.urls import path
 from . import views
 
-urlpatterns = [path("aggregate", views.aggregate_metrics)]
+urlpatterns = [path("aggregate/", views.aggregate_metrics)]
