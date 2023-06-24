@@ -69,6 +69,7 @@ export class SidebarComponent {
   newDomainImageName = '';
 
   showAddDomainModal = false;
+  showProfileModal = false;
 
   constructor(private backendService: BackendService) {}
 
@@ -79,6 +80,16 @@ export class SidebarComponent {
     } else {
       // this.windows[0].scrolling = true;
       this.showAddDomainModal = false;
+    }
+  }
+
+  toggleProfileModal(): void {
+    if (!this.showProfileModal) {
+      // this.windows[0].scrolling = false;
+      this.showProfileModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showProfileModal = false;
     }
   }
 

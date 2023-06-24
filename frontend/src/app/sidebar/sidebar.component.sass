@@ -5,6 +5,7 @@
     background: linear-gradient(to bottom, styles.$primary-blue, styles.$secondary-blue)
     border-radius: 25px
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3)
+    z-index: 900
 
 .domain
     gap: 1.2rem
@@ -39,3 +40,116 @@
     font-size: 17pt
     font-weight: 500
     margin-top: 1rem
+
+
+.modal-heading
+    font-family: 'Open Sans'
+    font-weight: 700
+    font-size: 20pt
+    color: styles.$primary-blue
+
+.modal-contents
+
+.heading-container 
+  text-align: left
+  width: 80%
+  display: flex
+  align-items: center
+
+.back-arrow 
+  width: 25px
+  margin-right: 10px
+
+.modal-step-tag
+    font-size: 50px
+    font-weight: 700
+    font-family: 'Open Sans'
+    color: styles.$grey-subtle
+    padding-right: 10px
+
+.step-heading
+    font-family: 'Source Sans 3'
+    font-weight: 300
+    font-size: 15px
+    color: black
+
+.picture
+    flex-basis: 45%
+    background-color: blue
+    border-top-right-radius: 59px
+    border-bottom-right-radius: 59px
+    background-image: url("../../assets/stock-bg.png")
+    background-repeat: no-repeat
+    background-size: cover
+    width:100%
+
+.profile-section 
+
+
+//Profile Modal
+
+.profile-image
+    width: 180px
+    height: 180px
+    border-radius: 50%
+    object-fit: cover
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+
+.profile-name
+    font-family: 'Source Sans 3'
+    font-weight: 700
+    font-size: 18pt
+    color: styles.$secondary-blue
+
+.profile-icon
+    width:15px
+
+.modal-contents
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+
+.heading-container
+  align-self: flex-start
+  margin-top: 2%
+  margin-left: 6%
+
+.content
+  flex-grow: 1
+
+.button-div
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 1rem
+  align-content: center
+  justify-content: center
+  margin-bottom: 10%
+
+.button
+    display: flex
+    align-items: center
+    height: 2rem
+    padding: 0 1rem
+    border-radius: 1rem
+    background-color: styles.$primary-blue
+    cursor: pointer
+    width: 12rem
+    color: white
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
+
+.button:hover
+  background-color: styles.$secondary-blue
+
+.button-text
+  margin-left: 0.5rem
+
+
+.button-icon 
+    margin-left: 0.3rem
+    margin-right: 0.5rem
+    width: 0.8rem
+
+
+
+  
+
