@@ -17,6 +17,7 @@ nltk = "*"
 torch = "*"
 transformers = "*"
 mock = "*"
+pymongo = "*"
 
 [dev-packages]
 
