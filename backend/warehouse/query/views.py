@@ -5,10 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
-def say_hello(request):
-    return JsonResponse({"message": "hello there!"})
-
-
 @csrf_exempt
 def get_dashboard_data_source(request: HttpRequest):
     # 1. Query the sentiment records database for all data from a provided source

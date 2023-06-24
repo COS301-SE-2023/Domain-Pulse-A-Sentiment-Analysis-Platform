@@ -14,6 +14,6 @@ query = {"source_id": 0}
 result = collection.find(query)
 
 for document in result:
-    print(document)
+    print(dict(document))
 
 client.close()
