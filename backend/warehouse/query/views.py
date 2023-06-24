@@ -62,7 +62,39 @@ def get_dashboard_data_domain(request: HttpRequest):
     # 3. Send that data to the aggregator (engine) to get cumulative metrics
     # 4. Return data from the response from 3, as well as meta-data and an other status codes, etc
     if request.method == "POST":
-        return JsonResponse({"message": "hello there!"})
+        raw_data = json.loads(request.body)
+        source_ids_raw = raw_data["source_ids"]
+
+        individual_records = []
+        source_ids = list(source_ids_raw)
+        for source_id in source_ids_raw:
+            individual_records += sentiment_record_model.get_records_by_source_id(
+                int(source_id)
+            )
+
+        for record in individual_records:
+            record["_id"] = ""
+
+        request_to_engine_body = {"metrics": individual_records}
+
+        url = "http://localhost:8001/aggregator/aggregate/"
+        response_from_aggregator = requests.post(
+            url, data=json.dumps(request_to_engine_body)
+        )
+
+        if response_from_aggregator.status_code == 200:
+            response = {}
+            response["status"] = "SUCCESS"
+
+            agg_response_body = response_from_aggregator.json()
+
+            response["aggregated_metrics"] = agg_response_body["overall"]
+            response["individual_metrics"] = agg_response_body["individual_data"]
+
+            return JsonResponse(response)
+        else:
+            return JsonResponse({"status": "FAILURE"})
+
     return JsonResponse({"status": "FAILURE"})
 
 
