@@ -12,9 +12,11 @@ import { FormsModule } from '@angular/forms';
 import { StatisticSelectorComponent } from './statistic-selector/statistic-selector.component';
 import { GraphSelectorComponent } from './graph-selector/graph-selector.component';
 import { CommentsViewComponent } from './comments-view/comments-view.component';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { RegisterPageComponent } from './register-page/register-page.component';
 
 @NgModule({
-  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent, GraphSelectorComponent, CommentsViewComponent],
+  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent, GraphSelectorComponent, CommentsViewComponent, LoginPageComponent, RegisterPageComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
