@@ -16,6 +16,7 @@ coverage = "*"
 nltk = "*"
 torch = "*"
 transformers = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

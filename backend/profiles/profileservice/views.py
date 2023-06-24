@@ -1,8 +1,16 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 from utils import profilescrud
 
 # Create your views here.
+@csrf_exempt
+def create_user(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        return JsonResponse(profilescrud.create_user(raw_data["username"],raw_data["email"],raw_data["password"]))
+    return JsonResponse({"status": "FAILURE"})
 
 def create_profile(request, user_id, profileIcon, mode):
     return JsonResponse(profilescrud.create_profile(user_id, profileIcon, mode))
