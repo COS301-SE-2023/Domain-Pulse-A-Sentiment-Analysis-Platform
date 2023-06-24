@@ -1,122 +1,119 @@
-
-
 <div class="flex-row app-container">
-    <dp-sidebar
-      [expanded]="!sidebarCollapsed"
-      [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-      (mouseenter)="openSidebar()"
-      (mouseleave)="colapseSidebar()"
-    ></dp-sidebar>
-    <div
-      *ngIf="selectedDomain$ | async as selectedDomain"
-      class="flex-column"
-      style="width: 92%; gap: 1.3rem;"
-    >
-      <div class="header flex-row centered" style="gap: 1.2rem">
-        <img
-          [src]="'../assets/' + selectedDomain.imageUrl"
-          alt="Starbucks loog"
-          height="80%"
-        />
-        <div class="flex-column">
-          <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
-          <p class = "domainDesc">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
-            magni ea sint, repellendus quam dolor consequatur sequi.
-          </p>
-        </div>
+  <dp-sidebar
+    [expanded]="!sidebarCollapsed"
+    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (mouseenter)="openSidebar()"
+    (mouseleave)="colapseSidebar()"
+  ></dp-sidebar>
+  <div
+    *ngIf="selectedDomain$ | async as selectedDomain"
+    class="flex-column"
+    style="width: 92%; gap: 1.3rem"
+  >
+    <div class="header flex-row centered" style="gap: 1.2rem">
+      <img
+        [src]="'../assets/' + selectedDomain.imageUrl"
+        alt="Starbucks loog"
+        height="80%"
+      />
+      <div class="flex-column">
+        <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
+        <p class="domainDesc">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
+          magni ea sint, repellendus quam dolor consequatur sequi.
+        </p>
       </div>
-  
-      <div class="source-selector flex-row align-center">
-        <div
-          *ngFor="let source of selectedDomain.sources"
-          class="source-cat flex-column center"
-        >
-          <img
-            [src]="'../assets/' + source.source_image_name"
-            height="60px"
-            style="border-radius: 50%"
-          />
-          <p>{{ source.source_name }}</p>
-        </div>
-  
-        <div
-          (click)="toggleAddSourcesModal()"
-          class="source-cat flex-column center"
-        >
-          <p style="font-size: 80pt">+</p>
-        </div>
-      </div>
-  
-      <statistic-selector></statistic-selector>
-  
+    </div>
+
+    <div class="source-selector flex-row align-center">
       <div
-        class="source-manager flex-row"
-        style="gap: 1rem; height: 43%; width:100%"
+        *ngFor="let source of selectedDomain.sources"
+        class="source-cat flex-column center"
       >
+        <img
+          [src]="'../assets/' + source.source_image_name"
+          height="60px"
+          style="border-radius: 50%"
+        />
+        <p>{{ source.source_name }}</p>
+      </div>
+
+      <div
+        (click)="toggleAddSourcesModal()"
+        class="source-cat flex-column center"
+      >
+        <p style="font-size: 80pt">+</p>
+      </div>
+    </div>
+
+    <statistic-selector></statistic-selector>
+
+    <div
+      class="source-manager flex-row"
+      style="gap: 1rem; height: 43%; width: 100%"
+    >
       <graph-selector></graph-selector>
       <comments-view></comments-view>
     </div>
-    </div>
   </div>
-  
-  <dp-modal-container
-    [modalDisplay]="showAddSourcesModal"
-    (close)="toggleAddSourcesModal()"
-  >
-    <div class="flex-row" style="width: 70vw; height: 70vh; color: black">
-      <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
-        <div class="heading-container">
-          <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleAddSourcesModal()">
-          <p class="modal-heading">Add a Source</p>
-        </div>
-  
-        <div class="flex-row" style="width: 80%">
-          <p class = "modal-step-tag">1</p>
-          <div class="flex-column" style="width: 100%">
-            <p class = "step-heading">
-              Source Name:
-            </p>
-            <input class="default-input" [(ngModel)]="newSouceName" type="text" />
-          </div>
-        </div>
-  
-        <div class="flex-row" style="width: 80%">
-          <p class = "modal-step-tag">2</p>
-          <div class="flex-column" style="width: 100%">
-            <p class = "step-heading">
-              Source Type:
-            </p>
-            <select
-              [(ngModel)]="newSourcePlatform"
-              style="
-                border: solid rgb(133, 133, 133) 2px;
-                height: 30px;
-                border-radius: 10px;
-              "
-            >
-              <option value="facebook">facebook</option>
-              <option value="instagram">instagram</option>
-              <option value="reddit">reddit</option>
-            </select>
-          </div>
-        </div>
-  
-        <div class="flex-row" style="width: 80%">
-          <p class = "modal-step-tag">3</p>
-          <div class="flex-column" style="width: 100%">
-            <p class = "step-heading">
-              Source url:
-            </p>
-            <input class="default-input" type="text" />
-          </div>
-        </div>
-  
-        <button class="new-source-btn" (click)="addNewSource()">confirm</button>
+</div>
+
+<dp-modal-container
+  [modalDisplay]="showAddSourcesModal"
+  (close)="toggleAddSourcesModal()"
+>
+  <div class="flex-row" style="width: 70vw; height: 70vh; color: black">
+    <div
+      class="flex-column center modal-contents"
+      style="flex-basis: 55%; gap: 0.7rem"
+    >
+      <div class="heading-container">
+        <img
+          src="../assets/logos/arrow-right-solid.png"
+          alt="Back Arrow"
+          class="back-arrow"
+          (click)="toggleAddSourcesModal()"
+        />
+        <p class="modal-heading">Add a Source</p>
       </div>
-      <div
-        class="picture"
-      ></div>
+
+      <div class="flex-row" style="width: 80%">
+        <p class="modal-step-tag">1</p>
+        <div class="flex-column" style="width: 100%">
+          <p class="step-heading">Source Name:</p>
+          <input class="default-input" [(ngModel)]="newSouceName" type="text" />
+        </div>
+      </div>
+
+      <div class="flex-row" style="width: 80%">
+        <p class="modal-step-tag">2</p>
+        <div class="flex-column" style="width: 100%">
+          <p class="step-heading">Source Type:</p>
+          <select
+            [(ngModel)]="newSourcePlatform"
+            style="
+              border: solid rgb(133, 133, 133) 2px;
+              height: 30px;
+              border-radius: 10px;
+            "
+          >
+            <option value="facebook">facebook</option>
+            <option value="instagram">instagram</option>
+            <option value="reddit">reddit</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex-row" style="width: 80%">
+        <p class="modal-step-tag">3</p>
+        <div class="flex-column" style="width: 100%">
+          <p class="step-heading">Source url:</p>
+          <input class="default-input" type="text" />
+        </div>
+      </div>
+
+      <button class="new-source-btn" (click)="addNewSource()">confirm</button>
     </div>
-  </dp-modal-container>
-  
+    <div class="picture"></div>
+  </div>
+</dp-modal-container>

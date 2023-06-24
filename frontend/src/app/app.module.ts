@@ -15,17 +15,36 @@ import { CommentsViewComponent } from './comments-view/comments-view.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { MainComponent } from './main/main.component';
+import { NgxsModule } from '@ngxs/store';
+import { AppState } from './app.state';
+import { AppApi } from './app.api';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 
 @NgModule({
-  declarations: [AppComponent, SidebarComponent, ModalContainerComponent, StatisticSelectorComponent, GraphSelectorComponent, CommentsViewComponent, LoginPageComponent, RegisterPageComponent, MainComponent],
+  declarations: [
+    AppComponent,
+    SidebarComponent,
+    ModalContainerComponent,
+    StatisticSelectorComponent,
+    GraphSelectorComponent,
+    CommentsViewComponent,
+    LoginPageComponent,
+    RegisterPageComponent,
+    MainComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
+    NgxsModule.forRoot([AppState]),
+    NgxsLoggerPluginModule.forRoot({
+      collapsed: true,
+      // disabled: ENVIRONMENT == 'production',
+    }),
   ],
-  providers: [BackendService],
+  providers: [AppApi, BackendService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

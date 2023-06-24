@@ -1,15 +1,26 @@
-<div class="flex-row" style="width: 97%; height: 90%; justify-content: space-between;">
-    <div class="flex-row center" style="width: 2%;">
-        <img width="100%" src="../../assets/logos/arrowBlockLeft.png" alt="Arrow block left" (click)="switchToPreviousGraph()">
-      </div>
-      
-      <div id="chartContainer" #chartContainer class="chart-container">
-        <canvas #myChart></canvas>
-      </div>
-      
-      <div class="flex-row center" style="width: 2%;">
-        <img width="100%" src="../../assets/logos/arrowBlockRight.png" alt="Arrow block right" (click)="switchToNextGraph()">
-      </div>
-      
-    
+<div
+  class="flex-row"
+  style="width: 97%; height: 90%; justify-content: space-between"
+>
+  <div class="flex-row center" style="width: 2%">
+    <img
+      width="100%"
+      src="../../assets/logos/arrowBlockLeft.png"
+      alt="Arrow block left"
+      (click)="switchToPreviousGraph()"
+    />
+  </div>
+
+  <div id="chartContainer" #chartContainer class="chart-container">
+    <canvas #myChart></canvas>
+  </div>
+
+  <div class="flex-row center" style="width: 2%">
+    <img
+      width="100%"
+      src="../../assets/logos/arrowBlockRight.png"
+      alt="Arrow block right"
+      (click)="switchToNextGraph()"
+    />
+  </div>
 </div>
