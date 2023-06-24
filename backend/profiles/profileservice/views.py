@@ -23,8 +23,8 @@ def change_password(request: HttpRequest):
 def logout_user(request: HttpRequest):
     return JsonResponse(profilescrud.logout_user(request))
 
-def create_profile(request, user_id, profileIcon, mode):
-    return JsonResponse(profilescrud.create_profile(user_id, profileIcon, mode))
+# def create_profile(request, user_id, profileIcon, mode):
+#     return JsonResponse(profilescrud.create_profile(request.POST["user_id"],request.POST["profileIcon"] , request.POST["mode"]))
 
 def delete_user(request):
     if request.method == "POST":
@@ -33,14 +33,18 @@ def delete_user(request):
 
 def swap_mode(request, id):
     if request.method == "POST":
-        return JsonResponse(profilescrud.swap_mode(id))
+        return JsonResponse(profilescrud.swap_mode(request,request.POST["id"]))
     return JsonResponse({"status": "FAILURE"})
 
 def edit_profile_picture(request, id, pictureURL):
-    return JsonResponse(profilescrud.edit_profile_picture(id, pictureURL))
+    if request.method == "POST":
+        return JsonResponse(profilescrud.edit_profile_picture(request,request.POST["id"], request.POST["pictureURL"]))
+    return JsonResponse({"status": "FAILURE"})
 
 def edit_profile_mode(request, id, mode):
-    return JsonResponse(profilescrud.edit_profile_mode(id, mode))
+    if request.method == "POST":
+        return JsonResponse(profilescrud.edit_profile_mode(request,request.POST["id"], request.POST["mode"]))
+    return JsonResponse({"status": "FAILURE"})    
 
 def get_profile(request, id):
     return JsonResponse(profilescrud.get_profile(id))

@@ -54,33 +54,36 @@ def create_profile(user_id, profileIcon, mode=LIGHT):
     return profile
 
 
-def swap_mode(id):
-    id = int(id)
-
-    # for entry in profiles_db:
-    #     if entry["id"] == id:
-    #         entry["mode"] = not entry["mode"]
-
-    profile= profile_models.Profiles.objects.get(id=id)
-    profile.mode= not bool(profile.mode)
-    profile.save()
-    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+def swap_mode(request,id):
+    if request.user.is_authenticated:
+        id = int(id)
+        profile= profile_models.Profiles.objects.get(id=id)
+        profile.mode= not bool(profile.mode)
+        profile.save()
+        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+    else:
+        return {"status":"FAILURE"}
 
 
-def edit_profile_picture(id, pictureURL):
-    id = int(id)
-    profile= profile_models.Profiles.objects.get(id=id)
-    profile.profileIcon=pictureURL 
-    profile.save()
-    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+def edit_profile_picture(request,id, pictureURL):
+    if request.user.is_authenticated:
+        id = int(id)
+        profile= profile_models.Profiles.objects.get(id=id)
+        profile.profileIcon=pictureURL 
+        profile.save()
+        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+    else:
+        return {"status":"FAILURE"}
 
 
 def edit_profile_mode(id, mode):
-    id = int(id)
-    profile= profile_models.Profiles.objects.get(id=id)
-    profile.mode= mode
-    profile.save()
-    return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+    if request.user.is_authenticated:
+        id = int(id)
+        profile= profile_models.Profiles.objects.get(id=id)
+        profile.mode= mode
+        profile.save()
+    else:
+        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
 
 def change_password(request,id,oldpass,newpass):
     if request.user.is_authenticated:
