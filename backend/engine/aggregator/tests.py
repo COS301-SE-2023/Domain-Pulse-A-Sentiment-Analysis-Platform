@@ -102,6 +102,7 @@ class DataAggregationTests(TestCase):
                 "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                 "ratios": {"positive": 0.2515, "neutral": 0.6819, "negative": 0.0666},
             },
+            "metadata": {"num_analysed": 8},
             "individual_data": [
                 {
                     "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
@@ -277,6 +278,7 @@ class DataAggregationTests(TestCase):
                 "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                 "ratios": {"positive": 0.2515, "neutral": 0.6819, "negative": 0.0666},
             },
+            "metadata": {"num_analysed": 8},
             "individual_data": [
                 {
                     "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",

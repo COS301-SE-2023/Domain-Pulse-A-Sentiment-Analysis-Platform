@@ -82,5 +82,6 @@ def aggregate_sentiment_data(sentiment_data):
                 "negative": agg_negative_ratio,
             },
         },
+        "metadata": {"num_analysed": len(sentiment_data)},
         "individual_data": sentiment_data,
     }
