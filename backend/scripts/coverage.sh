@@ -1,4 +1,4 @@
-cd engine
 ls
+cd engine
 coverage run --source='.' manage.py test
-coverage lcov 
+coverage lcov
