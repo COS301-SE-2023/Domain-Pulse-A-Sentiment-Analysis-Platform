@@ -76,7 +76,7 @@ def edit_profile_picture(request,id, pictureURL):
         return {"status":"FAILURE"}
 
 
-def edit_profile_mode(id, mode):
+def edit_profile_mode(request,id, mode):
     if request.user.is_authenticated:
         id = int(id)
         profile= profile_models.Profiles.objects.get(id=id)
