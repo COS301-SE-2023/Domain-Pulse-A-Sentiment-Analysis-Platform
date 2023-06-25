@@ -90,9 +90,6 @@ export class SidebarComponent {
     }
   }
 
-  // change logoState based on expanded
-  // domains$ = this.backendService.domains$;
-
   domains = [
     {
       name: 'apple',
