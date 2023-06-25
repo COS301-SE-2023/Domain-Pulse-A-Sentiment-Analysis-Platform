@@ -10,7 +10,7 @@ import {
 import { Select, Store } from '@ngxs/store';
 import { AppState, DisplayDomain } from '../app.state';
 import { Observable } from 'rxjs';
-import { SetDomain } from '../app.actions';
+import { AddNewDomain, SetDomain } from '../app.actions';
 
 @Component({
   selector: 'dp-sidebar',
@@ -144,9 +144,8 @@ export class SidebarComponent {
   addNewDomain(): void {
     console.log('addNewDomain');
     console.log(this.newDomainName, this.newDomainImageName);
-    this.backendService.addNewDomain(
-      this.newDomainName,
-      this.newDomainImageName
+    this.store.dispatch(
+      new AddNewDomain(this.newDomainName, this.newDomainImageName)
     );
     this.toggleDomainModal();
   }
