@@ -20,7 +20,7 @@ export interface Domain {
   providedIn: 'root',
 })
 export class BackendService {
-  private baseUrl = 'http://localhost:8000/';
+  private engineBaseUrl = `http://${window.location.hostname}:8001/`;
   private getDomainsUrl = 'domains/get_domains/1';
 
   private _domains = new BehaviorSubject<Domain[]>([]);
@@ -29,7 +29,7 @@ export class BackendService {
   readonly selectedDomain$ = this._selectedDomain.asObservable();
 
   constructor(private http: HttpClient) {
-    this.http.get(this.baseUrl + this.getDomainsUrl).subscribe((res: any) => {
+    this.http.get(this.engineBaseUrl + this.getDomainsUrl).subscribe((res: any) => {
       let firstt = true;
       let domainArr: Domain[] = res.domains.map((domain: any) => {
         let selected = false;
@@ -88,7 +88,7 @@ export class BackendService {
     if (this._selectedDomain.value) {
       let domainID = this._selectedDomain.value.id;
       const addSourceUrl =
-        this.baseUrl +
+        this.engineBaseUrl +
         `domains/add_source/1/${domainID}/${sourceName}/${source_image_name}`;
 
       this._selectedDomain.value.sources.push({
@@ -104,7 +104,7 @@ export class BackendService {
   addNewDomain(newDomainName: string, domain_image_name: string) {
     //add_domain/<user_id>/<domain_name>/<domain_image_name>
 
-    const addDomainUrl = `${this.baseUrl}domains/add_domain/1/${newDomainName}/${domain_image_name}`;
+    const addDomainUrl = `${this.engineBaseUrl}domains/add_domain/1/${newDomainName}/${domain_image_name}`;
     this.http.get(addDomainUrl).subscribe((data: any) => {
       let domains = data.domains;
       const domainsSize = domains.length;
