@@ -16,4 +16,5 @@ urlpatterns = [
     path("remove_domain_from_profile", views.remove_domain_from_profile),
     path("get_domains_for_user", views.get_domains_for_user),
     path("get_user_by_id", views.get_user_by_id),
+    path("check_logged_in", views.check_logged_in),
 ]

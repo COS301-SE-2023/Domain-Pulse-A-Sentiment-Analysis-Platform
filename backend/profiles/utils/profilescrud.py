@@ -151,3 +151,8 @@ def get_user_by_id(id):
     user = User.objects.get(id = id)
     return {"status":"SUCCESS","id":user.id, "username":user.username,"email":user.email,"password":user.password}
 
+def check_logged_in(request):
+    if request.user.is_authenticated:
+        return {"status":"SUCCESS","id":request.user.id}
+    else:
+        return {"status":"FAILURE"}
