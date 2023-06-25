@@ -1,15 +1,47 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
-from analysismodels import sentiment_analysis
+from utils import mock_data
+from django.views.decorators.csrf import csrf_exempt
+from processor import processing
+from postprocessor import aggregation
+import json
 
-# from preprocessor import preprocessing
-# from utils import mock_data
 
 # Create your views here.
 
 
+# Uses the mock data
 def get_sentiment_metrics(request: HttpRequest, source_id):
-    return JsonResponse(sentiment_analysis.process_sentiment_records(int(source_id)))
+    source_id = int(source_id)
+    if source_id == 1:
+        data = mock_data.starbucks_rosebank_tripadvisor
+    elif source_id == 2:
+        data = mock_data.leinster_loss_to_munster_insta
+    elif source_id == 3:
+        data = mock_data.bitcoin_article
+    elif source_id == 4:
+        data = mock_data.the_witcher_reviews_reddit
+    elif source_id == 5:
+        data = mock_data.lance_reddit_data
+    data = list(data)
+    scores = []
+    for d in data:
+        scores.append(processing.analyse_content(d))
+
+    return JsonResponse(aggregation.aggregate_sentiment_data(scores))
+
+
+# Perform analysis on given data
+@csrf_exempt
+def perform_analysis(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        new_records = raw_data["data"]
+        scores = []
+        for item in new_records:
+            scores.append(processing.analyse_content(item))
+        return JsonResponse({"metrics": scores})
+    return JsonResponse({"status": "FAILURE"})
 
 
 #     source_id = int(source_id)
