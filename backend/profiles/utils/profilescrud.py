@@ -42,7 +42,7 @@ def create_user(uname,email,pword):
                                  email=email,
                                  password=pword)
     profile = create_profile(user,"https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg",LIGHT)
-    return {"user_id":user.id, "username":user.username,"email":user.email,"password":user.password,"profileID":profile.id}
+    return {"status":"SUCCESS","id":user.id, "username":user.username,"email":user.email,"password":user.password,"profileID":profile.id}
 
 def create_profile(user_id, profileIcon, mode=LIGHT):
     
@@ -60,7 +60,7 @@ def swap_mode(request,id):
         profile= profile_models.Profiles.objects.get(id=id)
         profile.mode= not bool(profile.mode)
         profile.save()
-        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
+        return {"status":"SUCCESS","id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
     else:
         return {"status":"FAILURE"}
 
@@ -82,6 +82,7 @@ def edit_profile_mode(request,id, mode):
         profile= profile_models.Profiles.objects.get(id=id)
         profile.mode= mode
         profile.save()
+        return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
     else:
         return {"id":profile.id,"mode":profile.mode,"profileIcon":profile.profileIcon,"domainIDs":profile.domainIDs,"userID":profile.userID_id}
 
@@ -148,7 +149,7 @@ def login_user(request,username,password):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request,user)
-            return {"status": "SUCCESS"}
+            return {"status": "SUCCESS", "id":user.id}
         else:
             return {"status": "FAILURE"}
     else:

@@ -18,6 +18,8 @@ torch = "*"
 transformers = "*"
 psycopg2-binary = "*"
 django-environ = "*"
+mock = "*"
+pymongo = "*"
 [dev-packages]
 
 [requires]

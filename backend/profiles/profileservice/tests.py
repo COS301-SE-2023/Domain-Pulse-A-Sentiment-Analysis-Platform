@@ -1,11 +1,15 @@
+import json
 from django.test import TestCase
 from unittest import mock
 # Create your tests here.
 from django.test import TestCase, Client
 from django.urls import reverse
 from utils import profilescrud
+from django.http import HttpRequest, JsonResponse
 from profileservice import models as profile_models
-
+from django.test.client import RequestFactory
+from profileservice import views as profile_views
+from django.contrib.auth.models import User
 
 
 def mocked_create_profile(dummy,dummy1,dummy2):
@@ -19,20 +23,39 @@ class ProfilesTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
     @mock.patch(
-        "util.profilescrud.create_profile", side_effect=mocked_create_profile
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
     )
 
-    def test_create_user(self):
+    def test_create_user(self,mocked_create_profile):
         testUsername="test"
         testEmail="test@t.com"
         testPassword="testP"
         result = profilescrud.create_user(testUsername,testEmail,testPassword)
-        assert (
-            (result["id"]).isnumeric()
-            and result["profileID"] == result["id"]
-            and result["username"] == testUsername
-            and result["email"] == testEmail
-        )
+        if result["status"] == "SUCCESS":
+            assert (result["profileID"].id == result["id"]
+                and result["username"] == testUsername
+                and result["email"] == testEmail
+            )
+        else:
+            assert (False)
+
+    def test_swap_mode(self):
+        class MockUser:
+            is_authenticated = True
+
+        user = profilescrud.create_user("test","t@test.com","test")
+        rf = RequestFactory()
+        data={'id': user["id"]}
+        post_request = rf.post('/profiles/swap_mode', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=json.loads(profile_views.swap_mode(post_request).content)
+        if result["status"] == "SUCCESS":
+            assert (result["id"] == user["id"]
+                and result["mode"] == True
+            )
+        else:
+            assert (False)
+        
 
    
 
