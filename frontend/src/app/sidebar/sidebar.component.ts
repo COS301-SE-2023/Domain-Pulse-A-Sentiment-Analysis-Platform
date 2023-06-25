@@ -112,4 +112,20 @@ export class SidebarComponent {
   selectDomain(domain: DisplayDomain) {
     this.store.dispatch(new SetDomain(domain));
   }
+
+  theme = 0; //0 = light, 1 = dark
+
+  toggleTheme(){
+    console.log("toggle theme");
+      if(this.theme == 0){
+          this.theme = 1;
+          document.body.classList.toggle('light');
+          document.body.classList.toggle('dark');
+      }else{
+          this.theme = 0;
+          //document.body.style.setProperty('--background', '#e8ecfc');
+          document.body.classList.toggle('light');
+          document.body.classList.toggle('dark');
+      }
+  }
 }

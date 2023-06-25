@@ -4,7 +4,6 @@
     display: flex
     justify-content: center
     align-items: center
-    background-color: rgb(92 228 243 / 18%)
     height: inherit
     width: inherit
 
@@ -38,7 +37,7 @@
     font-size: 15pt
 
 .source-selector
-    background-color: white
+    background-color: var(--main-div)
     border-radius: 25px
     height: 16%
     gap: 1.4rem
@@ -49,13 +48,13 @@
     border-radius: 25px
     height: 80%
     width: 180px
-    background-color: rgba(191, 200, 228, 0.39)
+    background-color: var(--highlight)
 
 .statistic-selector
 
 // below is where the styles for the modal are
 .default-input
-    border: solid rgb(133, 133, 133) 2px
+    border: solid var(--highlight) 2px
     height: 30px
     border-radius: 10px
 
@@ -63,7 +62,7 @@
     width: 130px
     height: 40px
     border-radius: 25px
-    background-color: styles.$primary-blue
+    background-color: var(--primary)
     color: white
     font-family: 'Source Sans 3'
     font-size: 14pt
@@ -76,7 +75,7 @@
     font-family: 'Open Sans'
     font-weight: 700
     font-size: 20pt
-    color: styles.$primary-blue
+    color: var(--primary)
 
 .heading-container 
     text-align: left
@@ -114,14 +113,14 @@
     font-size: 50px
     font-weight: 700
     font-family: 'Open Sans'
-    color: styles.$grey-subtle
+    color: var(--grey-subtle)
     padding-right: 10px
 
 .step-heading
     font-family: 'Source Sans 3'
     font-weight: 300
     font-size: 15px
-    color: black
+    color: var(--text-color)
 
 .picture
     flex-basis: 45%

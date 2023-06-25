@@ -1,8 +1,8 @@
 @use 'styles'
 
 :host
-    color: white
-    background: linear-gradient(to bottom, styles.$primary-blue, styles.$secondary-blue)
+    color: var(--text-color)
+    background: linear-gradient(to bottom, var(--sidebar-top), var(--sidebar-bottom))
     border-radius: 25px
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3)
 
@@ -34,7 +34,7 @@
     width: 130px
     height: 40px
     border-radius: 25px
-    background-color: styles.$primary-blue
+    background-color: var(--primary)
     color: white
     font-family: 'Source Sans 3'
     font-size: 14pt
@@ -48,7 +48,7 @@
     font-family: 'Open Sans'
     font-weight: 700
     font-size: 20pt
-    color: styles.$primary-blue
+    color: var(--primary)
 
 
 .heading-container 
@@ -69,14 +69,14 @@
     font-size: 50px
     font-weight: 700
     font-family: 'Open Sans'
-    color: styles.$grey-subtle
+    color: var(--grey-subtle)
     padding-right: 10px
 
 .step-heading
     font-family: 'Source Sans 3'
     font-weight: 300
     font-size: 15px
-    color: black
+    color: var(--text-color)
 
 .picture
     flex-basis: 45%
@@ -104,7 +104,7 @@
     font-family: 'Source Sans 3'
     font-weight: 700
     font-size: 18pt
-    color: styles.$secondary-blue
+    color: var(--secondary)
 
 .profile-icon
     width:15px
@@ -133,14 +133,14 @@
     height: 2rem
     padding: 0 1rem
     border-radius: 1rem
-    background-color: styles.$primary-blue
+    background-color: var(--primary)
     cursor: pointer
     width: 12rem
     color: white
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
 
 .button:hover
-  background-color: styles.$secondary-blue
+  background-color: var(--secondary)
 
 .button-text
   margin-left: 0.5rem

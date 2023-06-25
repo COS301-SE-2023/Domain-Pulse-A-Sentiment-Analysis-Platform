@@ -3,7 +3,7 @@
 :host
     display: flex
     align-items: center
-    background-color: white
+    background-color: var(--main-div)
     border-radius: 25px
     height: 12%
     padding: 0.3rem 1.3rem
@@ -19,7 +19,7 @@
     height: 100%
 
 .statistic-category-selected
-    background-color: styles.$highlight-blue
+    background-color: var(--highlight-blue)
     border-radius: 20px
     padding: 0.5rem 1rem
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05)
@@ -36,11 +36,11 @@
         font-size: 15pt
         font-weight: bold
         font-family: 'Open Sans'
-        color: styles.$secondary-blue
+        color: var(--secondary)
     :nth-child(2)
         font-size: 19pt
         font-family: 'Source Sans 3'
-        color: styles.$secondary-blue
+        color: var(--secondary)
         font-weight: 300
 
 @media (max-width: 1600px)

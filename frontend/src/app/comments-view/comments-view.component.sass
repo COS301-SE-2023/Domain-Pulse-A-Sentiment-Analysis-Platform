@@ -1,14 +1,14 @@
 @use 'styles'
 
 :host
-  background-color: white
+  background-color: var(--main-div)
   border-radius: 25px
   flex-basis: 98%
   padding: 1rem 2.8rem
   overflow-y: scroll
   scrollbar-width: 5px
   scrollbar-height: 90%
-  scrollbar-color: styles.$grey-subtle
+  scrollbar-color: var(--grey-subtle)
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
   border-right: solid transparent 0.5rem
   border-top: solid transparent 1.5rem
@@ -23,11 +23,11 @@
     background-color: transparent
 
   &::-webkit-scrollbar-thumb
-    background-color: styles.$grey-subtle
+    background-color: var(--grey-subtle)
     border-radius: 3px
 
   &::-webkit-scrollbar-thumb:hover
-    background-color: styles.$grey-item
+    background-color: var(--grey-item)
 
 .flex-column
   display: flex
@@ -46,7 +46,7 @@
   padding: 4px 8px
   margin-right: 5px
   border-radius: 20px
-  color: #fff
+  color: var(--text-color)
   font-size: 12px
   font-family: 'Source Sans 3'
 
@@ -57,7 +57,7 @@ p
 hr
   border: 0
   height: 5px
-  background: styles.$grey-subtle
+  background: var(--grey-subtle)
   opacity: 0.5
   width: 100%
   border-radius: 10px
@@ -79,7 +79,7 @@ h2
   font-family: 'Open Sans'
   font-size: 20pt
   font-weight: bold
-  color: styles.$secondary-blue
+  color: var(--secondary)
   margin-bottom: 0.5rem
 
 
