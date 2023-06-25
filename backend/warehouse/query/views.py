@@ -52,7 +52,7 @@ def get_dashboard_data_source(request: HttpRequest):
         else:
             return JsonResponse({"status": "FAILURE"})
 
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -95,7 +95,7 @@ def get_dashboard_data_domain(request: HttpRequest):
         else:
             return JsonResponse({"status": "FAILURE"})
 
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
