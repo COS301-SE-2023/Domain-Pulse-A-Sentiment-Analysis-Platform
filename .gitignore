@@ -13,5 +13,8 @@ db.sqlite3
 media/
 staticfiles/
 
+#env
+.env
+
 # VSCode
 .vscode/

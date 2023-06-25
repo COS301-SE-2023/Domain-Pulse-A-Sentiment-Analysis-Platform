@@ -13,7 +13,11 @@ django = "*"
 vadersentiment = "*"
 django-cors-headers = "*"
 coverage = "*"
-
+nltk = "*"
+torch = "*"
+transformers = "*"
+psycopg2-binary = "*"
+django-environ = "*"
 [dev-packages]
 
 [requires]
