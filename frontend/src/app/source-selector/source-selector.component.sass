@@ -1,0 +1,73 @@
+@use "styles"
+
+:host
+    background-color: var(--main-div)
+    border-radius: 25px
+    height: 16%
+    gap: 1.4rem
+    padding: 0 1.2rem
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+
+.source-cat
+    border-radius: 25px
+    height: 80%
+    width: 180px
+    background-color: var(--highlight)
+
+// below is where the styles for the modal are
+.default-input
+    border: solid rgb(133, 133, 133) 2px
+    height: 30px
+    border-radius: 10px
+
+.new-source-btn
+    width: 130px
+    height: 40px
+    border-radius: 25px
+    background-color: styles.$primary-light
+    color: white
+    font-family: 'Source Sans 3'
+    font-size: 14pt
+    font-weight: 700
+    margin-top: 1rem
+    border: none
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+
+.modal-heading
+    font-family: 'Open Sans'
+    font-weight: 700
+    font-size: 20pt
+    color: styles.$primary-light
+    
+.heading-container
+    text-align: left
+    width: 80%
+    display: flex
+    align-items: center
+
+.back-arrow
+    width: 25px
+    margin-right: 10px
+
+.modal-step-tag
+    font-size: 50px
+    font-weight: 700
+    font-family: 'Open Sans'
+    color: var(--grey-subtle)
+    padding-right: 10px
+
+.step-heading
+    font-family: 'Source Sans 3'
+    font-weight: 300
+    font-size: 15px
+    color: var(--text-color)
+
+.picture
+    flex-basis: 45%
+    background-color: blue
+    border-top-right-radius: 59px
+    border-bottom-right-radius: 59px
+    background-image: url("../../assets/stock-bg.png")
+    background-repeat: no-repeat
+    background-size: cover
+    width: 100%

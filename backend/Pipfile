@@ -6,7 +6,7 @@ name = "pypi"
 [scripts]
 check_all = "bash scripts/check_all.sh"
 coverage_gen = "bash scripts/coverage.sh"
-run_engine = "python engine/manage.py runserver"
+engine = "python engine/manage.py runserver 0.0.0.0:8001"
 
 [packages]
 django = "*"

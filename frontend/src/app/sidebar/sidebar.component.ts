@@ -1,13 +1,94 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BackendService, Domain } from '../backend.service';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+} from '@angular/animations';
+import { Select, Store } from '@ngxs/store';
+import { AppState, DisplayDomain } from '../app.state';
+import { Observable } from 'rxjs';
+import { SetDomain } from '../app.actions';
 
 @Component({
   selector: 'dp-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.sass'],
+  animations: [
+    trigger('smallLogoSwitch', [
+      state(
+        'in',
+        style({
+          opacity: 1,
+          transform: 'scale(1)',
+        })
+      ),
+      state(
+        'out',
+        style({
+          opacity: 0,
+          transform: 'scale(0.5)',
+        })
+      ),
+      transition('in => out', animate('300ms ease-in')),
+      transition('out => in', animate('300ms ease-out')),
+    ]),
+    trigger('fullLogoSwitch', [
+      state(
+        'in',
+        style({
+          opacity: 1,
+          transform: 'scale(1)',
+        })
+      ),
+      state(
+        'out',
+        style({
+          opacity: 0,
+          transform: 'scale(0.7)',
+        })
+      ),
+      transition('in => out', [animate('400ms ease-in')]),
+      transition('out => in', [animate('300ms ease-out')]),
+    ]),
+  ],
 })
 export class SidebarComponent {
-  domains$ = this.backendService.domains$;
+  @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
+  smallLogoState = 'in';
+  showSmallLogo = true;
+  fullLogoState = 'out';
+  showFullLogo = false;
+
+  logoState = 'small';
+  _expanded = false;
+  @Input() set expanded(value: boolean) {
+    if (value) {
+      this.smallLogoState = 'out';
+      this._expanded = true;
+      setTimeout(() => {
+        this.showSmallLogo = false;
+        setTimeout(() => {
+          this.showFullLogo = true;
+          setTimeout(() => {
+            this.fullLogoState = 'in';
+          }, 50);
+        }, 50);
+      }, 300);
+    } else {
+      this.fullLogoState = 'out';
+      this._expanded = false;
+      setTimeout(() => {
+        this.showSmallLogo = true;
+        setTimeout(() => {
+          this.showFullLogo = false;
+          this.smallLogoState = 'in';
+        }, 100);
+      }, 300);
+    }
+  }
 
   domains = [
     {
@@ -36,8 +117,9 @@ export class SidebarComponent {
   newDomainImageName = '';
 
   showAddDomainModal = false;
+  showProfileModal = false;
 
-  constructor(private backendService: BackendService) {}
+  constructor(private backendService: BackendService, private store: Store) {}
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
@@ -46,6 +128,16 @@ export class SidebarComponent {
     } else {
       // this.windows[0].scrolling = true;
       this.showAddDomainModal = false;
+    }
+  }
+
+  toggleProfileModal(): void {
+    if (!this.showProfileModal) {
+      // this.windows[0].scrolling = false;
+      this.showProfileModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showProfileModal = false;
     }
   }
 
@@ -59,7 +151,23 @@ export class SidebarComponent {
     this.toggleDomainModal();
   }
 
-  selectDomain(domain: Domain) {
-    this.backendService.selectDomain(domain);
+  selectDomain(domain: DisplayDomain) {
+    this.store.dispatch(new SetDomain(domain));
+  }
+
+  theme = 0; //0 = light, 1 = dark
+
+  toggleTheme() {
+    console.log('toggle theme');
+    if (this.theme == 0) {
+      this.theme = 1;
+      document.body.classList.toggle('light');
+      document.body.classList.toggle('dark');
+    } else {
+      this.theme = 0;
+      //document.body.style.setProperty('--background', '#e8ecfc');
+      document.body.classList.toggle('light');
+      document.body.classList.toggle('dark');
+    }
   }
 }

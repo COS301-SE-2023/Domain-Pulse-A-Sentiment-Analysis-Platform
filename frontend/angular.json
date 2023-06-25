@@ -32,6 +32,11 @@
             "styles": [
               "src/styles.sass"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -84,8 +89,6 @@
           "options": 
           { 
             "karmaConfig": "karma.conf.js",
-
-    
             "polyfills": [
               "zone.js",
               "zone.js/testing"
@@ -99,6 +102,11 @@
             "styles": [
               "src/styles.sass"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src"
+              ]
+            },
             "scripts": []
           }
         }
