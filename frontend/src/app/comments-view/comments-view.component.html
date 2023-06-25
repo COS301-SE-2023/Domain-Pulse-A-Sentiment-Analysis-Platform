@@ -4,7 +4,7 @@
         <p>{{comment.comment}}</p>
         <div class="flex-row"  style="padding-top:10px">
             <div class="tag-container">
-              <div class = "tag" [ngClass]="getRatingColor(comment.ratings[0])" *ngFor="let rating of comment.ratings">{{ rating }}</div>
+              <div class = "tag" [ngClass]="getRatingColor(comment.ratings[0])" *ngFor="let rating of comment.ratings">{{rating}}</div>
             </div>
         </div>
         <hr>
