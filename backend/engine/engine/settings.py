@@ -34,10 +34,10 @@ ALLOWED_HOSTS = [
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
-       'http://localhost:4200',
-       'http://127.0.0.1:4200',
-       'http://154.73.32.89',
-       'http://154.73.32.89:4200',
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
+    'http://154.73.32.89',
+    'http://154.73.32.89:4200',
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?:\/\/)?((\w(-\w)*)+\.)*thuthuka\.me$',
@@ -47,14 +47,15 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'analyser',
-    'corsheaders',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "analyser",
+    "aggregator",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
