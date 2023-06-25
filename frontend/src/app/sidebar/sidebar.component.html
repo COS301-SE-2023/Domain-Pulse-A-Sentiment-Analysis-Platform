@@ -32,7 +32,7 @@
       <img [src]="domain.imageUrl" alt="Source logo" height="44px" />
     </div>
     <p *ngIf="_expanded">{{ domain.name }}</p>
-    <div *ngIf="domain.selected && _expanded" class="icons-container flex-row align-center">
+    <div class = "domain-name" *ngIf="domain.selected && _expanded" class="icons-container flex-row align-center">
       <img src="../assets/logos/pen-solid.png" height="15px" />
       <img src="../assets/logos/grey-trash.png" height="15px" />
     </div>
@@ -47,7 +47,7 @@
     <div class="plus-wrapper flex-row center">
     <img src="../assets/logos/white-plus.png" height="20px" />
     </div>
-    <p *ngIf="_expanded" style = "color: white;">add a domain</p>
+    <p class = "domain-name" *ngIf="_expanded" style = "color: white; ">add a domain</p>
   </div>
 
 
@@ -61,7 +61,7 @@
     <div class="circle-wrapper">
       <img src="../assets/stock-profile-pic.jpg" alt="Source logo" height="44px" />
     </div>
-    <p *ngIf="_expanded" style = "color: black;">John Doe</p>
+    <p class = "domain-name" *ngIf="_expanded" style = "color: black;">John Doe</p>
     <div *ngIf="_expanded" class="icons-container flex-row align-center">
       <img src="../assets/logos/settings.png" height="15px" />
     </div>
