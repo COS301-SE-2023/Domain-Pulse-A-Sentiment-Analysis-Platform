@@ -43,37 +43,11 @@ import { Observable } from 'rxjs';
   ],
 })
 export class MainComponent {
-  sidebarCollapsed = true;
-  title = 'Domain Pulse';
-
-  showAddSourcesModal = false;
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
+  sidebarCollapsed = true;
 
-  newSouceName = '';
-  newSourcePlatform = '';
-
-  constructor(private backendService: BackendService, private store: Store) {
-    this.selectedDomain$.subscribe((domain) => {
-      console.log('selected domain: ' + domain?.name);
-    });
-  }
-
-  addNewSource() {
-    console.log('platform: ' + this.newSourcePlatform);
-    this.backendService.addNewSource(this.newSouceName, this.newSourcePlatform);
-    this.newSouceName = '';
-
-    this.toggleAddSourcesModal();
-  }
-
-  toggleAddSourcesModal() {
-    if (!this.showAddSourcesModal) {
-      this.showAddSourcesModal = true;
-    } else {
-      this.showAddSourcesModal = false;
-    }
-  }
+  constructor(private backendService: BackendService, private store: Store) {}
 
   openSidebar() {
     this.sidebarCollapsed = false;

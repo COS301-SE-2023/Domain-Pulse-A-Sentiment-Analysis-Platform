@@ -25,26 +25,7 @@
       </div>
     </div>
 
-    <div class="source-selector flex-row align-center">
-      <div
-        *ngFor="let source of selectedDomain.sources"
-        class="source-cat flex-column center"
-      >
-        <img
-          [src]="'../assets/' + source.sourceImageUrl"
-          height="60px"
-          style="border-radius: 50%"
-        />
-        <p>{{ source.source_name }}</p>
-      </div>
-
-      <div
-        (click)="toggleAddSourcesModal()"
-        class="source-cat flex-column center"
-      >
-        <p style="font-size: 80pt">+</p>
-      </div>
-    </div>
+    <source-selector class="flex-row align-center"></source-selector>
 
     <statistic-selector></statistic-selector>
 
@@ -57,69 +38,3 @@
     </div>
   </div>
 </div>
-
-<dp-modal-container
-  [modalDisplay]="showAddSourcesModal"
-  (close)="toggleAddSourcesModal()"
->
-  
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
-    <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
-      <div class="heading-container">
-        <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleAddSourcesModal()">
-        <p class="modal-heading">Add a Source</p>
-      </div>
-      <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
-        <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">1</p>
-          <div class="flex-column" style="width: 100%">
-            <p class="step-heading">Source Name:</p>
-            <input class="default-input" [(ngModel)]="newSouceName" type="text" />
-          </div>
-        </div>
-  
-        <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">2</p>
-          <div class="flex-column" style="width: 100%">
-            <p class="step-heading">Source Type:</p>
-            <select
-              [(ngModel)]="newSourcePlatform"
-              style="
-                border: solid rgb(133, 133, 133) 2px;
-                height: 30px;
-                border-radius: 10px;
-              "
-            >
-              <option value="facebook">facebook</option>
-              <option value="instagram">instagram</option>
-              <option value="reddit">reddit</option>
-            </select>
-          </div>
-        </div>
-  
-        <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">3</p>
-          <div class="flex-column" style="width: 100%">
-            <p class="step-heading">Source url:</p>
-            <input class="default-input" type="text" />
-          </div>
-        </div>
-      </div>
-  
-      <div class="bottom-div">
-        
-        <button class="new-source-btn" (click)="addNewSource()">Confirm</button>
-        
-      </div>
-      
-  
-      
-  
-    </div>
-    <div
-      class="picture"
-    ></div>
-  
-      
-  </div>
-</dp-modal-container>

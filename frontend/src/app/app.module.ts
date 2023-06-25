@@ -19,6 +19,7 @@ import { NgxsModule } from '@ngxs/store';
 import { AppState } from './app.state';
 import { AppApi } from './app.api';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { SourceSelectorComponent } from './source-selector/source-selector.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
     LoginPageComponent,
     RegisterPageComponent,
     MainComponent,
+    SourceSelectorComponent,
   ],
   imports: [
     BrowserModule,

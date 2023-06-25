@@ -1,42 +1,6 @@
 @use "styles"
 
 :host
-    display: flex
-    justify-content: center
-    align-items: center
-    height: inherit
-    width: inherit
-
-.app-container
-    width: 97%
-    height: 96%
-    gap: 2rem
-
-.header
-    display: flex
-    justify-content: left
-    align-items: left
-    height: 15%
-
-.centered
-    flex-direction: row
-    align-items: center
-
-.domainTitle
-    margin-top: 0
-    margin-bottom: 0
-    font-family: Open Sans
-    font-weight: 700
-    font-size: 30pt
-
-.domainSubtitle
-    margin-top: 0
-    margin-bottom: 0
-    font-family: 'Source Sans 3'
-    font-weight: 400
-    font-size: 15pt
-
-.source-selector
     background-color: var(--main-div)
     border-radius: 25px
     height: 16%
@@ -50,11 +14,9 @@
     width: 180px
     background-color: var(--highlight)
 
-.statistic-selector
-
 // below is where the styles for the modal are
 .default-input
-    border: solid var(--highlight) 2px
+    border: solid rgb(133, 133, 133) 2px
     height: 30px
     border-radius: 10px
 
@@ -62,7 +24,7 @@
     width: 130px
     height: 40px
     border-radius: 25px
-    background-color: var(--primary)
+    background-color: styles.$primary-light
     color: white
     font-family: 'Source Sans 3'
     font-size: 14pt
@@ -75,39 +37,19 @@
     font-family: 'Open Sans'
     font-weight: 700
     font-size: 20pt
-    color: var(--primary)
+    color: styles.$primary-light
 
-.heading-container 
+.modal-contents
+
+.heading-container
     text-align: left
     width: 80%
     display: flex
     align-items: center
-    align-self: flex-start
-    margin-top: 4%
-    margin-left: 10%
 
-.content
-  flex-grow: 1
-
-.modal-contents
-  display: flex
-  flex-direction: column
-  justify-content: space-between
-
-.bottom-div
-  align-content: center
-  justify-content: center
-  margin-bottom: 6%
-
-.heading-container 
-  text-align: left
-  width: 80%
-  display: flex
-  align-items: center
-
-.back-arrow 
-  width: 25px
-  margin-right: 10px
+.back-arrow
+    width: 25px
+    margin-right: 10px
 
 .modal-step-tag
     font-size: 50px
@@ -130,7 +72,4 @@
     background-image: url("../../assets/stock-bg.png")
     background-repeat: no-repeat
     background-size: cover
-    width:100%
-
-   
-
+    width: 100%
