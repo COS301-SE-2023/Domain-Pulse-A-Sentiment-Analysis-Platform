@@ -14,4 +14,15 @@ export class AppApi {
       this.engineBaseUrl + this.getDomainsUrl + '/' + userId
     );
   }
+
+  addSource(
+    domainID: number,
+    sourceName: string,
+    sourceImageUrl: string
+  ): Observable<any> {
+    const addSourceUrl =
+      this.engineBaseUrl +
+      `domains/add_source/1/${domainID}/${sourceName}/${sourceImageUrl}`;
+    return this.http.get(addSourceUrl);
+  }
 }

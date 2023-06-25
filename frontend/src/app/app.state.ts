@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { AppApi } from './app.api';
-import { GetDomains, SetDomain } from './app.actions';
+import { AddNewSource, GetDomains, SetDomain } from './app.actions';
 export interface Source {
   source_id: number;
   source_name: string;
@@ -150,5 +150,32 @@ export class AppState {
       domains: domains,
       selectedDomain: state.domain,
     });
+  }
+
+  @Action(AddNewSource)
+  addNewSource(ctx: StateContext<AppStateModel>, state: AddNewSource) {
+    let source_image_name = '';
+    switch (state.platform) {
+      case 'facebook':
+        source_image_name = 'facebook-logo.png';
+        break;
+      case 'instagram':
+        source_image_name = 'instagram-Icon.png';
+        break;
+      case 'reddit':
+        source_image_name = 'reddit-logo.png';
+        break;
+    }
+
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    let domainID = selectedDomain.id;
+    this.appApi
+      .addSource(domainID, state.name, source_image_name)
+      .subscribe((res) => {
+        // Not sure as to whether i should just reget all the data or just use the response
+        this.store.dispatch(new GetDomains());
+      });
   }
 }
