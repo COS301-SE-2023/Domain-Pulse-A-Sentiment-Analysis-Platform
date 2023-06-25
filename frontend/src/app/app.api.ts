@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AppApi {
   private engineBaseUrl = `http://${window.location.hostname}:8001/`;
+  private profilesBaseUrl = `http://${window.location.hostname}:8002/`;
   private getDomainsUrl = 'domains/get_domains';
 
   constructor(private http: HttpClient) {}
@@ -24,5 +25,11 @@ export class AppApi {
       this.engineBaseUrl +
       `domains/add_source/1/${domainID}/${sourceName}/${sourceImageUrl}`;
     return this.http.get(addSourceUrl);
+  }
+
+  checkAuthenticate(): Observable<any> {
+    const checkAuthenticateUrl =
+      this.profilesBaseUrl + 'profiles/check_logged_in';
+    return this.http.post(checkAuthenticateUrl, {});
   }
 }

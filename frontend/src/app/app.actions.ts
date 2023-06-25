@@ -17,7 +17,16 @@ export class SetDomain {
   constructor(public domain: DisplayDomain) {}
 }
 
+export class AddNewDomain {
+  static readonly type = '[App] Add New Domain';
+  constructor(public domainName: string, domainImageName: string) {}
+}
+
 export class AddNewSource {
   static readonly type = '[App] Add New Source';
   constructor(public name: string, public platform: string) {}
+}
+
+export class CheckAuthenticate {
+  static readonly type = '[App] Check Authenticate';
 }

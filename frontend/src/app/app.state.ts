@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { AppApi } from './app.api';
-import { AddNewSource, GetDomains, SetDomain } from './app.actions';
+import {
+  AddNewDomain,
+  AddNewSource,
+  CheckAuthenticate,
+  GetDomains,
+  SetDomain,
+} from './app.actions';
+import { Router } from '@angular/router';
 export interface Source {
   source_id: number;
   source_name: string;
@@ -56,6 +63,7 @@ export class Comment {
 
 interface AppStateModel {
   profileId: number;
+  authenticated: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -67,14 +75,25 @@ interface AppStateModel {
   name: 'app',
   defaults: {
     profileId: 1,
+    authenticated: false,
   },
 })
 @Injectable()
 export class AppState {
-  constructor(private readonly appApi: AppApi, private readonly store: Store) {
+  constructor(
+    private readonly appApi: AppApi,
+    private readonly store: Store,
+    private readonly router: Router
+  ) {
     setTimeout(() => {
-      this.store.dispatch(new GetDomains());
-    }, 300); // put this dispatch in the right place
+      this.store.dispatch(new CheckAuthenticate()).subscribe(() => {
+        if (this.store.selectSnapshot((state) => state.app.authenticated)) {
+          this.store.dispatch(new GetDomains());
+        } else {
+          this.router.navigate(['/register']);
+        }
+      });
+    }, 300);
   }
 
   @Selector()
@@ -105,11 +124,6 @@ export class AppState {
   getDomains(ctx: StateContext<AppStateModel>) {
     this.appApi.getDomains(ctx.getState().profileId).subscribe((res: any) => {
       let domainArr: DisplayDomain[] = res.domains.map((domain: any) => {
-        // let selected = false;
-        // if (firstt) {
-        //   selected = true;
-        //   firstt = false;
-        // }
         return {
           id: domain.domain_id,
           name: domain.domain_name,
@@ -177,5 +191,18 @@ export class AppState {
         // Not sure as to whether i should just reget all the data or just use the response
         this.store.dispatch(new GetDomains());
       });
+  }
+
+  @Action(AddNewDomain)
+  addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
+    alert('ADD NEW DOMAIN CODE NEEDS TO BE IMPLEMENTED');
+  }
+
+  @Action(CheckAuthenticate)
+  checkAuthenticate(ctx: StateContext<AppStateModel>) {
+    this.appApi.checkAuthenticate().subscribe((res: any) => {
+      if (res.status == 'SUCCESS') return true;
+      else return false;
+    });
   }
 }
