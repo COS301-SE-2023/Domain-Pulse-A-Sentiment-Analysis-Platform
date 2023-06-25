@@ -35,7 +35,8 @@ import { Observable } from 'rxjs';
       transition(
         'collapsed <=> notCollapsed',
         group([
-          query('@logoSwitch', [animateChild()]),
+          query('@smallLogoSwitch', [animateChild()], { optional: true }),
+          query('@fullLogoSwitch', [animateChild()], { optional: true }),
           animate('0.3s ease-in-out'),
         ])
       ),

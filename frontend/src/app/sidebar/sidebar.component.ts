@@ -17,32 +17,77 @@ import { SetDomain } from '../app.actions';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.sass'],
   animations: [
-    trigger('logoSwitch', [
+    trigger('smallLogoSwitch', [
       state(
-        'small',
+        'in',
         style({
+          opacity: 1,
+          transform: 'scale(1)',
+        })
+      ),
+      state(
+        'out',
+        style({
+          opacity: 0,
           transform: 'scale(0.5)',
         })
       ),
-      transition(':enter', [
-        style({ transform: 'scale(0.5)', opacity: 0 }),
-        animate(300),
-      ]),
-      transition(':leave', [
-        animate(300, style({ transform: 'scale(0.5)' })),
-        style({ opacity: 0 }),
-      ]),
+      transition('in => out', animate('300ms ease-in')),
+      transition('out => in', animate('300ms ease-out')),
+    ]),
+    trigger('fullLogoSwitch', [
+      state(
+        'in',
+        style({
+          opacity: 1,
+          transform: 'scale(1)',
+        })
+      ),
+      state(
+        'out',
+        style({
+          opacity: 0,
+          transform: 'scale(0.7)',
+        })
+      ),
+      transition('in => out', [animate('400ms ease-in')]),
+      transition('out => in', [animate('300ms ease-out')]),
     ]),
   ],
 })
 export class SidebarComponent {
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
+  smallLogoState = 'in';
+  showSmallLogo = true;
+  fullLogoState = 'out';
+  showFullLogo = false;
 
   logoState = 'small';
   _expanded = false;
   @Input() set expanded(value: boolean) {
-    // TODO have a seprate controller for the small logo and the large logo
-    this._expanded = value;
+    if (value) {
+      this.smallLogoState = 'out';
+      this._expanded = true;
+      setTimeout(() => {
+        this.showSmallLogo = false;
+        setTimeout(() => {
+          this.showFullLogo = true;
+          setTimeout(() => {
+            this.fullLogoState = 'in';
+          }, 50);
+        }, 50);
+      }, 300);
+    } else {
+      this.fullLogoState = 'out';
+      this._expanded = false;
+      setTimeout(() => {
+        this.showSmallLogo = true;
+        setTimeout(() => {
+          this.showFullLogo = false;
+          this.smallLogoState = 'in';
+        }, 100);
+      }, 300);
+    }
   }
 
   // change logoState based on expanded
@@ -115,17 +160,17 @@ export class SidebarComponent {
 
   theme = 0; //0 = light, 1 = dark
 
-  toggleTheme(){
-    console.log("toggle theme");
-      if(this.theme == 0){
-          this.theme = 1;
-          document.body.classList.toggle('light');
-          document.body.classList.toggle('dark');
-      }else{
-          this.theme = 0;
-          //document.body.style.setProperty('--background', '#e8ecfc');
-          document.body.classList.toggle('light');
-          document.body.classList.toggle('dark');
-      }
+  toggleTheme() {
+    console.log('toggle theme');
+    if (this.theme == 0) {
+      this.theme = 1;
+      document.body.classList.toggle('light');
+      document.body.classList.toggle('dark');
+    } else {
+      this.theme = 0;
+      //document.body.style.setProperty('--background', '#e8ecfc');
+      document.body.classList.toggle('light');
+      document.body.classList.toggle('dark');
+    }
   }
 }
