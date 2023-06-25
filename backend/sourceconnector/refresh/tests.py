@@ -11,9 +11,7 @@ class RefreshInstagramSourceTestCase(TestCase):
         self.factory = RequestFactory()
 
     def test_refresh_instagram_source_with_source_id_2(self):
-        request = self.client.get("/refresh/instagram/<source_id>/", args=[2])
-
-        response = views.refresh_instagram_source(request, source_id=2)
+        response = self.client.get("/refresh/instagram/2/")
 
         self.assertEqual(response.status_code, 200)
 
@@ -21,9 +19,7 @@ class RefreshInstagramSourceTestCase(TestCase):
         self.assertEqual(response.content, JsonResponse(expected_data).content)
 
     def test_refresh_instagram_source_with_source_id_3(self):
-        request = self.client.get("/refresh/instagram/<source_id>/", args=[3])
-
-        response = views.refresh_instagram_source(request, source_id=3)
+        response = self.client.get("/refresh/instagram/3/")
 
         self.assertEqual(response.status_code, 200)
 
