@@ -146,4 +146,8 @@ def delete_user(request,username,password):
             return {"status": "FAILURE"}
     else:
         return {"status": "FAILURE"}
+    
+def get_user_by_id(id):
+    user = User.objects.get(id = id)
+    return {"status":"SUCCESS","id":user.id, "username":user.username,"email":user.email,"password":user.password}
 

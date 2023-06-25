@@ -89,3 +89,10 @@ def get_domains_for_user(request: HttpRequest):
         raw_data=json.loads(request.body)
         return JsonResponse(profilescrud.get_domains_for_user(request,raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
+
+@csrf_exempt
+def get_user_by_id(request:HttpRequest):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse(profilescrud.get_user_by_id(raw_data["id"]))
+    return JsonResponse({"status": "FAILURE"})
