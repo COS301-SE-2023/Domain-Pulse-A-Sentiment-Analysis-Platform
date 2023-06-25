@@ -16,8 +16,11 @@ def mocked_create_profile(dummy,dummy1,dummy2):
     profile = profile_models.Profiles(id=dummy,userID_id=dummy,mode=dummy2,profileIcon=dummy1,domainIDs=[])
     return profile
 
+def mocked_login(dummy,dummy1):
+    return {}
 
-
+def mocked_logout(dummy):
+    return {}
 
 class ProfilesTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
@@ -133,8 +136,144 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-   
+    def test_get_domains_for_user(self):
+        class MockUser:
+            is_authenticated = True
+            
 
+        user = profilescrud.create_user("test","t@test.com","test")
+        rf = RequestFactory()
+
+        testDomainID=3
+        setupData={'id': user["id"], "domain_id":testDomainID }
+        post_request = rf.post('/profiles/add_domain_to_profile', setupData, content_type='application/json')
+        post_request.user = MockUser()
+        profile_views.add_domain_to_profile(post_request)
+        data={'id': user["id"] }
+        post_request = rf.post('/profiles/get_domains_for_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=json.loads(profile_views.get_domains_for_user(post_request).content)
+        if result["status"] == "SUCCESS":
+            assert (result["id"] == user["id"]
+                and result["domainIDs"]==[testDomainID]
+            )
+        else:
+            assert (False)
+    
+   
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+
+    def test_login_user_correct_credentials(self,mocked_login):
+        class MockUser:
+            is_authenticated = False
+
+        user = profilescrud.create_user("test","t@test.com","test")
+        rf = RequestFactory()
+        testUsername="test"
+        testPassword="test"
+        data={'username':'test','password':'test' }
+        post_request = rf.post('/profiles/login_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=profilescrud.login_user(post_request,testUsername,testPassword)
+        if result["status"] == "SUCCESS":
+            assert (result["id"] == user["id"])
+        else:
+            assert (False)
+
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+
+    def test_login_user_incorrect_credentials(self,mocked_login):
+        class MockUser:
+            is_authenticated = False
+
+        user = profilescrud.create_user("test","t@test.com","test")
+        rf = RequestFactory()
+        testUsername="testWrong"
+        testPassword="test"
+        data={'username':'testWrong','password':'test' }
+        post_request = rf.post('/profiles/login_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=profilescrud.login_user(post_request,testUsername,testPassword)
+        if result["status"] == "SUCCESS":
+            assert (False)
+        else:
+            assert (True)
+
+    @mock.patch('utils.profilescrud.logout', side_effect=mocked_logout)
+
+    def test_logout_user_logged_in(self,mocked_logout):
+        class MockUser:
+            is_authenticated = True
+        user = profilescrud.create_user("test","t@test.com","test")
+        rf = RequestFactory()
+        data={}
+        post_request = rf.post('/profiles/logout_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=profilescrud.logout_user(post_request)
+        if result["status"] == "SUCCESS":
+            assert (True)
+        else:
+            assert (False)
+
+    @mock.patch('utils.profilescrud.logout', side_effect=mocked_logout)
+
+    def test_logout_user_logged_out(self,mocked_logout):
+        class MockUser:
+            is_authenticated = False
+        user = profilescrud.create_user("test","t@test.com","test")
+        rf = RequestFactory()
+        data={}
+        post_request = rf.post('/profiles/logout_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=profilescrud.logout_user(post_request)
+        if result["status"] == "SUCCESS":
+            assert (False)
+        else:
+            assert (True)
+
+
+    def test_change_password(self):
+        class MockUser:
+            is_authenticated = True
+        user = profilescrud.create_user("test","t@test.com","test")
+        rf = RequestFactory()
+        testId=user["id"]
+        testOldPassword="test"
+        testNewPassword="test2"
+        data={user["id"],"test","test2"}
+        post_request = rf.post('/profiles/change_password', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=profilescrud.change_password(post_request,testId,testOldPassword,testNewPassword)
+        if result["status"] == "SUCCESS":
+            assert (True)
+        else:
+            assert (False)
+
+    @mock.patch('utils.profilescrud.logout', side_effect=mocked_logout)
+
+    def test_delete_user(self,mocked_logout):
+        user = profilescrud.create_user("test","t@test.com","test")
+        class MockUser:
+            is_authenticated = True
+            user=None
+            def setUser(self,user):
+               self.user=user
+        rf = RequestFactory()
+        testId=user["id"]
+        testOldPassword="test"
+        testNewPassword="test2"
+        data={user["id"],"test","test2"}
+        post_request = rf.post('/profiles/delete_user', data, content_type='application/json')
+        temp = MockUser()
+        temp.setUser(user)
+        post_request.user = temp
+
+        result=profilescrud.change_password(post_request,testId,testOldPassword,testNewPassword)
+        if result["status"] == "SUCCESS":
+            assert (True)
+        else:
+            assert (False)
+   
     
     
 
