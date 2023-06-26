@@ -30,3 +30,17 @@ export class AddNewSource {
 export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
 }
+
+export class AttempPsswdLogin {
+  static readonly type = '[Auth] Attemp Login';
+  constructor(public username: string, public password: string) {}
+}
+
+export class RegisterUser {
+  static readonly type = '[Auth] Register User';
+  constructor(
+    public username: string,
+    public password: string,
+    public email: string
+  ) {}
+}

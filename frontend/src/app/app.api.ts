@@ -32,4 +32,27 @@ export class AppApi {
       this.profilesBaseUrl + 'profiles/check_logged_in';
     return this.http.post(checkAuthenticateUrl, {});
   }
+
+  registerUser(
+    username: string,
+    email: string,
+    password: string
+  ): Observable<any> {
+    const registerUserUrl = this.profilesBaseUrl + 'profiles/create_user';
+    const body = {
+      username: username,
+      email: email,
+      password: password,
+    };
+    return this.http.post(registerUserUrl, body);
+  }
+
+  attemptPsswdLogin(username: string, password: string): Observable<any> {
+    const attemptPsswdLoginUrl = this.profilesBaseUrl + 'profiles/login_user';
+    const body = {
+      username: username,
+      password: password,
+    };
+    return this.http.post(attemptPsswdLoginUrl, body);
+  }
 }

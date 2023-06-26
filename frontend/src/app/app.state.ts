@@ -4,8 +4,10 @@ import { AppApi } from './app.api';
 import {
   AddNewDomain,
   AddNewSource,
+  AttempPsswdLogin,
   CheckAuthenticate,
   GetDomains,
+  RegisterUser,
   SetDomain,
 } from './app.actions';
 import { Router } from '@angular/router';
@@ -204,5 +206,22 @@ export class AppState {
       if (res.status == 'SUCCESS') return true;
       else return false;
     });
+  }
+  @Action(AttempPsswdLogin)
+  attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
+    this.appApi
+      .attemptPsswdLogin(state.username, state.password)
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+
+  @Action(RegisterUser)
+  registerUser(ctx: StateContext<AppStateModel>, state: RegisterUser) {
+    this.appApi
+      .registerUser(state.username, state.password, state.email)
+      .subscribe((res) => {
+        console.log(res);
+      });
   }
 }
