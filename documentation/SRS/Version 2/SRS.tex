@@ -622,7 +622,7 @@ Authentication User Functions will be controlled by Django Authentication System
 
 \section{Class Diagram}
 
-  \includegraphics[width=13cm]{../../Images/classDiagram.png}\\\\  
+  \includegraphics[width=13cm]{../../Images/classDiagram2.jpg}\\\\  
   \textbf{Design Patterns:} While the nature of the architecture does not lend itself to the Object-Oriented paradigm, two design patterns have been identified (and noted within the class diagram) - namely:\\\\
   \textbf{Facade:} The \textit{QueryEngine} effectively acts as a \textit{Facade} to the \textit{SourceConnector}, the \textit{Analysis Engine}, and conceptually, to the database. This ensures that the \textit{QueryEngine} acts as a uniform interface to the frontend web-app (as well as the rest of the application in general) for the retrieval of data. That is, the rest of the system need not interact with the complicated underlying systems, but rather can communicate uniformly with the \textit{QueryEngine} (which abstracts out the complicated query logic involved with retrieving data from the database, from external APIs, or sending data for sentiment analysis in the \textit{AnalysisEngine}).\\\\
   \textbf{Template Method:} Conceptually, the \textit{Template Method} design pattern is applied as follows: When a user defines a source, the source is categorized based on its type (e.g., Facebook, Reddit, etc). Each of these types of sources has different APIs with different parameters (and thus have different query strings). While the parent \textit{Source} class specifies the operation to build a query string, the individual, specific type of source defines exactly how that string may be built. i.e., The \textit{Source} is effectively a template for the construction of external API query strings, while the derivatives of the \textit{Source} (e.g., Reddit, Facebook, etc.) define how that template is "filled in" to construct the query string.
@@ -631,100 +631,7 @@ Authentication User Functions will be controlled by Django Authentication System
 
 \newpage
 
-\section{Architectural Requirements}
-
-\subsection{Quality Requirements}
-\begin{itemize}
-\item Security
-\item Usability
-\item Accessibility
-\item Scalability
-\item Availability
-\item Modifiability
-\item Performance
-\end{itemize}
-
-\subsection{Architectural Patterns and Tactics}
-\begin{itemize}
-  \item Below we discuss which architectural patterns and tactics we will use to meet the quality requirements. The patterns and tactics are in bold.
-\end{itemize}
-
-\subsubsection*{Security}
-\begin{itemize}
-\item Authentication system of Django that encrypts data created and sent pertaining to user data (email, password, etc.).
-\item Use POST if possible as opposed to GET.
-\item Our virtual machine on which we deploy shall have extensive firewalls set up so as to prevent foreign attacks of our system.
-\item Access to the virtual machine can only be performed by members of our group using SSH and by logging into the machine with private details.
-\end{itemize}
-
-\subsubsection*{Usability}
-
-\begin{itemize}
-  \item User-Centred Design Approach
-        \begin{itemize}
-          \item Consider the end-user throughout the design process and design the system accordingly.
-          \item Make the terminology easy to understand but still meaningful, considering users with no technical knowledge about NLP (Natural Language Processing).
-          \item Examples of end-users: R\&D specialists, social media managers, project leaders, executives, consultants.
-        \end{itemize}
-  \item Clear and Intuitive Interface
-        \begin{itemize}
-          \item Reduce clutter on the dashboard.
-          \item Ensure that the meaning and purpose of actions is clear through the use of descriptive and minimalistic icons.
-          \item Provide user feedback as they navigate through the application.
-          \item Utilize a user workflow of top-to-bottom, left-to-right navigation, ensuring that the process of completing steps feels natural and ordered.
-        \end{itemize}
-  \item Usability Testing
-        \begin{itemize}
-          \item Test the system with representative users.
-          \item Collect and implement feedback.
-        \end{itemize}
-\end{itemize}
-
-\subsubsection*{Accessibility}
-\begin{itemize}
-\item Implement a dark mode to cater for visually impaired and cognitive disabilities by providing a simple, free-from-distraction, high contrast user interface.
-\end{itemize}
-
-\subsubsection*{Scalability}
-\begin{itemize}
-\item By employing elements of the microservices architecture, we intend to improve the application’s ability to cope with high amounts of traffic from multiple concurrent users.
-\item Microservices allow for service isolation. Since services will be in isolation of each other, we may prevent issues in one service from impacting others. Ex: should one service experience high traffic, it can be scaled independently without affecting other services. Furthermore since this bottleneck will be isolated to an individually deployed system, it will impact other services to a minimal degree.
-\end{itemize}
-
-\subsubsection*{Availability}
-\begin{itemize}
-\item By leveraging aspects of the microservices architecture, we can improve the availability of the application.
-\item The microservices architecture promotes fault isolation, meaning issues in one service are less likely to propagate to other services. This increases the overall resilience of the system.
-\item Consequently, this will improve the overall availability of the system since even if a single deployed system fails, the other deployed units are still able to function (to an extent).
-\end{itemize}
-
-\subsubsection*{Modifiability}
-\begin{itemize}
-\item Furthermore, use of the microservices architecture will improve the ease with which us as developers can modify or extend the existing system.
-\item By promoting separation of concerns (architectural tactic) it is easier for
-\item For example: since the service that performs sentiment analysis on the data is deployed independently of the service responsible for fetching and aggregating data from external APIs, it is easy to extend the types of sources a user may consult for analysis, without making any changes to the analysis engine itself. Similarly, changes to user profiles are totally irrelevant to the other services of the system
-\item Consequently, easy modifiability of the system is accomplished 
-\end{itemize}
-
-\subsection*{Performance}
-\begin{itemize}
-  \item By employing the architectural tactic of caching can we improve the performance of the system. Caching is accomplished as follows:
-  \begin{itemize}
-    \item Once sentiment analysis is performed on data, those computed sentiment metrics are stored along with the actual data
-    \item Consequently, the next time the user wants to perform analysis on the data, data for which sentiment metrics have already been computed do not need to be computed again, since they have been ‘cached’ by the database
-    \item While this is not true caching (since the sentiment metrics once computed are permanently persisted) it does ensure that sentiment analysis overhead is drastically reduced since analysis will never be performed more than once for the same piece of data
-  \end{itemize}
-  \item Furthermore, by using the architectural tactic of database optimization, we can improve performance of the system by reducing the execution time of database queries. Database optimization is achieved via the following means
-  \begin{itemize}
-    \item By tightly grouping data that is highly related/dependent, we design the database in such a way that (slow) compound queries are not necessary. For example: a NoSQL document-based database is used to store the domains a user manages. Since the purpose of these domains is effectively to act as collections of sources, it is much more efficient to make the list of sources in a domain a list attribute on the domain stored in the database itself, rather than have a separate collection or database for the sources. Hence, whenever a domain is retrieved, so are the sources it contains, without the overhead of writing another query or a complex join to fetch the corresponding sources
-    \item Playing into the advantages of the microservices architecture, we are able to leverage different database technologies for different deployed systems depending on what is more fit for purpose. For example, in our context, persisting user profiles and authentication data is much more naturally and efficiently done by the use of a SQL database, as opposed to using a NoSQL database (which the other deployed systems make use of). Subsequently, we may achieve faster database queries on user profile and authentication related data, improving performance
-  \end{itemize}
-
-\end{itemize}
-
-
-
-\subsection{Constraints}
+\section{Constraints}
 
 \textbf{Technical Constraints}
 \begin{itemize}
@@ -767,13 +674,6 @@ Authentication User Functions will be controlled by Django Authentication System
   \item Need to have the final product delivered before the final demonstration and Project Day (approximately 6 months).
   \item Need to conform to milestone deadlines as set out by the requirements for demos 1 to 4.
 \end{itemize}
-
-Architectural Diagram
-
-\begin{center}
-  \includegraphics[width=13cm]{../../Images/archDiagram.png}
-
-\end{center}
 
 \newpage
 
