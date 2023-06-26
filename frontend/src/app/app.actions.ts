@@ -1,4 +1,4 @@
-import { DisplayDomain } from './app.state';
+import { DisplayDomain, DisplaySource } from './app.state';
 
 export class LoadUserDomains {
   static readonly type = '[App] Load User Domains';
@@ -33,6 +33,11 @@ export class AddNewDomain {
 
 export class GetSources {
   static readonly type = '[App] Get Sources';
+}
+
+export class SetSource {
+  static readonly type = '[App] Set Source';
+  constructor(public source: DisplaySource) {}
 }
 
 export class AddNewSource {

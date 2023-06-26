@@ -27,9 +27,9 @@ export class StatisticSelectorComponent {
   analysedSum = '23k';
 
   constructor(private store: Store) {
-    this.store.dispatch(new GetOverallSentimentScores());
-    this.sentimentScores$.subscribe((scores) => {
-      console.log(scores);
-    });
+    // this.store.dispatch(new GetOverallSentimentScores());
+    // this.sentimentScores$.subscribe((scores) => {
+    //   console.log(scores);
+    // });
   }
 }

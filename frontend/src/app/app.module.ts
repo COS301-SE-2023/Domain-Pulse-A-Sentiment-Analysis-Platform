@@ -42,7 +42,7 @@ import { SourceSelectorComponent } from './source-selector/source-selector.compo
     HttpClientModule,
     NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({
-      collapsed: true,
+      collapsed: false,
       // disabled: ENVIRONMENT == 'production',
     }),
   ],

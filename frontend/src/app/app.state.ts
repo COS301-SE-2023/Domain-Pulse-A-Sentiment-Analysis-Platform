@@ -12,6 +12,7 @@ import {
   RegisterUser,
   SetDomain,
   SetProfileId,
+  SetSource,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -164,17 +165,6 @@ export class AppState {
             selected: false,
           };
 
-          if (firstDomain) {
-            domain.selected = true;
-            firstDomain = false;
-            ctx.patchState({
-              selectedDomain: domain,
-            });
-
-            // this will use the selected domain
-            this.store.dispatch(new GetSources());
-          }
-
           let domains = ctx.getState().domains;
           if (domains) {
             ctx.patchState({
@@ -184,6 +174,15 @@ export class AppState {
             ctx.patchState({
               domains: [domain],
             });
+          }
+
+          if (firstDomain) {
+            // domain.selected = true;
+            firstDomain = false;
+            this.store.dispatch(new SetDomain(domain));
+
+            // this will use the selected domain
+            this.store.dispatch(new GetSources());
           }
 
           console.log(ctx.getState().domains);
@@ -205,6 +204,8 @@ export class AppState {
       domains: domains,
       selectedDomain: state.domain,
     });
+
+    this.store.dispatch(new GetSources());
   }
 
   @Action(GetSources)
@@ -213,8 +214,6 @@ export class AppState {
     if (!selectedDomain) return;
 
     let firstSource = true;
-
-    console.log('get sources')
 
     // initialize sources to empty array
     ctx.patchState({
@@ -226,9 +225,8 @@ export class AppState {
       let mockSource = this.idToSource(sourceID);
 
       if (firstSource) {
-        ctx.patchState({
-          selectedSource: mockSource,
-        });
+        console.log('first source');
+        this.store.dispatch(new SetSource(mockSource));
         firstSource = false;
       }
 
@@ -264,6 +262,24 @@ export class AppState {
       //   }
       // });
     }
+  }
+
+  @Action(SetSource)
+  setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
+    let sources = ctx.getState().sources;
+    if (!sources) return;
+
+    for (let souce of sources) {
+      souce.selected = false;
+    }
+    state.source.selected = true;
+
+    ctx.patchState({
+      sources: sources,
+      selectedSource: state.source,
+    });
+
+    this.store.dispatch(new GetOverallSentimentScores());
   }
 
   @Action(AddNewSource)
@@ -324,11 +340,11 @@ export class AppState {
   @Action(GetOverallSentimentScores)
   getOverallSentimentScores(ctx: StateContext<AppStateModel>) {
     // TODO have a selected Source
-    // let selectedDomain = ctx.getState().selectedDomain;
-    // if (!selectedDomain) return;
-    let selectedSouceID = 1;
+    let selectedSource = ctx.getState().selectedSource;
+    if (!selectedSource) return;
+    let selectedSourceID = selectedSource.id;
 
-    this.appApi.getOverallSentimentScores(selectedSouceID).subscribe((res) => {
+    this.appApi.getOverallSentimentScores(selectedSourceID).subscribe((res) => {
       console.log(res);
     });
   }
@@ -372,44 +388,56 @@ export class AppState {
 
   // fake soruce to info
   private idToSource(id: number): DisplaySource {
+    let displaySource: DisplaySource;
     switch (id) {
       case 0:
-        return  {
+        displaySource = {
           id: id,
-          name: "Goddess Cafe Waterkloof",
-          url: "google-reviews.png",
-          selected: false
-        }
+          name: 'Goddess Cafe Waterkloof',
+          url: 'google-reviews.png',
+          selected: false,
+        };
+        break;
       case 1:
-        return  {
+        displaySource = {
           id: id,
-          name: "Goddess Cafe Rietondale",
-          url: "google-reviews.png",
-          selected: false
-        }
+          name: 'Goddess Cafe Rietondale',
+          url: 'google-reviews.png',
+          selected: false,
+        };
+        break;
       case 2:
-        return  {
+        displaySource = {
           id: id,
           name: "Heineken Champion's Cup",
-          url: "instagram-Icon.png",
-          selected: false
-        }
+          url: 'instagram-Icon.png',
+          selected: false,
+        };
+        break;
       case 3:
-        return  {
+        displaySource = {
           id: id,
-          name: "Cell C Sharks",
-          url: "instagram-Icon.png",
-          selected: false
-        }
+          name: 'Cell C Sharks',
+          url: 'instagram-Icon.png',
+          selected: false,
+        };
+        break;
       case 4:
-        return  {
+        displaySource = {
           id: id,
-          name: "Tuks",
-          url: "google-reviews.png",
-          selected: false
-        }
+          name: 'Tuks',
+          url: 'google-reviews.png',
+          selected: false,
+        };
+        break;
       default:
-        console.log("Invalid value");
+        displaySource = {
+          id: id,
+          name: 'Goddess Cafe Waterkloof',
+          url: 'google-reviews.png',
+          selected: false,
+        };
     }
+    return displaySource;
   }
 }

@@ -10,6 +10,9 @@ export class AppApi {
   private warehouseBaseUrl = `http://${window.location.hostname}:8004/`;
   private getDomainsUrl = 'domains/get_domains';
 
+  // using the below to back in the source_id
+  private source_id_gen = 1;
+
   constructor(private http: HttpClient) {}
 
   getDomainIDs(userId: number): Observable<any> {
@@ -67,10 +70,14 @@ export class AppApi {
     sourceName: string,
     sourceImageUrl: string
   ): Observable<any> {
-    const addSourceUrl =
-      this.engineBaseUrl +
-      `domains/add_source/1/${domainID}/${sourceName}/${sourceImageUrl}`;
-    return this.http.get(addSourceUrl);
+    const addSourceUrl = this.profilesBaseUrl + 'profiles/add_source';
+    const body = {
+      domain_id: domainID,
+      source_id: this.source_id_gen++,
+      // icon: sourceImageUrl,
+    };
+
+    return this.http.post(addSourceUrl, body, { withCredentials: true });
   }
 
   getSourceInfo(sourceID: number): Observable<any> {
