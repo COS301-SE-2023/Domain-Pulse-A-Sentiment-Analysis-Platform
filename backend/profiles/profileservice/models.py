@@ -12,3 +12,10 @@ class Profiles(models.Model):
     profileIcon = models.URLField(max_length=200)
     domainIDs = ArrayField(models.IntegerField())
     # userID = models.TextField(max_length=10)
+
+class Domains(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.TextField(max_length=200)
+    description = models.TextField(max_length=200)
+    icon = models.URLField(max_length=200)
+    sources = ArrayField(models.IntegerField())

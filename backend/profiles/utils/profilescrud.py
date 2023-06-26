@@ -7,11 +7,12 @@ DARK = True
 
 
 
-def create_user(uname,email,pword):
+def create_user(request,uname,email,pword):
     user = User.objects.create_user(username=uname,
                                  email=email,
                                  password=pword)
     profile = create_profile(user,"https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg",LIGHT)
+    login(request, user)
     return {"status":"SUCCESS","id":user.id, "username":user.username,"email":user.email,"password":user.password,"profileID":profile.id}
 
 def create_profile(user_id, profileIcon, mode=LIGHT):
@@ -141,6 +142,7 @@ def delete_user(request,username,password):
                 logout(request)
                 return {"status": "SUCCESS"}
             else:
+                print("here")
                 return {"status": "FAILURE"}
         else:
             return {"status": "FAILURE"}
