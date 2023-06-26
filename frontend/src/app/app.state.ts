@@ -7,7 +7,7 @@ import {
   AttempPsswdLogin,
   CheckAuthenticate,
   GetDomains,
-  GetOverallSentimentScores,
+  GetDashboardData,
   GetSources,
   RegisterUser,
   SetDomain,
@@ -242,6 +242,8 @@ export class AppState {
         ctx.patchState({
           sources: [...sources, mockSource],
         });
+
+        this.store.dispatch(new GetDashboardData());
       }
 
       // this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
@@ -287,7 +289,23 @@ export class AppState {
       selectedSource: state.source,
     });
 
-    this.store.dispatch(new GetOverallSentimentScores());
+    for (let source of sources) {
+      if (source.selected) {
+        let overall = ctx.getState().overallSentimentScores;
+        if (!overall) return;
+
+        let selectedSouceId = source.id;
+
+        for (let commentSentAnal of overall.individual_metrics) {
+          if (commentSentAnal.source_id == selectedSouceId) {
+            ctx.patchState({
+              sampleData: commentSentAnal.sample_data,
+            });
+            break;
+          }
+        }
+      }
+    }
   }
 
   @Action(AddNewSource)
@@ -345,7 +363,7 @@ export class AppState {
       });
   }
 
-  @Action(GetOverallSentimentScores)
+  @Action(GetDashboardData)
   getOverallSentimentScores(ctx: StateContext<AppStateModel>) {
     // TODO have a selected Source
     let selectedSource = ctx.getState().selectedSource;

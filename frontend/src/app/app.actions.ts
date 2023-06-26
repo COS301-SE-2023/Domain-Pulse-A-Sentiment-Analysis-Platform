@@ -49,8 +49,8 @@ export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
 }
 
-export class GetOverallSentimentScores {
-  static readonly type = '[App] Get Overall Sentiment Scores';
+export class GetDashboardData {
+  static readonly type = '[App] Get Dashboard Data';
 }
 
 export class AttempPsswdLogin {

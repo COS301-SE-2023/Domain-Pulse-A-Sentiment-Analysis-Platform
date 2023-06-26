@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AppState, SentimentScores } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { GetOverallSentimentScores } from '../app.actions';
 
 @Component({
   selector: 'statistic-selector',
