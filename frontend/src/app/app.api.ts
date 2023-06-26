@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 export class AppApi {
   private engineBaseUrl = `http://${window.location.hostname}:8001/`;
   private profilesBaseUrl = `http://${window.location.hostname}:8002/`;
+
+  private warehouseBaseUrl = `http://${window.location.hostname}:8004/`;
   private getDomainsUrl = 'domains/get_domains';
 
   constructor(private http: HttpClient) {}
@@ -40,6 +42,16 @@ export class AppApi {
       this.engineBaseUrl +
       `domains/add_source/1/${domainID}/${sourceName}/${sourceImageUrl}`;
     return this.http.get(addSourceUrl);
+  }
+
+  getOverallSentimentScores(domainID: number): Observable<any> {
+    const getOverallSentimentScoresUrl =
+      this.warehouseBaseUrl + 'query/get_source_dashboard/';
+    const body = {
+      source_id: domainID,
+    };
+
+    return this.http.post(getOverallSentimentScoresUrl, body);
   }
 
   checkAuthenticate(): Observable<any> {

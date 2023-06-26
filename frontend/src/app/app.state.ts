@@ -7,6 +7,7 @@ import {
   AttempPsswdLogin,
   CheckAuthenticate,
   GetDomains,
+  GetOverallSentimentScores,
   RegisterUser,
   SetDomain,
   SetProfileId,
@@ -97,6 +98,11 @@ export class AppState {
     //     }
     //   });
     // }, 300);
+
+    // remove the below
+    setTimeout(() => {
+      this.store.dispatch(new GetOverallSentimentScores());
+    }, 1000);
   }
 
   @Selector()
@@ -220,6 +226,18 @@ export class AppState {
   @Action(AddNewDomain)
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
     alert('ADD NEW DOMAIN CODE NEEDS TO BE IMPLEMENTED');
+  }
+
+  @Action(GetOverallSentimentScores)
+  getOverallSentimentScores(ctx: StateContext<AppStateModel>) {
+    // TODO have a selected Source
+    // let selectedDomain = ctx.getState().selectedDomain;
+    // if (!selectedDomain) return;
+    let selectedSouceID = 1;
+
+    this.appApi.getOverallSentimentScores(selectedSouceID).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   @Action(CheckAuthenticate)

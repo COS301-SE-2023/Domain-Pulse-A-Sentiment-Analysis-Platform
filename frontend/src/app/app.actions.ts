@@ -36,6 +36,10 @@ export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
 }
 
+export class GetOverallSentimentScores {
+  static readonly type = '[App] Get Overall Sentiment Scores';
+}
+
 export class AttempPsswdLogin {
   static readonly type = '[Auth] Attemp Login';
   constructor(public username: string, public password: string) {}
