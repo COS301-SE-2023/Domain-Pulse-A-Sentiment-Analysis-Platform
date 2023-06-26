@@ -511,4 +511,27 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
+    def test_login_user_correct_credentials_integration(self):
+        class MockUser:
+            is_authenticated = False
+
+        rf = RequestFactory()
+        data={"username":"test","email":"test@t.com","password":"test"}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        post_request.user = MockUser()
+        user = json.loads(profile_views.create_user(post_request).content.decode())
+        data={'username':'test','password':'test' }
+        post_request = rf.post('/profiles/login_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        post_request.user = MockUser()
+        result=json.loads(profile_views.login_user(post_request).content.decode())
+        if result["status"] == "SUCCESS":
+            assert (result["id"] == user["id"])
+        else:
+            assert (False)
     # ----------------------------------------------------------------
