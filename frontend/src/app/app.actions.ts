@@ -31,6 +31,10 @@ export class AddNewDomain {
   ) {}
 }
 
+export class GetSources {
+  static readonly type = '[App] Get Sources';
+}
+
 export class AddNewSource {
   static readonly type = '[App] Add New Source';
   constructor(public name: string, public platform: string) {}

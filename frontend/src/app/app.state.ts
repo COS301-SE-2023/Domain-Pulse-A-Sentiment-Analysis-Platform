@@ -8,6 +8,7 @@ import {
   CheckAuthenticate,
   GetDomains,
   GetOverallSentimentScores,
+  GetSources,
   RegisterUser,
   SetDomain,
   SetProfileId,
@@ -25,7 +26,7 @@ export interface DisplayDomain {
   description: string;
   selected: boolean;
   imageUrl: string;
-  sources: Source[]; // remove this maybe, or state that these are the ids
+  sourceIds: number[];
 }
 
 export interface DisplaySource {
@@ -73,6 +74,7 @@ interface AppStateModel {
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
+  selectedSource?: DisplaySource;
   overallSentimentScores?: SentimentScores;
   comments?: Comment[];
 }
@@ -100,11 +102,6 @@ export class AppState {
     //     }
     //   });
     // }, 300);
-
-    // remove the below
-    setTimeout(() => {
-      this.store.dispatch(new GetOverallSentimentScores());
-    }, 1000);
   }
 
   @Selector()
@@ -122,6 +119,12 @@ export class AppState {
   @Selector()
   static sources(state: AppStateModel) {
     if (state.sources && state.sources.length > 0) return state.sources;
+    return undefined;
+  }
+
+  @Selector()
+  static selectedSource(state: AppStateModel) {
+    if (state.selectedSource) return state.selectedSource;
     return undefined;
   }
 
@@ -152,53 +155,12 @@ export class AppState {
             return;
           }
 
-          for (let sourceID of domainRes.sources) {
-            let sources = ctx.getState().sources;
-            let mockSource = this.idToSource(sourceID);
-
-            if (sources) {
-              ctx.patchState({
-                sources: [...sources, mockSource],
-              });
-            } else {
-              ctx.patchState({
-                sources: [mockSource],
-              });
-            }
-
-            // this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
-            //   if (sourceRes.status === 'FAILURE') {
-            //     // CHRIS ERROR HANDLE
-            //     alert('CHRIS ERROR HANDLE');
-            //     return;
-            //   }
-
-            //   let source: DisplaySource = {
-            //     id: sourceRes.id,
-            //     name: sourceRes.name,
-            //     url: sourceRes.url,
-            //     selected: false,
-            //   };
-
-            //   let sources = ctx.getState().sources;
-            //   if (sources) {
-            //     ctx.patchState({
-            //       sources: [...sources, source],
-            //     });
-            //   } else {
-            //     ctx.patchState({
-            //       sources: [source],
-            //     });
-            //   }
-            // });
-          }
-
           let domain: DisplayDomain = {
             id: domainRes.id,
             name: domainRes.name,
             description: domainRes.description,
             imageUrl: '../assets/' + domainRes.icon,
-            sources: [],
+            sourceIds: domainRes.sources,
             selected: false,
           };
 
@@ -208,6 +170,9 @@ export class AppState {
             ctx.patchState({
               selectedDomain: domain,
             });
+
+            // this will use the selected domain
+            this.store.dispatch(new GetSources());
           }
 
           let domains = ctx.getState().domains;
@@ -240,6 +205,65 @@ export class AppState {
       domains: domains,
       selectedDomain: state.domain,
     });
+  }
+
+  @Action(GetSources)
+  getSources(ctx: StateContext<AppStateModel>) {
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    let firstSource = true;
+
+    console.log('get sources')
+
+    // initialize sources to empty array
+    ctx.patchState({
+      sources: [],
+    });
+
+    for (let sourceID of selectedDomain.sourceIds) {
+      let sources = ctx.getState().sources;
+      let mockSource = this.idToSource(sourceID);
+
+      if (firstSource) {
+        ctx.patchState({
+          selectedSource: mockSource,
+        });
+        firstSource = false;
+      }
+
+      if (sources) {
+        ctx.patchState({
+          sources: [...sources, mockSource],
+        });
+      }
+
+      // this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
+      //   if (sourceRes.status === 'FAILURE') {
+      //     // CHRIS ERROR HANDLE
+      //     alert('CHRIS ERROR HANDLE');
+      //     return;
+      //   }
+
+      //   let source: DisplaySource = {
+      //     id: sourceRes.id,
+      //     name: sourceRes.name,
+      //     url: sourceRes.url,
+      //     selected: false,
+      //   };
+
+      //   let sources = ctx.getState().sources;
+      //   if (sources) {
+      //     ctx.patchState({
+      //       sources: [...sources, source],
+      //     });
+      //   } else {
+      //     ctx.patchState({
+      //       sources: [source],
+      //     });
+      //   }
+      // });
+    }
   }
 
   @Action(AddNewSource)

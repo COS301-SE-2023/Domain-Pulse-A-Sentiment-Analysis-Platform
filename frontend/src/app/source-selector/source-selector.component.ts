@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AppState, DisplayDomain } from '../app.state';
+import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { AddNewSource } from '../app.actions';
@@ -10,8 +10,9 @@ import { AddNewSource } from '../app.actions';
   styleUrls: ['./source-selector.component.sass'],
 })
 export class SourceSelectorComponent {
-  @Select(AppState.selectedDomain)
-  selectedDomain$!: Observable<DisplayDomain | null>;
+  @Select(AppState.sources) sources$!: Observable<DisplaySource[] | null>;
+  @Select(AppState.selectedSource)
+  selectedSource$!: Observable<DisplaySource | null>;
 
   showAddSourcesModal = false;
   newSouceName = '';
