@@ -372,11 +372,44 @@ export class AppState {
 
   // fake soruce to info
   private idToSource(id: number): DisplaySource {
-    return {
-      id: id,
-      name: 'Source ' + id,
-      url: 'https://www.google.com',
-      selected: false,
-    };
+    switch (id) {
+      case 0:
+        return  {
+          id: id,
+          name: "Goddess Cafe Waterkloof",
+          url: "google-reviews.png",
+          selected: false
+        }
+      case 1:
+        return  {
+          id: id,
+          name: "Goddess Cafe Rietondale",
+          url: "google-reviews.png",
+          selected: false
+        }
+      case 2:
+        return  {
+          id: id,
+          name: "Heineken Champion's Cup",
+          url: "instagram-Icon.png",
+          selected: false
+        }
+      case 3:
+        return  {
+          id: id,
+          name: "Cell C Sharks",
+          url: "instagram-Icon.png",
+          selected: false
+        }
+      case 4:
+        return  {
+          id: id,
+          name: "Tuks",
+          url: "google-reviews.png",
+          selected: false
+        }
+      default:
+        console.log("Invalid value");
+    }
   }
 }
