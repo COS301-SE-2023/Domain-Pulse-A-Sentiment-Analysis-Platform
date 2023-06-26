@@ -7,8 +7,9 @@
 \author{Ctrl Alt Defeat}
 
 \begin{document}
-\maketitle
-
+\include{cover}
+\tableofcontents
+\newpage
 \section{Architectural Design Strategy}
 \subsection{Approach}
 We have opted to follow the approach of: Design based on Quality Requirements
@@ -147,7 +148,7 @@ Note that no pattern directly addresses the quality requirement of security. Thi
 \section{Technology Choices}
 \subsection{Frontend Technology}
 Our frontend consists of the use of Angular which is an open source web application development framework that was developed by google. Angular is used to build dynamic and responsive applications.
-\subsection{Angular}
+\subsubsection{Angular}
 The reasons below are some of the key points as to why Angular is best suited for our application
 \begin{itemize}
     \item Angular is a complete framework which means that it doesnt have to rely on any other frameworks to complete any functionality front end wise , this is good because we already have multiple deployable units and having a singular front end framework would be a great way to declutter the project and not have a steep learning curve with multiple frontend frameworks.
@@ -162,13 +163,13 @@ In contrast there are always drawbacks to all technology and below are some of t
 \end{itemize}
 The argument about how angular is more fit for our project is presented below:
 \begin{itemize}
-    \item Angular is a good fit for good fit for our architecture as it has built in common practice ways of interacting with multiple backends, angular also provides a good framework for building abstractions on top of a service oriented architecture. Angulars component based architecture and dependancy injection system pair well with the principles of service orientated architecture,such that in a service orientated architecture applications are structured as a collection of loosly coupled services that communicate with each other through interfaces 
+    \item Angular is a good fit for good fit for our architecture as it has built in common practice ways of interacting with multiple backends, angular also provides a good framework for building abstractions on top of a service oriented architecture. Angulars component based architecture and dependancy injection system pair well with the principles of service orientated architecture,such that in a service orientated architecture applications are structured as a collection of loosly coupled services that communicate with each other through interfaces
     \item Angulars approach to the information above is that its components can be designed to encapsulate specific functionalities or services within the application.
 \end{itemize}
 With the above information and short example , lists all the reasons why we have chosen Angular
-\subsection{React}
+\subsubsection{React}
 React is library developed by Facebook for building user interfaces.
-Advantages of react: 
+Advantages of react:
 \begin{itemize}
     \item React uses a virtual DOM which efficiently updates and renders only the components that have changed.
     \item One way data flow which promotes data consistency
@@ -176,14 +177,14 @@ Advantages of react:
 Disadvantages of react:
 \begin{itemize}
     \item Alot of boilerplate code
-    \item Rapidly evolving ecosystem 
+    \item Rapidly evolving ecosystem
 \end{itemize}
 We decided against using react because of the amount of unused boilerplate code.
 
-\subsection{Svelte}
+\subsubsection{Svelte}
 Svelte is a JavaScript framework that takes a different approach to building user interfaces compared to traditional frameworks.
 \begin{itemize}
-    \item Highly optimised code leads to high performance 
+    \item Highly optimised code leads to high performance
     \item Framework-less does not rely on a runtime library
 \end{itemize}
 Disadvantages to svelte:
@@ -191,15 +192,16 @@ Disadvantages to svelte:
     \item Limited ecosystem and small community
     \item steep learning curve for advanced features
 \end{itemize}
-We decided against svelte because of the limited integration tools it has 
+We decided against svelte because of the limited integration tools it has
 
 \subsection{Backend Technology}
-\begin{itemize}
-    \item Django is a high-level Python web framework that follows the Model-View-Controller (MVC) architectural pattern. It provides a robust and efficient toolkit for building web applications.
-\end{itemize}
+
 Our backend consists of five different deployable units, each developed using Django to perform the business logic, data logic, and API functionality. The reasoning behind this technology choice is explained below.
 \subsubsection{Django}
 The following reasons are the main driving force this design decision:
+\begin{itemize}
+    \item Django is a high-level Python web framework that follows the Model-View-Controller (MVC) architectural pattern. It provides a robust and efficient toolkit for building web applications.
+\end{itemize}
 \begin{itemize}
     \item Django is, by design, highly secure 'out of the box' and provides comprehensive protection for all the most common security threats (SQL injection, CSRF, clickjacking, etc). This is of particularly high value to us since (as pointed out in the architectural constraints) the system will be hosted on a virtual machine with a public IP that is subject to frequent cyber-attacks. In order to minimize risk wrought on by inexperience or oversight, a highly secure framework such as Django is a very suitable choice for our purposes.
     \item Django is an entirely Python development environment. Since our system includes a significant portion of data manipulation (across all services), Python will improve the ease with which we are able to develop the system. Furthermore, Python has a number of fantastic libraries for Natural Language Processing and Machine Learning (ex: NLTK, PyTorch, etc), this language is a great choice to handle the application's sentiment analysis component. Additionally, all group members have high proficiency with Python, allowing us to lean into our strengths as programmers.
@@ -216,19 +218,19 @@ The argument on why we have chosen django is presented below:
     \item One of our constraints is that we have to use a NoSQL database and Django integrates well with this databse as djago provides a Object-Relational mapping which allows developers to interact with the database using python objects. Djangos modularity and component based architecture make it well suited for building services within an SOA , Django component can be reused and comunicate with eachother through interfaces.Django includes built in authentication and authorization which can be highly leveraged in an SOA architecture , Django can handle high traffic and scale well when deployed as it has functionality for load balancing,caching and database optimization.
 \end{itemize}
 
-\subsection{Flask}
+\subsubsection{Flask}
 Flask is a lightweight and flexible web framework for Python. It provides a simple and minimalist approach to building web applications.
 Advantages of flask:
 \begin{itemize}
-    \item Easy to learn 
+    \item Easy to learn
     \item It has a small core framework and provides only essential features
 \end{itemize}
 Disadvantages of flask:
 \begin{itemize}
     \item Doesnt have alot of functionality and is very "light-weight"
 \end{itemize}
-We decided against using flask because it doesnt have alot of functionality 
-\subsection{Express.js}
+We decided against using flask because it doesnt have alot of functionality
+\subsubsection{Express.js}
 Express.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 Advantages of express.js:
 \begin{itemize}
@@ -237,7 +239,7 @@ Advantages of express.js:
 \end{itemize}
 Disadvantages of express.js:
 \begin{itemize}
-    \item minimalistic approach isnt good in complex projects 
+    \item minimalistic approach isnt good in complex projects
 \end{itemize}
 we didnt choose express.js because it is minimalistic and we need alot of functionality for our project
 \subsection{Database Technology}
@@ -272,13 +274,13 @@ The reason we have chosen these 2 types of databases is because of the following
 \end{itemize}
 \subsection{Alternatives for database technology}
 \begin{itemize}
-    \item Alternative for postgreSQL is MySQL 
+    \item Alternative for postgreSQL is MySQL
     \item Alternative for MongoDB is CouchDB
 \end{itemize}
 Advantages for MySQL:
 \begin{itemize}
     \item Wide adoption and community support
-    \item good performance and scalibility 
+    \item good performance and scalibility
 \end{itemize}
 Disadvantages for MySQL:
 \begin{itemize}
@@ -292,7 +294,7 @@ Advantages for CouchDB:
 \end{itemize}
 Disadvantages for CouchDB:
 \begin{itemize}
-    \item bad performance on large data sets 
+    \item bad performance on large data sets
     \item doesnt have good advanced querying functionality
 \end{itemize}
 with the above reasons we decided to go with postgreSQL and MongoDB
