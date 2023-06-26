@@ -55,7 +55,30 @@ Testing out LaTeX
 
 
 \section{Technology Choices}
-\subsection{heading}
+\subsection{Frontend Technology}
 Testing out LaTeX
+\subsection{Backend Technology}
+Testing out LaTeX
+\subsection{Database Technology}
+Our system comprises three seperate databases, each running on different deployable units and each serve a different purpose. The description and reasoning of each is below.
+\subsubsection{Sentiment Records Database}
+This is a NoSQL document-based MongoDB database that runs on the Data Warehouse deployable unit. It is the main and largest database on the application, and contains all the sentiment records/data that have been analyzed, as well as the sentiment metrics that have been computed for each record.
+\begin{itemize}
+    \item A NoSQL database lends itself to this data because of unpredictable size and variety of the sentiment records that are retrieved online.
+    \item Furthermore, the metrics that are computed for each record are closely tied to the record itself (since the record will never be accessed outside the context of checking the sentiment metrics). By leveraging the document structure allowed by MongoDB, it is possible to store both the data and the metrics as a single document/unit.
+    \item Potentially most importantly, a NoSQL database (especially the document-based MongoDB) allows for flexibility and modifiability of the metrics computed on a particular sentiment record. For example, in the future it may be desirable to include an objectivity-subjectivity score on new articles that have been analysed. The flexibility of MongoDB would make this modification extremely simple, as no change needs to be applied to the database schema, or to any of the other existing documents in the database.
+\end{itemize}
+\subsubsection{Domains and Sources Database}
+This is a NoSQL document-based MongoDB database that runs on the Domains deployable unit. It is responsible for storing the information and structure of a domain, as well as the sources specified within it (including the information and parameters for those sources)
+\begin{itemize}
+    \item Since domains effectively act as 'folders' for sources, MongoDB is once again a suitable choice of technology, as it allows us to store sources as nested objects within a domain (which is the document). This helps accomplish 1. domains physically group their associated sources (and easily catering for a variable number of sources), as opposed to a SQL approach, which would alomost certainly require the use of complex joins, and 2. accomplish some form of query/database optimization in that since domains will ALWAYS be accessed in order to retrieve ALL their contained sources, we avoid consistently having to use joins like we would in a SQL databasee, instead by retrieving a single document (domain) we have all the information we required.
+    \item Furthermore since the parameters for different sources vary both in number and in type/name, by leverage a MongoDB database we do not need to create some static schema that needs to cater for all possible parameters. Instead we can simple create an object that contains key value pairs of the parameter name and its value.
+\end{itemize}
+\subsubsection{Profiles, Users, and Authentication}
+This is a SQL Postgre database that runs on the Profiles deployable unit. It is resposible for storing a user's profile information and preferences, linking it to their domains in the above database, and managing user and authentication data.
+\begin{itemize}
+    \item The data to be stored by this database is highly structured and well-defined, and consequently a SQL database is highly suitable for this purpose.
+    \item Additionally, Django (backend technology) provides seemless and secure integration with Postgre 'right out of the box' and hence we are able to leverage this predefined interaction in our development. (It is worth noting that this seemless integration is designed with security in mind, providing appropriate and comprehensive protection for database attacks such as SQL Injection)
+\end{itemize}
 
 \end{document}
