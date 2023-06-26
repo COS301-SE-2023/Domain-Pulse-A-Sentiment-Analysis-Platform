@@ -39,7 +39,7 @@ class ProfilesTests(TestCase):
         post_request = rf.post('/profiles/create_user', data, content_type='application/json')
         result = profilescrud.create_user(post_request,testUsername,testEmail,testPassword)
         if result["status"] == "SUCCESS":
-            assert (result["profileID"].id == result["id"]
+            assert (result["profileID"] == result["id"]
                 and result["username"] == testUsername
                 and result["email"] == testEmail
             )
@@ -69,12 +69,18 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-    def test_edit_profile_picture(self):
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_edit_profile_picture(self,mocked_create_profile,mocked_login):
         class MockUser:
             is_authenticated = True
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
+        data={}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         testPictureURL="test.com"
         data={'id': user["id"], "pictureURL": testPictureURL}
         post_request = rf.post('/profiles/edit_profile_picture', data, content_type='application/json')
@@ -112,12 +118,19 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-    def test_add_domain_to_profile(self):
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_add_domain_to_profile(self,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = True
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
+        data={ }
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         testDomainID=3
         data={'id': user["id"], "domain_id":testDomainID }
         post_request = rf.post('/profiles/add_domain_to_profile', data, content_type='application/json')
@@ -130,13 +143,19 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-    def test_remove_domain_from_profile(self):
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_remove_domain_from_profile(self,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = True
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
-
+        data={ }
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         testDomainID=3
         setupData={'id': user["id"], "domain_id":testDomainID }
         post_request = rf.post('/profiles/add_domain_to_profile', setupData, content_type='application/json')
@@ -153,14 +172,21 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-    def test_get_domains_for_user(self):
+
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_get_domains_for_user(self,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = True
             
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
-
+        data={ }
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         testDomainID=3
         setupData={'id': user["id"], "domain_id":testDomainID }
         post_request = rf.post('/profiles/add_domain_to_profile', setupData, content_type='application/json')
