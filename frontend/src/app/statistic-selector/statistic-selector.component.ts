@@ -12,8 +12,10 @@ export class StatisticSelectorComponent {
   negativeScore = 22;
   neutralScore = 8;
 
-  objectivityScore = 12;
-  subjectivityScore = 87;
+  emotion = "Joy";
+  emotionIconUrl = "../../assets/logos/" + this.emotion.toLowerCase() + ".png";
+  
+  toxicity = 10;
 
   analysedSum = "23k";
 }

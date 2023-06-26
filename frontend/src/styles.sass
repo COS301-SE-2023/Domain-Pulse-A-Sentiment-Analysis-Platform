@@ -2,13 +2,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap')
 
 // global style variables
-$background-light: #e8ecfc
+$background-light: #e0efff
 $primary-light: #037fff
 $secondary-light: #17234c
 $highlight-light: rgba(3, 127, 255, 0.25)
 $grey-item-light: #949494
 $grey-subtle-light: #e0e0e0
 $main-div-light: #ffffff
+$secondary-div-light: #ffffff
 $text-color-light: #000000
 $sidebar-top-light: #037fff
 $sidebar-bottom-light: #17234c
@@ -20,6 +21,7 @@ $highlight-dark: rgba(3, 127, 255, 0.25)
 $grey-item-dark: #949494
 $grey-subtle-dark: #e0e0e0
 $main-div-dark: #282828
+$secondary-div-dark: #404040
 $text-color-dark: #ffffff
 $sidebar-top-dark: #0058b2
 $sidebar-bottom-dark: #0058b2
@@ -33,6 +35,7 @@ body.light
     --grey-item: #{$grey-item-light}
     --grey-subtle: #{$grey-subtle-light}
     --main-div: #{$main-div-light}
+    --secondary-div: #{$secondary-div-light}
     --text-color: #{$text-color-light}
     --sidebar-top: #{$sidebar-top-light}
     --sidebar-bottom: #{$sidebar-bottom-light}
@@ -45,6 +48,7 @@ body.dark
     --grey-item: #{$grey-item-dark}
     --grey-subtle: #{$grey-subtle-dark}
     --main-div: #{$main-div-dark}
+    --secondary-div: #{$secondary-div-dark}
     --text-color: #{$text-color-dark}
     --sidebar-top: #{$sidebar-top-dark}
     --sidebar-bottom: #{$sidebar-bottom-dark}
@@ -55,7 +59,7 @@ body
     width: 100vw
     height: 100vh
     font-family: 'Source Sans 3'
-    background-color: var(--background)
+    background-color: white
     color: var(--text-color)
 p
     margin: 0

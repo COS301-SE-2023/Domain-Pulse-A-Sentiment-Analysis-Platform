@@ -12,19 +12,19 @@ export class CommentsViewComponent {
       this.comments = [
         {
           comment: "I love the cozy atmosphere and friendly staff at my local Starbucks. It's my go-to place for a delicious cup of coffee and a relaxing time.",
-          ratings: ["20%", "Somewhat Negative"]
+          ratings: ["20%", "Somewhat Negative", "Joy"]
         },
         {
           comment: "The quality of the drinks at Starbucks never disappoints. I always look forward to trying their seasonal offerings. The Pumpkin Spice Latte is my absolute favorite!",
-          ratings: ["70%", "Very Positive"]
+          ratings: ["70%", "Very Positive", "Surprise"]
         },
         {
           comment: "I visit Starbucks frequently for their variety of refreshing iced beverages. Their iced caramel macchiato is simply divine!",
-          ratings: ["56%", "Neutral"]
+          ratings: ["56%", "Neutral", "Neutral"]
         },
         {
           comment: "Unfortunately, the Starbucks near my office often has long queues, especially during peak hours. It can be frustrating when I'm in a hurry and need my coffee fix.",
-          ratings: ["15%", "Somewhat Negative"]
+          ratings: ["15%", "Somewhat Negative", "Anger"]
         }
       ];
     }

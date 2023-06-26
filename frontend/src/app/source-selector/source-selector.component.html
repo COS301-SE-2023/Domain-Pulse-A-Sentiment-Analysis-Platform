@@ -1,46 +1,70 @@
-<ng-container
-  *ngIf="selectedDomain$ | async as selectedDomain; else loadingSources"
->
-  <div
-    *ngFor="let source of selectedDomain.sources"
-    class="source-cat flex-column center"
+<div class="sources-div flex-row center">
+  
+  <ng-container
+    *ngIf="selectedDomain$ | async as selectedDomain; else loadingSources"
   >
-    <img
-      [src]="'../assets/' + source.sourceImageUrl"
-      height="60px"
-      style="border-radius: 50%"
-    />
-    <p>{{ source.source_name }}</p>
-  </div>
+    <div
+      *ngFor="let source of selectedDomain.sources"
+      class="source-cat flex-column center"
+    >
+      <img
+        [src]="'../assets/' + source.sourceImageUrl"
+        height="45px"
+        style="border-radius: 50%; margin-bottom: 0.5rem"
+      />
+      <p>{{ source.source_name }}</p>
+    </div>
 
-  <div (click)="toggleAddSourcesModal()" class="source-cat flex-column center">
-    <p style="font-size: 80pt">+</p>
-  </div>
-</ng-container>
+    <div (click)="toggleAddSourcesModal()" class="flex-column center">
+      <img src="../assets/logos/add-blue.png" height="45px" style="padding-bottom: 0.5rem"/>
+      <p>Add a Source</p>
+    </div>
+  </ng-container>
 
-<ng-template #loadingSources>
-  <p>Loading...</p>
-</ng-template>
+  <ng-template #loadingSources>
+    <p>Loading...</p>
+  </ng-template>
+</div>
+
+<div class = "source-actions flex-row center">
+  <div class="space-div flex-row center" style="margin-top: 0.5rem;">
+    <p>source actions</p>
+  </div>
+  <div class="button-div flex-row center">
+    
+    <div class="button">
+      <img class="button-icon" src="../assets/logos/refresh.png" alt="Icon">
+      <span class="button-text">Refresh</span>
+    </div>
+    <div class="button">
+      <img class="button-icon" src="../assets/logos/edit.png" alt="Icon">
+      <span class="button-text">Edit</span>
+    </div>
+    <div class="button">
+      <img class="button-icon" src="../assets/logos/trash-can-regular.png" alt="Icon">
+      <span class="button-text">Delete</span>
+    </div>
+    <div class="button">
+      <img class="button-icon" src="../assets/logos/search.png" alt="Icon">
+      <span class="button-text">Inspect</span>
+    </div>
+    
+  </div>
+  <div class="space-div flex-row center" style="margin-bottom: 0.5rem;"></div>
+</div>
 
 <dp-modal-container
-  [modalDisplay]="showAddSourcesModal"
-  (close)="toggleAddSourcesModal()"
+[modalDisplay]="showAddSourcesModal"
+(close)="toggleAddSourcesModal()"
 >
-  <div class="flex-row" style="width: 70vw; height: 70vh; color: black">
-    <div
-      class="flex-column center modal-contents"
-      style="flex-basis: 55%; gap: 0.7rem"
-    >
-      <div class="heading-container">
-        <img
-          src="../assets/logos/arrow-right-solid.png"
-          alt="Back Arrow"
-          class="back-arrow"
-          (click)="toggleAddSourcesModal()"
-        />
-        <p class="modal-heading">Add a Source</p>
-      </div>
 
+<div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
+    <div class="heading-container">
+      <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleAddSourcesModal()">
+      <p class="modal-heading">Add a Source</p>
+    </div>
+    <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
       <div class="flex-row" style="width: 80%">
         <p class="modal-step-tag">1</p>
         <div class="flex-column" style="width: 100%">
@@ -75,9 +99,22 @@
           <input class="default-input" type="text" />
         </div>
       </div>
-
-      <button class="new-source-btn" (click)="addNewSource()">confirm</button>
     </div>
-    <div class="picture"></div>
+
+    <div class="bottom-div">
+
+      <button class="new-source-btn" (click)="addNewSource()">Confirm</button>
+
+    </div>
+
+
+
+
   </div>
+  <div
+    class="picture"
+  ></div>
+
+
+</div>
 </dp-modal-container>
