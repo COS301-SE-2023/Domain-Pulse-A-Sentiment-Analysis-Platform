@@ -1,8 +1,8 @@
 # Fdb version 3
-["pdflatex"] 1687817796 "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.tex" "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.pdf" "CodingStandards" 1687817797
+["pdflatex"] 1687817938 "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.tex" "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.pdf" "CodingStandards" 1687817939
   "/etc/texmf/web2c/texmf.cnf" 1687795512 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.aux" 1687817797 1046 da714a266646550e73c6dee3bb0e7d41 ""
-  "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.tex" 1687817796 3212 649f6b12d98e8e1a02a2fc78f9e1a6f5 ""
+  "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.aux" 1687817938 1046 da714a266646550e73c6dee3bb0e7d41 ""
+  "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.tex" 1687817934 3460 ba163bede61c4f017b34c1f8c4025e99 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -40,14 +40,14 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1687795748 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1687795776 8262616 f4250a3aa63a4b8bc4aae82bcefcb55c ""
-  "CodingStandards.aux" 1687817797 1046 da714a266646550e73c6dee3bb0e7d41 "pdflatex"
-  "CodingStandards.tex" 1687817796 3212 649f6b12d98e8e1a02a2fc78f9e1a6f5 ""
-  "CodingStandards.toc" 1687817797 628 f0ac5070eb60d8dc073bce26a0400310 "pdflatex"
+  "CodingStandards.aux" 1687817938 1046 da714a266646550e73c6dee3bb0e7d41 "pdflatex"
+  "CodingStandards.tex" 1687817934 3460 ba163bede61c4f017b34c1f8c4025e99 ""
+  "CodingStandards.toc" 1687817939 628 f0ac5070eb60d8dc073bce26a0400310 "pdflatex"
   "cover.tex" 1687806188 319 3b78a0813c67256b76741afc32a78555 ""
   (generated)
   "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.pdf"
   "CodingStandards.aux"
-  "CodingStandards.log"
   "CodingStandards.pdf"
   "CodingStandards.toc"
+  "CodingStandards.log"
   "/mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.log"
