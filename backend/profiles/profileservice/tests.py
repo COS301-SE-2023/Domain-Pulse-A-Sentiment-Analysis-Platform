@@ -61,7 +61,7 @@ class ProfilesTests(TestCase):
         data={'id': user["profileID"]}
         post_request = rf.post('/profiles/swap_mode', data, content_type='application/json')
         post_request.user = MockUser()
-        result=json.loads(profile_views.swap_mode(post_request).content)
+        result=profilescrud.swap_mode(post_request,user["profileID"])
         if result["status"] == "SUCCESS":
             assert (result["id"] == user["id"]
                 and result["mode"] == True
@@ -85,7 +85,7 @@ class ProfilesTests(TestCase):
         data={'id': user["id"], "pictureURL": testPictureURL}
         post_request = rf.post('/profiles/edit_profile_picture', data, content_type='application/json')
         post_request.user = MockUser()
-        result=json.loads(profile_views.edit_profile_picture(post_request).content)
+        result=profilescrud.edit_profile_picture(post_request,user["id"],testPictureURL)
         if result["status"] == "SUCCESS":
             assert (result["id"] == user["id"]
                 and result["profileIcon"] == testPictureURL
@@ -110,7 +110,7 @@ class ProfilesTests(TestCase):
         data={'id': user["id"], "mode":testMode }
         post_request = rf.post('/profiles/edit_profile_mode', data, content_type='application/json')
         post_request.user = MockUser()
-        result=json.loads(profile_views.edit_profile_mode(post_request).content)
+        result=profilescrud.edit_profile_mode(post_request,user["id"],testMode)
         if result["status"] == "SUCCESS":
             assert (result["id"] == user["id"]
                 and result["mode"] ==testMode
@@ -135,7 +135,7 @@ class ProfilesTests(TestCase):
         data={'id': user["id"], "domain_id":testDomainID }
         post_request = rf.post('/profiles/add_domain_to_profile', data, content_type='application/json')
         post_request.user = MockUser()
-        result=json.loads(profile_views.add_domain_to_profile(post_request).content)
+        result=profilescrud.add_domain_to_profile(post_request,user["id"],testDomainID)
         if result["status"] == "SUCCESS":
             assert (result["id"] == user["id"]
                 and testDomainID in result["domainIDs"]
@@ -160,11 +160,11 @@ class ProfilesTests(TestCase):
         setupData={'id': user["id"], "domain_id":testDomainID }
         post_request = rf.post('/profiles/add_domain_to_profile', setupData, content_type='application/json')
         post_request.user = MockUser()
-        profile_views.add_domain_to_profile(post_request)
+        profilescrud.add_domain_to_profile(post_request,user["id"],testDomainID)
         data={'id': user["id"], "domain_id":testDomainID }
         post_request = rf.post('/profiles/remove_domain_from_profile', data, content_type='application/json')
         post_request.user = MockUser()
-        result=json.loads(profile_views.remove_domain_from_profile(post_request).content)
+        result=profilescrud.remove_domain_from_profile(post_request,user["id"],testDomainID)
         if result["status"] == "SUCCESS":
             assert (result["id"] == user["id"]
                 and testDomainID not in result["domainIDs"]
@@ -191,11 +191,11 @@ class ProfilesTests(TestCase):
         setupData={'id': user["id"], "domain_id":testDomainID }
         post_request = rf.post('/profiles/add_domain_to_profile', setupData, content_type='application/json')
         post_request.user = MockUser()
-        profile_views.add_domain_to_profile(post_request)
+        profilescrud.add_domain_to_profile(post_request,user["id"],testDomainID)
         data={'id': user["id"] }
         post_request = rf.post('/profiles/get_domains_for_user', data, content_type='application/json')
         post_request.user = MockUser()
-        result=json.loads(profile_views.get_domains_for_user(post_request).content)
+        result=profilescrud.get_domains_for_user(post_request,user["id"])
         if result["status"] == "SUCCESS":
             assert (result["id"] == user["id"]
                 and result["domainIDs"]==[testDomainID]
@@ -205,13 +205,18 @@ class ProfilesTests(TestCase):
     
    
     @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
-
-    def test_login_user_correct_credentials(self,mocked_login):
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_login_user_correct_credentials(self,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = False
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
+        data={ }
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         testUsername="test"
         testPassword="test"
         data={'username':'test','password':'test' }
@@ -224,12 +229,13 @@ class ProfilesTests(TestCase):
             assert (False)
 
     @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
-
-    def test_login_user_incorrect_credentials(self,mocked_login):
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_login_user_incorrect_credentials(self,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = False
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
         testUsername="testWrong"
         testPassword="test"
@@ -243,11 +249,9 @@ class ProfilesTests(TestCase):
             assert (True)
 
     @mock.patch('utils.profilescrud.logout', side_effect=mocked_logout)
-
     def test_logout_user_logged_in(self,mocked_logout):
         class MockUser:
             is_authenticated = True
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
         data={}
         post_request = rf.post('/profiles/logout_user', data, content_type='application/json')
@@ -259,11 +263,9 @@ class ProfilesTests(TestCase):
             assert (False)
 
     @mock.patch('utils.profilescrud.logout', side_effect=mocked_logout)
-
     def test_logout_user_logged_out(self,mocked_logout):
         class MockUser:
             is_authenticated = False
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
         data={}
         post_request = rf.post('/profiles/logout_user', data, content_type='application/json')
@@ -274,12 +276,18 @@ class ProfilesTests(TestCase):
         else:
             assert (True)
 
-
-    def test_change_password(self):
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_change_password(self,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = True
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
+        data={ }
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         testId=user["id"]
         testOldPassword="test"
         testNewPassword="test2"
@@ -293,15 +301,21 @@ class ProfilesTests(TestCase):
             assert (False)
 
     @mock.patch('utils.profilescrud.logout', side_effect=mocked_logout)
-
-    def test_delete_user(self,mocked_logout):
-        user = profilescrud.create_user("test","t@test.com","test")
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_delete_user(self,mocked_logout,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = True
             user=None
             def setUser(self,user):
                self.user=user
         rf = RequestFactory()
+        data={ }
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         testId=user["id"]
         testOldPassword="test"
         testNewPassword="test2"
