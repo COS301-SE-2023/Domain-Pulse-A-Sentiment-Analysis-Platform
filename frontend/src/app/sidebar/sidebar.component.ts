@@ -118,6 +118,7 @@ export class SidebarComponent {
 
   showAddDomainModal = false;
   showProfileModal = false;
+  showEditDomainModal = false;
 
   constructor(private backendService: BackendService, private store: Store) {}
 
@@ -128,6 +129,16 @@ export class SidebarComponent {
     } else {
       // this.windows[0].scrolling = true;
       this.showAddDomainModal = false;
+    }
+  }
+
+  toggleEditDomainModal(): void {
+    if (!this.showEditDomainModal) {
+      // this.windows[0].scrolling = false;
+      this.showEditDomainModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showEditDomainModal = false;
     }
   }
 
