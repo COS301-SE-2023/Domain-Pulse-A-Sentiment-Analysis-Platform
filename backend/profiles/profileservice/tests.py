@@ -568,7 +568,7 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-    def test_logout_user_logged_out(self):
+    def test_logout_user_logged_out_integration(self):
         class MockUser:
             is_authenticated = False
         rf = RequestFactory()
@@ -583,4 +583,25 @@ class ProfilesTests(TestCase):
             assert (False)
         else:
             assert (True)
+
+    def test_change_password_integration(self):
+        class MockUser:
+            is_authenticated = True
+        rf = RequestFactory()
+        data={"username":"test","email":"test@t.com","password":"test"}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        post_request.user = MockUser()
+        user = json.loads(profile_views.create_user(post_request).content.decode())
+        
+        data={"id":user["id"],"oldpassword":"test","newpassword":"test2"}
+        post_request = rf.post('/profiles/change_password', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=json.loads(profile_views.change_password(post_request).content.decode())
+        if result["status"] == "SUCCESS":
+            assert (True)
+        else:
+            assert (False)
     # ----------------------------------------------------------------
