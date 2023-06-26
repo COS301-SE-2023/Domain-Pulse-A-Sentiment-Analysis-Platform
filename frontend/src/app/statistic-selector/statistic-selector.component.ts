@@ -11,7 +11,7 @@ import { GetOverallSentimentScores } from '../app.actions';
 })
 export class StatisticSelectorComponent {
   @Select(AppState.overallSentimentScores)
-  sentimentScores$!: Observable<SentimentScores | null>;
+  sentimentScores$!: Observable<any | null>;
 
   overrallScore = 70;
 
@@ -26,10 +26,5 @@ export class StatisticSelectorComponent {
 
   analysedSum = '23k';
 
-  constructor(private store: Store) {
-    // this.store.dispatch(new GetOverallSentimentScores());
-    // this.sentimentScores$.subscribe((scores) => {
-    //   console.log(scores);
-    // });
-  }
+  constructor(private store: Store) {}
 }

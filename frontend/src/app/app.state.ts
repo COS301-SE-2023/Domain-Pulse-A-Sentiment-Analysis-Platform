@@ -359,6 +359,9 @@ export class AppState {
         return;
       }
 
+      ctx.patchState({
+        overallSentimentScores: res.aggregated_metrics,
+      });
 
     });
   }
