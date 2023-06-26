@@ -13,6 +13,7 @@ import {
   SetProfileId,
 } from './app.actions';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 export interface Source {
   source_id: number;
   source_name: string;
@@ -23,7 +24,7 @@ export interface DisplayDomain {
   name: string;
   selected: boolean;
   imageUrl: string;
-  sources: Source[];
+  sources: Source[]; // remove this maybe, or state that these are the ids
 }
 
 export interface DisplaySource {
@@ -148,19 +149,39 @@ export class AppState {
             return;
           }
 
+          for (let sourceID of domainRes.sources) {
+            this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
+              if (sourceRes.status === 'FAILURE') {
+                // CHRIS ERROR HANDLE
+                alert('CHRIS ERROR HANDLE');
+                return;
+              }
+
+              let source: DisplaySource = {
+                id: sourceRes.id,
+                name: sourceRes.name,
+                url: sourceRes.url,
+                selected: false,
+              };
+
+              let sources = ctx.getState().sources;
+              if (sources) {
+                ctx.patchState({
+                  sources: [...sources, source],
+                });
+              } else {
+                ctx.patchState({
+                  sources: [source],
+                });
+              }
+            });
+          }
+
           let domain: DisplayDomain = {
             id: domainRes.id,
             name: domainRes.name,
             imageUrl: '../assets/' + domainRes.icon,
-            sources: domainRes.domain.sources.map((source: any) => {
-              // THOMAS needs to tell me how sources will be handled
-              let newSource: Source = {
-                source_id: source.source_id,
-                source_name: source.source_name,
-                sourceImageUrl: source.source_image_name,
-              };
-              return newSource;
-            }),
+            sources: [],
             selected: false,
           };
 
@@ -225,7 +246,30 @@ export class AppState {
 
   @Action(AddNewDomain)
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
-    alert('ADD NEW DOMAIN CODE NEEDS TO BE IMPLEMENTED');
+    console.log(state);
+
+    this.appApi
+      .addDomain(state.domainName, state.description, state.domainImagUrl)
+      .subscribe((res) => {
+        if (res.status === 'FAILURE') {
+          // CHRIS ERROR HANDLE
+          alert('CHRIS ERROR HANDLE');
+          return;
+        }
+
+        let userID = ctx.getState().profileId;
+        this.appApi.linkDomainToProfile(res.id, userID).subscribe((res2) => {
+          console.log(res2);
+
+          if (res2.status === 'FAILURE') {
+            // CHRIS ERROR HANDLE
+            alert('CHRIS ERROR HANDLE');
+            return;
+          }
+
+          this.store.dispatch(new GetDomains());
+        });
+      });
   }
 
   @Action(GetOverallSentimentScores)
@@ -275,5 +319,10 @@ export class AppState {
           alert('ERROR FOR CHRIS');
         }
       });
+  }
+
+  // fake soruce to info
+  private idToSource(id: number): DisplaySource {
+    
   }
 }

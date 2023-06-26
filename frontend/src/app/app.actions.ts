@@ -24,7 +24,11 @@ export class SetDomain {
 
 export class AddNewDomain {
   static readonly type = '[App] Add New Domain';
-  constructor(public domainName: string, domainImageName: string) {}
+  constructor(
+    public domainName: string,
+    public domainImagUrl: string,
+    public description: string
+  ) {}
 }
 
 export class AddNewSource {

@@ -33,6 +33,35 @@ export class AppApi {
     );
   }
 
+  addDomain(
+    domainName: string,
+    domainDescrption: string,
+    domainImageUrl: string
+  ): Observable<any> {
+    const addDomainUrl = this.profilesBaseUrl + 'profiles/create_domain';
+    const body = {
+      name: domainName,
+      description: domainDescrption,
+      icon: domainImageUrl,
+    };
+
+    return this.http.post(addDomainUrl, body, { withCredentials: true });
+  }
+
+  // such a tragedy that this doesnt happen in the backend
+  linkDomainToProfile(domainID: number, profileID: number): Observable<any> {
+    const linkDomainToProfileUrl =
+      this.profilesBaseUrl + 'profiles/add_domain_to_profile';
+    const body = {
+      domain_id: domainID,
+      id: profileID,
+    };
+
+    return this.http.post(linkDomainToProfileUrl, body, {
+      withCredentials: true,
+    });
+  }
+
   addSource(
     domainID: number,
     sourceName: string,
@@ -42,6 +71,15 @@ export class AppApi {
       this.engineBaseUrl +
       `domains/add_source/1/${domainID}/${sourceName}/${sourceImageUrl}`;
     return this.http.get(addSourceUrl);
+  }
+
+  getSourceInfo(sourceID: number): Observable<any> {
+    const getSourceInfoUrl = this.profilesBaseUrl + 'profiles/get_source';
+    return this.http.post(
+      getSourceInfoUrl,
+      { id: sourceID },
+      { withCredentials: true }
+    );
   }
 
   getOverallSentimentScores(domainID: number): Observable<any> {

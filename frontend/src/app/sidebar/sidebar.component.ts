@@ -115,6 +115,7 @@ export class SidebarComponent {
 
   newDomainName = '';
   newDomainImageName = '';
+  newDomainDescription = '';
 
   showAddDomainModal = false;
   showProfileModal = false;
@@ -143,10 +144,17 @@ export class SidebarComponent {
 
   addNewDomain(): void {
     console.log('addNewDomain');
-    console.log(this.newDomainName, this.newDomainImageName);
     this.store.dispatch(
-      new AddNewDomain(this.newDomainName, this.newDomainImageName)
+      new AddNewDomain(
+        this.newDomainName,
+        this.newDomainImageName,
+        this.newDomainDescription
+      )
     );
+    this.newDomainName = '';
+    this.newDomainImageName = '';
+    this.newDomainDescription = '';
+
     this.toggleDomainModal();
   }
 
