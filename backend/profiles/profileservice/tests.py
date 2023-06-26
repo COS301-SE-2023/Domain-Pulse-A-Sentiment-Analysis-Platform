@@ -482,4 +482,33 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
+    def test_get_domains_for_user_integration(self):
+        class MockUser:
+            is_authenticated = True
+            
+
+        rf = RequestFactory()
+        data={"username":"test","email":"test@t.com","password":"test"}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        post_request.user = MockUser()
+        user = json.loads(profile_views.create_user(post_request).content.decode())
+        testDomainID=3
+        setupData={'id': user["id"], "domain_id":testDomainID }
+        post_request = rf.post('/profiles/add_domain_to_profile', setupData, content_type='application/json')
+        post_request.user = MockUser()
+        profile_views.add_domain_to_profile(post_request)
+        data={'id': user["id"] }
+        post_request = rf.post('/profiles/get_domains_for_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=json.loads(profile_views.get_domains_for_user(post_request).content.decode())
+        if result["status"] == "SUCCESS":
+            assert (result["id"] == user["id"]
+                and result["domainIDs"]==[testDomainID]
+            )
+        else:
+            assert (False)
+
     # ----------------------------------------------------------------
