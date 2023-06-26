@@ -119,6 +119,7 @@ export class SidebarComponent {
   showAddDomainModal = false;
   showProfileModal = false;
   showEditDomainModal = false;
+  showProfileEditModal = false;
 
   constructor(private backendService: BackendService, private store: Store) {}
 
@@ -152,6 +153,16 @@ export class SidebarComponent {
     }
   }
 
+  toggleProfileEditModal(): void {
+    if (!this.showProfileEditModal) {
+      // this.windows[0].scrolling = false;
+      this.showProfileEditModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showProfileEditModal = false;
+    }
+  }
+
   addNewDomain(): void {
     console.log('addNewDomain');
     console.log(this.newDomainName, this.newDomainImageName);
@@ -181,4 +192,20 @@ export class SidebarComponent {
       document.body.classList.toggle('dark');
     }
   }
+
+
+  imageSelected: boolean = false;
+  selectedImage: File | undefined;
+
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+    this.imageSelected = true;
+  }
+
+  uploadImage() {
+    // Handle image upload logic here
+    // You can access the selected image using this.selectedImage
+  }
+
+  
 }
