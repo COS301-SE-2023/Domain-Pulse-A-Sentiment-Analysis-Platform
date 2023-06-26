@@ -1,8 +1,9 @@
 # Fdb version 3
-["pdflatex"] 1687761396 "/home/lukelawson/WSLCoding/Github/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ArchitecturalDesignDocument.tex" "ArchitecturalDesignDocument.pdf" "ArchitecturalDesignDocument" 1687761397
+["pdflatex"] 1687762292 "/home/lukelawson/WSLCoding/Github/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ArchitecturalDesignDocument.tex" "ArchitecturalDesignDocument.pdf" "ArchitecturalDesignDocument" 1687762293
   "/etc/texmf/web2c/texmf.cnf" 1687724156 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/lukelawson/WSLCoding/Github/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ArchitecturalDesignDocument.tex" 1687761396 557 ba0787caf59d4b6db1a0316d857a2f83 ""
+  "/home/lukelawson/WSLCoding/Github/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ArchitecturalDesignDocument.tex" 1687762292 2168 fce799ea70d70b2637b6adc32b17c3c7 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
+  "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1136768653 1288 655e228510b4c2a1abe905c368440826 ""
@@ -28,11 +29,13 @@
   "/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def" 1642022539 29921 f0f4f870357ebfb8fe58ed9ed4ee9b92 ""
   "/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg" 1279039959 678 4792914a8f45be57bb98413425e4c7af ""
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
+  "/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1636152094 2900 1537cc8184ad1792082cd229ecc269f4 ""
+  "/usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb" 1687724216 136101 f533469f523533d38317ab5729d00c8a ""
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1687724325 4379155 98693266ff65f58d9f98aff394de12d2 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1687725110 2800762 8e8f0b98ac88268a760bb38786bfcc4d ""
-  "ArchitecturalDesignDocument.aux" 1687761397 885 24f7937910de5b322237df86c7a47513 "pdflatex"
-  "ArchitecturalDesignDocument.tex" 1687761396 557 ba0787caf59d4b6db1a0316d857a2f83 ""
+  "ArchitecturalDesignDocument.aux" 1687762293 1130 9eb76121f5f939d97c977d0c8f6fb2a5 "pdflatex"
+  "ArchitecturalDesignDocument.tex" 1687762292 2168 fce799ea70d70b2637b6adc32b17c3c7 ""
   (generated)
   "ArchitecturalDesignDocument.aux"
   "ArchitecturalDesignDocument.log"

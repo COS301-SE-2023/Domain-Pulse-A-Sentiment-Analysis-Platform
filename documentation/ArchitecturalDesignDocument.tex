@@ -10,8 +10,20 @@
 \maketitle
 
 \section{Architectural Design Strategy}
-\subsection{heading}
-Testing out LaTeX
+\subsection{Approach}
+We have opted to follow the approach of: Design based on Quality Requirements
+\subsection{Reasons for approach}
+\begin{itemize}
+    \item This approach allows us to model our system as a solution to an abstract problem (that being the satisfaction of quality requirements). This allows us to  make technology-independent design decisions.
+    \item By formulating our design based on quality requirements, we are able to ensure (make a huge step towards ensuring) that the system does indeed meet its quality requirements first and foremost before any code has been written.
+    \item By analyzing the system in terms of quality requirements, it becomes clearer which architectural strategies and patterns (discussed below) are most suitable for the system's implementation.
+\end{itemize}
+\subsection{Reasons to not follow other approaches}
+\begin{itemize}
+    \item Since our application is dashboard centric, which limits edge case interaction from users, we found it unsuitable to take the approach of designing the system via the generation of test cases. Furthermore, designing test cases would not necessarily help us in identifying approriate architectural stategies and patterns (at least not the the extent that our favoured approach allows)
+    \item There are relatively few object-like structures that can be decomposed into suitable hierarchical or relationship structures (at least not to enough of an extent) in our system. Hence we felt that a decomposition approach was not necessarily warranted (at least not over our favoured approach, which we deemed to be the most suitable for our purposes)
+\end{itemize}
+
 
 \section{Architectural Strategies}
 \subsection{heading}
