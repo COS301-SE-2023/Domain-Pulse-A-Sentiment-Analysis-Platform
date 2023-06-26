@@ -3,9 +3,9 @@ name: Check frontend code builds
 on:
   push:
     branches:
-      - 'frontend/**'
-      - 'testcicd'
-      - main
+      - "frontend/**"
+      - "testcicd"
+      ß- main
   pull_request:
     branches:
       - main
@@ -15,11 +15,22 @@ jobs:
     steps:
       - name: setup
         uses: actions/checkout@v3
-      - name: install dependancies
-        
-        run: |
-          cd frontend
-          npm ci
-          npm link @angular/cli
-          ng build --configuration=production
 
+      - name: cache dependencies
+        id: npm-cache
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: node_modules-${{hashFiles('frontend/package-lock.json') }}
+
+      - name: install dependancies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: |
+          npm ci
+
+      - name: Build
+        working-directory: ./frontend
+        run: |
+          npm link @angular/cli
+          ng build --configuration=development

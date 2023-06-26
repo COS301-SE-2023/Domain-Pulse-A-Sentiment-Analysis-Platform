@@ -12,42 +12,71 @@ jobs:
     steps:
       - name: setup
         uses: actions/checkout@v3
+
+      - name: cache dependencies
+        id: npm-cache
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: node_modules-${{hashFiles('frontend/package-lock.json') }}
+
       - name: install dependancies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
         run: |
-          cd frontend
           npm ci
-          npm link @angular/cli
-    
+
       - name: Build and Test
+        working-directory: ./frontend
         run: |
-           cd frontend
-           ng build --configuration=development
-           ng test --no-watch --code-coverage --browsers ChromeHeadless
+          npm link @angular/cli
+          ng build --configuration=development
+          ng test --no-watch --code-coverage --browsers ChromeHeadless
+          
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           files: frontend/coverage/lcov-report/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
+
   test_backend:
     runs-on: ubuntu-latest
     steps:
       - name: setup
         uses: actions/checkout@v3
+      
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install Dependencies
+      
+      - name: install pipenv
+        working-directory: ./backend
         run: |
-          cd backend
+          python -m pip install --upgrade pip
           pip install pipenv
-          pipenv sync
-      - name: Run Tests
+
+      - name: cache pipenv
+        id: cache-pipenv
+        uses: actions/cache@v2
+        with:
+          path: backend/.venv
+          key: venv_cache-${{ hashFiles('backend/Pipfile.lock') }}
+
+      - name: install dependencies
+        working-directory: ./backend
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        env:
+          PIPENV_VENV_IN_PROJECT: 1
         run: |
-          cd backend
-          pipenv run coverage_gen
+          pipenv sync
+      
+      - name: Run Tests
+        working-directory: ./backend
+        run: pipenv run coverage_gen
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           files: backend/coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+ß          token: ${{ secrets.CODECOV_TOKEN }}
