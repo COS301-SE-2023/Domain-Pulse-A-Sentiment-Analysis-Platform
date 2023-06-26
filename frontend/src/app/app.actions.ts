@@ -4,6 +4,11 @@ export class LoadUserDomains {
   static readonly type = '[App] Load User Domains';
 }
 
+export class SetProfileId {
+  static readonly type = '[App] Set Profile Id';
+  constructor(public profileId: number) {}
+}
+
 export class SetUser {
   static readonly type = '[App] Set User';
 }

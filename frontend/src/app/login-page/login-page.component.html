@@ -13,11 +13,21 @@
           <div class="header"><h1>Get started by</h1></div>
           <div class="header2"><h1>logging in!</h1></div>
         </div>
-        <label for="username" class="email">Email</label>
-        <input type="text" class="inputBar" name="username" />
+        <label for="username" class="email">Username</label>
+        <input
+          [(ngModel)]="username"
+          type="text"
+          class="inputBar"
+          name="username"
+        />
 
         <label for="password" class="password">Password</label>
-        <input type="password" class="inputBar2" name="password" />
+        <input
+          [(ngModel)]="password"
+          type="password"
+          class="inputBar2"
+          name="password"
+        />
         <div class="forgot">
           <p>Forgot your password?</p>
         </div>
@@ -30,7 +40,7 @@
     >
       <div class="flex-column" style="width: 100%">
         <div>
-          <button class="button">Log In</button>
+          <button (click)="login()" class="button">Log In</button>
         </div>
         <div>
           <button class="button2">Sign in with Google</button>

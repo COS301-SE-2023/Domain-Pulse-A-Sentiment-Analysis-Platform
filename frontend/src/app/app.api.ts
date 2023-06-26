@@ -30,7 +30,7 @@ export class AppApi {
   checkAuthenticate(): Observable<any> {
     const checkAuthenticateUrl =
       this.profilesBaseUrl + 'profiles/check_logged_in';
-    return this.http.post(checkAuthenticateUrl, {});
+    return this.http.post(checkAuthenticateUrl, {}, { withCredentials: true });
   }
 
   registerUser(
@@ -53,6 +53,9 @@ export class AppApi {
       username: username,
       password: password,
     };
-    return this.http.post(attemptPsswdLoginUrl, body);
+    // send with credentials enabled
+    return this.http.post(attemptPsswdLoginUrl, body, {
+      withCredentials: true,
+    });
   }
 }

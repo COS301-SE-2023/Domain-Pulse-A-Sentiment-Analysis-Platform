@@ -9,6 +9,7 @@ import {
   GetDomains,
   RegisterUser,
   SetDomain,
+  SetProfileId,
 } from './app.actions';
 import { Router } from '@angular/router';
 export interface Source {
@@ -212,7 +213,14 @@ export class AppState {
     this.appApi
       .attemptPsswdLogin(state.username, state.password)
       .subscribe((res) => {
-        console.log(res);
+        if (res.status == 'SUCCESS') {
+          this.store.dispatch(new SetProfileId(res.id));
+          this.store.dispatch(new GetDomains());
+          this.router.navigate(['']);
+        } else {
+          // CHRIS ERROR HANDLE
+          alert('ERROR FOR CHRIS');
+        }
       });
   }
 

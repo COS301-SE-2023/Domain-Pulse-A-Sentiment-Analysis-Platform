@@ -47,6 +47,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?:\/\/)?((\w(-\w)*)+\.)*domain-pulse\.co\.za$',
 )
 
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
