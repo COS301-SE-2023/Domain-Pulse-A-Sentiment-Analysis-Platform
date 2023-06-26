@@ -11,6 +11,7 @@ from django.test.client import RequestFactory
 from profileservice import views as profile_views
 from django.contrib.auth.models import User
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.auth import authenticate
 
 
 def mocked_create_profile(dummy,dummy1,dummy2):
@@ -309,24 +310,20 @@ class ProfilesTests(TestCase):
     def test_delete_user(self,mocked_logout,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = True
-            user=None
-            def setUser(self,user):
-               self.user=user
+            
         rf = RequestFactory()
         data={ }
         post_request = rf.post('/profiles/create_user', data, content_type='application/json')
         post_request.user = MockUser()
         user = profilescrud.create_user(post_request,"test","t@test.com","test")
-        testId=user["id"]
-        testOldPassword="test"
-        testNewPassword="test2"
+        testUsername="test"
+        testPassword="test"
         data={user["id"],"test","test2"}
         post_request = rf.post('/profiles/delete_user', data, content_type='application/json')
-        temp = MockUser()
-        temp.setUser(user)
-        post_request.user = temp
+        user = authenticate(username="test",password="test")
+        post_request.user = user
 
-        result=profilescrud.change_password(post_request,testId,testOldPassword,testNewPassword)
+        result=profilescrud.delete_user(post_request,testUsername,testPassword)
         if result["status"] == "SUCCESS":
             assert (True)
         else:
@@ -600,6 +597,32 @@ class ProfilesTests(TestCase):
         post_request = rf.post('/profiles/change_password', data, content_type='application/json')
         post_request.user = MockUser()
         result=json.loads(profile_views.change_password(post_request).content.decode())
+        if result["status"] == "SUCCESS":
+            assert (True)
+        else:
+            assert (False)
+    
+    def test_delete_user_integration(self):
+        class MockUser:
+            is_authenticated = True
+
+        rf = RequestFactory()
+        data={"username":"test","email":"test@t.com","password":"test"}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        post_request.user = MockUser()
+        user = json.loads(profile_views.create_user(post_request).content.decode())
+        data={"id":user["id"],"username":"test","password":"test"}
+        post_request = rf.post('/profiles/delete_user', data, content_type='application/json')
+        user = authenticate(username="test",password="test")
+        post_request.user = user
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        result=json.loads(profile_views.delete_user(post_request).content.decode())
+
         if result["status"] == "SUCCESS":
             assert (True)
         else:

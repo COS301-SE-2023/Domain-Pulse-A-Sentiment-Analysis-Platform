@@ -142,6 +142,7 @@ def delete_user(request,username,password):
                 logout(request)
                 return {"status": "SUCCESS"}
             else:
+                print("here")
                 return {"status": "FAILURE"}
         else:
             return {"status": "FAILURE"}
