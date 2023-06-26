@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 
 
 def mocked_create_profile(dummy,dummy1,dummy2):
-    profile = profile_models.Profiles(id=dummy,userID_id=dummy,mode=dummy2,profileIcon=dummy1,domainIDs=[])
+    profile = profile_models.Profiles.objects.create(id=dummy.id,userID_id=dummy.id,mode=dummy2,profileIcon=dummy1,domainIDs=[])
     return profile
 
 def mocked_login(dummy,dummy1):
@@ -28,12 +28,16 @@ class ProfilesTests(TestCase):
     @mock.patch(
         "utils.profilescrud.create_profile", side_effect=mocked_create_profile
     )
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
 
-    def test_create_user(self,mocked_create_profile):
+    def test_create_user(self,mocked_create_profile,mocked_login):
         testUsername="test"
         testEmail="test@t.com"
         testPassword="testP"
-        result = profilescrud.create_user(testUsername,testEmail,testPassword)
+        rf = RequestFactory()
+        data={}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        result = profilescrud.create_user(post_request,testUsername,testEmail,testPassword)
         if result["status"] == "SUCCESS":
             assert (result["profileID"].id == result["id"]
                 and result["username"] == testUsername
@@ -42,13 +46,19 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-    def test_swap_mode(self):
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_swap_mode(self,mocked_create_profile,mocked_login):
         class MockUser:
             is_authenticated = True
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
-        data={'id': user["id"]}
+        data={}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
+        data={'id': user["profileID"]}
         post_request = rf.post('/profiles/swap_mode', data, content_type='application/json')
         post_request.user = MockUser()
         result=json.loads(profile_views.swap_mode(post_request).content)
@@ -77,13 +87,20 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
         
-    def test_edit_profile_mode(self):
+    @mock.patch('utils.profilescrud.login', side_effect=mocked_login)
+    @mock.patch(
+        "utils.profilescrud.create_profile", side_effect=mocked_create_profile
+    )
+    def test_edit_profile_mode(self,mocked_login,mocked_create_profile):
         class MockUser:
             is_authenticated = True
 
-        user = profilescrud.create_user("test","t@test.com","test")
         rf = RequestFactory()
         testMode=True
+        data={ }
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        post_request.user = MockUser()
+        user = profilescrud.create_user(post_request,"test","t@test.com","test")
         data={'id': user["id"], "mode":testMode }
         post_request = rf.post('/profiles/edit_profile_mode', data, content_type='application/json')
         post_request.user = MockUser()

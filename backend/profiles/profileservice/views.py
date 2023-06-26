@@ -9,7 +9,7 @@ from utils import domainscrud
 def create_user(request: HttpRequest):
     if request.method == "POST":
         raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.create_user(raw_data["username"],raw_data["email"],raw_data["password"]))
+        return JsonResponse(profilescrud.create_user(request,raw_data["username"],raw_data["email"],raw_data["password"]))
     return JsonResponse({"status": "FAILURE"})
 
 @csrf_exempt
