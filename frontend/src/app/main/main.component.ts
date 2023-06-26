@@ -13,7 +13,7 @@ import {
 import { AppState, DisplayDomain } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-
+import { GetDomains } from '../app.actions';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -48,7 +48,9 @@ export class MainComponent {
   selectedDomain$!: Observable<DisplayDomain | null>;
   sidebarCollapsed = true;
 
-  constructor(private backendService: BackendService, private store: Store) {}
+  constructor(private backendService: BackendService, private store: Store){
+    this.store.dispatch(new GetDomains());
+  }
 
   openSidebar() {
     this.sidebarCollapsed = false;
