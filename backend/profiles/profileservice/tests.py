@@ -535,7 +535,7 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
-    def test_login_user_incorrect_credentials(self):
+    def test_login_user_incorrect_credentials_integrations(self):
         class MockUser:
             is_authenticated = False
 
@@ -546,9 +546,25 @@ class ProfilesTests(TestCase):
         middleware.process_request(post_request)
         post_request.session.save()
         post_request.user = MockUser()
-        result=profilescrud.login_user(post_request)
+        result=json.loads(profile_views.login_user(post_request).content.decode())
         if result["status"] == "SUCCESS":
             assert (False)
         else:
             assert (True)
+
+    def test_logout_user_logged_in_integration(self):
+        class MockUser:
+            is_authenticated = True
+        rf = RequestFactory()
+        data={}
+        post_request = rf.post('/profiles/logout_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        post_request.user = MockUser()
+        result=json.loads(profile_views.logout_user(post_request).content.decode())
+        if result["status"] == "SUCCESS":
+            assert (True)
+        else:
+            assert (False)
     # ----------------------------------------------------------------
