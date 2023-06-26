@@ -26,7 +26,31 @@ We have opted to follow the approach of: Design based on Quality Requirements
 
 
 \section{Architectural Quality Requirements}
-\subsection{heading}
+While almost every possible quality requirement is something that should be aimed for as a general rule, we have identified five quality requirements most important for our system. The quality requirements below are listed in order from the most to "least" prioritised.
+\subsection{Usability}
+The most essential quality requirement of our system is usability. The target user for our application is not necessarily someone with high proficiency with software systems, sentiment analysis and natural language processing, or IT in general (ex: social media managers, small business and restaurant owners, etc) - consequently, the systems needs to be intuitive and non-overwhelming, both in the user interface as well as in the numerical metrics provided. As such, the following measurable requirements must be met (and can be tested by asking a non-IT person to try use the system)
+\begin{itemize}
+    \item With zero developer interference, the user should be able to do the following: create a new profile, change the theme of the website, and create a new domain
+    \item With minimal developer interference, the user must be able to do the following: create a new source to pull data from for analysis, refresh the source for new data, and delete the source
+    \item With zero developer interference (and the user having access to Google), the user must be able to do the following: Interpret each of the statistics on the dashboard, and interpret the chart visualizations of each statistic
+    \item After using the system for half an hour, the user should be able to: switch between viewing a single source and viewing the entire domain, and log out
+\end{itemize}
+\subsection{Security}
+Testing out LaTeX
+\subsection{Performance}
+Performance is an important quality requirement of our system. Our system includes a high degree of data processing and analysing (which can be a time-intensive activity) in addition to the ability to fetch data from external sources (which can also add precious seconds to execution time). Slow performance ruins the user's experience (pertaining to usability) and renders the app more frustrating that useful. Consequently, the following measurable requirements must be realised:
+\begin{itemize}
+    \item When a user refreshes a source, the total time taken for the data to be retrieved from an external API, preprocessed, analysed, aggregated, and returned to the user must never exceed 20 seconds.
+    \item When a user performs any other action that requires database interaction (ie: profile changes, accessing exisiting sentiment data, performing CRUD operations on domains and sources), the total time taken for the data to queried and returned to the user cannot exceed 5 seconds.
+\end{itemize}
+\subsection{Scalability}
+Scalability goes somewhat hand in hand with performance in that the system should not become overly encumbered (resulting in slower performance) when a high number of users are interacting with the system. To measure whether this is attained, the following requirements must be observed:
+\begin{itemize}
+    \item When the system has 50 concurrent users, the performance metrics specified above cannot exceed 1.1 times their normal threshold time
+    \item When the system has 100 concurrent users, the performance metrics specified above cannot exceed 1.2 times their normal threshold time
+    \item When the system has 500 concurrent users, the performance metrics specified above cannot exceed 1.5 times their normal threshold time
+\end{itemize}
+\subsection{Modifiability}
 Testing out LaTeX
 
 
