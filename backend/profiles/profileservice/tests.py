@@ -10,6 +10,7 @@ from profileservice import models as profile_models
 from django.test.client import RequestFactory
 from profileservice import views as profile_views
 from django.contrib.auth.models import User
+from django.contrib.sessions.middleware import SessionMiddleware
 
 
 def mocked_create_profile(dummy,dummy1,dummy2):
@@ -338,27 +339,49 @@ class ProfilesTests(TestCase):
 
     # ---------------------- INTEGRATION TESTS -----------------------
 
-    # def test_process_data_integration(self):
-    #     test_data = []
-    #     test_data += mock_data.bitcoin_article
-    #     test_data += mock_data.the_witcher_reviews_reddit
-    #     test_data += mock_data.lance_reddit_data
-    #     test_data += mock_data.starbucks_rosebank_tripadvisor
-    #     test_data += mock_data.leinster_loss_to_munster_insta
-    #     test_data += [""]
+    def test_create_profile_integration(self):
+        testUsername="test"
+        testEmail="test@t.com"
+        testPassword="testP"
+        rf = RequestFactory()
+        data={"username":testUsername,"email":testEmail,"password":testPassword}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        result = json.loads(profile_views.create_user(post_request).content.decode())
+        if result["status"] == "SUCCESS":
+            assert (result["profileID"] == result["id"]
+                and result["username"] == testUsername
+                and result["email"] == testEmail
+            )
+        else:
+            assert (False)
 
-    #     for t in test_data:
-    #         assert len(t) >= len(preprocessing.process_data(t))
+    def test_swap_mode_integration(self):
+        class MockUser:
+            is_authenticated = True
+        
+        rf = RequestFactory()
+        data={"username":"test","email":"test@t.com","password":"test"}
+        self.client.login(username='test', password='test')
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        user = profile_views.create_user(post_request).content.decode()
+        user = json.loads(user)
+        data={'id': user["profileID"]}
+        post_request = rf.post('/profiles/swap_mode', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=profile_views.swap_mode(post_request).content.decode()
+        result=json.loads(result)
+        if result["status"] == "SUCCESS":
+            assert (result["id"] == user["id"]
+                and result["mode"] == True
+            )
+        else:
+            assert (False)
 
-    # def test_analyse_content_integration(self):
-    #     data = "This is some test data!"
-
-    #     result = processing.analyse_content(data)
-
-    #     assert result["data"] == data
-    #     assert result["general"] != {}
-    #     assert result["emotions"] != {}
-    #     assert result["toxicity"] != {}
-    #     assert result["ratios"] != {}
 
     # ----------------------------------------------------------------
