@@ -165,10 +165,13 @@ The argument about how angular is more fit for our project is presented below:
     \item Angular is a good fit for good fit for our architecture as it has built in common practice ways of interacting with multiple backends, angular also provides a good framework for building abstractions on top of a service oriented architecture. Angulars component based architecture and dependancy injection system pair well with the principles of service orientated architecture,such that in a service orientated architecture applications are structured as a collection of loosly coupled services that communicate with each other through interfaces 
     \item Angulars approach to the information above is that its components can be designed to encapsulate specific functionalities or services within the application.
 \end{itemize}
-With the above information and short example , lists all the reasons why we have chosen Angular.
+With the above information and short example , lists all the reasons why we have chosen Angular
 
 
 \subsection{Backend Technology}
+\begin{itemize}
+    \item Django is a high-level Python web framework that follows the Model-View-Controller (MVC) architectural pattern. It provides a robust and efficient toolkit for building web applications.
+\end{itemize}
 Our backend consists of five different deployable units, each developed using Django to perform the business logic, data logic, and API functionality. The reasoning behind this technology choice is explained below.
 \subsubsection{Django}
 The following reasons are the main driving force this design decision:
@@ -181,6 +184,10 @@ However, no technology choice is ever perfect and there are some trade-offs whic
 \begin{itemize}
     \item Django accomplishes the advantages pointed out by points 1 and 3 above by being a 'batteries included' framework. Unfortunately this means that Django is more heavyweight than other Python frameworks such as Flask. A more lightweight framework may be more desirable since we are adopting a service-oriented architecture (ie: not every service will have use of all of Django's built-in features). We do however believe that the advantages described above outweigh this point, since each service in the architecture will leverage at least a few of Django's native features to great effect.
     \item Django is somewhat opinionated about the structure of the application which once again is not particularly desirable for a service-oriented architecture - however, this point is easily negated as it is entirely possible (and fairly easy) to add (through the use of user-defined Python modules) and remove components to accomplish our architectural structure.
+\end{itemize}
+The argument on why we have chosen django is presented below:
+\begin{itemize}
+    \item One of our constraints is that we have to use a NoSQL database and Django integrates well with this databse as djago provides a Object-Relational mapping which allows developers to interact with the database using python objects. Djangos modularity and component based architecture make it well suited for building services within an SOA , Django component can be reused and comunicate with eachother through interfaces.Django includes built in authentication and authorization which can be highly leveraged in an SOA architecture , Django can handle high traffic and scale well when deployed as it has functionality for load balancing,caching and database optimization.
 \end{itemize}
 
 
