@@ -48,7 +48,7 @@ export class MainComponent {
   selectedDomain$!: Observable<DisplayDomain | null>;
   sidebarCollapsed = true;
 
-  constructor(private backendService: BackendService, private store: Store){
+  constructor(private backendService: BackendService, private store: Store) {
     this.store.dispatch(new GetDomains());
   }
 

@@ -11,8 +11,14 @@ export class AppApi {
   constructor(private http: HttpClient) {}
 
   getDomains(userId: number): Observable<any> {
-    return this.http.get(
-      this.engineBaseUrl + this.getDomainsUrl + '/' + userId
+    const body = {
+      id: userId,
+    };
+
+    return this.http.post(
+      this.profilesBaseUrl + 'profiles/get_domains_for_user',
+      body,
+      { withCredentials: true }
     );
   }
 
