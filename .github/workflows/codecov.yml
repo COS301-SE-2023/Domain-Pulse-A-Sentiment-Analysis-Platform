@@ -25,11 +25,11 @@ jobs:
         working-directory: ./frontend
         run: |
           npm ci
-          npm link @angular/cli
 
       - name: Build and Test
         working-directory: ./frontend
         run: |
+          npm link @angular/cli
           ng build --configuration=development
           ng test --no-watch --code-coverage --browsers ChromeHeadless
           
