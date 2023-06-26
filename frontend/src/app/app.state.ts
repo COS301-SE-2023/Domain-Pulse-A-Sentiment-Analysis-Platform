@@ -76,8 +76,10 @@ interface AppStateModel {
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
   selectedSource?: DisplaySource;
-  overallSentimentScores?: SentimentScores;
-  comments?: Comment[];
+  // overallSentimentScores?: SentimentScores;
+  overallSentimentScores?: any;
+  // sampleData?: Comment[];
+  sampleData?: any[];
 }
 
 @State<AppStateModel>({
@@ -132,6 +134,12 @@ export class AppState {
   @Selector()
   static overallSentimentScores(state: AppStateModel) {
     if (state.overallSentimentScores) return state.overallSentimentScores;
+    return undefined;
+  }
+
+  @Selector()
+  static sampleData(state: AppStateModel) {
+    if (state.sampleData) return state.sampleData;
     return undefined;
   }
 
@@ -345,7 +353,13 @@ export class AppState {
     let selectedSourceID = selectedSource.id;
 
     this.appApi.getOverallSentimentScores(selectedSourceID).subscribe((res) => {
-      console.log(res);
+      if (res.status === 'FAILURE') {
+        // CHRIS ERROR HANDLE
+        alert('CHRIS ERROR HANDLE');
+        return;
+      }
+
+
     });
   }
 
