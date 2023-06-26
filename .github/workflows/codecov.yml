@@ -63,9 +63,13 @@ jobs:
           path: backend/.venv
           key: venv_cache-${{ hashFiles('backend/Pipfile.lock') }}
 
-      - name: Install Dependencies
+      - name: install dependencies
         working-directory: ./backend
-        run: pipenv sync
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        env:
+          PIPENV_VENV_IN_PROJECT: 1
+        run: |
+          pipenv sync
       
       - name: Run Tests
         working-directory: ./backend
