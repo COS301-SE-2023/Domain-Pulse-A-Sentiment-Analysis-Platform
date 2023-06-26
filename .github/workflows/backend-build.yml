@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: backend/.venv
-          key: ${{ runner.os }}-3.8-pipenv-${{ hashFiles('backend/Pipfile.lock') }}
+          key: venv_cache-${{ hashFiles('backend/Pipfile.lock') }}
 
       - name: install dependencies
         working-directory: ./backend
