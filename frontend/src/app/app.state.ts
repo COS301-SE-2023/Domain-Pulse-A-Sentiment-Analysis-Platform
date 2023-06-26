@@ -87,15 +87,15 @@ export class AppState {
     private readonly store: Store,
     private readonly router: Router
   ) {
-    setTimeout(() => {
-      this.store.dispatch(new CheckAuthenticate()).subscribe(() => {
-        if (this.store.selectSnapshot((state) => state.app.authenticated)) {
-          this.store.dispatch(new GetDomains());
-        } else {
-          this.router.navigate(['/register']);
-        }
-      });
-    }, 300);
+    // setTimeout(() => {
+    //   this.store.dispatch(new CheckAuthenticate()).subscribe(() => {
+    //     if (this.store.selectSnapshot((state) => state.app.authenticated)) {
+    //       this.store.dispatch(new GetDomains());
+    //     } else {
+    //       this.router.navigate(['/register']);
+    //     }
+    //   });
+    // }, 300);
   }
 
   @Selector()
@@ -221,7 +221,12 @@ export class AppState {
     this.appApi
       .registerUser(state.username, state.password, state.email)
       .subscribe((res) => {
-        console.log(res);
+        if (res.status == 'SUCCESS') {
+          this.router.navigate(['']);
+        } else {
+          // CHRIS ERROR HANDLE
+          alert('ERROR FOR CHRIS');
+        }
       });
   }
 }
