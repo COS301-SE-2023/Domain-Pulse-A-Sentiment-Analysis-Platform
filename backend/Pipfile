@@ -9,6 +9,8 @@ coverage_gen = "bash scripts/coverage.sh"
 engine = "python engine/manage.py runserver 0.0.0.0:8001"
 profiles = "python profiles/manage.py runserver 0.0.0.0:8002"
 
+warehouse = "python warehouse/manage.py runserver 0.0.0.0:8004"
+
 [packages]
 django = "*"
 vadersentiment = "*"
