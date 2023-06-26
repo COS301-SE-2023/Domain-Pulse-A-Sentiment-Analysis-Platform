@@ -36,7 +36,13 @@ The most essential quality requirement of our system is usability. The target us
     \item After using the system for half an hour, the user should be able to: switch between viewing a single source and viewing the entire domain, and log out
 \end{itemize}
 \subsection{Security}
-Testing out LaTeX
+As will be explained below, our system will be hosted on a virtual machine on a public IP address - experience and measuring has shown that the network of computers on which the virtual machine lies is subject to up to 17 000 cyber-attacks every 24 hours. Consequently, the security of the system needs to be state of the art in order to prevent would-be attackers from wreaking havoc upon the system. To measure the strength of our security, the following requirements must be met:
+\begin{itemize}
+    \item No user that interacts with the system may access the profile or domain/source data of another user
+    \item Should the database be leaked, all password data must be hashed to obfuscate sensitive password information
+    \item The system should be immune (to the most reasonable, state-of-the-art extent possible) to the following attacks: CSRF, SQL injection, and clickjacking
+    \item No user shall have the ability to make any modification to the system (ie: there will be no admin or super user)
+\end{itemize}
 \subsection{Performance}
 Performance is an important quality requirement of our system. Our system includes a high degree of data processing and analysing (which can be a time-intensive activity) in addition to the ability to fetch data from external sources (which can also add precious seconds to execution time). Slow performance ruins the user's experience (pertaining to usability) and renders the app more frustrating that useful. Consequently, the following measurable requirements must be realised:
 \begin{itemize}
@@ -51,7 +57,13 @@ Scalability goes somewhat hand in hand with performance in that the system shoul
     \item When the system has 500 concurrent users, the performance metrics specified above cannot exceed 1.5 times their normal threshold time
 \end{itemize}
 \subsection{Modifiability}
-Testing out LaTeX
+Ideally, this system will be useful to a fair number of people, who will in turn provide feedback for functionality, sources, and metrics they would like to be able to investigate using the system. Consequently, modifiability of the system is a desirable quality requirement in order to ensure the continuous growth and evolution of the system. Modifiability in this cases is to be defined by the following measurables:
+\begin{itemize}
+    \item It should not require more than 24 total work hours to add a new type of source for analysis (ex: Twitter or Reddit)
+    \item It should not require more than 15 total work hours to add a new metric/statistic to be included in the analysis
+    \item It should not require more than 10 total work hours to add a new type of visualization for a particular statistic
+    \item Changing database for any service should not exceed more than 10* total work hours (*though this is dependent on the type and amount of data to be transferred)
+\end{itemize}
 
 
 \section{Architectural Strategies}
