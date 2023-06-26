@@ -28,8 +28,9 @@ jobs:
         working-directory: ./frontend
         run: |
           npm ci
-          npm link @angular/cli
 
       - name: Build
         working-directory: ./frontend
-        run: ng build --configuration=development
+        run: |
+          npm link @angular/cli
+          ng build --configuration=development
