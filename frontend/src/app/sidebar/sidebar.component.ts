@@ -118,6 +118,8 @@ export class SidebarComponent {
 
   showAddDomainModal = false;
   showProfileModal = false;
+  showEditDomainModal = false;
+  showProfileEditModal = false;
 
   constructor(private backendService: BackendService, private store: Store) {}
 
@@ -131,6 +133,16 @@ export class SidebarComponent {
     }
   }
 
+  toggleEditDomainModal(): void {
+    if (!this.showEditDomainModal) {
+      // this.windows[0].scrolling = false;
+      this.showEditDomainModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showEditDomainModal = false;
+    }
+  }
+
   toggleProfileModal(): void {
     if (!this.showProfileModal) {
       // this.windows[0].scrolling = false;
@@ -138,6 +150,16 @@ export class SidebarComponent {
     } else {
       // this.windows[0].scrolling = true;
       this.showProfileModal = false;
+    }
+  }
+
+  toggleProfileEditModal(): void {
+    if (!this.showProfileEditModal) {
+      // this.windows[0].scrolling = false;
+      this.showProfileEditModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showProfileEditModal = false;
     }
   }
 
@@ -169,4 +191,20 @@ export class SidebarComponent {
       document.body.classList.toggle('dark');
     }
   }
+
+
+  imageSelected: boolean = false;
+  selectedImage: File | undefined;
+
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+    this.imageSelected = true;
+  }
+
+  uploadImage() {
+    // Handle image upload logic here
+    // You can access the selected image using this.selectedImage
+  }
+
+  
 }

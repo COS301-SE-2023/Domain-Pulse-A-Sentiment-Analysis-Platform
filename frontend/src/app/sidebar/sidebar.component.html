@@ -33,7 +33,7 @@
     </div>
     <p *ngIf="_expanded">{{ domain.name }}</p>
     <div class = "domain-name" *ngIf="domain.selected && _expanded" class="icons-container flex-row align-center">
-      <img src="../assets/logos/pen-solid.png" height="15px" />
+      <img (click)="toggleEditDomainModal()" src="../assets/logos/pen-solid.png" height="15px" />
       <img src="../assets/logos/grey-trash.png" height="15px" />
     </div>
   </div>
@@ -138,6 +138,75 @@
 </dp-modal-container>
 
 <dp-modal-container
+  [modalDisplay]="showEditDomainModal"
+  (close)="toggleEditDomainModal()"
+>
+  
+  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+    <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
+      <div class="heading-container">
+        <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleEditDomainModal()">
+        <p class="modal-heading">Edit a Domain</p>
+      </div>
+      <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">1</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">
+              Choose a name
+            </p>
+            <input
+              class="default-input"
+              [(ngModel)]="newDomainName"
+              type="text"
+            />
+          </div>
+        </div>
+
+        
+
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">2</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">
+              Add A Description
+            </p>
+            <input class="default-input" type="text" />
+          </div>
+        </div>
+  
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">3</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">
+              Select Domain image:
+            </p>
+            <select class="default-input" [(ngModel)]="newDomainImageName">
+              <option value="f1-logo.png">Formula 1</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div class="bottom-div">
+        
+        <button class="new-domain-btn" (click)="addNewDomain()">Confirm</button>
+        
+      </div>
+      
+  
+      
+  
+    </div>
+    <div
+      class="picture"
+    ></div>
+  
+      
+  </div>
+</dp-modal-container>
+
+<dp-modal-container
   [modalDisplay]="showProfileModal"
   (close)="toggleProfileModal()"
 >
@@ -153,7 +222,7 @@
         
       </div>
       <p class="profile-name">John Doe</p>
-      <img src="../assets/logos/editdark.png" class="profile-icon" />
+      <img (click)="toggleProfileEditModal()" src="../assets/logos/editdark.png" class="profile-icon" />
     </div>
 
     <div class="button-div">
@@ -186,5 +255,53 @@
   ></div>
 
     
+</div>
+</dp-modal-container>
+
+<dp-modal-container
+  [modalDisplay]="showProfileEditModal"
+  (close)="toggleProfileEditModal()"
+>
+<div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
+    <div class="heading-container">
+      <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleProfileEditModal()">
+      <p class="modal-heading">Edit Profile</p>
+    </div>
+
+    <div class="flex-row" style="width: 80%">
+      <p class="modal-step-tag">1</p>
+      <div class="flex-column" style="width: 100%">
+        <label for="imageUpload">Upload Image:</label>
+        <input type="file" id="imageUpload" (change)="onImageSelected($event)" accept="image/*" required>
+        
+      </div>
+    </div>
+    <div class="flex-row" style="width: 80%">
+      <p class="modal-step-tag">2</p>
+      <div class="flex-column" style="width: 100%">
+        <p class="step-heading">
+          Change Name
+        </p>
+        <input class="default-input" type="text" />
+      </div>
+    </div>
+
+    <div class="bottom-div">
+        
+      <button class="new-domain-btn">Confirm</button>
+      
+    </div>
+    
+
+    
+
+  </div>
+  <div
+    class="picture"
+  ></div>
+
+    
+
 </div>
 </dp-modal-container>
