@@ -44,7 +44,7 @@ Testing out LaTeX
 \subsection{Client-Defined}
 \begin{itemize}
     \item The system needs to consist of at least two seperate deployable units.
-    \item The system must be deployed to a private virtual machine with a public IP address (provided by Southern Cross Solutions)
+    \item The system must be deployed to a private virtual machine with a public IP address (provided by Southern Cross Solutions). This machine is subject to extremely frequent cyber-attacks for which the system must protect against.
     \item The system must make use of at least one NoSQL document-based database
 \end{itemize}
 \subsection{Hardware and Operating System Constraints}
@@ -57,8 +57,24 @@ Testing out LaTeX
 \section{Technology Choices}
 \subsection{Frontend Technology}
 Testing out LaTeX
+
+
 \subsection{Backend Technology}
-Testing out LaTeX
+Our backend consists of five different deployable units, each developed using Django to perform the business logic, data logic, and API functionality. The reasoning behind this technology choice is explained below.
+\subsubsection{Django}
+The following reasons are the main driving force this design decision:
+\begin{itemize}
+    \item Django is, by design, highly secure 'out of the box' and provides comprehensive protection for all the most common security threats (SQL injection, CSRF, clickjacking, etc). This is of particularly high value to us since (as pointed out in the architectural constraints) the system will be hosted on a virtual machine with a public IP that is subject to frequent cyber-attacks. In order to minimize risk wrought on by inexperience or oversight, a highly secure framework such as Django is a very suitable choice for our purposes.
+    \item Django is an entirely Python development environment. Since our system includes a significant portion of data manipulation (across all services), Python will improve the ease with which we are able to develop the system. Furthermore, Python has a number of fantastic libraries for Natural Language Processing and Machine Learning (ex: NLTK, PyTorch, etc), this language is a great choice to handle the application's sentiment analysis component. Additionally, all group members have high proficiency with Python, allowing us to lean into our strengths as programmers.
+    \item Django is designed for rapid and smooth development, this is suitable and desirable since we are adopting the Agile Software Process. That is, by developing our system using Django, we are able to rapidly prototype and build on different aspects of our system - allowing for maximum flexibility, while speeding up iteration-by-iteration improvement (highly desirable and necessary trait to successfully adopt the Agile process)
+\end{itemize}
+However, no technology choice is ever perfect and there are some trade-offs which need to be minimized.
+\begin{itemize}
+    \item Django accomplishes the advantages pointed out by points 1 and 3 above by being a 'batteries included' framework. Unfortunately this means that Django is more heavyweight than other Python frameworks such as Flask. A more lightweight framework may be more desirable since we are adopting a service-oriented architecture (ie: not every service will have use of all of Django's built-in features). We do however believe that the advantages described above outweigh this point, since each service in the architecture will leverage at least a few of Django's native features to great effect.
+    \item Django is somewhat opinionated about the structure of the application which once again is not particularly desirable for a service-oriented architecture - however, this point is easily negated as it is entirely possible (and fairly easy) to add (through the use of user-defined Python modules) and remove components to accomplish our architectural structure.
+\end{itemize}
+
+
 \subsection{Database Technology}
 Our system comprises three seperate databases, each running on different deployable units and each serve a different purpose. The description and reasoning of each is below.
 \subsubsection{Sentiment Records Database}
