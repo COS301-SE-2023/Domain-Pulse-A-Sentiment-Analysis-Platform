@@ -22,6 +22,7 @@ export interface Source {
 export interface DisplayDomain {
   id: number;
   name: string;
+  description: string;
   selected: boolean;
   imageUrl: string;
   sources: Source[]; // remove this maybe, or state that these are the ids
@@ -141,6 +142,8 @@ export class AppState {
 
       let domainIDs: number[] = res.domainIDs;
 
+      let firstDomain = true;
+
       domainIDs.map((domainID: number) => {
         this.appApi.getDomainInfo(domainID).subscribe((domainRes: any) => {
           if (domainRes.status === 'FAILURE') {
@@ -150,40 +153,62 @@ export class AppState {
           }
 
           for (let sourceID of domainRes.sources) {
-            this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
-              if (sourceRes.status === 'FAILURE') {
-                // CHRIS ERROR HANDLE
-                alert('CHRIS ERROR HANDLE');
-                return;
-              }
+            let sources = ctx.getState().sources;
+            let mockSource = this.idToSource(sourceID);
 
-              let source: DisplaySource = {
-                id: sourceRes.id,
-                name: sourceRes.name,
-                url: sourceRes.url,
-                selected: false,
-              };
+            if (sources) {
+              ctx.patchState({
+                sources: [...sources, mockSource],
+              });
+            } else {
+              ctx.patchState({
+                sources: [mockSource],
+              });
+            }
 
-              let sources = ctx.getState().sources;
-              if (sources) {
-                ctx.patchState({
-                  sources: [...sources, source],
-                });
-              } else {
-                ctx.patchState({
-                  sources: [source],
-                });
-              }
-            });
+            // this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
+            //   if (sourceRes.status === 'FAILURE') {
+            //     // CHRIS ERROR HANDLE
+            //     alert('CHRIS ERROR HANDLE');
+            //     return;
+            //   }
+
+            //   let source: DisplaySource = {
+            //     id: sourceRes.id,
+            //     name: sourceRes.name,
+            //     url: sourceRes.url,
+            //     selected: false,
+            //   };
+
+            //   let sources = ctx.getState().sources;
+            //   if (sources) {
+            //     ctx.patchState({
+            //       sources: [...sources, source],
+            //     });
+            //   } else {
+            //     ctx.patchState({
+            //       sources: [source],
+            //     });
+            //   }
+            // });
           }
 
           let domain: DisplayDomain = {
             id: domainRes.id,
             name: domainRes.name,
+            description: domainRes.description,
             imageUrl: '../assets/' + domainRes.icon,
             sources: [],
             selected: false,
           };
+
+          if (firstDomain) {
+            domain.selected = true;
+            firstDomain = false;
+            ctx.patchState({
+              selectedDomain: domain,
+            });
+          }
 
           let domains = ctx.getState().domains;
           if (domains) {
@@ -323,6 +348,11 @@ export class AppState {
 
   // fake soruce to info
   private idToSource(id: number): DisplaySource {
-    
+    return {
+      id: id,
+      name: 'Source ' + id,
+      url: 'https://www.google.com',
+      selected: false,
+    };
   }
 }
