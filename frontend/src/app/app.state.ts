@@ -125,32 +125,53 @@ export class AppState {
 
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
-    this.appApi.getDomains(ctx.getState().profileId).subscribe((res: any) => {
-      let domainArr: DisplayDomain[] = res.domains.map((domain: any) => {
-        return {
-          id: domain.domain_id,
-          name: domain.domain_name,
-          imageUrl: '../assets/' + domain.image_url,
-          sources: domain.sources.map((source: any) => {
-            let newSource: Source = {
-              source_id: source.source_id,
-              source_name: source.source_name,
-              sourceImageUrl: source.source_image_name,
-            };
-            return newSource;
-          }),
-          selected: false,
-        };
+    this.appApi.getDomainIDs(ctx.getState().profileId).subscribe((res: any) => {
+      if (res.status === 'FAILURE') {
+        // CHRIS ERROR HANDLE
+        alert('CHRIS ERROR HANDLE');
+        return;
+      }
+
+      let domainIDs: number[] = res.domainIDs;
+
+      domainIDs.map((domainID: number) => {
+        this.appApi.getDomainInfo(domainID).subscribe((domainRes: any) => {
+          if (domainRes.status === 'FAILURE') {
+            // CHRIS ERROR HANDLE
+            alert('CHRIS ERROR HANDLE');
+            return;
+          }
+
+          let domain: DisplayDomain = {
+            id: domainRes.id,
+            name: domainRes.name,
+            imageUrl: '../assets/' + domainRes.icon,
+            sources: domainRes.domain.sources.map((source: any) => {
+              // THOMAS needs to tell me how sources will be handled
+              let newSource: Source = {
+                source_id: source.source_id,
+                source_name: source.source_name,
+                sourceImageUrl: source.source_image_name,
+              };
+              return newSource;
+            }),
+            selected: false,
+          };
+
+          let domains = ctx.getState().domains;
+          if (domains) {
+            ctx.patchState({
+              domains: [...domains, domain],
+            });
+          } else {
+            ctx.patchState({
+              domains: [domain],
+            });
+          }
+
+          console.log(ctx.getState().domains);
+        });
       });
-
-      ctx.patchState({
-        domains: domainArr,
-      });
-
-      if (domainArr.length > 0)
-        this.store.dispatch(new SetDomain(domainArr[0]));
-
-      console.log(domainArr);
     });
   }
 
