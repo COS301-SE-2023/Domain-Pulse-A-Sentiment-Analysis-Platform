@@ -383,5 +383,28 @@ class ProfilesTests(TestCase):
         else:
             assert (False)
 
+    def test_edit_profile_picture_integration(self):
+        class MockUser:
+            is_authenticated = True
+
+        rf = RequestFactory()
+        data={"username":"test","email":"test@t.com","password":"test"}
+        post_request = rf.post('/profiles/create_user', data, content_type='application/json')
+        middleware = SessionMiddleware(lambda x: None)
+        middleware.process_request(post_request)
+        post_request.session.save()
+        user = json.loads(profile_views.create_user(post_request).content.decode())
+        testPictureURL="test.com"
+        data={'id': user["id"], "pictureURL": testPictureURL}
+        post_request = rf.post('/profiles/edit_profile_picture', data, content_type='application/json')
+        post_request.user = MockUser()
+        result=json.loads(profile_views.edit_profile_picture(post_request).content.decode())
+        if result["status"] == "SUCCESS":
+            assert (result["id"] == user["id"]
+                and result["profileIcon"] == testPictureURL
+            )
+        else:
+            assert (False)
+
 
     # ----------------------------------------------------------------
