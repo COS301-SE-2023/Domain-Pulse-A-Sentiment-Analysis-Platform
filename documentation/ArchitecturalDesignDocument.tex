@@ -179,6 +179,7 @@ The following reasons are the main driving force this design decision:
     \item Django is, by design, highly secure 'out of the box' and provides comprehensive protection for all the most common security threats (SQL injection, CSRF, clickjacking, etc). This is of particularly high value to us since (as pointed out in the architectural constraints) the system will be hosted on a virtual machine with a public IP that is subject to frequent cyber-attacks. In order to minimize risk wrought on by inexperience or oversight, a highly secure framework such as Django is a very suitable choice for our purposes.
     \item Django is an entirely Python development environment. Since our system includes a significant portion of data manipulation (across all services), Python will improve the ease with which we are able to develop the system. Furthermore, Python has a number of fantastic libraries for Natural Language Processing and Machine Learning (ex: NLTK, PyTorch, etc), this language is a great choice to handle the application's sentiment analysis component. Additionally, all group members have high proficiency with Python, allowing us to lean into our strengths as programmers.
     \item Django is designed for rapid and smooth development, this is suitable and desirable since we are adopting the Agile Software Process. That is, by developing our system using Django, we are able to rapidly prototype and build on different aspects of our system - allowing for maximum flexibility, while speeding up iteration-by-iteration improvement (highly desirable and necessary trait to successfully adopt the Agile process)
+    \item Compared to other frameworks like ASP.NET and Express.js django has an elegant codebase which allows for clean and maintainable code and has a very versiaile ORM (object relational mapping) is great for our 3 databases as we have to optimise everything we can in terms of database querying , storing etc
 \end{itemize}
 However, no technology choice is ever perfect and there are some trade-offs which need to be minimized.
 \begin{itemize}
@@ -192,6 +193,10 @@ The argument on why we have chosen django is presented below:
 
 
 \subsection{Database Technology}
+\begin{itemize}
+    \item A NoSQL (Not Only SQL) database is a type of database that provides a non-relational, schema-less approach to data storage and retrieval. Unlike traditional relational databases, NoSQL databases are designed to handle large volumes of unstructured or semi-structured data and offer flexible data models.
+    \item PostgreSQL is a powerful and highly reliable relational database that adheres to ACID (Atomicity, Consistency, Isolation, Durability) principles. It organizes data into tables with predefined schemas, where relationships can be established between tables using foreign keys.
+\end{itemize}
 Our system comprises three seperate databases, each running on different deployable units and each serve a different purpose. The description and reasoning of each is below.
 \subsubsection{Sentiment Records Database}
 This is a NoSQL document-based MongoDB database that runs on the Data Warehouse deployable unit. It is the main and largest database on the application, and contains all the sentiment records/data that have been analyzed, as well as the sentiment metrics that have been computed for each record.
@@ -211,6 +216,11 @@ This is a SQL Postgre database that runs on the Profiles deployable unit. It is 
 \begin{itemize}
     \item The data to be stored by this database is highly structured and well-defined, and consequently a SQL database is highly suitable for this purpose.
     \item Additionally, Django (backend technology) provides seemless and secure integration with Postgre 'right out of the box' and hence we are able to leverage this predefined interaction in our development. (It is worth noting that this seemless integration is designed with security in mind, providing appropriate and comprehensive protection for database attacks such as SQL Injection)
+\end{itemize}
+The reason we have chosen these 2 types of databases is because of the following:
+\begin{itemize}
+    \item PostgreSQL database is a great choice for service oriented architecture because of its flexibility and extensibility , postgres is highly flexible and extensible DBMS , supports a wide range od data types and the flexibility allows for models and storage of diverse data formats making it great for all different needs of an SOA.
+    \item A PostgreSQL has good scalability and performance and postgre is known for its capabilities in these areas , it can handle high transaction loads and large datasets with proper configuration and optimization , because our project has 3 databases postgre will be great when needing to minimize time spent interacting with the databases as it also has functionality for query optimization and parallel execution.
 \end{itemize}
 
 \end{document}
