@@ -24,7 +24,7 @@ jobs:
           
       - name: cache pipenv
         id: cache-pipenv
-        uses: actrions/cache@v2
+        uses: actions/cache@v2
         with:
           path: backend/.venv
           key: ${{ runner.os }}-3.8-pipenv-${{ hashFiles('backend/Pipfile.lock') }}
