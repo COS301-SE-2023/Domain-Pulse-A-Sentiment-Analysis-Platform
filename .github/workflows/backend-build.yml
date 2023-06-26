@@ -15,12 +15,29 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install Dependencies
+
+      - name: install pipenv
+        worrking-directory: ./backend
         run: |
-          cd backend
+          python -m pip install -- upgrade pip
           pip install pipenv
-          pipenv sync
-      - name: Check all django projects
+          
+      - name: cache pipenv
+        id: cache-pipenv
+        uses: actrions/cache@v2
+        with:
+          path: backend/.venv
+          key: ${{ runner.os }}-3.8-pipenv-${{ hashFiles('backend/Pipfile.lock') }}
+
+      - name: install dependencies
+        working-directory: ./backend
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        env:
+          PIPENV_VENV_IN_PROJECT: 1
         run: |
-          cd backend
+          pipenv sync
+
+      - name: Check all django projects
+        working-directory: ./backend
+        run: |
           pipenv run check_all
