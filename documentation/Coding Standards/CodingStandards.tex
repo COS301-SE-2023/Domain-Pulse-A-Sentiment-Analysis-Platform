@@ -22,10 +22,20 @@
 
 \section{File Structure}
 Our system (Domain Pulse) has multiple different services and components that are often times independant from one another, as a result of our service oriented architecture. Furthermore, our system makes use of a Angular frontend and Django backend. As a result of these factors, the file structure of our system is designed to with modularity and simplicity as focuses, and we have achieved such. These qualities have been achieved with there being three main folder paths of note within our system: 'backend', 'frontend' and 'documentation' (of which will not be covered as it is not 'Coding'). Each folder is self-explanitory in its purpose and all code relating to said folder is contained within it, with little to no overlap.
+
 \subsection{Frontend}
-The frontend folder contains a folder 'src' containing the developed resources. The 'assets' folder conveniantly stores all assests (icons,backgrounds, etc...) needed for the UI development. The 'app' folder contains all developed Angular UI pages, neatly stored in their corresponding component folders (login-page, register-page, etc...)
+\begin{itemize}
+    \item The frontend folder consists of a 'src' folder that contains the developed resources.
+    \item The 'assets' folder conveniently stores all assets (icons, backgrounds, etc.) required for UI development.
+    \item The 'app' folder houses all the developed Angular UI pages, neatly organized in their respective component folders (e.g., login-page, register-page, etc.).
+    \end{itemize}
 \subsection{Backend}
-Within the backend folder, every seperate service of the system is stored within the relevant folders. This allows for our clearly defined and seperated software oriented architecture. This ensures modularity and flexibility within our system by clearly defining individual services. Each of these services folders will contain one folder storing the needed Django settings and others containing the developed code needed for the proper execution of the service.
+\begin{itemize}
+    \item Within the backend folder, each separate service of the system is stored in relevant folders, following a clearly defined and separated software-oriented architecture.
+    \item This approach ensures modularity and flexibility within our system by clearly defining individual services.
+    \item Each service folder contains one folder dedicated to storing the necessary Django settings, while other folders contain the developed code required for the proper execution of the respective service.
+    \end{itemize}
+
 
 \newpage
 \section{Naming Conventions}
@@ -52,7 +62,14 @@ When it comes to naming conventions for frontend development, follow these guide
 \end{enumerate}
 
 \subsection{Backend}
-Within the backend of the project naming conventions are followed to ensure readable and understandable code. These include a well defined structure for endpoints whereby the endpoint function shall have a descriptive name. The URL shall be the same as the endpoint name. Auxiliary files are created to store the logic of the functions within the backend and these are stored in folders such as 'util' or 'preprocess' to give a clear understanding of their grouping of purpose. The functions within these auxiliary files include functions with the same name as the endpoint (indicating they are what is to be called in the endpoint) and helper functions such as '\texttt{remove\_whitespace}' to create an orderly structure within the main functions. This clear definition of different main and auxiliary functions increases readability and flexibility of our code as it leads to bugs being easier to 'track down'. As well as this variables are ensured to name that clearly describes their purpose within the codebase.
+\begin{itemize}
+    \item Naming conventions are followed within the backend to ensure readable and understandable code.
+    \item Endpoints follow a well-defined structure, where the endpoint function has a descriptive name and the URL matches the endpoint name.
+    \item Auxiliary files are created to store the logic of backend functions, organized in folders such as 'util' or 'preprocess' to indicate their purpose.
+    \item Functions within auxiliary files include those with the same name as the endpoint (indicating they are called in the endpoint) and helper functions like \texttt{remove\_whitespace}, promoting an orderly structure within main functions.
+    \item Clear distinction between main and auxiliary functions enhances code readability and flexibility, making it easier to track down and fix bugs.
+    \item Variable names are chosen to clearly describe their purpose within the codebase.
+\end{itemize}
 
 \newpage
 \section{Formatting}
@@ -69,6 +86,9 @@ Within the backend of the project naming conventions are followed to ensure read
   \end{itemize}
 
 \subsection{Backend}
-The backend code of our system is developed using Django which uses Python as its programming language. Inherently, by using python, our code will follow a strict and ordered format due to pythons use of indentation. As well as this inherent structure, we also use the 'Black' formatter to ensure readability and consistency within the code developed.
-
+\begin{itemize}
+    \item The backend code of our system is developed using Django, which utilizes Python as its programming language.
+    \item Python's inherent structure enforces a strict and ordered format due to its reliance on indentation.
+    \item We follow the \textit{Black} formatter guidelines to ensure code readability and maintain consistency within our development process.
+    \end{itemize}
 \end{document}

@@ -94,9 +94,13 @@ INPUT /home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm
 INPUT /home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
 OUTPUT CodingStandards.toc
 INPUT /home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /home/chris/.TinyTeX/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm
 INPUT /home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
+INPUT /home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmti12.tfm
 INPUT CodingStandards.aux
+INPUT /home/chris/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.600pk
 INPUT /home/chris/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 INPUT /home/chris/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
 INPUT /home/chris/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
+INPUT /home/chris/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb
 INPUT /home/chris/.TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb
