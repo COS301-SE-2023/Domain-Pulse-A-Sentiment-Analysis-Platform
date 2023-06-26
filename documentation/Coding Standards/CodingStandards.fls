@@ -54,7 +54,16 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.toc
 INPUT /mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.toc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr8.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi8.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
 OUTPUT /mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.toc
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /mnt/c/Users/blend/Desktop/Work/2023/COS 301/Capstone/Code/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/Coding Standards/CodingStandards.aux
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb

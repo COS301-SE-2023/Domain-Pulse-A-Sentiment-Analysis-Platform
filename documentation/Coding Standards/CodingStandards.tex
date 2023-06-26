@@ -19,5 +19,11 @@
 \newpage
 
 \section{Coding Standards}
+\subsection{File Structure}
+Our system (Domain Pulse) has multiple different services and components that are often times independant from one another, as a result of our service oriented architecture. Furthermore, our system makes use of a Angular frontend and Django backend. As a result of these factors, the file structure of our system is designed to with modularity and simplicity as focuses, and we have achieved such. These qualities have been achieved with there being three main folder paths of note within our system: 'backend', 'frontend' and 'documentation'. Each folder is self-explanitory in its purpose and all code relating to said folder is contained within it, with little to no overlap.
+\subsubsection{Frontend}
+The frontend folder contains a folder 'src' containing the developed resources. The 'assets' folder conveniantly stores all assests (icons,backgrounds, etc...) needed for the UI development. The 'app' folder contains all developed Angular UI pages, neatly stored in their corresponding component folders (login-page, register-page, etc...)
+\subsubsection{Backend}
+Within the backend folder, every seperate service of the system is stored within the relevant folders. This allows for our clearly defined and seperated software oriented architecture. Each of these services folders will contain one folder storing the needed Django settings and others containing the developed code needed for the proper execution of the service.
 
 \end{document}
