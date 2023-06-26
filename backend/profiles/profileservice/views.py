@@ -3,13 +3,13 @@ from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from utils import profilescrud
-
+from utils import domainscrud
 # Create your views here.
 @csrf_exempt
 def create_user(request: HttpRequest):
     if request.method == "POST":
         raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.create_user(raw_data["username"],raw_data["email"],raw_data["password"]))
+        return JsonResponse(profilescrud.create_user(request,raw_data["username"],raw_data["email"],raw_data["password"]))
     return JsonResponse({"status": "FAILURE"})
 
 @csrf_exempt
@@ -101,4 +101,32 @@ def get_user_by_id(request:HttpRequest):
 def check_logged_in(request:HttpRequest):
     if request.method == "POST":
         return JsonResponse(profilescrud.check_logged_in(request))
+    return JsonResponse({"status": "FAILURE"})
+
+@csrf_exempt
+def create_domain(request: HttpRequest):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse(domainscrud.create_domain(request, raw_data["name"], raw_data["description"], raw_data["icon"]))
+    return JsonResponse({"status": "FAILURE"})
+
+@csrf_exempt
+def remove_domain(request: HttpRequest):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse(domainscrud.remove_domain(request, raw_data["id"]))
+    return JsonResponse({"status": "FAILURE"})
+
+@csrf_exempt
+def add_source(request: HttpRequest):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse(domainscrud.add_source(request, raw_data["domain_id"],raw_data["source_id"]))
+    return JsonResponse({"status": "FAILURE"})
+
+@csrf_exempt
+def get_domain(request: HttpRequest):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse(domainscrud.get_domain(request,raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
