@@ -65,24 +65,70 @@ Ideally, this system will be useful to a fair number of people, who will in turn
     \item Changing database for any service should not exceed more than 10* total work hours (*though this is dependent on the type and amount of data to be transferred)
 \end{itemize}
 
+\section{Architectural Design and Patterns}
+\subsection{Diagram}
+\includegraphics[width=1\textwidth]{Demo2Architecture.jpg}
+Please see a description of the employed architectural patterns and tactics below.
+
+
 
 \section{Architectural Strategies}
-We have adopted aspects of several architectural styles, patterns and strategies to help realise our system and its quality requirements.
+We have adopted aspects of several architectural styles, patterns and strategies to help realise our system and its quality requirements. Tactics additionally are grouped by architectural patterns.
 \subsection{Service-Oriented Architecture}
-Testing out LaTeX
+\subsubsection{Description}
+The overarching software architecture is that of a Service-Oriented Architecture. Our system consists of five different, independently deployable unit, each of which is responsible for providing (a) different services(s).
+\subsubsection{Quality Requirements Addressed}
+\begin{itemize}
+    \item Scalability: The use of a Service-Oriented Architecture promotes scalability of the application by distributing the computational responsibilities across different deployed units (tactic: distributed processing) - thus helping reduce bottleneck.
+    \item Performance: The separation of services allows services that require higher computationally expense to be scalled vertically or horizontally (tactic). Furthermore distributed processing of tasks ultimately improves performance.
+    \item Modifiability: A SOA takes seperation of concerns (tactic) to an extreme, and allow for individual services to be modified totally independently of one another.
+\end{itemize}
 \subsection{Multitier/Layered Pattern}
-Testing out LaTeX
+\subsubsection{Description}
+A Multitier architecture is achieved by physicaly seperating the modules responsible for presentation, business logic, and data logic. Furthermore, this architecture is Layered in the sense that each layer provides services to the layer below it to use. The layers/tiers are as follows: Presentation layer (frontend UI), Service Layer (public APIs for each service), Business Logic Layer (to handle the application logic), and the Data Access Layer (to handle the database interaction)
+\subsubsection{Quality Requirements Addressed}
+\begin{itemize}
+    \item Modifiability: Once again, seperation of concerns (tactic) is achieved (and is more finely grained) by seperating modules physically by responsibility
+    \item General: It is good practice to seperate a system into layers such that updates to one layer in one unit does not affect others. Furthermore this helps realise the Agile methodology which requires that modules are updated and developed rapidly.
+\end{itemize}
 \subsection{Model-View-Controller Pattern}
-Testing out LaTeX
+\subsubsection{Description}
+The use of Angular as a frontend technology (discussed below) inheritedly makes use of the MVC pattern.
+\subsubsection{Quality Requirements Addressed}
+\begin{itemize}
+    \item Usability: By seperating data, visuals, and logic, is it possible to build a highly responsive application with stunning and intuitive visuals.
+\end{itemize}
 \subsection{Pipe-and-Filter Pattern}
-Testing out LaTeX
+\subsubsection{Description}
+The pipe-and-filter architectural pattern is a means to conceptually reason about the sentiment analysis pipeline. The pipeline is as follows: 1. Data is pulled from an external API 2. The data moves through the Query Engine and is formatted and pushed further along the conceptual pipeline 3. As part of the Analyser, the data is preprocessed using NTK 4. As part of thr Analyser, the data is subject to a number of sentiment analysis models to produce metrics 5. As part of the Aggregator, the data is combined in a meaningful and aggregated manner 6. The next step conceptually is that this fully transformed data is returned to the user on the frontend and presented visually
+\subsubsection{Quality Requirements Addressed}
+\begin{itemize}
+    \item Performance: The use of this conceptual pipeline structure is conducive to parallel processing, an architectural tactic (since this pipeline spans across three different deployable units) improving the time taken for data to be analysed overall on average
+    \item Scalabilty: Closing related to performance, the use of a somewhat pipe-and-filter structure allows for pipelining (tactic) in the sense that whille data is in one stage of the pipeline, different data may be simultaneously processed in a different component of the pipeline - improves overall scalability and performance when multiple users are invoking the pipeline simultaneously
+    \item Modifiability: By implementing the sentiment analysis pipeline as a series of filters/components, one can make modifications to one part of the pipeline (ex: preprocessing) without affecting any other stage of the pipeline
+\end{itemize}
 \subsection{Repository Pattern}
-Testing out LaTeX
+\subsubsection{Description}
+As part of the Data layer of the application (see Multitier/Layered Pattern) we have opted to implement the Repository pattern such that we have an intermediary between the databases and the rest of the application. This is doen for all deployable units that include a database (of which there are three).
+\subsubsection{Quality Requirements Addressed}
+\begin{itemize}
+    \item Modifiability: By placing an abstraction between the database and the application logic (tactic), the rest of the system can be totally agnostic of the database technology used, meaning that changes to the database require a minimal amount of code to be changed, namely only the repository/model modules that interact with the database, the rest of the application can remain unchanged.
+    \item Performance: Since we can thus guarantee that interaction with the databases takes place in a consistent manner, we can preemptively create optimized database queries (tactic: database optimization) for each predefined database-interaction method defined in the repository/model modules (since the application will always access the databases via these modules). By using optimal queries will the performance of the application improve.
+\end{itemize}
+\subsection{Important Notice regarding other identified Quality Requirements}
+Note that no pattern directly addresses the quality requirement of security. This is because this quality requirement is addressed by the choice of technology (detailed below). Furthermore, the important quality requirement of Usability is only directly addressed via one pattern above - please note however that this is not an oversight. Instead, Usability is so core to our application that it is mainly ingrained into the business logic and technology choices of the system.
+\subsubsection{Security}
+\begin{itemize}
+    \item Authentication is token based (tactic). JWT tokens will be used to authenticate a user across multiple deployed and independent services.
+    \item Backend technology choice of Django (discussed below) is designed with security in mind, employing various mechanisms to combat common security vulnerabilities
+\end{itemize}
+\subsubsection{Usability}
+\begin{itemize}
+    \item Attention to detail and smooth-ness when designing the UI
+    \item Sentiment anayss model outputs are appropriately transformed on the backend such that they are easy to interpret and visualise.
+\end{itemize}
 
 
-\section{Architectural Design and Patterns}
-\subsection{heading}
-Testing out LaTeX
 
 \section{Architectural Constraints}
 \subsection{Client-Defined}
