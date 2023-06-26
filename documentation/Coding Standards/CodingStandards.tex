@@ -31,12 +31,42 @@ Within the backend folder, every seperate service of the system is stored within
 \section{Naming Conventions}
 \subsection{Frontend}
 
+When it comes to naming conventions for frontend development, follow these guidelines:
+
+\begin{enumerate}
+    \item \textbf{Use meaningful and descriptive names}: Choose names that accurately describe the purpose or functionality of the component, variable, function, or class. Avoid using vague or ambiguous names.
+    
+    \item \textbf{Follow camelCase for angular code}: Use camelCase notation for naming variables, functions, and object properties. Start with a lowercase letter and capitalize the first letter of each subsequent concatenated word. For example: \texttt{myVariable}, \texttt{getUserData()}, \texttt{myObject.property}.
+    
+    \item \textbf{Use kebab-case for HTML and CSS}: Use kebab-case notation for naming HTML elements and CSS classes. Start each word with a lowercase letter and separate words with a hyphen. For example: \texttt{<my-component></my-component>}, \texttt{.my-class}.
+
+    \item \textbf{Use PascalCase for class and component names}: Class names and component names should follow PascalCase notation. Start each word with an uppercase letter. For example: \texttt{MyClass}, \texttt{MyComponent}.
+        
+    \item \textbf{Use lowercase for file names}: File names should be in lowercase and use hyphens to separate words. For example: \texttt{my-file.js}, \texttt{my-component.html}, \texttt{styles.css}.
+            
+    \item \textbf{Use self-explanatory names for CSS classes}: Choose CSS class names that are descriptive and convey their purpose. Avoid using generic names or abbreviations. Use hyphens to separate words in class names. For example: \texttt{.main-container}, \texttt{.btn-primary}, \texttt{.error-message}.
+    
+    \item \textbf{Prefixes and suffixes}: Consider using consistent prefixes or suffixes for variables or functions to indicate their purpose or type. For example, prefixing boolean variables with "is" or "has" (\texttt{isActive}, \texttt{hasError}) or suffixing functions with verbs (\texttt{calculateTotal}, \texttt{validateForm}).
+    
+    \item \textbf{Avoid excessive abbreviation}: While it's important to keep names concise, avoid excessive abbreviation that may make the code less readable. Aim for a balance between brevity and clarity.
+\end{enumerate}
+
 \subsection{Backend}
 Within the backend of the project naming conventions are followed to ensure readable and understandable code. These include a well defined structure for endpoints whereby the endpoint function shall have a descriptive name. The URL shall be the same as the endpoint name. Auxiliary files are created to store the logic of the functions within the backend and these are stored in folders such as 'util' or 'preprocess' to give a clear understanding of their grouping of purpose. The functions within these auxiliary files include functions with the same name as the endpoint (indicating they are what is to be called in the endpoint) and helper functions such as '\texttt{remove\_whitespace}' to create an orderly structure within the main functions. This clear definition of different main and auxiliary functions increases readability and flexibility of our code as it leads to bugs being easier to 'track down'. As well as this variables are ensured to name that clearly describes their purpose within the codebase.
 
 \newpage
 \section{Formatting}
 \subsection{Frontend}
+
+\begin{itemize}
+    \item Use tabs for indentation.
+    \item Keep lines of code within a reasonable length, so it doesn't go off the screen.
+    \item Align related code vertically so it looks organized.
+    \item Put braces and parentheses where they look nice, either on the same line or the next line.
+    \item Leave comments to explain what the code does, but not too many.
+    \item Try to be consistent with how the code looks, so it doesn't confuse anyone.
+    \item Use vscode auto-formatting to ensure consistency.
+  \end{itemize}
 
 \subsection{Backend}
 The backend code of our system is developed using Django which uses Python as its programming language. Inherently, by using python, our code will follow a strict and ordered format due to pythons use of indentation. As well as this inherent structure, we also use the 'Black' formatter to ensure readability and consistency within the code developed.
