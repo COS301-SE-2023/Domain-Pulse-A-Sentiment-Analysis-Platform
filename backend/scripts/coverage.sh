@@ -1,6 +1,6 @@
-project1="../backend/engine"
-project2="../backend/profilemanager"
-project3="../backend/warehouse"
+project1="./engine"
+project2="../profilemanager"
+project3="../warehouse"
 
 cd $project1
 coverage run --source='.' manage.py test
