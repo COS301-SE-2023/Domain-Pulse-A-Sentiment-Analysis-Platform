@@ -49,8 +49,8 @@ export class MainComponent {
   sidebarCollapsed = true;
 
   constructor(private backendService: BackendService, private store: Store) {
-    this.store.dispatch(new Demo2Setup());
-    // this.store.dispatch(new GetDomains());
+    // this.store.dispatch(new Demo2Setup());
+    this.store.dispatch(new GetDomains());
   }
 
   openSidebar() {

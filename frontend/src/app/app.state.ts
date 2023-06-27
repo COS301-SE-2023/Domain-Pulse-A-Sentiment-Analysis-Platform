@@ -90,7 +90,7 @@ interface AppStateModel {
 @State<AppStateModel>({
   name: 'app',
   defaults: {
-    profileId: 1,
+    profileId: 3,
     authenticated: false,
     selectedStatisticIndex: 0,
   },
@@ -102,6 +102,7 @@ export class AppState {
     private readonly store: Store,
     private readonly router: Router
   ) {
+    this.store.dispatch(new CheckAuthenticate());
     // setTimeout(() => {
     //   this.store.dispatch(new CheckAuthenticate()).subscribe(() => {
     //     if (this.store.selectSnapshot((state) => state.app.authenticated)) {
@@ -453,8 +454,12 @@ export class AppState {
   @Action(CheckAuthenticate)
   checkAuthenticate(ctx: StateContext<AppStateModel>) {
     this.appApi.checkAuthenticate().subscribe((res: any) => {
-      if (res.status == 'SUCCESS') return true;
-      else return false;
+      if (res.status == 'SUCCESS') {
+        ctx.patchState({
+          profileId: res.id,
+        });
+        return true;
+      } else return false;
     });
   }
   @Action(AttempPsswdLogin)
