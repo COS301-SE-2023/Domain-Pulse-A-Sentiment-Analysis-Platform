@@ -50,6 +50,10 @@ jobs:
         with:
           python-version: 3.8
       
+      -name: add .env file
+        working-directory: ./backend/profiles/profiles
+        run: echo "${{ secrets.POSTGRES_CONFIG }}" > .env
+
       - name: install pipenv
         working-directory: ./backend
         run: |
