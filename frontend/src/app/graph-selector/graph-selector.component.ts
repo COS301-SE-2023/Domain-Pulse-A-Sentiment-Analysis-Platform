@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as Chart from 'chart.js';
-import { aggregated_metrics } from '../statistic-selector/statistic-selector.component';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { AppState } from '../app.state';
 import { Observable } from 'rxjs';
+import { ChooseStatistic } from '../app.actions';
 
 @Component({
   selector: 'graph-selector',
@@ -16,6 +16,8 @@ export class GraphSelectorComponent {
 
   @Select(AppState.sourceOverallSentimentScores)
   sourceOverallSentiment!: Observable<any | null>;
+  @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
+  currentGraphIndex: number = 0;
 
   chart: Chart | undefined;
   gradient: CanvasGradient | undefined;
@@ -204,7 +206,7 @@ export class GraphSelectorComponent {
     // ...
   ];
 
-  constructor() {
+  constructor(private store: Store) {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
@@ -213,6 +215,11 @@ export class GraphSelectorComponent {
           this.renderGraph();
         }, 300);
       }
+    });
+
+    this.statisticIndex.subscribe((statIndex) => {
+      this.currentGraphIndex = statIndex;
+      this.renderGraph();
     });
   }
 
@@ -253,8 +260,6 @@ export class GraphSelectorComponent {
 
   updatedGraphArray?: any[];
 
-  currentGraphIndex = 0;
-
   ngAfterViewInit() {
     this.renderGraph();
   }
@@ -270,6 +275,7 @@ export class GraphSelectorComponent {
       this.currentGraphIndex = this.updatedGraphArray.length - 1;
       this.renderGraph();
     }
+    this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
   }
 
   switchToNextGraph() {
@@ -283,6 +289,7 @@ export class GraphSelectorComponent {
       this.currentGraphIndex = 0;
       this.renderGraph();
     }
+    this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
   }
 
   renderGraph() {
