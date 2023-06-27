@@ -21,7 +21,7 @@ coverage report -m
 coverage xml -o coverage.xml
 cd ..
 
-coverage combine
+coverage combine engine/.coverage profilemanager/.coverage warehouse/.coverage
 coverage report -m
 coverage html -d coverage_html
 coverage lcov -o coverage.lcov
