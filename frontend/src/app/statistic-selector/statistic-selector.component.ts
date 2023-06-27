@@ -56,6 +56,7 @@ export class StatisticSelectorComponent {
 
   constructor(private store: Store) {
     this.sourceOverallSentiment.subscribe((newAnalysisData) => {
+      if (!newAnalysisData) return;
       this.mockData = newAnalysisData;
       this.displayedMetrics = this.assignValues(newAnalysisData);
     });
