@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as Chart from 'chart.js';
+import { aggregated_metrics } from '../statistic-selector/statistic-selector.component';
+import { Select } from '@ngxs/store';
+import { AppState } from '../app.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'graph-selector',
@@ -10,34 +14,8 @@ export class GraphSelectorComponent {
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
-  mockData =
-    {
-      "aggregated_metrics": {
-        "general": {
-          "category": "POSITIVE",
-          "score": 0.714
-        },
-        "emotions": {
-          "anger": 0.0231,
-          "disgust": 0.012,
-          "fear": 0,
-          "joy": 0.6777,
-          "neutral": 0.0434,
-          "sadness": 0.2187,
-          "surprise": 0.0251
-        },
-        "toxicity": {
-          "level_of_toxic": "Non-toxic",
-          "score": 0.0009
-        },
-        "ratios": {
-          "positive": 0.3031,
-          "neutral": 0.6213,
-          "negative": 0.0757
-        }
-      }
-    }
-
+  @Select(AppState.sourceOverallSentimentScores)
+  sourceOverallSentiment!: Observable<any | null>;
 
   chart: Chart | undefined;
   gradient: CanvasGradient | undefined;
@@ -101,13 +79,15 @@ export class GraphSelectorComponent {
     {
       type: 'bar', // Replace with your desired chart type (e.g., line, pie, etc.)
       data: {
-        labels: ["anger",
-          "disgust",
-          "fear",
-          "joy",
-          "neutral",
-          "sadness",
-          "surprise"], // Replace with your data labels
+        labels: [
+          'anger',
+          'disgust',
+          'fear',
+          'joy',
+          'neutral',
+          'sadness',
+          'surprise',
+        ], // Replace with your data labels
         datasets: [
           {
             label: 'Rating per Emotion', // Replace with your dataset label
@@ -119,9 +99,9 @@ export class GraphSelectorComponent {
               'rgba(255, 99, 132, 0.8)',
               'rgba(54, 162, 235, 0.8)',
               'rgba(255, 206, 86, 0.8)',
-              'rgba(75, 192, 192, 0.8)'
+              'rgba(75, 192, 192, 0.8)',
             ], // Replace with desired colors
-            
+
             borderColor: [
               'rgba(3, 127, 255, 1)',
               'rgba(145, 44, 246, 1)',
@@ -129,9 +109,9 @@ export class GraphSelectorComponent {
               'rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',
               'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'
+              'rgba(75, 192, 192, 1)',
             ],
-            
+
             borderWidth: 1,
           },
         ],
@@ -224,8 +204,20 @@ export class GraphSelectorComponent {
     // ...
   ];
 
+  constructor() {
+    this.sourceOverallSentiment.subscribe((data) => {
+      console.log(data);
+      if (data) {
+        this.updatedGraphArray = this.assignGraphData(data, this.graphs);
+        setTimeout(() => {
+          this.renderGraph();
+        }, 300);
+      }
+    });
+  }
+
   assignGraphData(mockData: any, graphArray: any[]): any[] {
-    const aggregatedMetrics = mockData.aggregated_metrics;
+    const aggregatedMetrics = mockData;
 
     // Update the first graph (doughnut)
     const score = Math.floor(aggregatedMetrics.general.score * 100) / 2;
@@ -236,7 +228,7 @@ export class GraphSelectorComponent {
     graphArray[1].data.datasets[0].data = [
       Math.floor(aggregatedMetrics.ratios.positive * 100),
       Math.floor(aggregatedMetrics.ratios.negative * 100),
-      Math.floor(aggregatedMetrics.ratios.neutral * 100)
+      Math.floor(aggregatedMetrics.ratios.neutral * 100),
     ];
 
     // Update the third graph (bar)
@@ -247,20 +239,19 @@ export class GraphSelectorComponent {
       Math.floor(aggregatedMetrics.emotions.joy * 100),
       Math.floor(aggregatedMetrics.emotions.neutral * 100),
       Math.floor(aggregatedMetrics.emotions.sadness * 100),
-      Math.floor(aggregatedMetrics.emotions.surprise * 100)
+      Math.floor(aggregatedMetrics.emotions.surprise * 100),
     ];
 
     // Update the fourth graph (pie)
     graphArray[3].data.datasets[0].data = [
       Math.floor(aggregatedMetrics.toxicity.score * 100),
-      Math.floor((1 - aggregatedMetrics.toxicity.score) * 100)
+      Math.floor((1 - aggregatedMetrics.toxicity.score) * 100),
     ];
 
     return graphArray;
   }
 
-  updatedGraphArray = this.assignGraphData(this.mockData, this.graphs);
-
+  updatedGraphArray?: any[];
 
   currentGraphIndex = 0;
 
@@ -269,6 +260,8 @@ export class GraphSelectorComponent {
   }
 
   switchToPreviousGraph() {
+    if (!this.updatedGraphArray) return;
+
     console.log('previous graph');
     if (this.currentGraphIndex > 0) {
       this.currentGraphIndex--;
@@ -280,6 +273,8 @@ export class GraphSelectorComponent {
   }
 
   switchToNextGraph() {
+    if (!this.updatedGraphArray) return;
+
     console.log('next graph');
     if (this.currentGraphIndex < this.updatedGraphArray.length - 1) {
       this.currentGraphIndex++;
@@ -294,6 +289,8 @@ export class GraphSelectorComponent {
     if (this.chart) {
       this.chart.destroy();
     }
+    if (!this.updatedGraphArray) return;
+
     const ctx = this.myChart.nativeElement.getContext('2d');
     const container = this.chartContainer.nativeElement;
     const containerWidth = container.offsetWidth;

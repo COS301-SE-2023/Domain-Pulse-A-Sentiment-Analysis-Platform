@@ -3,7 +3,7 @@ import { AppState, SentimentScores } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 
-interface aggregated_metrics {
+export interface aggregated_metrics {
   general: {
     category: string;
     score: number;
