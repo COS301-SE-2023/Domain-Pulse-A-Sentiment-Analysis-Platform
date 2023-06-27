@@ -200,7 +200,6 @@ export class SidebarComponent {
     }
   }
 
-
   imageSelected: boolean = false;
   selectedImage: File | undefined;
 
@@ -213,6 +212,4 @@ export class SidebarComponent {
     // Handle image upload logic here
     // You can access the selected image using this.selectedImage
   }
-
-  
 }

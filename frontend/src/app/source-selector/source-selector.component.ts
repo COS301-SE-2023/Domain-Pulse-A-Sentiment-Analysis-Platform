@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource } from '../app.actions';
+import { AddNewSource, SetSource } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -19,6 +19,10 @@ export class SourceSelectorComponent {
   newSourcePlatform = '';
 
   constructor(private store: Store) {}
+
+  selectSource(source: DisplaySource) {
+    this.store.dispatch(new SetSource(source));
+  }
 
   addNewSource() {
     console.log('platform: ' + this.newSourcePlatform);

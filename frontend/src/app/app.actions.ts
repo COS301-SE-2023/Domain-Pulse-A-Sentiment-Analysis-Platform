@@ -49,8 +49,8 @@ export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
 }
 
-export class GetDashboardData {
-  static readonly type = '[App] Get Dashboard Data';
+export class GetSourceDashBoardInfo {
+  static readonly type = '[App] Get Source DashBoard Info';
 }
 
 export class AttempPsswdLogin {

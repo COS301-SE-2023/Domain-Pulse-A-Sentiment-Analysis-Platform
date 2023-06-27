@@ -89,7 +89,7 @@ export class AppApi {
     );
   }
 
-  getOverallSentimentScores(domainID: number): Observable<any> {
+  getSourceSentimentData(domainID: number): Observable<any> {
     const getOverallSentimentScoresUrl =
       this.warehouseBaseUrl + 'query/get_source_dashboard/';
     const body = {

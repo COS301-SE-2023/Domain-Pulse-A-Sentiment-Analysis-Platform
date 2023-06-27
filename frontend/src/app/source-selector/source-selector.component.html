@@ -1,6 +1,11 @@
 <div class="sources-div flex-row center">
   <ng-container *ngIf="sources$ | async as sources; else loadingSources">
-    <div *ngFor="let source of sources" class="source-cat flex-column center">
+    <div
+      *ngFor="let source of sources"
+      class="source-cat flex-column center"
+      (click)="selectSource(source)"
+      [ngClass]="{ 'source-cat-selected': source.selected }"
+    >
       <img
         [src]="'../assets/' + source.url"
         height="45px"

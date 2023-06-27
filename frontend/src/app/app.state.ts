@@ -7,12 +7,12 @@ import {
   AttempPsswdLogin,
   CheckAuthenticate,
   GetDomains,
-  GetDashboardData,
   GetSources,
   RegisterUser,
   SetDomain,
   SetProfileId,
   SetSource,
+  GetSourceDashBoardInfo,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -242,8 +242,6 @@ export class AppState {
         ctx.patchState({
           sources: [...sources, mockSource],
         });
-
-        this.store.dispatch(new GetDashboardData());
       }
 
       // this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
@@ -276,6 +274,7 @@ export class AppState {
 
   @Action(SetSource)
   setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
+    this.store.dispatch(new GetSourceDashBoardInfo());
     let sources = ctx.getState().sources;
     if (!sources) return;
 
@@ -288,24 +287,6 @@ export class AppState {
       sources: sources,
       selectedSource: state.source,
     });
-
-    for (let source of sources) {
-      if (source.selected) {
-        let overall = ctx.getState().overallSentimentScores;
-        if (!overall) return;
-
-        let selectedSouceId = source.id;
-
-        for (let commentSentAnal of overall.individual_metrics) {
-          if (commentSentAnal.source_id == selectedSouceId) {
-            ctx.patchState({
-              sampleData: commentSentAnal.sample_data,
-            });
-            break;
-          }
-        }
-      }
-    }
   }
 
   @Action(AddNewSource)
@@ -363,14 +344,16 @@ export class AppState {
       });
   }
 
-  @Action(GetDashboardData)
-  getOverallSentimentScores(ctx: StateContext<AppStateModel>) {
-    // TODO have a selected Source
+  @Action(GetSourceDashBoardInfo)
+  getSourceDashBoardInfo(ctx: StateContext<AppStateModel>) {
     let selectedSource = ctx.getState().selectedSource;
-    if (!selectedSource) return;
+    if (!selectedSource) {
+      console.log('no source selected to get dashboard info for');
+      return;
+    }
     let selectedSourceID = selectedSource.id;
 
-    this.appApi.getOverallSentimentScores(selectedSourceID).subscribe((res) => {
+    this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         // CHRIS ERROR HANDLE
         alert('CHRIS ERROR HANDLE');
@@ -379,8 +362,8 @@ export class AppState {
 
       ctx.patchState({
         overallSentimentScores: res.aggregated_metrics,
+        sampleData: res.individual_metrics,
       });
-
     });
   }
 
