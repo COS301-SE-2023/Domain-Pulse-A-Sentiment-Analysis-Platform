@@ -19,6 +19,7 @@ cd $project3
 coverage run --source='.' manage.py test
 coverage report -m
 coverage xml -o coverage.xml
+cd ..
 
 coverage combine
 coverage report -m
