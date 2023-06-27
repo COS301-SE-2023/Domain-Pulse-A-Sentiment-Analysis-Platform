@@ -16,6 +16,7 @@ import {
   ChooseStatistic,
   EditDomain,
   DeleteDomain,
+  Demo2Setup,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -545,6 +546,52 @@ export class AppState {
   chooseStatistic(ctx: StateContext<AppStateModel>, state: ChooseStatistic) {
     ctx.patchState({
       selectedStatisticIndex: state.statisticIndex,
+    });
+  }
+
+  @Action(Demo2Setup)
+  setupForDemo2(ctx: StateContext<AppStateModel>) {
+    // add 2 domain 1 and 3 to domain 2
+
+    this.appApi.getDomainIDs(ctx.getState().profileId).subscribe((res: any) => {
+      if (res.status === 'FAILURE') {
+        // CHRIS ERROR HANDLE
+        alert('CHRIS ERROR HANDLE');
+        return;
+      }
+
+      let domainIDs: number[] = res.domainIDs;
+      if (domainIDs.length > 0) return;
+
+      // JIPPA for demo
+
+      this.store.dispatch(
+        new AddNewDomain(
+          'Spottie',
+          'irrel',
+          'This is a catalogie of the domains that my best friends spottie is quite a fan of'
+        )
+      );
+
+      this.store.dispatch(new AddNewSource('irell', 'irell'));
+
+      this.store.dispatch(new AddNewSource('irell', 'irell'));
+
+      setTimeout(() => {
+        this.store.dispatch(
+          new AddNewDomain(
+            'Kittie',
+            'irrel',
+            'Kittie is such a wierd kittie, i dont know other cats that are quite as knowledgable as her'
+          )
+        );
+
+        this.store.dispatch(new AddNewSource('irell', 'irell'));
+
+        this.store.dispatch(new AddNewSource('irell', 'irell'));
+
+        this.store.dispatch(new AddNewSource('irell', 'irell'));
+      }, 1000);
     });
   }
 }

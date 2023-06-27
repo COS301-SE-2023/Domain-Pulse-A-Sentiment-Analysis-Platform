@@ -1,5 +1,9 @@
 import { DisplayDomain, DisplaySource } from './app.state';
 
+export class Demo2Setup {
+  static readonly type = '[App] Demo2 Setup';
+}
+
 export class LoadUserDomains {
   static readonly type = '[App] Load User Domains';
 }
