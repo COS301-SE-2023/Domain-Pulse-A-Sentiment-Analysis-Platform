@@ -10,7 +10,7 @@ import {
 import { Select, Store } from '@ngxs/store';
 import { AppState, DisplayDomain } from '../app.state';
 import { Observable } from 'rxjs';
-import { AddNewDomain, SetDomain } from '../app.actions';
+import { AddNewDomain, DeleteDomain, EditDomain, SetDomain } from '../app.actions';
 
 @Component({
   selector: 'dp-sidebar',
@@ -178,6 +178,30 @@ export class SidebarComponent {
     this.newDomainDescription = '';
 
     this.toggleDomainModal();
+  }
+
+  editDomain() {
+    const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
+    if (!selectedDomain) return;
+    const selectedDomainId = selectedDomain.id;
+
+    this.store.dispatch(
+      new EditDomain(
+        selectedDomainId,
+        this.newDomainName,
+        this.newDomainImageName,
+        this.newDomainDescription
+      )
+    );
+    this.newDomainName = '';
+    this.newDomainImageName = '';
+    this.newDomainDescription = '';
+
+    this.toggleEditDomainModal();
+  }
+
+  deleteDomain(domainToDeleteId: number) {
+    this.store.dispatch(new DeleteDomain(domainToDeleteId));
   }
 
   selectDomain(domain: DisplayDomain) {

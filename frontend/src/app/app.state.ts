@@ -14,6 +14,8 @@ import {
   SetSource,
   GetSourceDashBoardInfo,
   ChooseStatistic,
+  EditDomain,
+  DeleteDomain,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -350,6 +352,78 @@ export class AppState {
           this.store.dispatch(new GetDomains());
         });
       });
+  }
+
+  @Action(EditDomain)
+  editDomain(ctx: StateContext<AppStateModel>, state: EditDomain) {
+    // console.log(state);
+
+    // hard coded for now
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    selectedDomain.name = state.domainName;
+    selectedDomain.description = state.description;
+    // selectedDomain.imageUrl = state.domainImagUrl;
+
+    ctx.patchState({
+      selectedDomain: selectedDomain,
+    });
+
+    let domains = ctx.getState().domains;
+    if (!domains) return;
+
+    for (let domain of domains) {
+      if (domain.id == selectedDomain.id) {
+        domain.name = state.domainName;
+        domain.description = state.description;
+        // domain.imageUrl = state.domainImagUrl;
+        break;
+      }
+    }
+  }
+
+  @Action(DeleteDomain)
+  deleteDomain(ctx: StateContext<AppStateModel>, state: DeleteDomain) {
+    // this.appApi.removeDomain(state.domainID).subscribe((res) => {
+    //   if (res.status === 'FAILURE') {
+    //     // CHRIS ERROR HANDLE
+    //     alert('CHRIS ERROR HANDLE');
+    //     return;
+    //   }
+
+    //   // will hardcode removal instead of re-fetching domains for now
+    //   // this.store.dispatch(new GetDomains());
+    // });
+
+    let domains = ctx.getState().domains;
+    if (!domains) return;
+
+    for (let domain of domains) {
+      if (domain.id == state.domainID) {
+        let selectedDomain = ctx.getState().selectedDomain;
+        if (selectedDomain && selectedDomain.id == state.domainID) {
+          // switch to the next domain
+          if (domains.length > 1) {
+            let nextDomain = domains[0];
+            if (nextDomain.id == state.domainID) {
+              nextDomain = domains[1];
+            }
+
+            this.store.dispatch(new SetDomain(nextDomain));
+          }
+        }
+
+        // remove domain from domains
+        domains.splice(domains.indexOf(domain), 1);
+
+        ctx.patchState({
+          domains: domains,
+        });
+
+        break;
+      }
+    }
   }
 
   @Action(GetSourceDashBoardInfo)

@@ -51,6 +51,26 @@ export class AppApi {
     return this.http.post(addDomainUrl, body, { withCredentials: true });
   }
 
+  editDomain(
+    domainID: number,
+    domainName: string,
+    domainDescrption: string,
+    domainImageUrl: string
+  ): Observable<any> {
+    const editDomainUrl = this.profilesBaseUrl + 'profiles/edit_domain';
+    const body = {};
+    alert('FIND THE CORRECT BODY FOR THIS CODE');
+    return this.http.post(editDomainUrl, body, { withCredentials: true });
+  }
+
+  removeDomain(domainID: number): Observable<any> {
+    const removeDomainUrl = this.profilesBaseUrl + 'profiles/remove_domain';
+    const body = {
+      id: domainID,
+    };
+    return this.http.post(removeDomainUrl, body, { withCredentials: true });
+  }
+
   // such a tragedy that this doesnt happen in the backend
   linkDomainToProfile(domainID: number, profileID: number): Observable<any> {
     const linkDomainToProfileUrl =

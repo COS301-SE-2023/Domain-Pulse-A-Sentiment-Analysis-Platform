@@ -45,7 +45,11 @@
         src="../assets/logos/pen-solid.png"
         height="15px"
       />
-      <img src="../assets/logos/grey-trash.png" height="15px" />
+      <img
+        src="../assets/logos/grey-trash.png"
+        height="15px"
+        (click)="deleteDomain(domain.id)"
+      />
     </div>
   </div>
 
@@ -124,7 +128,11 @@
           <p class="modal-step-tag">2</p>
           <div class="flex-column" style="width: 100%">
             <p class="step-heading">Add A Description</p>
-            <input class="default-input" type="text" />
+            <input
+              class="default-input"
+              type="text"
+              [(ngModel)]="newDomainDescription"
+            />
           </div>
         </div>
 
@@ -182,7 +190,11 @@
           <p class="modal-step-tag">2</p>
           <div class="flex-column" style="width: 100%">
             <p class="step-heading">Add A Description</p>
-            <input class="default-input" type="text" />
+            <input
+              class="default-input"
+              type="text"
+              [(ngModel)]="newDomainDescription"
+            />
           </div>
         </div>
 
@@ -198,7 +210,9 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-domain-btn" (click)="addNewDomain()">Confirm</button>
+        <button class="new-domain-btn" (click)="editDomain()">
+          Confirm Edit
+        </button>
       </div>
     </div>
     <div class="picture"></div>
