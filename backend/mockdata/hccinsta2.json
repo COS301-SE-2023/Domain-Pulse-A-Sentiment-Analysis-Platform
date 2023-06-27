@@ -1,0 +1,67 @@
+{
+    "metrics": [
+      {
+        "data": "Please, this format is so incredibly dumb. Literally nobody likes it",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0003
+        },
+        "emotions": {
+          "anger": 0.3275,
+          "disgust": 0.5886,
+          "neutral": 0.084
+        },
+        "toxicity": {
+          "level_of_toxic": "Toxic",
+          "score": 0.976
+        },
+        "ratios": {
+          "positive": 0.333,
+          "neutral": 0.417,
+          "negative": 0.25
+        }
+      },
+      {
+        "data": "POV: both your club and country are in the pool of death.",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0001
+        },
+        "emotions": {
+          "sadness": 0.7319,
+          "neutral": 0.1705,
+          "surprise": 0.0976
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0106
+        },
+        "ratios": {
+          "positive": 0.0,
+          "neutral": 0.606,
+          "negative": 0.394
+        }
+      },
+      {
+        "data": "Literally no one in World Rugby wants this format, just go back to 6 pools of 4",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0878
+        },
+        "emotions": {
+          "sadness": 0.0145,
+          "surprise": 0.0809,
+          "neutral": 0.9046
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0006
+        },
+        "ratios": {
+          "positive": 0.106,
+          "neutral": 0.894,
+          "negative": 0.0
+        }
+      }
+    ]
+  }

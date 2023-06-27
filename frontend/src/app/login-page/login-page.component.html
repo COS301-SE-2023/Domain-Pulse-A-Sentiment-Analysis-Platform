@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="left-side flex-column center" style="gap: 10%">
+    <div class="flex-row content">
+      <img src="../assets/dp-logo-blue.png" style="width: 70%" />
+    </div>
+
+    <div
+      class="flex-row content"
+      style="text-align: left; align-self: flex-start; width: 100%"
+    >
+      <div class="flex-column" style="width: 100%">
+        <div class="flex-row" style="text-align: left; align-self: flex-start">
+          <div class="header"><h1>Get started by</h1></div>
+          <div class="header2"><h1>logging in!</h1></div>
+        </div>
+        <label for="username" class="email">Username</label>
+        <input
+          [(ngModel)]="username"
+          type="text"
+          class="inputBar"
+          name="username"
+        />
+
+        <label for="password" class="password">Password</label>
+        <input
+          [(ngModel)]="password"
+          type="password"
+          class="inputBar2"
+          name="password"
+        />
+        <div class="forgot">
+          <p>Forgot your password?</p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="flex-row content center"
+      style="text-align: left; align-self: flex-start; width: 100%"
+    >
+      <div class="flex-column" style="width: 100%">
+        <div>
+          <button (click)="login()" class="button">Log In</button>
+        </div>
+        <div>
+          <button class="button2">Sign in with Google</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-side"></div>
+</div>
