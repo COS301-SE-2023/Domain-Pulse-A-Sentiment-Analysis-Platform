@@ -78,5 +78,5 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: backend/engine/coverage.lcov
+          files: backend/coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
