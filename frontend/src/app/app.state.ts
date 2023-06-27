@@ -132,7 +132,7 @@ export class AppState {
   }
 
   @Selector()
-  static overallSentimentScores(state: AppStateModel) {
+  static sourceOverallSentimentScores(state: AppStateModel) {
     if (state.overallSentimentScores) return state.overallSentimentScores;
     return undefined;
   }

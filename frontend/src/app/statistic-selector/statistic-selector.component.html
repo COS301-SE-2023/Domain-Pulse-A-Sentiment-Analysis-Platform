@@ -1,7 +1,11 @@
-<div class="flex-row align-center" style="height: 80%; gap: 1.4rem">
+<div
+  *ngIf="displayedMetrics"
+  class="flex-row align-center"
+  style="height: 80%; gap: 1.4rem"
+>
   <div class="statistic-category statistic-category-selected">
     <div class="statistic-item flex-row">
-      <div class="flex-row center icon-div" >
+      <div class="flex-row center icon-div">
         <img
           src="../../assets/logos/graph.png"
           width="100%"
@@ -10,7 +14,7 @@
       </div>
       <div class="flex-column item-stats">
         <p>Overall Score</p>
-        <p>{{ overallScore }}%</p>
+        <p>{{ displayedMetrics.overallScore }}%</p>
       </div>
     </div>
   </div>
@@ -19,7 +23,7 @@
 
   <div class="statistic-category">
     <div class="statistic-item flex-row">
-      <div class="flex-row center icon-div" >
+      <div class="flex-row center icon-div">
         <img
           src="../../assets/logos/positive.png"
           width="100%"
@@ -28,12 +32,12 @@
       </div>
       <div class="flex-column item-stats">
         <p>Positive</p>
-        <p>{{ positiveScore }}%</p>
+        <p>{{ displayedMetrics.positiveScore }}%</p>
       </div>
     </div>
 
     <div class="statistic-item flex-row">
-      <div class="flex-row center icon-div" >
+      <div class="flex-row center icon-div">
         <img
           src="../../assets/logos/negative.png"
           width="100%"
@@ -42,12 +46,12 @@
       </div>
       <div class="flex-column item-stats">
         <p>Negative</p>
-        <p>{{ negativeScore }}%</p>
+        <p>{{ displayedMetrics.negativeScore }}%</p>
       </div>
     </div>
 
     <div class="statistic-item flex-row">
-      <div class="flex-row center icon-div" >
+      <div class="flex-row center icon-div">
         <img
           src="../../assets/logos/neutral-score.png"
           width="100%"
@@ -56,7 +60,7 @@
       </div>
       <div class="flex-column item-stats">
         <p>Neutral</p>
-        <p>{{ neutralScore }}%</p>
+        <p>{{ displayedMetrics.neutralScore }}%</p>
       </div>
     </div>
   </div>
@@ -74,14 +78,14 @@
       </div>
       <div class="flex-column item-stats">
         <p>Objectivity</p>
-        <p>{{ objectivityScore }}%</p>
+        <p>{{ displayedMetrics.objectivityScore }}%</p>
       </div>
     </div>
 
     <div class="statistic-item flex-row">
       <div class="flex-column item-stats">
         <p>Subjectivity</p>
-        <p>{{ subjectivityScore }}%</p>
+        <p>{{ displayedMetrics.subjectivityScore }}%</p>
       </div>
     </div>
   </div> -->
@@ -90,16 +94,16 @@
 
   <div class="statistic-category">
     <div class="statistic-item flex-row">
-      <div class="flex-row center icon-div" >
+      <div class="flex-row center icon-div">
         <img
-          [src]="emotionIconUrl"
+          [src]="displayedMetrics.emotionIconUrl"
           width="100%"
           alt="Positive Icon"
         />
       </div>
       <div class="flex-column item-stats">
         <p>Emotions</p>
-        <p>{{emotion}}</p>
+        <p>{{ displayedMetrics.emotion }}</p>
       </div>
     </div>
   </div>
@@ -108,7 +112,7 @@
 
   <div class="statistic-category">
     <div class="statistic-item flex-row">
-      <div class="flex-row center icon-div" >
+      <div class="flex-row center icon-div">
         <img
           src="../../assets/logos/comments.png"
           width="100%"
@@ -117,7 +121,7 @@
       </div>
       <div class="flex-column item-stats">
         <p>Toxicity</p>
-        <p>{{toxicity}}%</p>
+        <p>{{ displayedMetrics.toxicity }}%</p>
       </div>
     </div>
   </div>
@@ -125,7 +129,7 @@
 
   <div class="statistic-category">
     <div class="statistic-item flex-row">
-      <div class="flex-row center icon-div" >
+      <div class="flex-row center icon-div">
         <img
           src="../../assets/logos/analytics.png"
           width="100%"
@@ -134,9 +138,8 @@
       </div>
       <div class="flex-column item-stats">
         <p>Analysed</p>
-        <p>{{ analysedSum }}</p>
+        <p>{{ displayedMetrics.analysedSum }}</p>
       </div>
     </div>
   </div>
-
 </div>

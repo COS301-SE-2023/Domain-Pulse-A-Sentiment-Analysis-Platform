@@ -3,91 +3,84 @@ import { AppState, SentimentScores } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 
+interface aggregated_metrics {
+  general: {
+    category: string;
+    score: number;
+  };
+  emotions: {
+    anger: number;
+    disgust: number;
+    fear: number;
+    joy: number;
+    neutral: number;
+    sadness: number;
+    surprise: number;
+  };
+  toxicity: {
+    level_of_toxic: string;
+    score: number;
+  };
+  ratios: {
+    positive: number;
+    neutral: number;
+    negative: number;
+  };
+}
+
+interface DisplayableMetrics {
+  overallScore: number;
+  positiveScore: number;
+  negativeScore: number;
+  neutralScore: number;
+  emotion: string;
+  emotionIconUrl: string;
+  toxicity: number;
+  analysedSum: string;
+}
+
 @Component({
   selector: 'statistic-selector',
   templateUrl: './statistic-selector.component.html',
   styleUrls: ['./statistic-selector.component.sass'],
 })
 export class StatisticSelectorComponent {
-  @Select(AppState.overallSentimentScores)
-  sentimentScores$!: Observable<any | null>;
+  @Select(AppState.sourceOverallSentimentScores)
+  sourceOverallSentiment!: Observable<any | null>;
+
+  displayedMetrics?: DisplayableMetrics;
+
+  mockData?: { aggregated_metrics: aggregated_metrics; metadata?: any };
 
   overrallScore = 70;
 
- /*  mockData = {
-    "metrics":
-    [
-      {
-          "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
-          "general": {"category": "VERY_POSITIVE", "score": 0.9994},
-          "emotions": {"surprise": 0.015, "neutral": 0.0817, "joy": 0.9033},
-          "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
-          "ratios": {"positive": 0.353, "neutral": 0.647, "negative": 0.0},
-      }
-    ]
-  }  */
-
-  mockData = 
-  {
-    "aggregated_metrics": {
-      "general": {
-          "category": "POSITIVE",
-          "score": 0.714
-      },
-      "emotions": {
-          "anger": 0.0231,
-          "disgust": 0.012,
-          "fear": 0,
-          "joy": 0.6777,
-          "neutral": 0.0434,
-          "sadness": 0.2187,
-          "surprise": 0.0251
-      },
-      "toxicity": {
-          "level_of_toxic": "Non-toxic",
-          "score": 0.0009
-      },
-      "ratios": {
-          "positive": 0.3031,
-          "neutral": 0.6213,
-          "negative": 0.0757
-      }
-    }  
+  constructor(private store: Store) {
+    this.sourceOverallSentiment.subscribe((newAnalysisData) => {
+      this.mockData = newAnalysisData;
+      this.displayedMetrics = this.assignValues(newAnalysisData);
+    });
   }
 
-  /* overallScore = 70;
+  assignValues(
+    freshData: aggregated_metrics,
+    metaData?: any
+  ): DisplayableMetrics {
+    const aggregatedMetrics = freshData;
 
-  positiveScore = 70;
-  negativeScore = 22;
-  neutralScore = 8;
-
-  emotion = 'Joy';
-  emotionIconUrl = '../../assets/logos/' + this.emotion.toLowerCase() + '.png';
-
-  toxicity = 10;
-
-  analysedSum = '23k';
-
-  constructor(private store: Store) {}
-  analysedSum = "23k";
- */
-  assignValues(mockData: { aggregated_metrics: any; metadata?: any; }) {
-    const aggregatedMetrics = mockData.aggregated_metrics;
-  
     const overallScore = Math.floor(aggregatedMetrics.general.score * 100);
     const positiveScore = Math.floor(aggregatedMetrics.ratios.positive * 100);
     const negativeScore = Math.floor(aggregatedMetrics.ratios.negative * 100);
     const neutralScore = Math.floor(aggregatedMetrics.ratios.neutral * 100);
-  
-    const emotions = aggregatedMetrics.emotions;
-    const emotion = Object.keys(emotions).reduce((a, b) =>
+
+    const emotions: { [key: string]: number } = aggregatedMetrics.emotions;
+    let emotion = Object.keys(emotions).reduce((a, b) =>
       emotions[a] > emotions[b] ? a : b
     );
+
     const emotionIconUrl = `../../assets/logos/${emotion.toLowerCase()}.png`;
-  
+
     const toxicity = Math.floor(aggregatedMetrics.toxicity.score * 100);
-  
-  
+
     return {
       overallScore,
       positiveScore,
@@ -96,23 +89,7 @@ export class StatisticSelectorComponent {
       emotion,
       emotionIconUrl,
       toxicity,
-      
+      analysedSum: '23k',
     };
   }
-  
-  
-  
-  // Example usage:
-  assignedValues = this.assignValues(this.mockData);
-  overallScore = this.assignedValues.overallScore;
-  positiveScore = this.assignedValues.positiveScore;
-  negativeScore = this.assignedValues.negativeScore;
-  neutralScore = this.assignedValues.neutralScore;
-  emotion = this.assignedValues.emotion;
-  emotionIconUrl = this.assignedValues.emotionIconUrl;
-  toxicity = this.assignedValues.toxicity;
-  //Mock variable
-  analysedSum = "23k";
-
-
 }
