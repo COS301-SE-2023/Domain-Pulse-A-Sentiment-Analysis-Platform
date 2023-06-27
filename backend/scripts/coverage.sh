@@ -7,6 +7,7 @@ coverage run --source='.' manage.py test
 coverage report -m
 coverage xml -o coverage.xml
 cd ..
+ls
 
 cd $project2
 coverage run --source='.' manage.py test
