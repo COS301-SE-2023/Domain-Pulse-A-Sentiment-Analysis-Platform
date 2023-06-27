@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AppState, SentimentScores } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
+import { ChooseStatistic } from '../app.actions';
 
 export interface aggregated_metrics {
   general: {
@@ -47,12 +48,13 @@ interface DisplayableMetrics {
 export class StatisticSelectorComponent {
   @Select(AppState.sourceOverallSentimentScores)
   sourceOverallSentiment!: Observable<any | null>;
+  @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
 
   displayedMetrics?: DisplayableMetrics;
 
   mockData?: { aggregated_metrics: aggregated_metrics; metadata?: any };
 
-  overrallScore = 70;
+  selectedCategoryIndex = 0;
 
   constructor(private store: Store) {
     this.sourceOverallSentiment.subscribe((newAnalysisData) => {
@@ -60,6 +62,14 @@ export class StatisticSelectorComponent {
       this.mockData = newAnalysisData;
       this.displayedMetrics = this.assignValues(newAnalysisData);
     });
+
+    this.statisticIndex.subscribe((newIndex) => {
+      this.selectedCategoryIndex = newIndex;
+    });
+  }
+
+  selectStatisticCategory(categoryIndex: number) {
+    this.store.dispatch(new ChooseStatistic(categoryIndex));
   }
 
   assignValues(

@@ -66,3 +66,8 @@ export class RegisterUser {
     public email: string
   ) {}
 }
+
+export class ChooseStatistic {
+  static readonly type = '[App] Choose Statistic';
+  constructor(public statisticIndex: number) {}
+}

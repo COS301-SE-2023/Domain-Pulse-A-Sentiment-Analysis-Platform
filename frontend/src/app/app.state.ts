@@ -13,6 +13,7 @@ import {
   SetProfileId,
   SetSource,
   GetSourceDashBoardInfo,
+  ChooseStatistic,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -80,6 +81,7 @@ interface AppStateModel {
   overallSentimentScores?: any;
   // sampleData?: Comment[];
   sampleData?: any[];
+  selectedStatisticIndex: number;
 }
 
 @State<AppStateModel>({
@@ -87,6 +89,7 @@ interface AppStateModel {
   defaults: {
     profileId: 1,
     authenticated: false,
+    selectedStatisticIndex: 0,
   },
 })
 @Injectable()
@@ -141,6 +144,11 @@ export class AppState {
   static sampleData(state: AppStateModel) {
     if (state.sampleData) return state.sampleData;
     return undefined;
+  }
+
+  @Selector()
+  static statisticIndex(state: AppStateModel) {
+    return state.selectedStatisticIndex;
   }
 
   @Action(GetDomains)
@@ -457,5 +465,12 @@ export class AppState {
         };
     }
     return displaySource;
+  }
+
+  @Action(ChooseStatistic)
+  chooseStatistic(ctx: StateContext<AppStateModel>, state: ChooseStatistic) {
+    ctx.patchState({
+      selectedStatisticIndex: state.statisticIndex,
+    });
   }
 }
