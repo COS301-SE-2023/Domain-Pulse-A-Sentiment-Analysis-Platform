@@ -1,6 +1,7 @@
 import csv
 import os
 import pymongo
+from bson.objectid import ObjectId
 
 mongo_host = "localhost"
 mongo_port = 27017
@@ -124,17 +125,16 @@ def create_domain(domain_name, domain_icon,description):
     return {"id":str(ret.inserted_id),"name":domain_name,"icon":domain_icon,"description":"","description":description,"sources":[]}
 
 
-def remove_domain(user_id, domain_id):
-    user_id = int(user_id)
-    domain_id = int(domain_id)
-
-    for entry in domains_db:
-        if entry["user_id"] == user_id:
-            for domain in list(entry["domains"]):
-                if int(domain["domain_id"]) == domain_id:
-                    entry["domains"].remove(domain)
-                    return get_domains(user_id)
-    return get_domains(user_id)
+def delete_domain(id):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = { "_id": ObjectId(id) }
+    ret=collection.delete_one(query)
+    if(ret.deleted_count>0):
+        return {"status":"SUCCESS"}
+    else:
+        return {"status":"FAILURE", "details":"No Entry Found"}
 
 
 def get_domains(user_id):

@@ -9,4 +9,11 @@ def create_domain(request: HttpRequest):
     if request.method == "POST":
         raw_data=json.loads(request.body)
         return JsonResponse(domainscrud.create_domain(raw_data["name"],raw_data["icon"],raw_data["description"]))
-    return JsonResponse({"Status":"FAILURE"})
+    return JsonResponse({"status":"FAILURE"})
+
+@csrf_exempt
+def delete_domain(request: HttpRequest):
+    if request.method =="POST":
+        raw_data= json.loads(request.body)
+        return JsonResponse(domainscrud.delete_domain(raw_data["id"]))
+    return JsonResponse({"status":"FAILURE"})
