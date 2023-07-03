@@ -1,6 +1,6 @@
 import csv
 import os
-import pymogno
+import pymongo
 
 mongo_host = "localhost"
 mongo_port = 27017
@@ -114,26 +114,14 @@ def next_domain_id():
     return DOMAIN_ID_COUNTER
 
 
-def add_domain(user_id, domain_name, domain_icon,description):
+def create_domain(domain_name, domain_icon,description):
     client = pymongo.MongoClient(mongo_host, mongo_port)
     db = client[mongo_db]
     collection = db[mongo_collection]
 
-    user_id = int(user_id)
     new_item = {"name":domain_name,"icon":domain_icon,"description":"","description":description,"sources":[]}
-    collection.insert_one(new_item)
-    # for entry in domains_db:
-    #     if entry["user_id"] == user_id:
-    #         entry["domains"].append(
-    #             {
-    #                 "domain_id": next_domain_id(),
-    #                 "domain_name": domain_name,
-    #                 "image_url": domain_image_name,
-    #                 "sources": [],
-    #             }
-    #         )
-    #         return get_domains(user_id)
-    return {"id":new_item.inserted_id,"name":domain_name,"icon":domain_icon,"description":"","description":description,"sources":[]}
+    ret= collection.insert_one(new_item)
+    return {"id":str(ret.inserted_id),"name":domain_name,"icon":domain_icon,"description":"","description":description,"sources":[]}
 
 
 def remove_domain(user_id, domain_id):
@@ -192,4 +180,3 @@ def remove_source(user_id, domain_id, source_id):
                             return get_domains(user_id)
     return get_domains(user_id)
 
-client.close()
