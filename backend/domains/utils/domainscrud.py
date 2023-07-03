@@ -148,23 +148,19 @@ def get_domain(id):
     return result
 
 
-def add_source(user_id, domain_id, source_name, source_image_name):
-    user_id = int(user_id)
-    domain_id = int(domain_id)
-
-    for entry in domains_db:
-        if int(entry["user_id"]) == user_id:
-            for domain in list(entry["domains"]):
-                if int(domain["domain_id"]) == domain_id:
-                    domain["sources"].append(
-                        {
-                            "source_id": next_source_id(),
-                            "source_name": source_name,
-                            "source_image_name": source_image_name,
-                        }
-                    )
-                    return get_domains(user_id)
-    return get_domains(user_id)
+def add_source(domain_id, source_name, source_image_name):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = { "_id": ObjectId(domain_id) }
+    result =collection.find_one(query)
+    size=len(result["sources"])
+    new_source= {"source_id":(size+1),"source_name":source_name,"source_icon":source_image_name}
+    out = collection.find_one_and_update(result,{"$push":{"sources":new_source}})
+    out["sources"].append(new_source)
+    resId = str(out["_id"])
+    out["_id"]=resId
+    return out
 
 
 def remove_source(user_id, domain_id, source_id):
