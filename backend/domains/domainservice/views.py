@@ -31,3 +31,10 @@ def add_source(request: HttpRequest):
         raw_data= json.loads(request.body)
         return JsonResponse(domainscrud.add_source(raw_data["id"],raw_data["source_name"],raw_data["source_icon"]))
     return JsonResponse({"status":"FAILURE"})
+
+@csrf_exempt
+def remove_source(request: HttpRequest):
+    if request.method =="POST":
+        raw_data= json.loads(request.body)
+        return JsonResponse(domainscrud.remove_source(raw_data["id"],raw_data["source_id"]))
+    return JsonResponse({"status":"FAILURE"})

@@ -122,6 +122,7 @@ def create_domain(domain_name, domain_icon,description):
 
     new_item = {"name":domain_name,"icon":domain_icon,"description":"","description":description,"sources":[]}
     ret= collection.insert_one(new_item)
+    client.close()
     return {"id":str(ret.inserted_id),"name":domain_name,"icon":domain_icon,"description":"","description":description,"sources":[]}
 
 
@@ -131,6 +132,8 @@ def delete_domain(id):
     collection = db[mongo_collection]
     query = { "_id": ObjectId(id) }
     ret=collection.delete_one(query)
+    client.close()
+
     if(ret.deleted_count>0):
         return {"status":"SUCCESS"}
     else:
@@ -145,6 +148,8 @@ def get_domain(id):
     result =collection.find_one(query)
     resId = str(result["_id"])
     result["_id"]=resId
+    client.close()
+
     return result
 
 
@@ -154,27 +159,35 @@ def add_source(domain_id, source_name, source_image_name):
     collection = db[mongo_collection]
     query = { "_id": ObjectId(domain_id) }
     result =collection.find_one(query)
-    size=len(result["sources"])
-    new_source= {"source_id":(size+1),"source_name":source_name,"source_icon":source_image_name}
-    out = collection.find_one_and_update(result,{"$push":{"sources":new_source}})
-    out["sources"].append(new_source)
-    resId = str(out["_id"])
-    out["_id"]=resId
-    return out
+    new_id = ObjectId()
+    new_source= {"source_id":(new_id),"source_name":source_name,"source_icon":source_image_name}
+    collection.update_one(result,{"$push":{"sources":new_source}})
+    result["sources"].append(new_source)
+    for i in result["sources"]:
+        i["source_id"]=str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"]=resId
+    client.close()
+    return result
 
 
-def remove_source(user_id, domain_id, source_id):
-    user_id = int(user_id)
-    domain_id = int(domain_id)
-    source_id = int(source_id)
+def remove_source(domain_id, source_id):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = { "_id": ObjectId(domain_id) }
+    result =collection.find_one(query)
+    for i in result["sources"]:
+        if str(i["source_id"])==(source_id):
+            result["sources"].remove(i)
+    collection.update_one(query,{"$set":{"sources":result["sources"]}})
+    for i in result["sources"]:
+        i["source_id"]=str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"]=resId
+    client.close()
 
-    for entry in domains_db:
-        if entry["user_id"] == user_id:
-            for domain in list(entry["domains"]):
-                if int(domain["domain_id"]) == domain_id:
-                    for source in domain["sources"]:
-                        if source["source_id"] == source_id:
-                            domain["sources"].remove(source)
-                            return get_domains(user_id)
-    return get_domains(user_id)
+    return result
+
+
 

@@ -6,6 +6,6 @@ urlpatterns = [
     path("delete_domain",views.delete_domain),
     path("get_domain",views.get_domain),
     path("add_source",views.add_source),
-
+    path("remove_source",views.remove_source),
 
 ]
