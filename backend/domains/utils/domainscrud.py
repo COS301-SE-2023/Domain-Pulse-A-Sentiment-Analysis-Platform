@@ -137,13 +137,15 @@ def delete_domain(id):
         return {"status":"FAILURE", "details":"No Entry Found"}
 
 
-def get_domains(user_id):
-    user_id = int(user_id)
-
-    for entry in domains_db:
-        if entry["user_id"] == user_id:
-            return entry
-    return {}
+def get_domain(id):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = { "_id": ObjectId(id) }
+    result =collection.find_one(query)
+    resId = str(result["_id"])
+    result["_id"]=resId
+    return result
 
 
 def add_source(user_id, domain_id, source_name, source_image_name):

@@ -17,3 +17,10 @@ def delete_domain(request: HttpRequest):
         raw_data= json.loads(request.body)
         return JsonResponse(domainscrud.delete_domain(raw_data["id"]))
     return JsonResponse({"status":"FAILURE"})
+
+@csrf_exempt
+def get_domain(request: HttpRequest):
+    if request.method =="POST":
+        raw_data= json.loads(request.body)
+        return JsonResponse(domainscrud.get_domain(raw_data["id"]))
+    return JsonResponse({"status":"FAILURE"})
