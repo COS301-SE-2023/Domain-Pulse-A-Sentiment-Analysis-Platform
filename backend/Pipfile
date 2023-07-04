@@ -23,6 +23,7 @@ psycopg2-binary = "*"
 django-environ = "*"
 mock = "*"
 pymongo = "*"
+python-dotenv = "*"
 [dev-packages]
 
 [requires]
