@@ -55,7 +55,7 @@ def add_source(domain_id, source_name, source_image_name):
     query = { "_id": ObjectId(domain_id) }
     result =collection.find_one(query)
     new_id = ObjectId()
-    new_source= {"source_id":(new_id),"source_name":source_name,"source_icon":source_image_name}
+    new_source= {"source_id":(new_id),"source_name":source_name,"source_icon":source_image_name, "params":{}}
     collection.update_one(result,{"$push":{"sources":new_source}})
     result["sources"].append(new_source)
     for i in result["sources"]:
@@ -83,6 +83,27 @@ def remove_source(domain_id, source_id):
     client.close()
 
     return result
+
+def create_param(domain_id,source_id,key,value):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = { "_id": ObjectId(domain_id) }
+    result =collection.find_one(query)
+    if result == None:
+        return {"status":"FAILURE", "details":"No Entry Found"}
+    for i in result["sources"]:
+        if str(i["source_id"])==(source_id):
+            i["params"].update({key:value})
+    collection.update_one(query,{"$set":{"sources":result["sources"]}})
+    for i in result["sources"]:
+        i["source_id"]=str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"]=resId
+    client.close()
+
+    return result
+
 
 
 

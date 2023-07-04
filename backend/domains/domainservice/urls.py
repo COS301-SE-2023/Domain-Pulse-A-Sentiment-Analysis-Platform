@@ -7,5 +7,5 @@ urlpatterns = [
     path("get_domain",views.get_domain),
     path("add_source",views.add_source),
     path("remove_source",views.remove_source),
-
+    path("create_param",views.create_param),
 ]
