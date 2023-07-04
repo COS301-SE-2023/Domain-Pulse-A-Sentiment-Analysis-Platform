@@ -6,10 +6,11 @@ name = "pypi"
 [scripts]
 check_all = "bash scripts/check_all.sh"
 coverage_gen = "bash scripts/coverage.sh"
-engine = "python engine/manage.py runserver 0.0.0.0:8001"
-profiles = "python profiles/manage.py runserver 0.0.0.0:8002"
-sourceconn = "python sourceconnector/manage.py runserver 0.0.0.0:8003"
-warehouse = "python warehouse/manage.py runserver 0.0.0.0:8004"
+domains = "python domains/manage.py runserver"
+engine = "python engine/manage.py runserver"
+profiles = "python profiles/manage.py runserver"
+sourceconn = "python sourceconnector/manage.py runserver"
+warehouse = "python warehouse/manage.py runserver"
 
 [packages]
 django = "*"
@@ -23,6 +24,7 @@ psycopg2-binary = "*"
 django-environ = "*"
 mock = "*"
 pymongo = "*"
+python-dotenv = "*"
 [dev-packages]
 
 [requires]
