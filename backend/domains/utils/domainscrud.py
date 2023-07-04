@@ -41,6 +41,9 @@ def get_domain(id):
     collection = db[mongo_collection]
     query = { "_id": ObjectId(id) }
     result =collection.find_one(query)
+    if result == None:
+        client.close()
+        return {"status":"FAILURE", "details":"No Entry Found"}
     resId = str(result["_id"])
     result["_id"]=resId
     client.close()
@@ -54,6 +57,9 @@ def add_source(domain_id, source_name, source_image_name):
     collection = db[mongo_collection]
     query = { "_id": ObjectId(domain_id) }
     result =collection.find_one(query)
+    if result == None:
+        client.close()
+        return {"status":"FAILURE", "details":"No Entry Found"}
     new_id = ObjectId()
     new_source= {"source_id":(new_id),"source_name":source_name,"source_icon":source_image_name, "params":{}}
     collection.update_one(result,{"$push":{"sources":new_source}})
@@ -91,6 +97,7 @@ def create_param(domain_id,source_id,key,value):
     query = { "_id": ObjectId(domain_id) }
     result =collection.find_one(query)
     if result == None:
+        client.close()
         return {"status":"FAILURE", "details":"No Entry Found"}
     for i in result["sources"]:
         if str(i["source_id"])==(source_id):
