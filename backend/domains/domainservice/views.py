@@ -45,3 +45,10 @@ def create_param(request: HttpRequest):
         raw_data= json.loads(request.body)
         return JsonResponse(domainscrud.create_param(raw_data["id"],raw_data["source_id"], raw_data["key"],raw_data["value"]))
     return JsonResponse({"status":"FAILURE"})
+
+@csrf_exempt
+def delete_param(request: HttpRequest):
+    if request.method =="POST":
+        raw_data= json.loads(request.body)
+        return JsonResponse(domainscrud.delete_param(raw_data["id"],raw_data["source_id"], raw_data["key"]))
+    return JsonResponse({"status":"FAILURE"})

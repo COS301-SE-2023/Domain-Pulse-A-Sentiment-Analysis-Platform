@@ -8,4 +8,5 @@ urlpatterns = [
     path("add_source",views.add_source),
     path("remove_source",views.remove_source),
     path("create_param",views.create_param),
+    path("delete_param",views.delete_param),
 ]

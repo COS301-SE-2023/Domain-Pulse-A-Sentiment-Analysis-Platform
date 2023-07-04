@@ -112,5 +112,24 @@ def create_param(domain_id,source_id,key,value):
     return result
 
 
+def delete_param(domain_id,source_id,key):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = { "_id": ObjectId(domain_id) }
+    result =collection.find_one(query)
+    if result == None:
+        client.close()
+        return {"status":"FAILURE", "details":"No Entry Found"}
+    for i in result["sources"]:
+        if str(i["source_id"])==(source_id):
+            del i["params"][key]
+    collection.update_one(query,{"$set":{"sources":result["sources"]}})
+    for i in result["sources"]:
+        i["source_id"]=str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"]=resId
+    client.close()
 
+    return result
 
