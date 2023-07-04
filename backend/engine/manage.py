@@ -17,6 +17,7 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     runserver.default_port = settings.RUNSERVER_PORT
+    runserver.default_addr = "0.0.0.0"
     execute_from_command_line(sys.argv)
 
 if __name__ == '__main__':
