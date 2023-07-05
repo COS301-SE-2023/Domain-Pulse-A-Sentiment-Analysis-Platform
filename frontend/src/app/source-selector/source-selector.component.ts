@@ -14,6 +14,7 @@ export class SourceSelectorComponent {
   selectedDomain$!: Observable<DisplayDomain | null>;
 
   showAddSourcesModal = false;
+  showEditSourceModal = false;
   newSouceName = '';
   newSourcePlatform = '';
 
@@ -29,6 +30,12 @@ export class SourceSelectorComponent {
     this.toggleAddSourcesModal();
   }
 
+  editSource() {
+    
+
+    this.toggleEditSourceModal();
+  }
+
   toggleAddSourcesModal() {
     if (!this.showAddSourcesModal) {
       this.showAddSourcesModal = true;
@@ -36,4 +43,14 @@ export class SourceSelectorComponent {
       this.showAddSourcesModal = false;
     }
   }
+
+  toggleEditSourceModal() {
+    if (!this.showEditSourceModal) {
+      this.showEditSourceModal = true;
+    } else {
+      this.showEditSourceModal = false;
+    }
+  }
+
+
 }
