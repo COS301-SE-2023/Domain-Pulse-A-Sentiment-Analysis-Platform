@@ -18,5 +18,4 @@ urlpatterns = [
     path("get_user_by_id", views.get_user_by_id),
     path("check_logged_in", views.check_logged_in),
     path("create_domain", views.create_domain),
-    path("remove_domain", views.remove_domain),
 ]
