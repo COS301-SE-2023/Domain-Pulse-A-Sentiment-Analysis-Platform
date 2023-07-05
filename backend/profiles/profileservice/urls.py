@@ -20,5 +20,4 @@ urlpatterns = [
     path("create_domain", views.create_domain),
     path("remove_domain", views.remove_domain),
     path("add_source", views.add_source),
-    path("get_domain", views.get_domain),
 ]
