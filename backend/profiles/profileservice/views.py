@@ -102,15 +102,3 @@ def check_logged_in(request:HttpRequest):
     if request.method == "POST":
         return JsonResponse(profilescrud.check_logged_in(request))
     return JsonResponse({"status": "FAILURE"})
-
-@csrf_exempt
-def create_domain(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.create_domain(request, raw_data["name"], raw_data["description"], raw_data["icon"]))
-    return JsonResponse({"status": "FAILURE"})
-
-
-
-
-
