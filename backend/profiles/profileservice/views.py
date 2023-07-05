@@ -117,10 +117,5 @@ def remove_domain(request: HttpRequest):
         return JsonResponse(domainscrud.remove_domain(request, raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
 
-@csrf_exempt
-def add_source(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.add_source(request, raw_data["domain_id"],raw_data["source_id"]))
-    return JsonResponse({"status": "FAILURE"})
+
 

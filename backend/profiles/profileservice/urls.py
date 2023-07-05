@@ -19,5 +19,4 @@ urlpatterns = [
     path("check_logged_in", views.check_logged_in),
     path("create_domain", views.create_domain),
     path("remove_domain", views.remove_domain),
-    path("add_source", views.add_source),
 ]
