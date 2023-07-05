@@ -14,15 +14,13 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-import environ
-
-env = environ.Env()
-environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV_FILE = BASE_DIR.parent / '.env'
+DATABASE_ENV_FILE = BASE_DIR.parent / '.postgresql.env'
 load_dotenv(ENV_FILE)
+load_dotenv(DATABASE_ENV_FILE)
 
 RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 
@@ -107,9 +105,9 @@ WSGI_APPLICATION = 'profiles.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env('SQL_DATABASE_NAME'),
-        "USER": env('SQL_DATABASE_USER'),
-        "PASSWORD": env('SQL_DATABASE_PASS'),
+        "NAME": os.getenv("SQL_DATABASE_NAME"),
+        "USER": os.getenv("SQL_DATABASE_USER"),
+        "PASSWORD": os.getenv("SQL_DATABASE_PASS"),
         "HOST": "localhost",
         "PORT": "5432",
     }

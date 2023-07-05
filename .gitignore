@@ -14,7 +14,7 @@ media/
 staticfiles/
 
 #env
-.env
+*.env
 environment.ts
 
 # VSCode

@@ -11,6 +11,12 @@ jobs:
               uses: actions/setup-python@v2
               with:
                     python-version: 3.8
+            - name: setup .envs
+              working-directory: ./backend
+              run: |
+                    echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+                    echo "${{ secrets.PROD_DATABASE }}" > .postgresql.env
+
             - name: Install Dependencies
               run: |
                   cd backend
@@ -44,4 +50,4 @@ jobs:
                 echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
                 ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
             - name: connect and pull
-              run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR_PROD }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && cd frontend && ng build --configuration=production && exit"
+              run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR_PROD }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && cd frontend && npm run build:prod && exit"
