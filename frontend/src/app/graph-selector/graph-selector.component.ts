@@ -44,6 +44,7 @@ export class GraphSelectorComponent {
   graphs = [
     {
       type: 'doughnut',
+      fontColor: 'white',
       data: {
         labels: ['Overall Score'],
         datasets: [
@@ -76,6 +77,9 @@ export class GraphSelectorComponent {
           legend: {
             display: false,
           },
+          labels:{
+            fontColor: 'white'
+          }
         },
       },
     },
@@ -320,6 +324,14 @@ export class GraphSelectorComponent {
     if (this.chart) {
       this.chart.destroy();
     }
+    const element = document.querySelector('body'); // Replace with your actual element selector
+    if (element) {
+      const styles = window.getComputedStyle(element);
+      const backgroundColor = styles.getPropertyValue('--text-color');
+      Chart.defaults.global.defaultFontColor = backgroundColor;
+
+    }
+    
     const ctx = this.myChart.nativeElement.getContext('2d');
     const container = this.chartContainer.nativeElement;
     const containerWidth = container.offsetWidth;
