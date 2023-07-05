@@ -33,11 +33,11 @@ jobs:
           ng build --configuration=development
           # ng test --no-watch --code-coverage --browsers ChromeHeadless
           
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     files: frontend/coverage/lcov-report/lcov.info
-      #     token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: frontend/coverage/lcov-report/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   test_backend:
     runs-on: ubuntu-latest
