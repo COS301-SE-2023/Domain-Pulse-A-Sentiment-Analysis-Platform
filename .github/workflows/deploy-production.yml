@@ -1,47 +1,60 @@
 name: Production Deployment
 on:
-    push:
-        branches: [ main ]
+  push:
+    branches: [main]
 jobs:
   check_backend:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Setup Up Python 3.8
-              uses: actions/setup-python@v2
-              with:
-                    python-version: 3.8
-            - name: Install Dependencies
-              run: |
-                  cd backend
-                  pip install pipenv
-                  pipenv sync
-            - name: Verify backend
-              run: |
-                    cd backend
-                    pipenv run check_all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: setup .envs
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+          echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          pip install pipenv
+          pipenv sync
+      - name: Verify backend
+        run: |
+          cd backend
+          pipenv run check_all
 
   build_frontend:
     runs-on: ubuntu-latest
     steps:
       - name: setup
         uses: actions/checkout@v3
+
+      - name: setup port .env
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+
       - name: install dependancies
-        
+
         run: |
           cd frontend
           npm ci
           npm link @angular/cli
-          ng build --configuration=production
+          npm run build:prod
 
   update_deployment_environment:
     needs: [check_backend, build_frontend]
     runs-on: ubuntu-latest
     steps:
-            - name: install ssh keys
-              run: |
-                install -m 600 -D /dev/null ~/.ssh/id_rsa
-                echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-                ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-            - name: connect and pull
-              run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR_PROD }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && cd frontend && ng build --configuration=production && exit"
+      - name: install ssh keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      - name: connect and pull
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR_PROD }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && cd frontend && npm run build:prod && exit"
