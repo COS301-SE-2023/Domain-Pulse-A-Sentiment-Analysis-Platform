@@ -50,9 +50,11 @@ jobs:
         with:
           python-version: 3.8
       
-      - name: add .env file
-        working-directory: ./backend/profiles/profiles
-        run: echo "${{ secrets.POSTGRES_CONFIG }}" > .env
+      - name: setup .envs
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+          echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
 
       - name: install pipenv
         working-directory: ./backend
