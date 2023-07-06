@@ -13,9 +13,8 @@ if ! command -v pm2 &> /dev/null; then
 fi
 
 #activate virtual environment
-VENV_DIR=$(find /home/$USER/.local/share/virtualenvs -maxdepth 1 -type d -name "backend*" -print -quit)
-# Get the last part of the VENV_DIR
-VENV_NAME=$(basename "$VENV_DIR")
+FULL_CURRENT_DIR=$(dirname $(dirname "$(readlink -f "$0")"))
+VENV_DIR=$FULL_CURRENT_DIR/.venv
 
 echo "Activating virtual environment: $VENV_DIR"
 
@@ -28,24 +27,52 @@ else
     exit 1
 fi
 
+# identify process by parent directory 
+PROCESS_IDENT=$(dirname "$FULL_CURRENT_DIR")
+PROCESS_IDENT=$(basename "$PROCESS_IDENT")
+
+echo "VENV_DIR: $VENV_DIR"
+echo "PROCESS_IDENT: $PROCESS_IDENT"
+
 #Set the pythong interpreter to use because we are in a virtual environment
 PYTHON_INTERPRETER="$(which python)"
 
 #List of django projects
 declare -a PROJECT_NAMES=("domains" "engine" "profiles" "sourceconnector" "warehouse")
 
+# Generate the ecosystem.config.js file
+ECOSYSTEM_FILE="ecosystem.config.js"
+
+# Remove existing ecosystem.config.js file if it exists
+if [ -f "$ECOSYSTEM_FILE" ]; then
+  rm "$ECOSYSTEM_FILE"
+fi
+
+# Generate the ecosystem.config.js file content dynamically
+echo "module.exports = {" >> "$ECOSYSTEM_FILE"
+echo "  apps: [" >> "$ECOSYSTEM_FILE"
+
 for PROJECT_NAME in "${PROJECT_NAMES[@]}"
 do
   # Construct the process name
-  PROCESS_NAME="$PROJECT_NAME ($VENV_NAME)"
+  PROCESS_NAME="$PROJECT_NAME ($PROCESS_IDENT)"
 
-  # Check if the PM2 process is already running
-  PM2_PROCESS_CHECK=$(pm2 describe "$PROCESS_NAME" | grep "status" | cut -d':' -f2 | tr -d '[:space:]')
+  pm2 stop "$PROCESS_NAME"
 
-  if [[ "$PM2_PROCESS_CHECK" == "online" ]]; then
-    echo "The PM2 process '$PROCESS_NAME' is already running."
-  else
-    # Start the Django project using PM2
-    pm2 start --name="$PROCESS_NAME" --interpreter="$PYTHON_INTERPRETER" -- "$CURRENT_DIR/$PROJECT_NAME/manage.py" runserver
-  fi
+  echo "    {" >> "$ECOSYSTEM_FILE"
+  echo "      name: \"$PROCESS_NAME\"," >> "$ECOSYSTEM_FILE"
+  echo "      script: \""$PROJECT_NAME"/manage.py\"," >> "$ECOSYSTEM_FILE"
+  echo "      args: \"runserver\"," >> "$ECOSYSTEM_FILE"
+  echo "      interpreter: \"$PYTHON_INTERPRETER\"," >> "$ECOSYSTEM_FILE"
+  echo "      interpreter_args: \"-u\"," >> "$ECOSYSTEM_FILE"
+  echo "      watch: false," >> "$ECOSYSTEM_FILE"
+  echo "    }," >> "$ECOSYSTEM_FILE"
 done
+
+echo "  ]," >> "$ECOSYSTEM_FILE"
+echo "};" >> "$ECOSYSTEM_FILE"
+
+pm2 start "$ECOSYSTEM_FILE"
+
+# Remove the ecosystem.config.js file after starting the projects (optional)
+# rm "$ECOSYSTEM_FILE"
