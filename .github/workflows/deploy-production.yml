@@ -57,11 +57,22 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
-      - name: setup .envs
-        working-directory: ./backend
+      - name: connect andf pull
         run: |
-          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
-          echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.WORK_DIR_PROD }}
+            git checkout ${{ secrets.MAIN_BRANCH }}
+            git pull
 
-      - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR_PROD }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && cd frontend && npm run build:prod && exit"
+            cd backend
+            # pipenv sync
+            echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+            echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+
+            cd ../frontend
+            npm run build:prod
+            exit
+            EOF
+
+      # - name: connect and pull
+      #   run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR_PROD }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && cd frontend && npm run build:prod && exit"
