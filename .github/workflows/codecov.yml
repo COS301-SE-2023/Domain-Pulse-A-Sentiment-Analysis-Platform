@@ -2,7 +2,7 @@ name: Test and Uplaod to Codecov
 on:
   push:
     branches:
-    - "**"
+      - "**"
   pull_request:
     branches:
       - main
@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: setup
         uses: actions/checkout@v3
+
+      - name: setup port .env
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
 
       - name: cache dependencies
         id: npm-cache
@@ -30,9 +35,9 @@ jobs:
         working-directory: ./frontend
         run: |
           npm link @angular/cli
-          ng build --configuration=development
+          npm run build:prod
           # ng test --no-watch --code-coverage --browsers ChromeHeadless
-          
+
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v3
       #   with:
@@ -44,12 +49,12 @@ jobs:
     steps:
       - name: setup
         uses: actions/checkout@v3
-      
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      
+
       - name: setup .envs
         working-directory: ./backend
         run: |
@@ -76,7 +81,7 @@ jobs:
           PIPENV_VENV_IN_PROJECT: 1
         run: |
           pipenv sync
-      
+
       - name: Run Tests
         working-directory: ./backend
         run: pipenv run coverage_gen
