@@ -57,7 +57,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
-      - name: connect andf pull
+      - name: connect and pull
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             cd ${{ secrets.WORK_DIR_PROD }}
@@ -73,6 +73,3 @@ jobs:
             npm run build:prod
             exit
             EOF
-
-      # - name: connect and pull
-      #   run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR_PROD }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull && cd frontend && npm run build:prod && exit"
