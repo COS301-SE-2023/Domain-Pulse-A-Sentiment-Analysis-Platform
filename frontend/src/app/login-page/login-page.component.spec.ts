@@ -29,6 +29,7 @@ describe('LoginPageComponent', () => {
 
   it('fire "AttempPsswdLogin" action when register function called', (done) => {
     actions$.pipe(ofActionDispatched(AttempPsswdLogin)).subscribe((_) => {
+      expect(true).toBe(true);
       done();
     });
 

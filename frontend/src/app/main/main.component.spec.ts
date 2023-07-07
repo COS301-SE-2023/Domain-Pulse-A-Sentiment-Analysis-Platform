@@ -35,6 +35,7 @@ describe('MainComponent', () => {
   // test constructor dispatches GetDomains action
   it('should dispatch GetDomains action OnInit', (done) => {
     actions$.pipe(ofActionDispatched(GetDomains)).subscribe((_) => {
+      expect(true).toBe(true);
       done();
     });
 

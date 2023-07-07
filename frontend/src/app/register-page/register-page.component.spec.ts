@@ -33,7 +33,8 @@ describe('RegisterPageComponent', () => {
 
   it('fire "RegisterUser" action when register function called', (done) => {
     actions$.pipe(ofActionDispatched(RegisterUser)).subscribe((_) => {
-      done();
+      expect(true).toBe(true);
+done();
     });
 
     component.register();
