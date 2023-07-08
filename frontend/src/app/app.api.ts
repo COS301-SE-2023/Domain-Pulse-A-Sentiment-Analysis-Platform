@@ -5,11 +5,9 @@ import { environment } from 'src/environment';
 
 @Injectable()
 export class AppApi {
-  private engineBaseUrl = `http://${window.location.hostname}:${environment.ENGINE_PORT}/`;
-  private profilesBaseUrl = `http://${window.location.hostname}:${environment.PROFILES_PORT}/`;
-
-  private warehouseBaseUrl = `http://${window.location.hostname}:${environment.WAREHOUSE_PORT}/`;
-  private getDomainsUrl = 'domains/get_domains';
+  private engineBaseUrl = `/api/engine/`;
+  private profilesBaseUrl = `/api/profiles/`;
+  private warehouseBaseUrl = `/api/warehouse/`;
 
   // using the below to back in the source_id
   private source_id_gen = 1;
