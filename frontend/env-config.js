@@ -1,4 +1,5 @@
 // this is a script that will make sure angular uses the correct api ports
+const fs = require("fs");
 const path = require("path");
 require('dotenv').config({ path: path.resolve(__dirname, "../backend/.env") });
 
