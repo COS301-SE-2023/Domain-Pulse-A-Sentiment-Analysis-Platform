@@ -55,7 +55,7 @@ export class StatisticSelectorComponent {
   neutralScore = 8;
 
   emotion = "Joy";
-  emotionIconUrl = "../../assets/logos/" + this.emotion.toLowerCase() + ".png";
+  emotionIconUrl = "../../assets/icons/" + this.emotion.toLowerCase() + ".svg";
   
   toxicity = 10;
 
@@ -73,7 +73,7 @@ export class StatisticSelectorComponent {
     const emotion = Object.keys(emotions).reduce((a, b) =>
       emotions[a] > emotions[b] ? a : b
     );
-    const emotionIconUrl = `../../assets/logos/${emotion.toLowerCase()}.png`;
+    const emotionIconUrl = `../../assets/icons/${emotion.toLowerCase()}.svg`;
   
     const toxicity = Math.floor(aggregatedMetrics.toxicity.score * 100);
   

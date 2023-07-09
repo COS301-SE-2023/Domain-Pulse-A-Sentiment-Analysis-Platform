@@ -33,8 +33,8 @@
     </div>
     <p *ngIf="_expanded">{{ domain.name }}</p>
     <div class = "domain-name" *ngIf="domain.selected && _expanded" class="icons-container flex-row align-center">
-      <img (click)="toggleEditDomainModal()" src="../assets/logos/pen-solid.png" height="15px" />
-      <img src="../assets/logos/grey-trash.png" height="15px" />
+      <img (click)="toggleEditDomainModal()" src="../assets/icons/pen-solid.svg" height="15px" />
+      <img src="../assets/icons/grey-trash.svg" height="15px" />
     </div>
   </div>
 
@@ -45,7 +45,7 @@
     >
     
     <div class="plus-wrapper flex-row center">
-    <img src="../assets/logos/white-plus.png" height="20px" />
+    <img src="../assets/icons/white-plus.svg" height="20px" />
     </div>
     <p class = "domain-name" *ngIf="_expanded" style = "color: white; ">add a domain</p>
   </div>
@@ -63,7 +63,7 @@
     </div>
     <p class = "domain-name" *ngIf="_expanded" style = "color: black;">John Doe</p>
     <div *ngIf="_expanded" class="icons-container flex-row align-center">
-      <img src="../assets/logos/settings.png" height="15px" />
+      <img src="../assets/icons/settings.svg" height="15px" />
     </div>
   </div>
 </div>
@@ -76,7 +76,7 @@
   <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
       <div class="heading-container">
-        <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleDomainModal()">
+        <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="icon back-arrow" (click)="toggleDomainModal()">
         <p class="modal-heading">Add a Domain</p>
       </div>
       <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
@@ -145,7 +145,7 @@
   <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
       <div class="heading-container">
-        <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleEditDomainModal()">
+        <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow" (click)="toggleEditDomainModal()">
         <p class="modal-heading">Edit a Domain</p>
       </div>
       <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
@@ -213,7 +213,7 @@
 <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
   <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
     <div class="heading-container">
-      <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleProfileModal()">
+      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow" (click)="toggleProfileModal()">
       <p class="modal-heading">Profile</p>
     </div>
     <div class="flex-column center content" style="width: 80%">
@@ -222,25 +222,25 @@
         
       </div>
       <p class="profile-name">John Doe</p>
-      <img (click)="toggleProfileEditModal()" src="../assets/logos/editdark.png" class="profile-icon" />
+      <img (click)="toggleProfileEditModal()" src="../assets/icons/editdark.svg" class="profile-icon" />
     </div>
 
     <div class="button-div">
       
       <div class="button" (click)="toggleTheme()">
-        <img class="button-icon" src="../assets/logos/palette-solid.png" alt="Icon">
+        <img class="button-icon" src="../assets/icons/palette-solid.svg" alt="Icon">
         <span class="button-text">Toggle Theme</span>
       </div>
       <div class="button">
-        <img class="button-icon" src="../assets/logos/right-from-bracket-solid.png" alt="Icon">
+        <img class="button-icon" src="../assets/icons/right-from-bracket-solid.svg" alt="Icon">
         <span class="button-text">Log Out</span>
       </div>
       <div class="button">
-        <img class="button-icon" src="../assets/logos/lock-solid.png" alt="Icon">
+        <img class="button-icon" src="../assets/icons/lock-solid.svg" alt="Icon">
         <span class="button-text">Change Password</span>
       </div>
       <div class="button">
-        <img class="button-icon" src="../assets/logos/trash-solid.png" alt="Icon">
+        <img class="button-icon" src="../assets/icons/trash-solid.svg" alt="Icon">
         <span class="button-text">Delete Account</span>
       </div>
       
@@ -265,7 +265,7 @@
 <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
   <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
     <div class="heading-container">
-      <img src="../assets/logos/arrow-right-solid.png" alt="Back Arrow" class="back-arrow" (click)="toggleProfileEditModal()">
+      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow" (click)="toggleProfileEditModal()">
       <p class="modal-heading">Edit Profile</p>
     </div>
 
