@@ -6,7 +6,7 @@ const path = require("path");
 const envFilePath = path.resolve(__dirname, "../backend/.env");
 const envFileContent = fs.readFileSync(envFilePath, "utf8");
 
-const environment = envFileContent.split("\n").reduce((env, line) => {
+const environment = envFileContent.split("\r\n").reduce((env, line) => {
   const [key, value] = line.split("=");
   env[key] = value;
   return env;
@@ -20,6 +20,7 @@ const targetPath = path.resolve(
 const envConfigFile = `
 export const environment = {
     production: true,
+    environment: '${environment.ENVIRONMENT}',
     ENGINE_PORT: ${environment.DJANGO_ENGINE_PORT},
     DOMAINS_PORT: ${environment.DJANGO_DOMAINS_PORT},
     PROFILES_PORT: ${environment.DJANGO_PROFILES_PORT},
