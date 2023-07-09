@@ -1,16 +1,5 @@
 // this is a script that will make sure angular uses the correct api ports
-const fs = require("fs");
-const path = require("path");
-
-// Load environment variables from .env file
-const envFilePath = path.resolve(__dirname, "../backend/.env");
-const envFileContent = fs.readFileSync(envFilePath, "utf8");
-
-const environment = envFileContent.split("\r\n").reduce((env, line) => {
-  const [key, value] = line.split("=");
-  env[key] = value;
-  return env;
-}, {});
+require('dotenv').config({ path: path.resolve(__dirname, "../backend/.env") });
 
 const targetPath = path.resolve(
   __dirname,
@@ -20,12 +9,12 @@ const targetPath = path.resolve(
 const envConfigFile = `
 export const environment = {
     production: true,
-    environment: '${environment.ENVIRONMENT}',
-    ENGINE_PORT: ${environment.DJANGO_ENGINE_PORT},
-    DOMAINS_PORT: ${environment.DJANGO_DOMAINS_PORT},
-    PROFILES_PORT: ${environment.DJANGO_PROFILES_PORT},
-    SOURCECONNECTOR_PORT: ${environment.DJANGO_SOURCECONNECTOR_PORT},
-    WAREHOUSE_PORT: ${environment.DJANGO_WAREHOUSE_PORT},
+    environment: '${process.env.ENVIRONMENT}',
+    ENGINE_PORT: ${process.env.DJANGO_ENGINE_PORT},
+    DOMAINS_PORT: ${process.env.DJANGO_DOMAINS_PORT},
+    PROFILES_PORT: ${process.env.DJANGO_PROFILES_PORT},
+    SOURCECONNECTOR_PORT: ${process.env.DJANGO_SOURCECONNECTOR_PORT},
+    WAREHOUSE_PORT: ${process.env.DJANGO_WAREHOUSE_PORT},
 };
 `;
 
