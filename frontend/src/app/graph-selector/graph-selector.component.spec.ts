@@ -5,7 +5,7 @@ import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { AttempPsswdLogin } from '../app.actions';
+import { AttempPsswdLogin, ChooseStatistic } from '../app.actions';
 
 describe('GraphSelectorComponent', () => {
     let component: GraphSelectorComponent;
@@ -231,5 +231,23 @@ describe('GraphSelectorComponent', () => {
         component.switchToPreviousGraph();
         component.switchToPreviousGraph();
         expect(component.currentGraphIndex).toEqual(3);
+    });
+
+    it('fire correct "ChooseStatistics" event when graphs are switched', (done: DoneFn) => {
+        actions$.pipe(ofActionDispatched(ChooseStatistic)).subscribe((_) => {
+            expect(true).toBe(true);
+            done();
+        });
+
+        component.switchToPreviousGraph();
+    });
+
+    it('fire correct "ChooseStatistics" event when graphs are switched', (done: DoneFn) => {
+        actions$.pipe(ofActionDispatched(ChooseStatistic)).subscribe((_) => {
+            expect(true).toBe(true);
+            done();
+        });
+
+        component.switchToNextGraph();
     });
 });
