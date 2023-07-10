@@ -18,9 +18,6 @@ describe('SourceSelectorComponent', () => {
 		appApiSpy = jasmine.createSpyObj('AppApi', ['getSourceSentimentData']);
 		appApiSpy.getSourceSentimentData.and.callThrough();
 
-		// appStateSpy = jasmine.createSpyObj('AppState', ['setSource']);
-		// appStateSpy.setSource.and.callThrough();
-
 		TestBed.configureTestingModule({
 			providers: [SourceSelectorComponent, { provide: AppApi, useValue: appApiSpy }],
 			imports: [NgxsModule.forRoot([]), FormsModule],
