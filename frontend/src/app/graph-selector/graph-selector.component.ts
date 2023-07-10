@@ -10,7 +10,7 @@ import { ChooseStatistic } from '../app.actions';
   templateUrl: './graph-selector.component.html',
   styleUrls: ['./graph-selector.component.sass'],
 })
-export class GraphSelectorComponent {
+export class GraphSelectorComponent implements OnInit {
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
@@ -206,7 +206,9 @@ export class GraphSelectorComponent {
     // ...
   ];
 
-  constructor(private store: Store) {
+  constructor(private store: Store) {}
+
+  ngOnInit(): void {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
@@ -221,6 +223,10 @@ export class GraphSelectorComponent {
       this.currentGraphIndex = statIndex;
       this.renderGraph();
     });
+  }
+
+  ngAfterViewInit() {
+    this.renderGraph();
   }
 
   assignGraphData(mockData: any, graphArray: any[]): any[] {
@@ -259,10 +265,6 @@ export class GraphSelectorComponent {
   }
 
   updatedGraphArray?: any[];
-
-  ngAfterViewInit() {
-    this.renderGraph();
-  }
 
   switchToPreviousGraph() {
     if (!this.updatedGraphArray) return;
