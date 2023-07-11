@@ -17,8 +17,7 @@ urlpatterns = [
     path("get_domains_for_user", views.get_domains_for_user),
     path("get_user_by_id", views.get_user_by_id),
     path("check_logged_in", views.check_logged_in),
-    path("create_domain", views.create_domain),
-    path("remove_domain", views.remove_domain),
-    path("add_source", views.add_source),
-    path("get_domain", views.get_domain),
+    path("add_source_to_domain",views.add_source_to_domain),
+    path("remove_source_from_domain",views.remove_source_from_domain),
+    path("get_sources_for_domain",views.get_sources_for_domain),
 ]

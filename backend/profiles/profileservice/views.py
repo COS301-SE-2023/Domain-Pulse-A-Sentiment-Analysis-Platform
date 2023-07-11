@@ -104,29 +104,22 @@ def check_logged_in(request:HttpRequest):
     return JsonResponse({"status": "FAILURE"})
 
 @csrf_exempt
-def create_domain(request: HttpRequest):
+def add_source_to_domain(request: HttpRequest):
     if request.method == "POST":
         raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.create_domain(request, raw_data["name"], raw_data["description"], raw_data["icon"]))
+        return JsonResponse(profilescrud.add_source_to_domain(request,raw_data["id"],raw_data["domain_id"],raw_data["source_id"]))
     return JsonResponse({"status": "FAILURE"})
 
 @csrf_exempt
-def remove_domain(request: HttpRequest):
+def remove_source_from_domain(request: HttpRequest):
     if request.method == "POST":
         raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.remove_domain(request, raw_data["id"]))
+        return JsonResponse(profilescrud.remove_source_from_domain(request,raw_data["id"],raw_data["domain_id"],raw_data["source_id"]))
     return JsonResponse({"status": "FAILURE"})
 
 @csrf_exempt
-def add_source(request: HttpRequest):
+def get_sources_for_domain(request: HttpRequest):
     if request.method == "POST":
         raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.add_source(request, raw_data["domain_id"],raw_data["source_id"]))
-    return JsonResponse({"status": "FAILURE"})
-
-@csrf_exempt
-def get_domain(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.get_domain(request,raw_data["id"]))
+        return JsonResponse(profilescrud.get_sources_for_domain(request,raw_data["id"],raw_data["domain_id"]))
     return JsonResponse({"status": "FAILURE"})

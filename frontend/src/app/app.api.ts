@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environment';
 
 @Injectable()
 export class AppApi {
-  private engineBaseUrl = `http://${window.location.hostname}:8001/`;
-  private profilesBaseUrl = `http://${window.location.hostname}:8002/`;
-
-  private warehouseBaseUrl = `http://${window.location.hostname}:8004/`;
-  private getDomainsUrl = 'domains/get_domains';
+  private engineBaseUrl = `/api/engine/`;
+  private profilesBaseUrl = `/api/profiles/`;
+  private warehouseBaseUrl = `/api/warehouse/`;
 
   // using the below to back in the source_id
   private source_id_gen = 1;
