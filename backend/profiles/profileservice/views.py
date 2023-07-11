@@ -151,6 +151,7 @@ def check_logged_in(request: HttpRequest):
     return JsonResponse({"status": "FAILURE"})
 
 
+
 @csrf_exempt
 def add_source_to_domain(request: HttpRequest):
     if request.method == "POST":
@@ -185,3 +186,4 @@ def get_sources_for_domain(request: HttpRequest):
             )
         )
     return JsonResponse({"status": "FAILURE"})
+

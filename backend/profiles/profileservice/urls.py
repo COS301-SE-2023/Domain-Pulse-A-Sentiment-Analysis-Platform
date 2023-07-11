@@ -21,3 +21,4 @@ urlpatterns = [
     path("remove_source_from_domain", views.remove_source_from_domain),
     path("get_sources_for_domain", views.get_sources_for_domain),
 ]
+
