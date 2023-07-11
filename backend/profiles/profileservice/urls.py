@@ -19,4 +19,5 @@ urlpatterns = [
     path("check_logged_in", views.check_logged_in),
     path("add_source_to_domain",views.add_source_to_domain),
     path("remove_source_from_domain",views.remove_source_from_domain),
+    path("get_sources_for_domain",views.get_sources_for_domain),
 ]

@@ -268,3 +268,20 @@ def remove_source_from_domain(request,user_id,domain_id,source_id):
         else:
             return {"status":"FAILURE","details":"Incorrect UserID"}
         
+def get_sources_for_domain(request,user_id,domain_id):
+    if request.user.is_authenticated:
+        domain = None
+        try:
+            domain=profile_models.Domains.objects.get(id=domain_id)
+        except ObjectDoesNotExist:
+            return {"status":"FAILURE", "details":"No domain exists"}
+        profile = None
+        try:
+            user_id = int(user_id)
+            profile= profile_models.Profiles.objects.get(id=user_id)
+        except ObjectDoesNotExist:
+            return {"status":"FAILURE", "details":"No user exists"}
+        if domain_id in profile.domainIDs.all().values_list('id',flat=True):
+            return {"id":user_id,"domain_id":domain_id,"source_ids":domain.sourceIDs}
+        else:
+            return {"status":"FAILURE","details":"Incorrect UserID"}
