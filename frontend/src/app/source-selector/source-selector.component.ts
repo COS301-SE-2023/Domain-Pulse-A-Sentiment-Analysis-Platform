@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { AppState, DisplayDomain } from '../app.state';
+import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource } from '../app.actions';
+import { AddNewSource, SetSource } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -10,14 +10,19 @@ import { AddNewSource } from '../app.actions';
   styleUrls: ['./source-selector.component.sass'],
 })
 export class SourceSelectorComponent {
-  @Select(AppState.selectedDomain)
-  selectedDomain$!: Observable<DisplayDomain | null>;
+  @Select(AppState.sources) sources$!: Observable<DisplaySource[] | null>;
+  @Select(AppState.selectedSource)
+  selectedSource$!: Observable<DisplaySource | null>;
 
   showAddSourcesModal = false;
   newSouceName = '';
   newSourcePlatform = '';
 
   constructor(private store: Store) {}
+
+  selectSource(source: DisplaySource) {
+    this.store.dispatch(new SetSource(source));
+  }
 
   addNewSource() {
     console.log('platform: ' + this.newSourcePlatform);

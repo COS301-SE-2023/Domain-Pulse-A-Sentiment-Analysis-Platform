@@ -1,7 +1,16 @@
-import { DisplayDomain } from './app.state';
+import { DisplayDomain, DisplaySource } from './app.state';
+
+export class Demo2Setup {
+  static readonly type = '[App] Demo2 Setup';
+}
 
 export class LoadUserDomains {
   static readonly type = '[App] Load User Domains';
+}
+
+export class SetProfileId {
+  static readonly type = '[App] Set Profile Id';
+  constructor(public profileId: number) {}
 }
 
 export class SetUser {
@@ -19,7 +28,35 @@ export class SetDomain {
 
 export class AddNewDomain {
   static readonly type = '[App] Add New Domain';
-  constructor(public domainName: string, domainImageName: string) {}
+  constructor(
+    public domainName: string,
+    public domainImagUrl: string,
+    public description: string
+  ) {}
+}
+
+export class EditDomain {
+  static readonly type = '[App] Edit Domain';
+  constructor(
+    public domainId: number,
+    public domainName: string,
+    public domainImagUrl: string,
+    public description: string
+  ) {}
+}
+
+export class DeleteDomain {
+  static readonly type = '[App] Delete Domain';
+  constructor(public domainID: number) {}
+}
+
+export class GetSources {
+  static readonly type = '[App] Get Sources';
+}
+
+export class SetSource {
+  static readonly type = '[App] Set Source';
+  constructor(public source: DisplaySource) {}
 }
 
 export class AddNewSource {
@@ -29,6 +66,10 @@ export class AddNewSource {
 
 export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
+}
+
+export class GetSourceDashBoardInfo {
+  static readonly type = '[App] Get Source DashBoard Info';
 }
 
 export class AttempPsswdLogin {
@@ -43,4 +84,9 @@ export class RegisterUser {
     public password: string,
     public email: string
   ) {}
+}
+
+export class ChooseStatistic {
+  static readonly type = '[App] Choose Statistic';
+  constructor(public statisticIndex: number) {}
 }

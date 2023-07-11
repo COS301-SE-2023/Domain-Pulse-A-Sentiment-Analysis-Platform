@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datamanager import sentiment_record_model
 import json
 import requests
+from authchecker import auth_checks
 
 # Create your views here.
 
@@ -24,6 +25,14 @@ def get_dashboard_data_source(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[int(source_id_raw)]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
 
         individual_records = sentiment_record_model.get_records_by_source_id(
             int(source_id_raw)
@@ -67,6 +76,15 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         individual_records = []
         source_ids = list(source_ids_raw)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=source_ids
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+
         for source_id in source_ids_raw:
             individual_records += sentiment_record_model.get_records_by_source_id(
                 int(source_id)
@@ -116,6 +134,14 @@ def refresh_source(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[int(source_id_raw)]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
 
         # 1
         individual_records = sentiment_record_model.get_records_by_source_id(

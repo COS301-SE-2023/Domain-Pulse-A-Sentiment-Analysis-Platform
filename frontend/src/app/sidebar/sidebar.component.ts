@@ -10,7 +10,7 @@ import {
 import { Select, Store } from '@ngxs/store';
 import { AppState, DisplayDomain } from '../app.state';
 import { Observable } from 'rxjs';
-import { AddNewDomain, SetDomain } from '../app.actions';
+import { AddNewDomain, DeleteDomain, EditDomain, SetDomain } from '../app.actions';
 
 @Component({
   selector: 'dp-sidebar',
@@ -115,9 +115,12 @@ export class SidebarComponent {
 
   newDomainName = '';
   newDomainImageName = '';
+  newDomainDescription = '';
 
   showAddDomainModal = false;
   showProfileModal = false;
+  showEditDomainModal = false;
+  showProfileEditModal = false;
 
   constructor(private backendService: BackendService, private store: Store) {}
 
@@ -131,6 +134,16 @@ export class SidebarComponent {
     }
   }
 
+  toggleEditDomainModal(): void {
+    if (!this.showEditDomainModal) {
+      // this.windows[0].scrolling = false;
+      this.showEditDomainModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showEditDomainModal = false;
+    }
+  }
+
   toggleProfileModal(): void {
     if (!this.showProfileModal) {
       // this.windows[0].scrolling = false;
@@ -141,13 +154,54 @@ export class SidebarComponent {
     }
   }
 
+  toggleProfileEditModal(): void {
+    if (!this.showProfileEditModal) {
+      // this.windows[0].scrolling = false;
+      this.showProfileEditModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showProfileEditModal = false;
+    }
+  }
+
   addNewDomain(): void {
     console.log('addNewDomain');
-    console.log(this.newDomainName, this.newDomainImageName);
     this.store.dispatch(
-      new AddNewDomain(this.newDomainName, this.newDomainImageName)
+      new AddNewDomain(
+        this.newDomainName,
+        this.newDomainImageName,
+        this.newDomainDescription
+      )
     );
+    this.newDomainName = '';
+    this.newDomainImageName = '';
+    this.newDomainDescription = '';
+
     this.toggleDomainModal();
+  }
+
+  editDomain() {
+    const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
+    if (!selectedDomain) return;
+    const selectedDomainId = selectedDomain.id;
+
+    this.store.dispatch(
+      new EditDomain(
+        selectedDomainId,
+        this.newDomainName,
+        this.newDomainImageName,
+        this.newDomainDescription
+      )
+    );
+    this.newDomainName = '';
+    this.newDomainImageName = '';
+    this.newDomainDescription = '';
+
+    this.toggleEditDomainModal();
+  }
+
+  deleteDomain(domainToDeleteId: number) {
+    this.store.dispatch(new DeleteDomain(domainToDeleteId));
   }
 
   selectDomain(domain: DisplayDomain) {
@@ -168,5 +222,18 @@ export class SidebarComponent {
       document.body.classList.toggle('light');
       document.body.classList.toggle('dark');
     }
+  }
+
+  imageSelected: boolean = false;
+  selectedImage: File | undefined;
+
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+    this.imageSelected = true;
+  }
+
+  uploadImage() {
+    // Handle image upload logic here
+    // You can access the selected image using this.selectedImage
   }
 }

@@ -7,15 +7,16 @@
     padding-left: 1.2rem
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
 
-    
-
-
-
-
 .source-cat
     border-radius: 25px
     height: 80%
     width: 180px
+    cursor: pointer
+
+.source-cat:hover
+    background-color: var(--highlight)
+
+.source-cat-selected
     background-color: var(--highlight)
 
 .source-actions
@@ -35,20 +36,18 @@
     width: 100%
     color: var(--grey-subtle)
 
-
-.sources-div 
-  gap: 1.4rem
-  height: 100%
-
+.sources-div
+    gap: 1.4rem
+    height: 100%
 
 .button-div
-  display: grid
-  grid-template-columns: repeat(2, 1fr)
-  align-content: center
-  justify-content: center
-  width: 60%
-  height: 50%
-  margin-left: 3rem
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    align-content: center
+    justify-content: center
+    width: 60%
+    height: 50%
+    margin-left: 3rem
 
 .button
     display: flex
@@ -60,17 +59,13 @@
     width: 8rem
     color: var(--text-color)
 
-
 .button-text
-  margin-left: 0.5rem
+    margin-left: 0.5rem
 
-
-.button-icon 
+.button-icon
     margin-left: 0.3rem
     margin-right: 0.3rem
     width: 1.2rem
-
-
 
 // below is where the styles for the modal are
 .default-input
@@ -96,8 +91,8 @@
     font-weight: 700
     font-size: 20pt
     color: styles.$primary-light
-    
-.heading-container 
+
+.heading-container
     text-align: left
     width: 80%
     display: flex
@@ -107,19 +102,17 @@
     margin-left: 10%
 
 .content
-  flex-grow: 1
+    flex-grow: 1
 
 .modal-contents
-  display: flex
-  flex-direction: column
-  justify-content: space-between
+    display: flex
+    flex-direction: column
+    justify-content: space-between
 
 .bottom-div
-  align-content: center
-  justify-content: center
-  margin-bottom: 6%
-
-
+    align-content: center
+    justify-content: center
+    margin-bottom: 6%
 
 .back-arrow
     width: 25px

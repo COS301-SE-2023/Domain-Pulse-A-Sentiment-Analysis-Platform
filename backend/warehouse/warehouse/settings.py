@@ -10,11 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ENV_FILE = BASE_DIR.parent / '.env'
+load_dotenv(ENV_FILE)
+
+RUNSERVER_PORT = os.getenv("DJANGO_WAREHOUSE_PORT")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,8 +31,24 @@ SECRET_KEY = 'django-insecure-cj$se5b=+*l)lufk@di@z3)%h0_x^%yt$43wuzca0e^-3ok2gh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '154.73.32.89',
+    '.domain-pulse.co.za',
+    '.dp.cos301.thuthuka.me',
+]
 
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
+    'http://154.73.32.89',
+    'http://154.73.32.89:4200',
+)
+CORS_ORIGIN_REGEX_WHITELIST = (
+    '^(https?:\/\/)?((\w(-\w)*)+\.)*thuthuka\.me$',
+    '^(https?:\/\/)?((\w(-\w)*)+\.)*domain-pulse\.co\.za$',
+)
 
 # Application definition
 
@@ -37,7 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'query'
+    'query',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -48,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'warehouse.urls'
