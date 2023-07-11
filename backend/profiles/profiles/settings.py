@@ -29,7 +29,7 @@ RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-xkk-*h&kg^uz5gskt@8jn-4o$^50d#iaxs+*1r11lh0t*&v6nt"
+# SECRET_KEY = "django-insecure-xkk-*h&kg^uz5gskt@8jn-4o$^50d#iaxs+*1r11lh0t*&v6nt"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
