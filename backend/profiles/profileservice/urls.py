@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("login_user",views.login_user),
-    path("logout_user",views.logout_user),
-    path("change_password",views.change_password),
-    path("delete_user",views.delete_user),
-    path("create_user",views.create_user),
+    path("login_user", views.login_user),
+    path("logout_user", views.logout_user),
+    path("change_password", views.change_password),
+    path("delete_user", views.delete_user),
+    path("create_user", views.create_user),
     # path("create_profile/<user_id>/<profileIcon>/<mode>", views.create_profile),
     path("swap_mode", views.swap_mode),
     path("edit_profile_picture", views.edit_profile_picture),
@@ -17,9 +17,7 @@ urlpatterns = [
     path("get_domains_for_user", views.get_domains_for_user),
     path("get_user_by_id", views.get_user_by_id),
     path("check_logged_in", views.check_logged_in),
-    path("add_source_to_domain",views.add_source_to_domain),
-    path("remove_source_from_domain",views.remove_source_from_domain),
-    path("get_sources_for_domain",views.get_sources_for_domain),
-    path("/check/source_ids/",views.check_source_ids),
-    path("/check/domain_ids/",views.check_domain_ids),
+    path("add_source_to_domain", views.add_source_to_domain),
+    path("remove_source_from_domain", views.remove_source_from_domain),
+    path("get_sources_for_domain", views.get_sources_for_domain),
 ]
