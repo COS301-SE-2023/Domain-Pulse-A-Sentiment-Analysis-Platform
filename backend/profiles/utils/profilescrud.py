@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from profileservice import models as profile_models
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import AccessToken
 
 LIGHT = False
 DARK = True
@@ -16,7 +17,7 @@ def create_user(request, uname, email, pword):
         LIGHT,
     )
     login(request, user)
-
+    jwt = create_JWT(user)
     return {
         "status": "SUCCESS",
         "id": user.id,
@@ -24,6 +25,7 @@ def create_user(request, uname, email, pword):
         "email": user.email,
         "password": user.password,
         "profileID": profile.id,
+        "JWT":jwt
     }
 
 
@@ -238,12 +240,20 @@ def login_user(request, username, password):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return {"status": "SUCCESS", "id": user.id}
+            jwt=create_JWT(user)
+            return {"status": "SUCCESS", "id": user.id,"JWT":jwt}
         else:
             return {"status": "FAILURE"}
     else:
         return {"status": "FAILURE"}
 
+def create_JWT(user):
+    if user.is_authenticated:
+        token=AccessToken.for_user(user)
+        jwt=str(token)
+        return jwt
+    else:
+        return None
 
 def logout_user(request):
     if request.user.is_authenticated:
