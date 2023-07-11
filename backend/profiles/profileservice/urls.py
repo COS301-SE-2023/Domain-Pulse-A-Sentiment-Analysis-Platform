@@ -20,4 +20,6 @@ urlpatterns = [
     path("add_source_to_domain",views.add_source_to_domain),
     path("remove_source_from_domain",views.remove_source_from_domain),
     path("get_sources_for_domain",views.get_sources_for_domain),
+    path("/check/source_ids/",views.check_source_ids),
+    path("/check/domain_ids/",views.check_domain_ids),
 ]

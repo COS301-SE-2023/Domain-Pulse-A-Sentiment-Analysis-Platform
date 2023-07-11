@@ -123,3 +123,15 @@ def get_sources_for_domain(request: HttpRequest):
         raw_data=json.loads(request.body)
         return JsonResponse(profilescrud.get_sources_for_domain(request,raw_data["id"],raw_data["domain_id"]))
     return JsonResponse({"status": "FAILURE"})
+
+def check_source_ids(request):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse()
+    return JsonResponse({"status": "FAILURE"})
+
+def check_domain_ids(request):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse()
+    return JsonResponse({"status": "FAILURE"})
