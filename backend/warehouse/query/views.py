@@ -28,9 +28,7 @@ def get_dashboard_data_source(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request,
-            source_id_list=[int(source_id_raw)],
-            for_refresh=False,
+            original_request=request, source_id_list=[int(source_id_raw)]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
@@ -81,7 +79,7 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=source_ids, for_refresh=False
+            original_request=request, source_id_list=source_ids
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
@@ -139,9 +137,7 @@ def refresh_source(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request,
-            source_id_list=[int(source_id_raw)],
-            for_refresh=True,
+            original_request=request, source_id_list=[int(source_id_raw)]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})

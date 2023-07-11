@@ -21,9 +21,7 @@ def extract_token(original_request: HttpRequest):
     return (True, token)
 
 
-def verify_user_owns_source_ids(
-    original_request: HttpRequest, source_id_list: list, for_refresh: bool
-):
+def verify_user_owns_source_ids(original_request: HttpRequest, source_id_list: list):
     status, details = extract_token(original_request)
 
     if not status:
@@ -34,7 +32,7 @@ def verify_user_owns_source_ids(
 
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
 
-    data = {"source_ids": source_ids, "for_refresh": for_refresh}
+    data = {"source_ids": source_ids}
 
     response = requests.post(VERIFY_SOURCES_ENDPOINT, json=data, headers=headers)
 
