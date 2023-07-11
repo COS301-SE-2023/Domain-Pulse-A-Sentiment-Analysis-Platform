@@ -210,6 +210,18 @@ def get_domains_for_user(request, id):
     else:
         return {"status": "FAILURE"}
 
+def get_domains_for_user_internal(id):
+    id = int(id)
+    profile = None
+    try:
+        profile = profile_models.Profiles.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return {"status": "FAILURE", "details": "No user exists"}
+
+    domain_list = []
+    for i in profile.domainIDs.all().values_list("id", flat=True):
+        domain_list.append(i)
+    return {"status": "SUCCESS", "id": profile.id, "domainIDs": domain_list}
 
 def get_profile(request, id):
     if request.user.is_authenticated:
@@ -306,8 +318,7 @@ def check_logged_in(request):
         return {"status": "FAILURE"}
 
 
-def add_source_to_domain(request, user_id, domain_id, source_id):
-    if request.user.is_authenticated:
+def add_source_to_domain( user_id, domain_id, source_id):
         domain = None
         try:
             domain = profile_models.Domains.objects.get(id=domain_id)
@@ -327,8 +338,7 @@ def add_source_to_domain(request, user_id, domain_id, source_id):
             return {"status": "FAILURE", "details": "Incorrect UserID"}
 
 
-def remove_source_from_domain(request, user_id, domain_id, source_id):
-    if request.user.is_authenticated:
+def remove_source_from_domain(user_id, domain_id, source_id):
         domain = None
         try:
             domain = profile_models.Domains.objects.get(id=domain_id)
@@ -351,8 +361,7 @@ def remove_source_from_domain(request, user_id, domain_id, source_id):
             return {"status": "FAILURE", "details": "Incorrect UserID"}
 
 
-def get_sources_for_domain(request, user_id, domain_id):
-    if request.user.is_authenticated:
+def get_sources_for_domain(user_id, domain_id):
         domain = None
         try:
             domain = profile_models.Domains.objects.get(id=domain_id)
@@ -372,3 +381,19 @@ def get_sources_for_domain(request, user_id, domain_id):
             }
         else:
             return {"status": "FAILURE", "details": "Incorrect UserID"}
+    
+def get_sources_for_user_internal(user_id):
+        profile = None
+        try:
+            user_id = int(user_id)
+            profile = profile_models.Profiles.objects.get(id=user_id)
+        except ObjectDoesNotExist:
+            return {"status": "FAILURE", "details": "No user exists"}
+        domain_list = []
+        for i in profile.domainIDs.all().values_list("id", flat=True):
+            domain_list.append(i)
+        source_list=[]
+        for domain_id in domain_list:
+            domain = profile_models.Domains.objects.get(id=domain_id)  
+            source_list.extend(domain.sourceIDs)
+        return {"id":user_id,"source_ids":source_list} 

@@ -186,4 +186,3 @@ def get_sources_for_domain(request: HttpRequest):
             )
         )
     return JsonResponse({"status": "FAILURE"})
-
