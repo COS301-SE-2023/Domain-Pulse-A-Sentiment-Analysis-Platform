@@ -109,3 +109,10 @@ def add_source_to_domain(request: HttpRequest):
         raw_data=json.loads(request.body)
         return JsonResponse(profilescrud.add_source_to_domain(request,raw_data["id"],raw_data["domain_id"],raw_data["source_id"]))
     return JsonResponse({"status": "FAILURE"})
+
+@csrf_exempt
+def remove_source_from_domain(request: HttpRequest):
+    if request.method == "POST":
+        raw_data=json.loads(request.body)
+        return JsonResponse(profilescrud.remove_source_from_domain(request,raw_data["id"],raw_data["domain_id"],raw_data["source_id"]))
+    return JsonResponse({"status": "FAILURE"})
