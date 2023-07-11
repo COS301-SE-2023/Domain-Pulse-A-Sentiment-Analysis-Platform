@@ -126,7 +126,7 @@ def remove_domain_from_profile(request,id, domain_id):
         
         domain = None
         try:
-            domain=profile_models.Domains.objects.get(id=domain_id,sourceIDs=[])
+            domain=profile_models.Domains.objects.get(id=domain_id)
         except ObjectDoesNotExist:
             return {"status":"FAILURE", "details":"No domain exists"}
         profile.domainIDs.remove(domain)
@@ -205,7 +205,6 @@ def delete_user(request,username,password):
                 logout(request)
                 return {"status": "SUCCESS"}
             else:
-                print("here")
                 return {"status": "FAILURE"}
         else:
             return {"status": "FAILURE"}
@@ -225,3 +224,23 @@ def check_logged_in(request):
         return {"status":"SUCCESS","id":request.user.id}
     else:
         return {"status":"FAILURE"}
+    
+def add_source_to_domain(request, user_id,domain_id,source_id):
+    if request.user.is_authenticated:
+        domain = None
+        try:
+            domain=profile_models.Domains.objects.get(id=domain_id)
+        except ObjectDoesNotExist:
+            return {"status":"FAILURE", "details":"No domain exists"}
+        profile = None
+        try:
+            user_id = int(user_id)
+            profile= profile_models.Profiles.objects.get(id=user_id)
+        except ObjectDoesNotExist:
+            return {"status":"FAILURE", "details":"No user exists"}
+        if domain_id in profile.domainIDs.all().values_list('id',flat=True):
+            domain.sourceIDs.append(source_id)
+            domain.save()
+            return {"domainID":domain_id,"sourceIDs":domain.sourceIDs}
+        else:
+            return {"status":"FAILURE","details":"Incorrect UserID"}
