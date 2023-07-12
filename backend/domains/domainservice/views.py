@@ -19,7 +19,7 @@ def delete_domain(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_domain_ids(
-            original_request=request, domain_id_list=[int(raw_data["id"])]
+            original_request=request, domain_id_list=[(raw_data["id"])]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
@@ -35,7 +35,7 @@ def get_domain(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_domain_ids(
-            original_request=request, domain_id_list=[int(raw_data["id"])]
+            original_request=request, domain_id_list=[(raw_data["id"])]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
@@ -58,7 +58,7 @@ def remove_source(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[int(raw_data["source_id"])]
+            original_request=request, source_id_list=[(raw_data["source_id"])]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
@@ -74,7 +74,7 @@ def create_param(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[int(raw_data["source_id"])]
+            original_request=request, source_id_list=[(raw_data["source_id"])]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
@@ -90,7 +90,7 @@ def delete_param(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[int(raw_data["source_id"])]
+            original_request=request, source_id_list=[(raw_data["source_id"])]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
