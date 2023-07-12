@@ -60,6 +60,8 @@ jobs:
         run: |
           echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
           echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+          mkdir ~/.ssh
+          echo "${{ secrets.POSTGRES_USER_PRIV_KEY }}" >> ~/.ssh/posgresql-user-priv_key
 
       - name: install pipenv
         working-directory: ./backend
