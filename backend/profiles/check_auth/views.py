@@ -35,6 +35,7 @@ def check_source_ids(request):
 def check_domain_ids(request):
     if request.method == "POST":
         flag,token=extract_token(request)
+
         user=get_user_from_token(token)
         if user == None:
             return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identtfy"})

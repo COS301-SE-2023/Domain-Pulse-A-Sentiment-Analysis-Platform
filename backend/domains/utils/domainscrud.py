@@ -46,8 +46,10 @@ def get_domain(id):
         return {"status":"FAILURE", "details":"No Entry Found"}
     resId = str(result["_id"])
     result["_id"]=resId
+    for i in result["sources"]:
+        i["source_id"]=str(i["source_id"])
     client.close()
-
+    
     return result
 
 

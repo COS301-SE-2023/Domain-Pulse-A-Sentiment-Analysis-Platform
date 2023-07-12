@@ -1,7 +1,7 @@
 import requests
 from django.http import HttpResponse, HttpRequest, JsonResponse
 
-PROFILES_SERVICE_ADDRESS = "localhost:8002"
+PROFILES_SERVICE_ADDRESS = "http://localhost:8002"
 VERIFY_SOURCES_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/source_ids/"
 VERIFY_DOMAINS_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/domain_ids/"
 
