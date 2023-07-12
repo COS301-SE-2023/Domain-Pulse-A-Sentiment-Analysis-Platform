@@ -24,6 +24,8 @@ psycopg2-binary = "*"
 mock = "*"
 pymongo = "*"
 python-dotenv = "*"
+sshtunnel = "*"
+
 [dev-packages]
 
 [requires]
