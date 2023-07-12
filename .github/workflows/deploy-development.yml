@@ -17,6 +17,7 @@ jobs:
         run: |
           echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
           echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+          echo "${{ secrets.POSTGRES_USER_PRIV_KEY }}" >> ~/.ssh/posgresql-user-priv_key
 
       - name: Install Dependencies
         run: |
