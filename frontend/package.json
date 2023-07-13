@@ -8,7 +8,7 @@
     "build:prod": "node env-config.js && ng build --configuration=production",
     "build:dev": "node env-config.js && ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
-    "test": "node env-config.js && ng test"
+    "actions:test": "node env-config.js && ng test --no-watch --code-coverage --browsers ChromeHeadless"
   },
   "private": true,
   "dependencies": {

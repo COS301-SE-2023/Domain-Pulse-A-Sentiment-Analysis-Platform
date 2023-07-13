@@ -35,14 +35,14 @@ jobs:
         working-directory: ./frontend
         run: |
           npm link @angular/cli
-          npm run build:prod
-          # ng test --no-watch --code-coverage --browsers ChromeHeadless
-
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     files: frontend/coverage/lcov-report/lcov.info
-      #     token: ${{ secrets.CODECOV_TOKEN }}
+          npm run build:dev
+          npm run actions:test
+          
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: frontend/coverage/lcov-report/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   test_backend:
     runs-on: ubuntu-latest

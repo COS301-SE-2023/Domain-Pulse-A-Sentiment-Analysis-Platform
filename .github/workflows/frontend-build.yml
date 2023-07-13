@@ -33,4 +33,4 @@ jobs:
         working-directory: ./frontend
         run: |
           npm link @angular/cli
-          ng build --configuration=development
+          npm run build:dev

@@ -10,7 +10,12 @@ import {
 import { Select, Store } from '@ngxs/store';
 import { AppState, DisplayDomain } from '../app.state';
 import { Observable } from 'rxjs';
-import { AddNewDomain, DeleteDomain, EditDomain, SetDomain } from '../app.actions';
+import {
+  AddNewDomain,
+  DeleteDomain,
+  EditDomain,
+  SetDomain,
+} from '../app.actions';
 
 @Component({
   selector: 'dp-sidebar',
@@ -65,6 +70,8 @@ export class SidebarComponent {
   logoState = 'small';
   _expanded = false;
   @Input() set expanded(value: boolean) {
+    console.log('lets be serious');
+
     if (value) {
       this.smallLogoState = 'out';
       this._expanded = true;
@@ -122,7 +129,7 @@ export class SidebarComponent {
   showEditDomainModal = false;
   showProfileEditModal = false;
 
-  constructor(private backendService: BackendService, private store: Store) {}
+  constructor(private store: Store) {}
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
@@ -165,19 +172,21 @@ export class SidebarComponent {
   }
 
   addNewDomain(): void {
-    console.log('addNewDomain');
-    this.store.dispatch(
-      new AddNewDomain(
-        this.newDomainName,
-        this.newDomainImageName,
-        this.newDomainDescription
+    this.store
+      .dispatch(
+        new AddNewDomain(
+          this.newDomainName,
+          this.newDomainImageName,
+          this.newDomainDescription
+        )
       )
-    );
-    this.newDomainName = '';
-    this.newDomainImageName = '';
-    this.newDomainDescription = '';
+      .subscribe(() => {
+        this.newDomainName = '';
+        this.newDomainImageName = '';
+        this.newDomainDescription = '';
 
-    this.toggleDomainModal();
+        this.toggleDomainModal();
+      });
   }
 
   editDomain() {

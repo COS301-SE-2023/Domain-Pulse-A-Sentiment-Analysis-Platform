@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../backend.service';
 import {
   trigger,
@@ -43,13 +43,17 @@ import { Demo2Setup, GetDomains } from '../app.actions';
     ]),
   ],
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
   sidebarCollapsed = true;
 
-  constructor(private backendService: BackendService, private store: Store) {
+  constructor(private store: Store) {
     // this.store.dispatch(new Demo2Setup());
+    // this.store.dispatch(new GetDomains());
+  }
+
+  ngOnInit(): void {
     this.store.dispatch(new GetDomains());
   }
 
