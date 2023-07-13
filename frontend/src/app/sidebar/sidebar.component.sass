@@ -1,4 +1,214 @@
+@use 'styles'
+
 :host
-    color: white
-    background-color: blue
+    color: var(--text-color)
+    background: linear-gradient(to bottom, var(--sidebar-top), var(--sidebar-bottom))
     border-radius: 25px
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3)
+
+.domain
+    gap: 0.6rem
+    height: 50px
+    border-radius: 25px
+    width: fit-content
+    display: flex
+    align-items: center
+
+.selected-domain
+    background-color: white
+
+.icons-container
+    position: flex-end
+    display: flex
+    gap: 0.5rem
+    margin-left: auto
+    padding-right: 1rem
+    
+  
+.domain-name 
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+
+
+
+
+
+
+.add-domain-btn
+    gap: 2rem
+    height: 50px
+    background-color: rgba(187, 208, 231, 0.418)
+    width: 80%
+    border-radius: 25px
+
+.circle-wrapper
+    width: 44px
+    height: 44px
+    min-width: 44px
+    min-height: 44px
+    border-radius: 44px
+    background-color: white
+    overflow: hidden
+    border: solid 2px white
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+    justify-content: center
+    align-items: center
+
+ 
+
+
+.circle-wrapper img 
+  width: 100%
+  height:100%
+  object-fit: cover
+
+.plus-wrapper
+    width: 44px
+    height: 44px
+    min-width: 44px
+    min-height: 44px
+
+
+
+
+// below is where the styles for the modal are
+
+.default-input
+    border: solid rgb(133, 133, 133) 2px
+    height: 30px
+    border-radius: 10px
+
+.new-domain-btn
+    width: 130px
+    height: 40px
+    border-radius: 25px
+    background-color: var(--primary)
+    color: white
+    font-family: 'Source Sans 3'
+    font-size: 14pt
+    font-weight: 700
+    margin-top: 1rem
+    border: none
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+
+
+.modal-heading
+    font-family: 'Open Sans'
+    font-weight: 700
+    font-size: 20pt
+    color: var(--primary)
+
+
+.heading-container 
+    text-align: left
+    width: 80%
+    display: flex
+    align-items: center
+    align-self: flex-start
+    margin-top: 4%
+    margin-left: 10%
+
+
+.back-arrow 
+  width: 25px
+  margin-right: 10px
+
+.modal-step-tag
+    font-size: 50px
+    font-weight: 700
+    font-family: 'Open Sans'
+    color: var(--grey-subtle)
+    padding-right: 10px
+
+.step-heading
+    font-family: 'Source Sans 3'
+    font-weight: 300
+    font-size: 15px
+    color: var(--text-color)
+
+.picture
+    flex-basis: 45%
+    background-color: blue
+    border-top-right-radius: 59px
+    border-bottom-right-radius: 59px
+    background-image: url("../../assets/stock-bg.png")
+    background-repeat: no-repeat
+    background-size: cover
+    width:100%
+
+.profile-section 
+
+
+//Profile Modal
+
+.profile-image
+    width: 180px
+    height: 180px
+    border-radius: 50%
+    object-fit: cover
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+
+.profile-name
+    font-family: 'Source Sans 3'
+    font-weight: 700
+    font-size: 18pt
+    color: var(--secondary)
+
+.profile-icon
+    width:15px
+
+.modal-contents
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+
+  
+
+.content
+  flex-grow: 1
+
+.button-div
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 1rem
+  align-content: center
+  justify-content: center
+  margin-bottom: 5%
+
+.button
+    display: flex
+    align-items: center
+    height: 2rem
+    padding: 0 1rem
+    border-radius: 1rem
+    background-color: var(--primary)
+    cursor: pointer
+    width: 12rem
+    color: white
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
+
+.button:hover
+  background-color: var(--secondary)
+
+.button-text
+  margin-left: 0.5rem
+
+
+.button-icon 
+    margin-left: 0.3rem
+    margin-right: 0.5rem
+    width: 0.8rem
+
+.bottom-div
+  align-content: center
+  justify-content: center
+  margin-bottom: 6%
+
+    
+
+
+
+  
+

@@ -1,0 +1,109 @@
+{
+    "metrics": [
+      {
+        "data": "So disappointing. Would have been ok if the sharks played well, but no. Cheetahs are going to win by a big margin",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0994
+        },
+        "emotions": {
+          "neutral": 0.0187,
+          "surprise": 0.0533,
+          "sadness": 0.928
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0009
+        },
+        "ratios": {
+          "positive": 0.438,
+          "neutral": 0.417,
+          "negative": 0.146
+        }
+      },
+      {
+        "data": "So resting all those players against WP doesn't look like it was such a good idea now does it 🙄",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0002
+        },
+        "emotions": {
+          "sadness": 0.8522,
+          "neutral": 0.0731,
+          "fear": 0.0746
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.001
+        },
+        "ratios": {
+          "positive": 0.171,
+          "neutral": 0.571,
+          "negative": 0.258
+        }
+      },
+      {
+        "data": "No matter what I am forever sharks it's was an wonderful experience, THE COMEBACK IS ALWAYS STRONGER ❤️❤️",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9991
+        },
+        "emotions": {
+          "anger": 0.0311,
+          "joy": 0.7873,
+          "neutral": 0.1816
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0006
+        },
+        "ratios": {
+          "positive": 0.304,
+          "neutral": 0.649,
+          "negative": 0.046
+        }
+      },
+      {
+        "data": "You are one man down, and you get an opportunity to take the 3 points, and you don't? This is what happens when you rest players. Francois Steyn knew what he was talking about this afternoon. What a mess! You rest players, you disrupt the momentum. I'm glad ya'll lost and saved us some embarrassment from the Cheetahs. We lack so much depth and yet have a lot of talent! Hopefully, next season will be better. Evening ruined😡💔",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0007
+        },
+        "emotions": {
+          "sadness": 0.9613,
+          "joy": 0.0116,
+          "surprise": 0.0271
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0013
+        },
+        "ratios": {
+          "positive": 0.245,
+          "neutral": 0.573,
+          "negative": 0.182
+        }
+      },
+      {
+        "data": "Shambolic performance today. No fight or plan from start to finish🫥",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.005
+        },
+        "emotions": {
+          "sadness": 0.0374,
+          "surprise": 0.0894,
+          "fear": 0.8732
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0007
+        },
+        "ratios": {
+          "positive": 0.214,
+          "neutral": 0.786,
+          "negative": 0.0
+        }
+      }
+    ]
+  }

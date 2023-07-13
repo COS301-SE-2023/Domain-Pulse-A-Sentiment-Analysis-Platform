@@ -1,0 +1,277 @@
+{
+  "metrics": [
+    {
+      "data": "Best vibes, such a beautiful campus. It's a real treat to have so many options for food and drinks. Hatflied is the busiest campus with real difficulty finding parking.",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9996
+      },
+      "emotions": {
+        "surprise": 0.0316,
+        "neutral": 0.0541,
+        "joy": 0.9143
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.335,
+        "neutral": 0.59,
+        "negative": 0.075
+      }
+    },
+    {
+      "data": "The university that serves views. The buildings and structures are of top notch quality and the environment on campus is neat and earthy full of trees, greenery and sitting spaces all over campus.",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9998
+      },
+      "emotions": {
+        "surprise": 0.0246,
+        "neutral": 0.1214,
+        "joy": 0.8541
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.186,
+        "neutral": 0.814,
+        "negative": 0.0
+      }
+    },
+    {
+      "data": "I go to the university of Pretoria and I'm so impressed with how clean the university is. I'm also impressed with the level of professionalism from all the staff and lecturerers. I'm happy at this university.",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9999
+      },
+      "emotions": {
+        "surprise": 0.9831,
+        "joy": 0.009,
+        "neutral": 0.0079
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.387,
+        "neutral": 0.613,
+        "negative": 0.0
+      }
+    },
+    {
+      "data": "The building and grounds of Hatfield campus is not just a wonderful place to study, but also to walk around in general. It is home of two seperate theaters, many different cafes, restaurants and takeaways. Furthermore there is beautiful historic buildings and gardens!",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9998
+      },
+      "emotions": {
+        "surprise": 0.1833,
+        "joy": 0.7709,
+        "neutral": 0.0459
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.203,
+        "neutral": 0.797,
+        "negative": 0.0
+      }
+    },
+    {
+      "data": "University of Pretoria Gym is at a good location. However the general upkeep hygiene and standard is very poor.. Equipment has not been maintained regularly; clearly cleaning is not a priority but a chore and the staff desperately need training. Attitudes need to change.  Bad news.  Take note management.  👎",
+      "general": {
+        "category": "VERY_NEGATIVE",
+        "score": 0.0018
+      },
+      "emotions": {
+        "sadness": 0.7954,
+        "neutral": 0.1428,
+        "surprise": 0.0618
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.115,
+        "neutral": 0.697,
+        "negative": 0.189
+      }
+    },
+    {
+      "data": "The lack of communication from UP is disturbing. Students are not allowed back on campus to deal with any queries or receive any assistance. Nor can you get any feedback on multiple emails sent over several weeks either. And good luck trying to call someone for assistance, you have more chance of sliding uphill.  I am not sure how we are expected to deal with this? Surely if face to face communication is not permitted, one would expect them to be fully resourced electronically or telephonically to deal with this? My son's future career is at stake but I cannot get hold of anyone to help us. Very disappointed in an institution that I started out having so much faith in. SOMEONE FROM UP....PLEASE HELP US!",
+      "general": {
+        "category": "VERY_NEGATIVE",
+        "score": 0.0043
+      },
+      "emotions": {
+        "sadness": 0.854,
+        "neutral": 0.0254,
+        "surprise": 0.1207
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0005
+      },
+      "ratios": {
+        "positive": 0.237,
+        "neutral": 0.681,
+        "negative": 0.083
+      }
+    },
+    {
+      "data": "Parking machines still aren't accepting cards... apparently they came to fix it once and then even though it wasn't working they just haven't tried again. Parking are still a nightmare dispute them having 2 years (during the pandemic) to make alternative parking options available.",
+      "general": {
+        "category": "VERY_NEGATIVE",
+        "score": 0.0019
+      },
+      "emotions": {
+        "sadness": 0.6707,
+        "neutral": 0.1787,
+        "fear": 0.1505
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.0,
+        "neutral": 0.86,
+        "negative": 0.14
+      }
+    },
+    {
+      "data": "2 months since our 11 week long course ended. Still no final marks or certificate, the content was great but the level of service is shocking. No communication since the course ended, had to enquire twice.",
+      "general": {
+        "category": "VERY_NEGATIVE",
+        "score": 0.0034
+      },
+      "emotions": {
+        "anger": 0.014,
+        "surprise": 0.5715,
+        "fear": 0.4145
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.117,
+        "neutral": 0.743,
+        "negative": 0.14
+      }
+    },
+    {
+      "data": "I love the institution, the security guards were very helpful, I got lost but it was nice to know that you can Google map the campus.",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9954
+      },
+      "emotions": {
+        "surprise": 0.2111,
+        "joy": 0.5619,
+        "sadness": 0.227
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.46,
+        "neutral": 0.453,
+        "negative": 0.087
+      }
+    },
+    {
+      "data": "A great educational institution to join with world-class lecturers and a well running corporation",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9999
+      },
+      "emotions": {
+        "surprise": 0.0547,
+        "joy": 0.884,
+        "neutral": 0.0612
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0005
+      },
+      "ratios": {
+        "positive": 0.545,
+        "neutral": 0.455,
+        "negative": 0.0
+      }
+    },
+    {
+      "data": "A conveniently located institution. Not too far from CBD. Main campus is situated near most, if not all, student accommodations, public transportation stops, Hatfield Plaza and the Javett Art Centre.",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9988
+      },
+      "emotions": {
+        "joy": 0.8785,
+        "neutral": 0.0594,
+        "surprise": 0.0621
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.0,
+        "neutral": 0.925,
+        "negative": 0.075
+      }
+    },
+    {
+      "data": "You will never want to be anywhere else once you've been here",
+      "general": {
+        "category": "VERY_NEGATIVE",
+        "score": 0.0117
+      },
+      "emotions": {
+        "neutral": 0.5459,
+        "joy": 0.3258,
+        "sadness": 0.1284
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0022
+      },
+      "ratios": {
+        "positive": 0.0,
+        "neutral": 0.804,
+        "negative": 0.196
+      }
+    },
+    {
+      "data": "The facilities are amazing. The education is the highest quality around. I am proud to be a student of this institution. Overall 10/10.",
+      "general": {
+        "category": "VERY_POSITIVE",
+        "score": 0.9999
+      },
+      "emotions": {
+        "neutral": 0.0504,
+        "joy": 0.4743,
+        "surprise": 0.4753
+      },
+      "toxicity": {
+        "level_of_toxic": "Non-toxic",
+        "score": 0.0004
+      },
+      "ratios": {
+        "positive": 0.301,
+        "neutral": 0.699,
+        "negative": 0.0
+      }
+    }
+  ]
+}

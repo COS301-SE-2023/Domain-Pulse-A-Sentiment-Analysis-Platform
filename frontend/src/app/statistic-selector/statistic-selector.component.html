@@ -1,0 +1,142 @@
+<div class="flex-row align-center" style="height: 80%; gap: 1.4rem">
+  <div class="statistic-category statistic-category-selected">
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          src="../../assets/logos/graph.png"
+          width="100%"
+          alt="Overall Score icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Overall Score</p>
+        <p>{{ overrallScore }}%</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 3px; height: 100%; background-color: #e0e0e0"></div>
+
+  <div class="statistic-category">
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          src="../../assets/logos/positive.png"
+          width="100%"
+          alt="Positive Icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Positive</p>
+        <p>{{ positiveScore }}%</p>
+      </div>
+    </div>
+
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          src="../../assets/logos/negative.png"
+          width="100%"
+          alt="Overall Score icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Negative</p>
+        <p>{{ negativeScore }}%</p>
+      </div>
+    </div>
+
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          src="../../assets/logos/neutral-score.png"
+          width="100%"
+          alt="Overall Score icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Neutral</p>
+        <p>{{ neutralScore }}%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div style="width: 3px; height: 100%; background-color: #e0e0e0"></div>
+
+  <div class="statistic-category">
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          src="../../assets/logos/comments.png"
+          width="100%"
+          alt="Positive Icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Objectivity</p>
+        <p>{{ objectivityScore }}%</p>
+      </div>
+    </div>
+
+    <div class="statistic-item flex-row">
+      <div class="flex-column item-stats">
+        <p>Subjectivity</p>
+        <p>{{ subjectivityScore }}%</p>
+      </div>
+    </div>
+  </div> -->
+
+  <div style="width: 3px; height: 100%; background-color: #e0e0e0"></div>
+
+  <div class="statistic-category">
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          [src]="emotionIconUrl"
+          width="100%"
+          alt="Positive Icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Emotions</p>
+        <p>{{emotion}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 3px; height: 100%; background-color: #e0e0e0"></div>
+
+  <div class="statistic-category">
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          src="../../assets/logos/comments.png"
+          width="100%"
+          alt="Positive Icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Toxicity</p>
+        <p>{{toxicity}}%</p>
+      </div>
+    </div>
+  </div>
+  <div style="width: 3px; height: 100%; background-color: #e0e0e0"></div>
+
+  <div class="statistic-category">
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div" >
+        <img
+          src="../../assets/logos/analytics.png"
+          width="100%"
+          alt="Positive Icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Analysed</p>
+        <p>{{ analysedSum }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>
