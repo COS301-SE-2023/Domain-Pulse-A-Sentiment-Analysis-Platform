@@ -14,15 +14,13 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-import environ
-
-env = environ.Env()
-environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV_FILE = BASE_DIR.parent / '.env'
+DATABASE_ENV_FILE = BASE_DIR.parent / '.postgresql.env'
 load_dotenv(ENV_FILE)
+load_dotenv(DATABASE_ENV_FILE)
 
 RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 
@@ -104,15 +102,36 @@ WSGI_APPLICATION = 'profiles.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+from sshtunnel import SSHTunnelForwarder
+
+#setup ssh tunnel
+ssh_tunnel = SSHTunnelForwarder(
+    os.getenv("DB_TUNNEL_HOST"),
+    ssh_username=os.getenv("DB_TUNNEL_USERNAME"),
+    ssh_pkey=os.getenv("DB_TUNNEL_PRIVATE_KEY"),
+    remote_bind_address=('127.0.0.1', int(os.getenv("SQL_DATABASE_PORT"))),
+)
+
+ssh_tunnel.start()
+print("SSH tunnel started")
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env('SQL_DATABASE_NAME'),
-        "USER": env('SQL_DATABASE_USER'),
-        "PASSWORD": env('SQL_DATABASE_PASS'),
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": os.getenv("SQL_DATABASE_NAME"),
+    #     "USER": os.getenv("SQL_DATABASE_USER"),
+    #     "PASSWORD": os.getenv("SQL_DATABASE_PASS"),
+    #     "HOST": "localhost",
+    #     "PORT": "5432",
+    # },
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.getenv("SQL_DATABASE_HOST"),
+        'PORT': ssh_tunnel.local_bind_port,
+        "NAME": os.getenv("SQL_DATABASE_NAME"),
+        "USER": os.getenv("SQL_DATABASE_USER"),
+        "PASSWORD": os.getenv("SQL_DATABASE_PASS"),
+    },
 }
 
 

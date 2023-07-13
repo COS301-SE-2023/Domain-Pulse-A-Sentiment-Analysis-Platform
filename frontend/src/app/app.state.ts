@@ -90,7 +90,7 @@ interface AppStateModel {
 @State<AppStateModel>({
   name: 'app',
   defaults: {
-    profileId: 3,
+    profileId: 1,
     authenticated: false,
     selectedStatisticIndex: 0,
   },

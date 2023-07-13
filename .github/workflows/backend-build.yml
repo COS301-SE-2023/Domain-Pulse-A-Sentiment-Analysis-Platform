@@ -24,7 +24,7 @@ jobs:
           
       - name: cache pipenv
         id: cache-pipenv
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: backend/.venv
           key: venv_cache-${{ hashFiles('backend/Pipfile.lock') }}
