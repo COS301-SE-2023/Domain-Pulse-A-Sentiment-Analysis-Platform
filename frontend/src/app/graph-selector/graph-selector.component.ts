@@ -220,8 +220,10 @@ export class GraphSelectorComponent implements OnInit {
     });
 
     this.statisticIndex.subscribe((statIndex) => {
-      this.currentGraphIndex = statIndex;
-      this.renderGraph();
+      if (statIndex) {
+        this.currentGraphIndex = statIndex;
+        this.renderGraph();
+      }
     });
   }
 
@@ -283,7 +285,6 @@ export class GraphSelectorComponent implements OnInit {
   switchToNextGraph() {
     if (!this.updatedGraphArray) return;
 
-    console.log('next graph');
     if (this.currentGraphIndex < this.updatedGraphArray.length - 1) {
       this.currentGraphIndex++;
       this.renderGraph();
