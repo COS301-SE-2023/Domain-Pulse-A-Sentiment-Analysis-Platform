@@ -48,6 +48,14 @@ def get_domain(request: HttpRequest):
 def add_source(request: HttpRequest):
     if request.method =="POST":
         raw_data= json.loads(request.body)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_domain_ids(
+            original_request=request, domain_id_list=[(raw_data["id"])]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
         return JsonResponse(domainscrud.add_source(raw_data["id"],raw_data["source_name"],raw_data["source_icon"]))
     return JsonResponse({"status":"FAILURE"})
 
