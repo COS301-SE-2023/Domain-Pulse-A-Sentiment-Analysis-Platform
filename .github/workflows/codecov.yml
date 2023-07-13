@@ -35,8 +35,8 @@ jobs:
         working-directory: ./frontend
         run: |
           npm link @angular/cli
-          ng build --configuration=development
-          ng test --no-watch --code-coverage --browsers ChromeHeadless
+          npm build:dev
+          npm run actions:test
           
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
