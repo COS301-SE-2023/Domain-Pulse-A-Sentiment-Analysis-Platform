@@ -1,0 +1,109 @@
+{
+    "metrics": [
+      {
+        "data": "Caps off another shocking embarrassing disgraceful season , wasted everyone’s time",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0002
+        },
+        "emotions": {
+          "sadness": 0.7339,
+          "disgust": 0.1401,
+          "fear": 0.1259
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0272
+        },
+        "ratios": {
+          "positive": 0.0,
+          "neutral": 0.485,
+          "negative": 0.515
+        }
+      },
+      {
+        "data": "Why must I keep supporting this team?",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0009
+        },
+        "emotions": {
+          "anger": 0.7389,
+          "neutral": 0.1541,
+          "sadness": 0.107
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0004
+        },
+        "ratios": {
+          "positive": 0.326,
+          "neutral": 0.674,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "Sharks promised us a team that will fight and we got that. Problem is they were fighting against themselves. Pumas only had to work for 12 of their points tonight, a whopping 14 were just given to them by unforced errors. I don't know if the constant kicking was a gameplan or just unimaginative play but it wasn't working. You could see it flop the whole 2nd half and there was just no innovation. Einstein once said the definition of insanity is doing the same thing over and over and expecting a different result.",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0026
+        },
+        "emotions": {
+          "surprise": 0.668,
+          "neutral": 0.228,
+          "sadness": 0.1039
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0005
+        },
+        "ratios": {
+          "positive": 0.113,
+          "neutral": 0.635,
+          "negative": 0.251
+        }
+      },
+      {
+        "data": "I'm still incredibly proud of this team. No matter what we saw fight that we hadn't seen before. Something here is being built. With you Sharks no matter the win or loss.",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9999
+        },
+        "emotions": {
+          "surprise": 0.0264,
+          "joy": 0.8551,
+          "neutral": 0.1185
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0005
+        },
+        "ratios": {
+          "positive": 0.265,
+          "neutral": 0.544,
+          "negative": 0.191
+        }
+      },
+      {
+        "data": "When I die I want the whole Sharks squad to lower my coffin into the grave so they can let me down one more time.",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0008
+        },
+        "emotions": {
+          "sadness": 0.8392,
+          "neutral": 0.1223,
+          "fear": 0.0384
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0273
+        },
+        "ratios": {
+          "positive": 0.062,
+          "neutral": 0.524,
+          "negative": 0.414
+        }
+      }
+    ]
+  }

@@ -1,0 +1,151 @@
+{
+    "metrics": [
+      {
+        "data": "I like the decor and waiter was pleasant and friendly. Food was good, taste was good and temperature was just right. I’ll give 9/10 for the food and presentation. I ordered caramel creamy coffee blue and white chocolate and coconut cake. Coffee was blue because bubblegum flavoring was added and it became bit too sweet and single shot of coffee didn’t do much and I didn’t taste caramel, cake was also just average and lacked sponge was not very smooth. I’ll give 6/10. Overall it’s a nice place and I’ll definitely go again.",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9994
+        },
+        "emotions": {
+          "surprise": 0.0122,
+          "neutral": 0.0474,
+          "joy": 0.9404
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0004
+        },
+        "ratios": {
+          "positive": 0.267,
+          "neutral": 0.733,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "Thank you to the staff, specifically Linda, who was our head waitron. Her service was exceptional, she went over and above the call of duty. Always attentive and ready to assist. She was an excellent host to us. I will always ask to be served by her whenever I visit this establishment. We had a beautiful baby shower at the venue. The food was delicious, we were well taken care off. Thank you",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9999
+        },
+        "emotions": {
+          "surprise": 0.0673,
+          "neutral": 0.1938,
+          "joy": 0.739
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0005
+        },
+        "ratios": {
+          "positive": 0.359,
+          "neutral": 0.641,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "Lovely decor but unfortunately the service is not of standard. Asking someone to take food from a platter with their hands is not ladylike. The food however was good. Very accommodating for a bridal shower.",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9983
+        },
+        "emotions": {
+          "neutral": 0.1839,
+          "sadness": 0.649,
+          "joy": 0.1671
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0006
+        },
+        "ratios": {
+          "positive": 0.307,
+          "neutral": 0.619,
+          "negative": 0.074
+        }
+      },
+      {
+        "data": "Such a beautiful place to go for a girls day out. We went for a girl's breakfast and was spoiled so much even if it wasn't a special occasion. Linda our waiter was very nice and did a suberb job in making sure we enjoy every moment. Would highly recommend and will definitely return for their high tea for a bridal party event in the near future.",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9996
+        },
+        "emotions": {
+          "surprise": 0.0787,
+          "neutral": 0.0321,
+          "joy": 0.8892
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0005
+        },
+        "ratios": {
+          "positive": 0.357,
+          "neutral": 0.604,
+          "negative": 0.039
+        }
+      },
+      {
+        "data": "It's a very nice place for ladies. I was dragged there for my grandmothers birthday, but the place is more suited for the ladies. Good food and delicious drinks. Dessert - Carrot cake is amazing",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9999
+        },
+        "emotions": {
+          "surprise": 0.0403,
+          "neutral": 0.0378,
+          "joy": 0.9219
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0006
+        },
+        "ratios": {
+          "positive": 0.384,
+          "neutral": 0.581,
+          "negative": 0.035
+        }
+      },
+      {
+        "data": "I love this spot. It’s perfect for intimate functions also and it is aesthetically pleasing. The service was great and the food was good",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9999
+        },
+        "emotions": {
+          "neutral": 0.0233,
+          "surprise": 0.0071,
+          "joy": 0.9697
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0004
+        },
+        "ratios": {
+          "positive": 0.585,
+          "neutral": 0.415,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "It was my first time booking a table at Goddess cafe in Waterkloof and the place looks amazing, however the service was really terrible, the waiters and staff tried their best to make the place comfortable however the manager was very unprofessional. Upon booking they did not explain that you only allowed to dine for two hours at the restaurant and we found out the hard way when the manager Gorgia came to basically scold at us for having friends that were late in her establishment. This was so bizarre because we were paying for the whole table and I’ve never heard of restaurants only allowing people a two hour dinning time if you had booked a table, more so even shocking that she failed to come tell us this in a professional manner instead of causing a scene, basically making inferences I assume to her white customers that she had to send away because we had open seats on the table we booked. If we were asked to leave because the table was missing people it would have probably been better than spoken to in a condescending and rude manner. Definitely would not recommend this branch.",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0034
+        },
+        "emotions": {
+          "anger": 0.0238,
+          "surprise": 0.7198,
+          "fear": 0.2564
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0004
+        },
+        "ratios": {
+          "positive": 0.156,
+          "neutral": 0.665,
+          "negative": 0.179
+        }
+      }
+    ]
+  }

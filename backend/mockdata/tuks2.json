@@ -1,0 +1,109 @@
+{
+    "metrics": [
+      {
+        "data": "A great university, with world-class facilities, equipment and lecturers. A majority of its course material is sourced from industry leading sources overseas and courses are benchmarked against similar offerings by universities world-wide. My course was extensive, all-inclusive, with ties to industry which provided me the opportunity to get practical, real world experience.",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9993
+        },
+        "emotions": {
+          "neutral": 0.023,
+          "joy": 0.9521,
+          "surprise": 0.0248
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0004
+        },
+        "ratios": {
+          "positive": 0.144,
+          "neutral": 0.856,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "I've studied here, and from what I've seen at other universities, UP campus is hugely under-appreciated. Awesome place to learn and meet up with other students.",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.006
+        },
+        "emotions": {
+          "surprise": 0.3487,
+          "joy": 0.5872,
+          "neutral": 0.0641
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0004
+        },
+        "ratios": {
+          "positive": 0.187,
+          "neutral": 0.813,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "Not sure hows the university itself, however they do races sometimes. Like the Bestmed Tuks race. Absolute pathetic service to register for the race at tuks. No one knows about it and no one knows where you can get it. Staff very rude and extremely unhelpfull!",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0002
+        },
+        "emotions": {
+          "anger": 0.2918,
+          "sadness": 0.638,
+          "surprise": 0.0702
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0461
+        },
+        "ratios": {
+          "positive": 0.06,
+          "neutral": 0.672,
+          "negative": 0.268
+        }
+      },
+      {
+        "data": "Best university in South Africa by far. Their grounds are always clean, and their facilities are top class",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9999
+        },
+        "emotions": {
+          "surprise": 0.0454,
+          "neutral": 0.3355,
+          "joy": 0.6191
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0004
+        },
+        "ratios": {
+          "positive": 0.442,
+          "neutral": 0.558,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "Is someone actually working at this institution, no answer at all after many weeks of calling at admin and faculties... Worst than government departments... Its a shame...",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0001
+        },
+        "emotions": {
+          "surprise": 0.0955,
+          "disgust": 0.8432,
+          "neutral": 0.0613
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.004
+        },
+        "ratios": {
+          "positive": 0.0,
+          "neutral": 0.714,
+          "negative": 0.286
+        }
+      }
+    ]
+  }

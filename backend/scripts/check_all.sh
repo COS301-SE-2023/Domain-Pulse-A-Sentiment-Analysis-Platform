@@ -1,3 +1,3 @@
-python backend/engine/manage.py check
-python backend/profilemanager/manage.py check
-python backend/warehouse/manage.py check
+python engine/manage.py check
+python profilemanager/manage.py check
+python warehouse/manage.py check
