@@ -1,9 +1,0 @@
-\contentsline {section}{\numberline {1}File Structure}{2}{}%
-\contentsline {subsection}{\numberline {1.1}Frontend}{2}{}%
-\contentsline {subsection}{\numberline {1.2}Backend}{2}{}%
-\contentsline {section}{\numberline {2}Naming Conventions}{3}{}%
-\contentsline {subsection}{\numberline {2.1}Frontend}{3}{}%
-\contentsline {subsection}{\numberline {2.2}Backend}{3}{}%
-\contentsline {section}{\numberline {3}Formatting}{5}{}%
-\contentsline {subsection}{\numberline {3.1}Frontend}{5}{}%
-\contentsline {subsection}{\numberline {3.2}Backend}{5}{}%
