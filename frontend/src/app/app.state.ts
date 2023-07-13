@@ -455,6 +455,7 @@ export class AppState {
   checkAuthenticate(ctx: StateContext<AppStateModel>) {
     this.appApi.checkAuthenticate().subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
+        // There is no res.id, one should store the userID in local storage
         ctx.patchState({
           profileId: res.id,
         });
@@ -462,6 +463,7 @@ export class AppState {
       } else return false;
     });
   }
+  
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
     this.appApi
