@@ -35,7 +35,7 @@ jobs:
         working-directory: ./frontend
         run: |
           npm link @angular/cli
-          npm build:dev
+          npm run build:dev
           npm run actions:test
           
       - name: Upload coverage to Codecov
