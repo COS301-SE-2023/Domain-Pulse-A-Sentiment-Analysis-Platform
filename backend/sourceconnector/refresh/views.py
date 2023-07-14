@@ -4,11 +4,13 @@ import json
 from youtube import youtube_connector
 from googlereviews import google_reviews_connector
 from tripadvisor import tripadvisor_connector
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
 
 
+@csrf_exempt
 def refresh_source(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
