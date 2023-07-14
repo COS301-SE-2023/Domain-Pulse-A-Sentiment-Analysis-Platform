@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { BackendService, Domain } from '../backend.service';
 import {
   trigger,
   state,
