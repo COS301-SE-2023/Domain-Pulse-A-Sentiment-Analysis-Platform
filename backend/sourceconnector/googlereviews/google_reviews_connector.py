@@ -53,4 +53,13 @@ def get_google_reviews(maps_url, last_refreshed_timestamp):
 
 
 def handle_request(params):
-    pass
+    google_maps_url = params["maps_url"]
+    last_refresh_timestamp = float(params["last_refresh_timestamp"])
+
+    reviews, latest_retrieval = get_google_reviews(
+        google_maps_url, last_refresh_timestamp
+    )
+
+    return JsonResponse(
+        {"status": "SUCCESS", "newdata": reviews, "latest_retrieval": latest_retrieval}
+    )
