@@ -1,25 +1,15 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
 import json
+from youtube import youtube_connector
+from googlereviews import google_reviews_connector
+from tripadvisor import tripadvisor_connector
+
 
 # Create your views here.
 
 
-def refresh_youtube_video(request: HttpRequest, source_id):
-    if request.method == "POST":
-        raw_data = json.loads(request.body)
-
-    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
-
-
-def refresh_google_reviews(request: HttpRequest, source_id):
-    if request.method == "POST":
-        raw_data = json.loads(request.body)
-
-    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
-
-
-def refresh_tripadvisor(request: HttpRequest, source_id):
+def refresh_source(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
 
