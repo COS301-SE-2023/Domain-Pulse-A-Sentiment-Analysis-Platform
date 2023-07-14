@@ -31,7 +31,7 @@ def get_comments_by_video_id(video_id: str, last_refresh_time):
 
             if last_updated_timestamp > last_refresh_time:
                 comments.append(
-                    {"text": original_text, "timestamp": last_updated_timestamp}
+                    {"text": original_text, "timestamp": int(last_updated_timestamp)}
                 )
 
                 if last_updated_timestamp > latest_retrieval:
