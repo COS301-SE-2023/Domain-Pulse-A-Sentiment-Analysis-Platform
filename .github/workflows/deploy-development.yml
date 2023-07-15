@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Check Backend Action
-        uses: ./.github/workflows/backend-build
+        uses: ./.github/workflows/backend-build.yml
 
       # - name: Setup Up Python 3.8
       #   uses: actions/setup-python@v2
@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build Action
-        uses: ./.github/workflows/frontend-build
+        uses: ./.github/workflows/frontend-build.yml
 
       # - name: setup port .env
       #   working-directory: ./backend
