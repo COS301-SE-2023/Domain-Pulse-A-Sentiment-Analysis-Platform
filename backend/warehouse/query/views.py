@@ -122,64 +122,56 @@ def refresh_source(request: HttpRequest):
     # 1. Given the appropriate source, invoke the SourceConnector to get new data (ie: past the most recent timestamp)
     # 2. Send the new data from 1 to the analyser (engine)
     # 3. Store the data with its computed metrics in the database
+    # 3.1 Update the last_refreshed field in the domains database for the source
     # 4. (Frontend concern) - call the get_data_dashboard_source/domain endpoint to refresh the frontend dashboard
 
-    # STUBBED VERSION
-    # 1. Given the source_id, query the database to get the data for the source
-    # 2. Next, invoke the source connector to get new data
-    # 3. Send the new data to the analyser for the metrics to be computed
-    # 4. Combining the new and the old data, send it to the aggregator
-    # 5. Return the result of the aggregator
+    DOMAINS_ENDPOINT = "http://localhost:8000/domains/get_source"
+    SOURCE_CONNECTOR_ENDPOINT = "http://localhost:8003/refresh/source/"
+    ANALYSER_ENDPOINT = "http://localhost:8001/analyser/compute/"
 
     if request.method == "POST":
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
 
-        # ------------------- VERIFYING ACCESS -----------------------
-        check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[int(source_id_raw)]
-        )
-        if not check_passed:
-            return JsonResponse({"status": "FAILURE", "details": details})
-        # ------------------------------------------------------------
+        # 0. Make a request to the domains service to get the info on the source (this also authenticates the user)
 
-        # 1
-        individual_records = sentiment_record_model.get_records_by_source_id(
-            int(source_id_raw)
-        )
+        # 1.
+        source_type = "youtube"
+        source_params = {"video_id": "446E-r0rXHI", "last_refresh_timestamp": 0}
 
-        for record in individual_records:
-            record["_id"] = ""
+        data = {"source": source_type, "params": source_params}
+        response = requests.post(SOURCE_CONNECTOR_ENDPOINT, json=data)
 
-        # 2
-        sid = int(source_id_raw)
-        if sid == 0:
-            url = "http://localhost:8003/refresh/googlereviews/0/"
-        elif sid == 1:
-            url = "http://localhost:8003/refresh/googlereviews/1/"
-        elif sid == 2:
-            url = "http://localhost:8003/refresh/instagram/2/"
-        elif sid == 3:
-            url = "http://localhost:8003/refresh/instagram/3/"
-        elif sid == 4:
-            url = "http://localhost:8003/refresh/googlereviews/4/"
-        response_from_source_connector = requests.get(url)
-        if response_from_source_connector.status_code == 200:
-            pass
-        else:
+        if response.status_code != 200:
             return JsonResponse(
                 {
                     "status": "FAILURE",
                     "details": "Could not connect to Source Connector",
                 }
             )
-        new_data = response_from_source_connector.json()["new_data"]
 
-        # 3
-        request_to_engine_body = {"data": new_data}
-        url = "http://localhost:8001/analyser/compute/"
+        resp_data = response.json()
+        status = resp_data["status"]
+        new_data = resp_data["newdata"]
+        latest_retrieval = resp_data["latest_retrieval"]
+
+        if status == "FAILURE":
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Source Connector",
+                }
+            )
+
+        # 2.
+
+        raw_new_data = []
+        for x in new_data:
+            raw_new_data.append(x["text"])
+
+        request_to_engine_body = {"data": raw_new_data}
         response_from_analyser = requests.post(
-            url, data=json.dumps(request_to_engine_body)
+            ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
         )
         if response_from_analyser.status_code == 200:
             pass
@@ -192,31 +184,116 @@ def refresh_source(request: HttpRequest):
             )
         new_data_metrics = response_from_analyser.json()["metrics"]
 
-        # 4
-        data_to_aggregate = []
-        data_to_aggregate += new_data_metrics
-        data_to_aggregate += individual_records
+        data_to_store = []
+        for metrics, stamped in zip(new_data_metrics, new_data):
+            metrics["timestamp"] = stamped["timestamp"]
+            data_to_store.append(metrics)
 
-        request_to_engine_body = {"metrics": data_to_aggregate}
-        url = "http://localhost:8001/aggregator/aggregate/"
-        response_from_aggregator = requests.post(
-            url, data=json.dumps(request_to_engine_body)
+        # 3.
+        for x in data_to_store:
+            sentiment_record_model.add_record(x)
+
+        # 3.1 Make a request to the domains service to update the last refreshed field
+
+        # 4.
+        return JsonResponse(
+            {"status": "SUCCESS", "details": "Data source refreshed successfully"}
         )
 
-        if response_from_aggregator.status_code == 200:
-            # 5
-            response = {}
-            response["status"] = "SUCCESS"
-
-            agg_response_body = response_from_aggregator.json()
-
-            response["aggregated_metrics"] = agg_response_body["overall"]
-            response["individual_metrics"] = agg_response_body["individual_data"]
-
-            return JsonResponse(response)
-        else:
-            return JsonResponse(
-                {"status": "FAILURE", "details": "Could not connect to Aggregator"}
-            )
-
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+    # STUBBED VERSION
+    # 1. Given the source_id, query the database to get the data for the source
+    # 2. Next, invoke the source connector to get new data
+    # 3. Send the new data to the analyser for the metrics to be computed
+    # 4. Combining the new and the old data, send it to the aggregator
+    # 5. Return the result of the aggregator
+
+    # if request.method == "POST":
+    #     raw_data = json.loads(request.body)
+    #     source_id_raw = raw_data["source_id"]
+
+    #     # ------------------- VERIFYING ACCESS -----------------------
+    #     check_passed, details = auth_checks.verify_user_owns_source_ids(
+    #         original_request=request, source_id_list=[int(source_id_raw)]
+    #     )
+    #     if not check_passed:
+    #         return JsonResponse({"status": "FAILURE", "details": details})
+    #     # ------------------------------------------------------------
+
+    #     # 1
+    #     individual_records = sentiment_record_model.get_records_by_source_id(
+    #         int(source_id_raw)
+    #     )
+
+    #     for record in individual_records:
+    #         record["_id"] = ""
+
+    #     # 2
+    #     sid = int(source_id_raw)
+    #     if sid == 0:
+    #         url = "http://localhost:8003/refresh/googlereviews/0/"
+    #     elif sid == 1:
+    #         url = "http://localhost:8003/refresh/googlereviews/1/"
+    #     elif sid == 2:
+    #         url = "http://localhost:8003/refresh/instagram/2/"
+    #     elif sid == 3:
+    #         url = "http://localhost:8003/refresh/instagram/3/"
+    #     elif sid == 4:
+    #         url = "http://localhost:8003/refresh/googlereviews/4/"
+    #     response_from_source_connector = requests.get(url)
+    #     if response_from_source_connector.status_code == 200:
+    #         pass
+    #     else:
+    #         return JsonResponse(
+    #             {
+    #                 "status": "FAILURE",
+    #                 "details": "Could not connect to Source Connector",
+    #             }
+    #         )
+    #     new_data = response_from_source_connector.json()["new_data"]
+
+    #     # 3
+    #     request_to_engine_body = {"data": new_data}
+    #     url = "http://localhost:8001/analyser/compute/"
+    #     response_from_analyser = requests.post(
+    #         url, data=json.dumps(request_to_engine_body)
+    #     )
+    #     if response_from_analyser.status_code == 200:
+    #         pass
+    #     else:
+    #         return JsonResponse(
+    #             {
+    #                 "status": "FAILURE",
+    #                 "details": "Could not connect to Analyser",
+    #             }
+    #         )
+    #     new_data_metrics = response_from_analyser.json()["metrics"]
+
+    #     # 4
+    #     data_to_aggregate = []
+    #     data_to_aggregate += new_data_metrics
+    #     data_to_aggregate += individual_records
+
+    #     request_to_engine_body = {"metrics": data_to_aggregate}
+    #     url = "http://localhost:8001/aggregator/aggregate/"
+    #     response_from_aggregator = requests.post(
+    #         url, data=json.dumps(request_to_engine_body)
+    #     )
+
+    #     if response_from_aggregator.status_code == 200:
+    #         # 5
+    #         response = {}
+    #         response["status"] = "SUCCESS"
+
+    #         agg_response_body = response_from_aggregator.json()
+
+    #         response["aggregated_metrics"] = agg_response_body["overall"]
+    #         response["individual_metrics"] = agg_response_body["individual_data"]
+
+    #         return JsonResponse(response)
+    #     else:
+    #         return JsonResponse(
+    #             {"status": "FAILURE", "details": "Could not connect to Aggregator"}
+    #         )
+
+    # return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
