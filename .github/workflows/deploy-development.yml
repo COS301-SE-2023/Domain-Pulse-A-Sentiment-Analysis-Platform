@@ -7,28 +7,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
 
-      - name: setup .envs
-        working-directory: ./backend
-        run: |
-          echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
-          echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
-          mkdir ~/.ssh
-          echo "${{ secrets.POSTGRES_USER_PRIV_KEY }}" >> ~/.ssh/posgresql-user-priv_key
+      - name: Check Backend Action
+        uses: ./.github/workflows/backend-build
 
-      - name: Install Dependencies
-        run: |
-          cd backend
-          pip install pipenv
-          pipenv sync
-      - name: Verify backend
-        run: |
-          cd backend
-          pipenv run check_all
+      # - name: Setup Up Python 3.8
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: 3.8
+
+      # - name: setup .envs
+      #   working-directory: ./backend
+      #   run: |
+      #     echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
+      #     echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+      #     mkdir ~/.ssh
+      #     echo "${{ secrets.POSTGRES_USER_PRIV_KEY }}" >> ~/.ssh/posgresql-user-priv_key
+
+      # - name: Install Dependencies
+      #   run: |
+      #     cd backend
+      #     pip install pipenv
+      #     pipenv sync
+      # - name: Verify backend
+      #   run: |
+      #     cd backend
+      #     pipenv run check_all
 
   build_frontend:
     runs-on: ubuntu-latest
@@ -36,18 +40,21 @@ jobs:
       - name: setup
         uses: actions/checkout@v3
 
-      - name: setup port .env
-        working-directory: ./backend
-        run: |
-          echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
+      - name: Build Action
+        uses: ./.github/workflows/frontend-build
 
-      - name: install dependancies
+      # - name: setup port .env
+      #   working-directory: ./backend
+      #   run: |
+      #     echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
 
-        run: |
-          cd frontend
-          npm ci
-          npm link @angular/cli
-          npm run build:dev
+      # - name: install dependancies
+
+      #   run: |
+      #     cd frontend
+      #     npm ci
+      #     npm link @angular/cli
+      #     npm run build:dev
 
   update_deployment_environment:
     needs: [check_backend, build_frontend]
