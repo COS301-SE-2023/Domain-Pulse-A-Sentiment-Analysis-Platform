@@ -1,11 +1,5 @@
-name: Check backend code builds
+name: Backend Checks
 on:
-  push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - main
   workflow_call:
 
 jobs:
@@ -51,3 +45,13 @@ jobs:
         working-directory: ./backend
         run: |
           pipenv run check_all
+
+      - name: Run Tests
+        working-directory: ./backend
+        run: pipenv run coverage_gen
+        
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-test
+          path: backend/coverage.lcov

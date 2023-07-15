@@ -1,13 +1,5 @@
----
-name: Check frontend code builds
+name: Frontend Checks
 on:
-  push:
-    branches:
-      - "frontend/**"
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_call:
 
 jobs:
