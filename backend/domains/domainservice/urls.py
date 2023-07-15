@@ -10,4 +10,5 @@ urlpatterns = [
     path("create_param", views.create_param),
     path("delete_param", views.delete_param),
     path("get_source", views.get_source),
+    path("update_last_refresh", views.update_last_refresh),
 ]

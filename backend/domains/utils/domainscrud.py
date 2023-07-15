@@ -27,6 +27,31 @@ def get_source(source_id):
     return final_source
 
 
+def update_last_refresh(source_id, new_last_refresh):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    try:
+        query = {"sources.source_id": source_id}
+        result = collection.find_one(query)
+
+        for source in result["sources"]:
+            if source["source_id"] == source_id:
+                source["last_refresh_timestamp"] = new_last_refresh
+                break
+
+        collection.update_one(
+            {"_id": result["_id"]}, {"$set": {"sources": result["sources"]}}
+        )
+    except Exception:
+        return False
+
+    client.close()
+
+    return True
+
+
 def create_domain(domain_name, domain_icon, description):
     client = pymongo.MongoClient(mongo_host, mongo_port)
     db = client[mongo_db]

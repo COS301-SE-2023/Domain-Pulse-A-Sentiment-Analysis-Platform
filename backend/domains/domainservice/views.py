@@ -9,6 +9,17 @@ from utils import domainscrud
 
 
 @csrf_exempt
+def update_last_refresh(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        if domainscrud.update_last_refresh(
+            raw_data["source_id", raw_data["new_last_refresh"]]
+        ):
+            return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE"})
+
+
+@csrf_exempt
 def get_source(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)

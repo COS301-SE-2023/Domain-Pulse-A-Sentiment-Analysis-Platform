@@ -126,6 +126,7 @@ def refresh_source(request: HttpRequest):
     # 4. (Frontend concern) - call the get_data_dashboard_source/domain endpoint to refresh the frontend dashboard
 
     GET_SOURCE_ENDPOINT = "http://localhost:8000/domains/get_source"
+    UPDATE_LAST_REFRESHED_ENDPOINT = "http://localhost:8000/domains/create_param"
     SOURCE_CONNECTOR_ENDPOINT = "http://localhost:8003/refresh/source/"
     ANALYSER_ENDPOINT = "http://localhost:8001/analyser/compute/"
 
@@ -215,6 +216,27 @@ def refresh_source(request: HttpRequest):
             sentiment_record_model.add_record(x)
 
         # 3.1 Make a request to the domains service to update the last refreshed field
+        data = {"source_id": source_id_raw}
+        response = requests.post(GET_SOURCE_ENDPOINT, json=data)
+
+        if response.status_code != 200:
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Domains Service",
+                }
+            )
+        elif response.json()["status"] == "FAILURE":
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Error interacting with the Domains database",
+                }
+            )
+        else:
+            source_details = response.json()["params"]
+            type = source_details["source_type"]
+            params = source_details
 
         # 4.
         return JsonResponse(
