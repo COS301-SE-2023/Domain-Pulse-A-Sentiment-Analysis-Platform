@@ -28,14 +28,14 @@ def get_dashboard_data_source(request: HttpRequest):
 
         # ------------------- VERIFYING ACCESS -----------------------
         check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[int(source_id_raw)]
+            original_request=request, source_id_list=[source_id_raw]
         )
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         individual_records = sentiment_record_model.get_records_by_source_id(
-            int(source_id_raw)
+            source_id_raw
         )
 
         for record in individual_records:
@@ -87,7 +87,7 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         for source_id in source_ids_raw:
             individual_records += sentiment_record_model.get_records_by_source_id(
-                int(source_id)
+                source_id
             )
 
         for record in individual_records:

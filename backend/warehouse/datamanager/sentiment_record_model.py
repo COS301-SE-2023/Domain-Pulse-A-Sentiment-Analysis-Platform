@@ -19,7 +19,7 @@ def get_records_by_source_id(source_id):
     db = client[db_connection.DB_NAME]
     collection = db[db_connection.SENTIMENT_RECORDS]
 
-    query = {"source_id": int(source_id)}
+    query = {"source_id": source_id}
 
     result = collection.find(query)
 
