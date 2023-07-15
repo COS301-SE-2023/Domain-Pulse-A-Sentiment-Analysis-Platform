@@ -76,7 +76,12 @@ def add_source(request: HttpRequest):
         # ------------------------------------------------------------
         return JsonResponse(
             domainscrud.add_source(
-                raw_data["id"], raw_data["source_name"], raw_data["source_icon"]
+                raw_data["id"],
+                raw_data["source_name"],
+                raw_data["source_icon"],
+                raw_data[
+                    "params"
+                ],  # Includes source type, last_refreshed_timestamp, and any other params
             )
         )
     return JsonResponse({"status": "FAILURE"})

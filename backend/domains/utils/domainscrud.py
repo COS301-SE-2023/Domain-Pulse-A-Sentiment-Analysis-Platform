@@ -82,7 +82,7 @@ def get_domain(id):
     return result
 
 
-def add_source(domain_id, source_name, source_image_name):
+def add_source(domain_id, source_name, source_image_name, params):
     client = pymongo.MongoClient(mongo_host, mongo_port)
     db = client[mongo_db]
     collection = db[mongo_collection]
@@ -96,7 +96,7 @@ def add_source(domain_id, source_name, source_image_name):
         "source_id": (new_id),
         "source_name": source_name,
         "source_icon": source_image_name,
-        "params": {},
+        "params": params,
     }
     collection.update_one(result, {"$push": {"sources": new_source}})
     result["sources"].append(new_source)
