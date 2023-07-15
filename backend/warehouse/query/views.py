@@ -156,6 +156,9 @@ def refresh_source(request: HttpRequest):
             source_details = response.json()["source"]["params"]
             type = source_details["source_type"]
             params = source_details
+            params["last_refresh_timestamp"] = response.json()["source"][
+                "last_refresh_timestamp"
+            ]
 
         # 1.
         source_type = type
