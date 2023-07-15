@@ -9,9 +9,11 @@ on:
 jobs:
   test_frontend:
     uses: ./.github/workflows/frontend-build.yml
+    secrets: inherit
 
   test_backend:
     uses: ./.github/workflows/backend-build.yml
+    secrets: inherit
 
   upload_reslts:
     runs-on: ubuntu-latest

@@ -6,9 +6,11 @@ on:
 jobs:
   check_backend:
     uses: ./.github/workflows/backend-build.yml
+    secrets: inherit
 
   build_frontend:
     uses: ./.github/workflows/frontend-build.yml
+    secrets: inherit
 
   update_deployment_environment:
     needs: [check_backend, build_frontend]
