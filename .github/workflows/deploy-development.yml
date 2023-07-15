@@ -3,22 +3,18 @@ on:
   push:
     branches: [dev]
 
-permissions:
-  contents: read
-
 jobs:
   check_backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: setup
-        uses: actions/checkout@v3
+      uses: ./.github/workflows/backend-build.yml
+    # runs-on: ubuntu-latest
+    # steps:
+    #   - name: setup
+    #     uses: actions/checkout@v3
 
-      - name: debug
-        run: |
-          ls ./.github/workflows
+    #   - name: debug
+    #     run: |
+    #       ls ./.github/workflows
 
-      - name: Check Backend Action
-        uses: ./.github/workflows/backend-build.yml
 
       # - name: Setup Up Python 3.8
       #   uses: actions/setup-python@v2
