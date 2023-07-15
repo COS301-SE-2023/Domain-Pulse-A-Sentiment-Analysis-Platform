@@ -11,11 +11,16 @@ on:
   workflow_call:
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     steps:
       - name: setup
         uses: actions/checkout@v3
+
+      - name: setup port .env
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
 
       - name: cache dependencies
         id: npm-cache
@@ -41,3 +46,14 @@ jobs:
         with:
           name: frontend-build
           path: frontend/dist
+
+      - name: Test
+        working-directory: ./frontend
+        run: |
+          npm run actions:test
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-test
+          path: frontend/converage
