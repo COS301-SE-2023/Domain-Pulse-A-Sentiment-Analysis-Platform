@@ -125,7 +125,7 @@ def refresh_source(request: HttpRequest):
     # 3.1 Update the last_refreshed field in the domains database for the source
     # 4. (Frontend concern) - call the get_data_dashboard_source/domain endpoint to refresh the frontend dashboard
 
-    DOMAINS_ENDPOINT = "http://localhost:8000/domains/get_source"
+    GET_SOURCE_ENDPOINT = "http://localhost:8000/domains/get_source"
     SOURCE_CONNECTOR_ENDPOINT = "http://localhost:8003/refresh/source/"
     ANALYSER_ENDPOINT = "http://localhost:8001/analyser/compute/"
 
@@ -134,10 +134,31 @@ def refresh_source(request: HttpRequest):
         source_id_raw = raw_data["source_id"]
 
         # 0. Make a request to the domains service to get the info on the source (this also authenticates the request)
+        data = {"source_id": source_id_raw}
+        response = requests.post(GET_SOURCE_ENDPOINT, json=data)
+
+        if response.status_code != 200:
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Domains Service",
+                }
+            )
+        elif response.json()["status"] == "FAILURE":
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Error interacting with the Domains database",
+                }
+            )
+        else:
+            source_details = response.json()["params"]
+            type = source_details["source_type"]
+            params = source_details
 
         # 1.
-        source_type = "youtube"
-        source_params = {"video_id": "446E-r0rXHI", "last_refresh_timestamp": 0}
+        source_type = type
+        source_params = params
 
         data = {"source": source_type, "params": source_params}
         response = requests.post(SOURCE_CONNECTOR_ENDPOINT, json=data)
