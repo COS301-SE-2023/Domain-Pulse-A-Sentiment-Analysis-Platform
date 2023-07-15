@@ -2,6 +2,10 @@ name: Development deployment
 on:
   push:
     branches: [dev]
+
+permissions:
+  contents: read
+
 jobs:
   check_backend:
     runs-on: ubuntu-latest
