@@ -70,9 +70,12 @@ def create_domain(request: HttpRequest):
         # ------------------------------------------------------------
 
         return JsonResponse(
-            domainscrud.create_domain(
-                raw_data["name"], raw_data["icon"], raw_data["description"]
-            )
+            {
+                "status": "SUCCESS",
+                "new_domain": domainscrud.create_domain(
+                    raw_data["name"], raw_data["icon"], raw_data["description"]
+                ),
+            }
         )
     return JsonResponse({"status": "FAILURE"})
 
@@ -90,7 +93,13 @@ def delete_domain(request: HttpRequest):
         #     return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
-        return JsonResponse(domainscrud.delete_domain(raw_data["id"]))
+        return JsonResponse(
+            {
+                "status": "SUCCESS",
+                "confirmation": domainscrud.delete_domain(raw_data["id"]),
+            }
+        )
+
     return JsonResponse({"status": "FAILURE"})
 
 
@@ -100,14 +109,16 @@ def get_domain(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        check_passed, details = auth_checks.verify_user_owns_domain_ids(
-            original_request=request, domain_id_list=[(raw_data["id"])]
-        )
-        if not check_passed:
-            return JsonResponse({"status": "FAILURE", "details": details})
+        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
+        #     original_request=request, domain_id_list=[(raw_data["id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
-        return JsonResponse(domainscrud.get_domain(raw_data["id"]))
+        return JsonResponse(
+            {"status": "SUCCESS", "domain": domainscrud.get_domain(raw_data["id"])}
+        )
     return JsonResponse({"status": "FAILURE"})
 
 
@@ -126,12 +137,15 @@ def add_source(request: HttpRequest):
         params = raw_data["params"]
 
         return JsonResponse(
-            domainscrud.add_source(
-                raw_data["id"],
-                raw_data["source_name"],
-                raw_data["source_icon"],
-                params,  # includes the source type too
-            )
+            {
+                "status": "SUCCESS",
+                "domain": domainscrud.add_source(
+                    raw_data["id"],
+                    raw_data["source_name"],
+                    raw_data["source_icon"],
+                    params,  # includes the source type too
+                ),
+            }
         )
     return JsonResponse({"status": "FAILURE"})
 
@@ -150,7 +164,12 @@ def remove_source(request: HttpRequest):
         # ------------------------------------------------------------
 
         return JsonResponse(
-            domainscrud.remove_source(raw_data["id"], raw_data["source_id"])
+            {
+                "status": "SUCCESS",
+                "confirmation": domainscrud.remove_source(
+                    raw_data["id"], raw_data["source_id"]
+                ),
+            }
         )
     return JsonResponse({"status": "FAILURE"})
 
@@ -169,12 +188,15 @@ def create_param(request: HttpRequest):
         # ------------------------------------------------------------
 
         return JsonResponse(
-            domainscrud.create_param(
-                raw_data["id"],
-                raw_data["source_id"],
-                raw_data["key"],
-                raw_data["value"],
-            )
+            {
+                "status": "SUCCESS",
+                "confirmation": domainscrud.create_param(
+                    raw_data["id"],
+                    raw_data["source_id"],
+                    raw_data["key"],
+                    raw_data["value"],
+                ),
+            }
         )
     return JsonResponse({"status": "FAILURE"})
 
@@ -193,8 +215,11 @@ def delete_param(request: HttpRequest):
         # ------------------------------------------------------------
 
         return JsonResponse(
-            domainscrud.delete_param(
-                raw_data["id"], raw_data["source_id"], raw_data["key"]
-            )
+            {
+                "status": "SUCCESS",
+                "confirmation": domainscrud.delete_param(
+                    raw_data["id"], raw_data["source_id"], raw_data["key"]
+                ),
+            }
         )
     return JsonResponse({"status": "FAILURE"})
