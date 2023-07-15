@@ -14,15 +14,17 @@ def get_source(source_id):
     db = client[mongo_db]
     collection = db[mongo_collection]
 
-    query = {"sources.source_id": source_id}
+    query = {"sources.source_id": ObjectId(source_id)}
     result = collection.find_one(query)
 
     final_source = {}
     for source in result["sources"]:
-        if source["source_id"] == source_id:
+        if source["source_id"] == ObjectId(source_id):
             final_source = source
 
     client.close()
+
+    final_source["source_id"] = str(final_source["source_id"])
 
     return final_source
 
@@ -31,6 +33,8 @@ def update_last_refresh(source_id, new_last_refresh):
     client = pymongo.MongoClient(mongo_host, mongo_port)
     db = client[mongo_db]
     collection = db[mongo_collection]
+
+    source_id = ObjectId(source_id)
 
     try:
         query = {"sources.source_id": source_id}
@@ -48,6 +52,8 @@ def update_last_refresh(source_id, new_last_refresh):
         return False
 
     client.close()
+
+    print("got here")
 
     return True
 
@@ -121,6 +127,7 @@ def add_source(domain_id, source_name, source_image_name, params):
         "source_id": (new_id),
         "source_name": source_name,
         "source_icon": source_image_name,
+        "last_refresh_timestamp": 0,
         "params": params,
     }
     collection.update_one(result, {"$push": {"sources": new_source}})

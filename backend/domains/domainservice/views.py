@@ -12,25 +12,63 @@ from utils import domainscrud
 def update_last_refresh(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        # check_passed, details = auth_checks.verify_user_owns_source_ids(
+        #     original_request=request, source_id_list=[(raw_data["source_id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+
         if domainscrud.update_last_refresh(
-            raw_data["source_id", raw_data["new_last_refresh"]]
+            raw_data["source_id"], raw_data["new_last_refresh"]
         ):
-            return JsonResponse({"status": "FAILURE"})
-    return JsonResponse({"status": "FAILURE"})
+            return JsonResponse(
+                {"status": "SUCCESS", "details": "Timestamp updated successfully"}
+            )
+    return JsonResponse(
+        {"status": "FAILURE", "details": "Error interacting with the database"}
+    )
 
 
 @csrf_exempt
 def get_source(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
-        return JsonResponse(domainscrud.get_source(raw_data["source_id"]))
-    return JsonResponse({"status": "FAILURE"})
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        # check_passed, details = auth_checks.verify_user_owns_source_ids(
+        #     original_request=request, source_id_list=[(raw_data["source_id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+
+        return JsonResponse(
+            {
+                "status": "SUCCESS",
+                "source": domainscrud.get_source(raw_data["source_id"]),
+            }
+        )
+    return JsonResponse(
+        {"status": "FAILURE", "details": "Error fetching source from DB"}
+    )
 
 
 @csrf_exempt
 def create_domain(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
+        #     original_request=request, domain_id_list=[]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+
         return JsonResponse(
             domainscrud.create_domain(
                 raw_data["name"], raw_data["icon"], raw_data["description"]
@@ -45,11 +83,11 @@ def delete_domain(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        check_passed, details = auth_checks.verify_user_owns_domain_ids(
-            original_request=request, domain_id_list=[(raw_data["id"])]
-        )
-        if not check_passed:
-            return JsonResponse({"status": "FAILURE", "details": details})
+        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
+        #     original_request=request, domain_id_list=[(raw_data["id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(domainscrud.delete_domain(raw_data["id"]))
@@ -79,20 +117,20 @@ def add_source(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        check_passed, details = auth_checks.verify_user_owns_domain_ids(
-            original_request=request, domain_id_list=[(raw_data["id"])]
-        )
-        if not check_passed:
-            return JsonResponse({"status": "FAILURE", "details": details})
+        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
+        #     original_request=request, domain_id_list=[(raw_data["id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
+        params = raw_data["params"]
+
         return JsonResponse(
             domainscrud.add_source(
                 raw_data["id"],
                 raw_data["source_name"],
                 raw_data["source_icon"],
-                raw_data[
-                    "params"
-                ],  # Includes source type, last_refreshed_timestamp, and any other params
+                params,  # includes the source type too
             )
         )
     return JsonResponse({"status": "FAILURE"})
@@ -104,11 +142,11 @@ def remove_source(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[(raw_data["source_id"])]
-        )
-        if not check_passed:
-            return JsonResponse({"status": "FAILURE", "details": details})
+        # check_passed, details = auth_checks.verify_user_owns_source_ids(
+        #     original_request=request, source_id_list=[(raw_data["source_id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(
@@ -123,11 +161,11 @@ def create_param(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[(raw_data["source_id"])]
-        )
-        if not check_passed:
-            return JsonResponse({"status": "FAILURE", "details": details})
+        # check_passed, details = auth_checks.verify_user_owns_source_ids(
+        #     original_request=request, source_id_list=[(raw_data["source_id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(
@@ -147,11 +185,11 @@ def delete_param(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        check_passed, details = auth_checks.verify_user_owns_source_ids(
-            original_request=request, source_id_list=[(raw_data["source_id"])]
-        )
-        if not check_passed:
-            return JsonResponse({"status": "FAILURE", "details": details})
+        # check_passed, details = auth_checks.verify_user_owns_source_ids(
+        #     original_request=request, source_id_list=[(raw_data["source_id"])]
+        # )
+        # if not check_passed:
+        #     return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(

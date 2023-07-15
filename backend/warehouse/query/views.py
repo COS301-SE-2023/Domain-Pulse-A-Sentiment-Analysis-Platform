@@ -153,7 +153,7 @@ def refresh_source(request: HttpRequest):
                 }
             )
         else:
-            source_details = response.json()["params"]
+            source_details = response.json()["source"]["params"]
             type = source_details["source_type"]
             params = source_details
 
