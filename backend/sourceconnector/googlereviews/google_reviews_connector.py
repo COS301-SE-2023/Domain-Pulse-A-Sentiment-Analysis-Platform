@@ -33,7 +33,7 @@ def get_google_reviews(maps_url, last_refreshed_timestamp):
         region=COUNTRY,
     )
 
-    latest_retrieval = 0
+    latest_retrieval = last_refreshed_timestamp
 
     reviews = results[0]["reviews_data"]
 

@@ -51,7 +51,7 @@ def get_tripadvisor_reviews(url, last_refresh_timestamp):
 
     review_data = response.json()["data"][0]
 
-    latest_retrieval = 0
+    latest_retrieval = last_refresh_timestamp
     ret_data = []
 
     for review in review_data:

@@ -28,14 +28,14 @@ def tokenize(data: str):
 
 
 # Stopword removal
-def remove_stopwords(tokens):
-    # nltk.download("stopwords") - uncomment for first execution
-    sws = stopwords.words("english")
-    new_tokens = []
-    for t in tokens:
-        if t not in sws:
-            new_tokens.append(t)
-    return new_tokens[:512]
+# def remove_stopwords(tokens):
+#     # nltk.download("stopwords") - uncomment for first execution
+#     sws = stopwords.words("english")
+#     new_tokens = []
+#     for t in tokens:
+#         if t not in sws:
+#             new_tokens.append(t)
+#     return new_tokens[:512]
 
 
 # Lemmatization

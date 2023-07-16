@@ -19,7 +19,7 @@ def get_comments_by_video_id(video_id: str, last_refresh_time):
 
     comments = []
 
-    latest_retrieval = 0
+    latest_retrieval = last_refresh_time
 
     if "items" in data:
         for item in data["items"]:
