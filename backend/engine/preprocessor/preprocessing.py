@@ -35,7 +35,7 @@ def remove_stopwords(tokens):
     for t in tokens:
         if t not in sws:
             new_tokens.append(t)
-    return new_tokens
+    return new_tokens[:512]
 
 
 # Lemmatization
@@ -52,4 +52,6 @@ def process_data(raw_text: str):
     tokens = remove_stopwords(tokens)
     for index, token in enumerate(tokens):
         tokens[index] = lemmatize_word(token)
-    return " ".join(tokens)
+    tokens = tokens[:512]
+    # print(tokens)
+    return tokens

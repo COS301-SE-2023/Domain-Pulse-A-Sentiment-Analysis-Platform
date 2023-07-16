@@ -107,6 +107,7 @@ def summarize_toxicity(toxicity):
 def analyse_content(data):
     originalData = data
     data = preprocessing.process_data(data)
+    # print(str(len(data)) + " " + data)
 
     vader = ANALYSER.polarity_scores(data)
     emotions = EMOTION_CLASSIFIER(data)

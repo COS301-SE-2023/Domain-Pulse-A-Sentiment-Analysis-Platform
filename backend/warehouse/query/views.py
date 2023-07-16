@@ -194,9 +194,12 @@ def refresh_source(request: HttpRequest):
             raw_new_data.append(x["text"])
 
         request_to_engine_body = {"data": raw_new_data}
+        # print(request_to_engine_body)
+
         response_from_analyser = requests.post(
             ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
         )
+
         if response_from_analyser.status_code == 200:
             pass
         else:
