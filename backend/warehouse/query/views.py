@@ -221,7 +221,7 @@ def refresh_source(request: HttpRequest):
         for x in data_to_store:
             sentiment_record_model.add_record(x)
 
-        # 3.1 Make a request to the domains service to update the last refreshed field
+        # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
         data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
         response = requests.post(UPDATE_LAST_REFRESHED_ENDPOINT, json=data)
 
