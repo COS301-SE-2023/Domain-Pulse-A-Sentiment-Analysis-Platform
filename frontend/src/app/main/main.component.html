@@ -1,0 +1,40 @@
+<div class="flex-row app-container">
+  <dp-sidebar
+    [expanded]="!sidebarCollapsed"
+    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (mouseenter)="openSidebar()"
+    (mouseleave)="colapseSidebar()"
+  ></dp-sidebar>
+  <div
+    *ngIf="selectedDomain$ | async as selectedDomain"
+    class="flex-column"
+    style="width: 92%; gap: 1.3rem"
+  >
+    <div class="header flex-row centered" style="gap: 1.2rem">
+      <img
+        [src]="'../assets/' + selectedDomain.imageUrl"
+        alt="Starbucks loog"
+        height="80%"
+      />
+      <div class="flex-column">
+        <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
+        <p class="domainDesc">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
+          magni ea sint, repellendus quam dolor consequatur sequi.
+        </p>
+      </div>
+    </div>
+
+    <source-selector class="flex-row align-center"></source-selector>
+
+    <statistic-selector></statistic-selector>
+
+    <div
+      class="source-manager flex-row"
+      style="gap: 1rem; height: 43%; width: 100%"
+    >
+      <graph-selector></graph-selector>
+      <comments-view></comments-view>
+    </div>
+  </div>
+</div>

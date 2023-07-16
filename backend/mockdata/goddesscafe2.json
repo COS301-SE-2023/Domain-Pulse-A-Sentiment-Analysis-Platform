@@ -1,0 +1,88 @@
+{
+    "metrics": [
+      {
+        "data": "Really wish I had read reviews before going there to host an event👎👎👎honestly I don't think you can take serving starters that we didn't order and giving people food they're allergic to even after stating their allergies as a misunderstanding of what you offer, unless that's the type of service you give people.",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.002
+        },
+        "emotions": {
+          "neutral": 0.445,
+          "sadness": 0.3179,
+          "surprise": 0.2372
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0007
+        },
+        "ratios": {
+          "positive": 0.065,
+          "neutral": 0.782,
+          "negative": 0.153
+        }
+      },
+      {
+        "data": "As a joburger, I’m so jealous that this Goddess cafe is so much better , definitely worth the drive. Amazing waiters and I had the best quiche ever! The ladies certainly felt like Goddesses! How cool are the hats that my niece made!?😍 she couldn’t stop bragging to her friends about her experience.",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9997
+        },
+        "emotions": {
+          "surprise": 0.289,
+          "joy": 0.6693,
+          "neutral": 0.0417
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0009
+        },
+        "ratios": {
+          "positive": 0.432,
+          "neutral": 0.493,
+          "negative": 0.075
+        }
+      },
+      {
+        "data": "A beautiful Mother's Day Treat. Just loved every moment of our visit to Goddess Cafe Waterkloof from the friendly welcome, the pink water, amazing waitress, a very helpful manager, delicious drinks, tasty food experience. So worth it. Thank you for making it a great Mother's Day",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9999
+        },
+        "emotions": {
+          "surprise": 0.0646,
+          "joy": 0.9173,
+          "neutral": 0.0181
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0005
+        },
+        "ratios": {
+          "positive": 0.532,
+          "neutral": 0.468,
+          "negative": 0.0
+        }
+      },
+      {
+        "data": "The staff is lovely, great customer service. The place is super cute and the food is great. Their cakes are some of the best I've had!",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9999
+        },
+        "emotions": {
+          "neutral": 0.0129,
+          "surprise": 0.0092,
+          "joy": 0.9779
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0006
+        },
+        "ratios": {
+          "positive": 0.609,
+          "neutral": 0.391,
+          "negative": 0.0
+        }
+      }
+    ]
+  }

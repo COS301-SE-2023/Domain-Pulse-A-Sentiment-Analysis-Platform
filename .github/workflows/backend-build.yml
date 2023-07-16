@@ -15,23 +15,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: install pipenv
+      - name: Install Dependencies
         run: |
           cd backend
           pip install pipenv
-          pipenv install
           pipenv sync
-          python -m pip install --no-cache-dir --upgrade pipenv && pipenv --rm && pipenv install 
-          export PATH="$HOME/.local/bin:$PATH"
-          export PIPENV_PIPFILE=$HOME/backend
-      - name: install dependancies
-        run: | 
-          ls
-          pipenv install
-      - name: check all django projects
+      - name: Check all django projects
         run: |
-          cat Pipfile
+          cd backend
           pipenv run check_all
-
-
-            

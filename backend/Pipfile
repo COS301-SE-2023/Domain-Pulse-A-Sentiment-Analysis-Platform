@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[scripts]
+check_all = "bash scripts/check_all.sh"
+coverage_gen = "bash scripts/coverage.sh"
+engine = "python engine/manage.py runserver 0.0.0.0:8001"
+profiles = "python profiles/manage.py runserver 0.0.0.0:8002"
+
+[packages]
+django = "*"
+vadersentiment = "*"
+django-cors-headers = "*"
+coverage = "*"
+nltk = "*"
+torch = "*"
+transformers = "*"
+psycopg2-binary = "*"
+django-environ = "*"
+mock = "*"
+pymongo = "*"
+[dev-packages]
+
+[requires]
+python_version = "3.8"
