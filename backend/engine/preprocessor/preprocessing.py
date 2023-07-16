@@ -49,9 +49,10 @@ def process_data(raw_text: str):
     new_data = remove_whitespace(raw_text)
     new_data = remove_urls(new_data)
     tokens = tokenize(new_data)
-    tokens = remove_stopwords(tokens)
+    # tokens = remove_stopwords(tokens)
     for index, token in enumerate(tokens):
         tokens[index] = lemmatize_word(token)
     tokens = tokens[:512]
     # print(tokens)
-    return tokens
+    return " ".join(tokens)
+    # return tokens
