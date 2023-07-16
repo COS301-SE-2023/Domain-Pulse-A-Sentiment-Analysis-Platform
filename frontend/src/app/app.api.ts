@@ -9,8 +9,7 @@ export class AppApi {
   private profilesBaseUrl = `/api/profiles/`;
   private warehouseBaseUrl = `/api/warehouse/`;
 
-  // using the below to back in the source_id
-  private source_id_gen = 1;
+
 
   constructor(private http: HttpClient) {}
 
@@ -90,9 +89,10 @@ export class AppApi {
     sourceImageUrl: string
   ): Observable<any> {
     const addSourceUrl = this.profilesBaseUrl + 'profiles/add_source';
+    const randomInteger = Math.floor(Math.random() * 1000000);
     const body = {
       domain_id: domainID,
-      source_id: this.source_id_gen++,
+      source_id: randomInteger,
       // icon: sourceImageUrl,
     };
 
