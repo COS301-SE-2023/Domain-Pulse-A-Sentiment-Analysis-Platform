@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1689244806 "/mnt/c/Users/chris/Documents/Capstone 2/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ADD/ArchitecturalDesignDocument.tex" "ArchitecturalDesignDocument.pdf" "ArchitecturalDesignDocument" 1689244808 0
+["pdflatex"] 1689513778 "/mnt/c/Users/chris/Documents/Capstone 2/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ADD/ArchitecturalDesignDocument.tex" "ArchitecturalDesignDocument.pdf" "ArchitecturalDesignDocument" 1689513779 0
   "/home/chris/.TinyTeX/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1136768653 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
   "/home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/home/chris/.TinyTeX/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -35,13 +35,13 @@
   "/home/chris/.TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.600pk" 1686397858 14040 a6d9cbed89306fe4b9a72f9ae8939712 ""
   "/home/chris/.TinyTeX/texmf-var/web2c/pdftex/pdflatex.fmt" 1686194109 6484163 49d28c0adb5695eb97378b680028ce3b ""
   "/home/chris/.TinyTeX/texmf.cnf" 1686194058 637 edd806fb06a89761a6034e1968af9017 ""
-  "/mnt/c/Users/chris/Documents/Capstone 2/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ADD/ArchitecturalDesignDocument.tex" 1689244804 31202 ebfe8c89c0df828033cd7f7d188bca1c ""
-  "ArchitecturalDesignDocument.aux" 1689244807 5585 879dfe11a54eca3a13b7cd1691974fa0 "pdflatex"
-  "ArchitecturalDesignDocument.tex" 1689244804 31202 ebfe8c89c0df828033cd7f7d188bca1c ""
-  "ArchitecturalDesignDocument.toc" 1689244807 3565 a0251066ea3d65272c076364055eb1ab "pdflatex"
-  "Demo2Architecture.jpg" 1689244645 141132 203d2cbb3e689bc808084bee5b987fd6 ""
-  "cover.aux" 1689244807 420 b5285b81922c3aad07e98a6c95db5fe2 "pdflatex"
-  "cover.tex" 1689244645 331 0fafa33bc28c82c02c9d0542b6a26ca0 ""
+  "/mnt/c/Users/chris/Documents/Capstone 2/Domain-Pulse-A-Sentiment-Analysis-Platform/documentation/ADD/ArchitecturalDesignDocument.tex" 1689513775 31201 c050ccbb2c5667cecf31df152ad39d3d ""
+  "ArchitecturalDesignDocument.aux" 1689513779 5585 879dfe11a54eca3a13b7cd1691974fa0 "pdflatex"
+  "ArchitecturalDesignDocument.tex" 1689513775 31201 c050ccbb2c5667cecf31df152ad39d3d ""
+  "ArchitecturalDesignDocument.toc" 1689513779 3565 a0251066ea3d65272c076364055eb1ab "pdflatex"
+  "Demo2Architecture.jpg" 1689513663 141132 203d2cbb3e689bc808084bee5b987fd6 ""
+  "cover.aux" 1689513779 420 b5285b81922c3aad07e98a6c95db5fe2 "pdflatex"
+  "cover.tex" 1689513663 331 0fafa33bc28c82c02c9d0542b6a26ca0 ""
   (generated)
   "ArchitecturalDesignDocument.aux"
   "ArchitecturalDesignDocument.log"
