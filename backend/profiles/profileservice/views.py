@@ -103,17 +103,6 @@ def get_profile(request: HttpRequest):
         return JsonResponse(profilescrud.get_profile(request, raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
 
-@csrf_exempt
-def remove_domain_from_profile(request: HttpRequest):
-    if request.method == "POST":
-        raw_data = json.loads(request.body)
-        return JsonResponse(
-            profilescrud.remove_domain_from_profile(
-                raw_data["id"], raw_data["domain_id"]
-            )
-        )
-    return JsonResponse({"status": "FAILURE"})
-
 
 @csrf_exempt
 def get_domains_for_user(request: HttpRequest):
@@ -135,31 +124,6 @@ def get_user_by_id(request: HttpRequest):
 def check_logged_in(request: HttpRequest):
     if request.method == "POST":
         return JsonResponse(profilescrud.check_logged_in(request))
-    return JsonResponse({"status": "FAILURE"})
-
-
-
-@csrf_exempt
-def add_source_to_domain(request: HttpRequest):
-    if request.method == "POST":
-        raw_data = json.loads(request.body)
-        return JsonResponse(
-            profilescrud.add_source_to_domain(
-                raw_data["id"], raw_data["domain_id"], raw_data["source_id"]
-            )
-        )
-    return JsonResponse({"status": "FAILURE"})
-
-
-@csrf_exempt
-def remove_source_from_domain(request: HttpRequest):
-    if request.method == "POST":
-        raw_data = json.loads(request.body)
-        return JsonResponse(
-            profilescrud.remove_source_from_domain(
-                request, raw_data["id"], raw_data["domain_id"], raw_data["source_id"]
-            )
-        )
     return JsonResponse({"status": "FAILURE"})
 
 
