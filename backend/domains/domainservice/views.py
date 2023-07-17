@@ -87,11 +87,11 @@ def delete_domain(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
-        #     original_request=request, domain_id_list=[(raw_data["id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_domain_ids(
+            original_request=request, domain_id_list=[(raw_data["id"])], action="remove_domain"
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(

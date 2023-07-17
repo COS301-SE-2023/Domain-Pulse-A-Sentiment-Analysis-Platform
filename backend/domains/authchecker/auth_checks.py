@@ -69,9 +69,11 @@ def verify_user_owns_domain_ids(original_request: HttpRequest, domain_id_list: l
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
     item = dict(json.loads(original_request.body))
     data = {"domain_ids": domain_ids, "item":item}
-    response = requests.post(VERIFY_DOMAINS_ENDPOINT, json=data, headers=headers)
-    
 
+    if action==None:
+        response = requests.post(VERIFY_DOMAINS_ENDPOINT, json=data, headers=headers)
+    elif action=="remove_domain":
+        response = requests.post(VERIFY_DOMAINS_AND_REMOVE_DOMAIN_ENDPOINT, json=data, headers=headers)
 
     if response.status_code == 200:
         response_data = response.json()
