@@ -125,6 +125,8 @@ def refresh_source(request: HttpRequest):
     # 3.1 Update the last_refreshed field in the domains database for the source
     # 4. (Frontend concern) - call the get_data_dashboard_source/domain endpoint to refresh the frontend dashboard
 
+    originalRequest = request
+
     GET_SOURCE_ENDPOINT = "http://localhost:8000/domains/get_source"
     UPDATE_LAST_REFRESHED_ENDPOINT = "http://localhost:8000/domains/update_last_refresh"
     SOURCE_CONNECTOR_ENDPOINT = "http://localhost:8003/refresh/source/"
@@ -135,8 +137,19 @@ def refresh_source(request: HttpRequest):
         source_id_raw = raw_data["source_id"]
 
         # 0. Make a request to the domains service to get the info on the source (this also authenticates the request)
+
+        headers = {"Content-Type": "application/json"}
+        # ------------------- VERIFYING ACCESS -----------------------
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # ------------------------------------------------------------
+
         data = {"source_id": source_id_raw}
-        response = requests.post(GET_SOURCE_ENDPOINT, json=data)
+        response = requests.post(GET_SOURCE_ENDPOINT, json=data, headers=headers)
 
         if response.status_code != 200:
             return JsonResponse(
@@ -147,10 +160,7 @@ def refresh_source(request: HttpRequest):
             )
         elif response.json()["status"] == "FAILURE":
             return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": "Error interacting with the Domains database",
-                }
+                {"status": "FAILURE", "details": response.json()["details"]}
             )
         else:
             source_details = response.json()["source"]["params"]
@@ -222,8 +232,21 @@ def refresh_source(request: HttpRequest):
             sentiment_record_model.add_record(x)
 
         # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
+
+        headers = {"Content-Type": "application/json"}
+        # ------------------- VERIFYING ACCESS -----------------------
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # ------------------------------------------------------------
+
         data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
-        response = requests.post(UPDATE_LAST_REFRESHED_ENDPOINT, json=data)
+        response = requests.post(
+            UPDATE_LAST_REFRESHED_ENDPOINT, json=data, headers=headers
+        )
 
         if response.status_code != 200:
             return JsonResponse(
@@ -236,7 +259,7 @@ def refresh_source(request: HttpRequest):
             return JsonResponse(
                 {
                     "status": "FAILURE",
-                    "details": "Error interacting with the Domains database",
+                    "details": response.json()["details"],
                 }
             )
 
