@@ -27,5 +27,5 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: backend/coverage.lcov, frontend/lcov-report/lcov.info
+          files: backend-test/coverage.lcov, frontend-test/lcov-report/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}

@@ -10,12 +10,9 @@ class Profiles(models.Model):
     id = models.AutoField(primary_key=True)
     mode = models.BooleanField()
     profileIcon = models.URLField(max_length=200)
-    domainIDs = ArrayField(models.IntegerField())
+    domainIDs = models.ManyToManyField("Domains")
     # userID = models.TextField(max_length=10)
 
 class Domains(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.TextField(max_length=200)
-    description = models.TextField(max_length=200)
-    icon = models.URLField(max_length=200)
-    sources = ArrayField(models.IntegerField())
+    id = models.TextField(primary_key=True)
+    sourceIDs = ArrayField(models.TextField(),default=None)

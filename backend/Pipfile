@@ -24,7 +24,9 @@ psycopg2-binary = "*"
 mock = "*"
 pymongo = "*"
 python-dotenv = "*"
+djangorestframework-simplejwt = "*"
 sshtunnel = "*"
+outscraper = "*"
 
 [dev-packages]
 

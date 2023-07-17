@@ -108,6 +108,9 @@ def analyse_content(data):
     originalData = data
     data = preprocessing.process_data(data)
 
+    data = data[:512]
+    # print(str(len(data)) + " " + data)
+
     vader = ANALYSER.polarity_scores(data)
     emotions = EMOTION_CLASSIFIER(data)
     toxicity = TOXIC_CLASSIFIER(data)

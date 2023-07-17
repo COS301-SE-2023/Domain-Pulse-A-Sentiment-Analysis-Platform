@@ -169,15 +169,16 @@ export class AppState {
       let firstDomain = true;
 
       domainIDs.map((domainID: number) => {
-        this.appApi.getDomainInfo(domainID).subscribe((domainRes: any) => {
-          if (domainRes.status === 'FAILURE') {
+        this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
+          if (res.status === 'FAILURE') {
             // CHRIS ERROR HANDLE
             alert('CHRIS ERROR HANDLE');
             return;
           }
 
+          let domainRes = res.domain;
           let domain: DisplayDomain = {
-            id: domainRes.id,
+            id: domainRes._id,
             name: domainRes.name,
             description: domainRes.description,
             imageUrl: '../assets/' + domainRes.icon,
@@ -342,7 +343,7 @@ export class AppState {
         }
 
         let userID = ctx.getState().profileId;
-        this.appApi.linkDomainToProfile(res.id, userID).subscribe((res2) => {
+        this.appApi.linkDomainToProfile(res.new_domain.id, userID).subscribe((res2) => {
           console.log(res2);
 
           if (res2.status === 'FAILURE') {

@@ -18,6 +18,7 @@ ssh_tunnel = SSHTunnelForwarder(
     remote_bind_address=('127.0.0.1', int(os.getenv("MONGO_PORT"))),
 )
 
+print("SSH Tunnel Starting")
 ssh_tunnel.start()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,5 +31,6 @@ load_dotenv(DATABASE_ENV_FILE)
 
 # MongoDB connection settings
 HOST = os.getenv("MONGO_HOST")
+# PORT = int(os.getenv("MONGO_PORT"))
 PORT = ssh_tunnel.local_bind_port
 DB_NAME = os.getenv("MONGO_DB_NAME")
