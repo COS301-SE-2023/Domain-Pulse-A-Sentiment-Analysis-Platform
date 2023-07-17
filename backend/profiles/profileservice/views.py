@@ -103,27 +103,13 @@ def get_profile(request: HttpRequest):
         return JsonResponse(profilescrud.get_profile(request, raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
 
-
-@csrf_exempt
-def add_domain_to_profile(request: HttpRequest):
-    if request.method == "POST":
-        raw_data = json.loads(request.body)
-        return JsonResponse(
-            profilescrud.add_domain_to_profile(
-                request, raw_data["id"], raw_data["domain_id"]
-            )
-        )
-    return JsonResponse({"status": "FAILURE"})
-
-
 @csrf_exempt
 def remove_domain_from_profile(request: HttpRequest):
     if request.method == "POST":
-        print(request.META.get('REMOTE_ADDR'))
         raw_data = json.loads(request.body)
         return JsonResponse(
             profilescrud.remove_domain_from_profile(
-                request, raw_data["id"], raw_data["domain_id"]
+                raw_data["id"], raw_data["domain_id"]
             )
         )
     return JsonResponse({"status": "FAILURE"})

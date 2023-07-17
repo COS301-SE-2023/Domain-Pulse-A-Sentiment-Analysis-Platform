@@ -62,21 +62,22 @@ def create_domain(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
-        #     original_request=request, domain_id_list=[]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_domain_ids(
+            original_request=request, domain_id_list=[]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
-
+        new_domain=domainscrud.create_domain(raw_data["name"], raw_data["icon"], raw_data["description"])
+        domainID=new_domain["id"]
+        auth_checks.create_domain_in_profile(request,domainID)
         return JsonResponse(
             {
                 "status": "SUCCESS",
-                "new_domain": domainscrud.create_domain(
-                    raw_data["name"], raw_data["icon"], raw_data["description"]
-                ),
+                "new_domain": new_domain,
             }
         )
+
     return JsonResponse({"status": "FAILURE"})
 
 

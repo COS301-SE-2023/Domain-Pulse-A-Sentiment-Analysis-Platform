@@ -137,7 +137,7 @@ def change_password(request, id, oldpass, newpass):
         return {"status": "FAILURE"}
 
 
-def add_domain_to_profile(request, id, domain_id):
+def add_domain_to_profile( id, domain_id):
         id = int(id)
         profile = None
         try:
@@ -159,7 +159,7 @@ def add_domain_to_profile(request, id, domain_id):
         }
 
 
-def remove_domain_from_profile(request, id, domain_id):
+def remove_domain_from_profile(id, domain_id):
         id = int(id)
         profile = None
         try:
