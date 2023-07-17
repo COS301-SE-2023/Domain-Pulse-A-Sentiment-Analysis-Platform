@@ -17,6 +17,9 @@ staticfiles/
 *.env
 environment.ts
 
+# virtualenvironment
+.venv
+
 # VSCode
 .vscode/
 
