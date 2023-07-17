@@ -119,10 +119,11 @@ def get_dashboard_data_domain(request: HttpRequest):
 @csrf_exempt
 def refresh_source(request: HttpRequest):
     # FINAL VERSION
+    # 0. Given a source_id, get the details of the source from the Domains service (performs auth)
     # 1. Given the appropriate source, invoke the SourceConnector to get new data (ie: past the most recent timestamp)
     # 2. Send the new data from 1 to the analyser (engine)
     # 3. Store the data with its computed metrics in the database
-    # 3.1 Update the last_refreshed field in the domains database for the source
+    # 3.1 Update the last_refreshed field in the domains database for the source (performs auth)
     # 4. (Frontend concern) - call the get_data_dashboard_source/domain endpoint to refresh the frontend dashboard
 
     originalRequest = request
@@ -140,12 +141,12 @@ def refresh_source(request: HttpRequest):
 
         headers = {"Content-Type": "application/json"}
         # ------------------- VERIFYING ACCESS -----------------------
-        checked, jwt = auth_checks.extract_token(originalRequest)
-        if not checked:
-            return JsonResponse(
-                {"status": "FAILURE", "details": "JWT not found in header of request"}
-            )
-        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # checked, jwt = auth_checks.extract_token(originalRequest)
+        # if not checked:
+        #     return JsonResponse(
+        #         {"status": "FAILURE", "details": "JWT not found in header of request"}
+        #     )
+        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         # ------------------------------------------------------------
 
         data = {"source_id": source_id_raw}
@@ -235,12 +236,12 @@ def refresh_source(request: HttpRequest):
 
         headers = {"Content-Type": "application/json"}
         # ------------------- VERIFYING ACCESS -----------------------
-        checked, jwt = auth_checks.extract_token(originalRequest)
-        if not checked:
-            return JsonResponse(
-                {"status": "FAILURE", "details": "JWT not found in header of request"}
-            )
-        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # checked, jwt = auth_checks.extract_token(originalRequest)
+        # if not checked:
+        #     return JsonResponse(
+        #         {"status": "FAILURE", "details": "JWT not found in header of request"}
+        #     )
+        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         # ------------------------------------------------------------
 
         data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
