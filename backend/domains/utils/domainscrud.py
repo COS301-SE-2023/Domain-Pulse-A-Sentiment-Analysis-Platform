@@ -135,6 +135,7 @@ def add_source(domain_id, source_name, source_image_name, params):
     resId = str(result["_id"])
     result["_id"] = resId
     client.close()
+    result.update({"new_source_id": str(new_id)})
     return result
 
 

@@ -328,7 +328,7 @@ def add_source_to_domain( user_id, domain_id, source_id):
         if domain_id in profile.domainIDs.all().values_list("id", flat=True):
             domain.sourceIDs.append(source_id)
             domain.save()
-            return {"domainID": domain_id, "sourceIDs": domain.sourceIDs}
+            return {"status":"SUCCESS","domainID": domain_id, "sourceIDs": domain.sourceIDs}
         else:
             return {"status": "FAILURE", "details": "Incorrect UserID"}
 

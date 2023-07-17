@@ -7,7 +7,7 @@ VERIFY_SOURCES_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/source_ids/"
 VERIFY_DOMAINS_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/domain_ids/"
 ADD_DOMAIN_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/add_domain/"
 VERIFY_DOMAINS_AND_REMOVE_DOMAIN_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/domain_ids_and_remove_domain/"
-VERIFY_DOMAINS_AND_ADD_SOURCE_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/domain_ids_and_add_source/"
+ADD_SOURCE_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/add_source/"
 VERIFY_SOURCES_AND_REMOVE_SOURCE_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/source_ids_and_remove_source/"
 
 
@@ -95,4 +95,16 @@ def create_domain_in_profile(original_request: HttpRequest,domain_id):
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
     data = {"id":domain_id}
     response = requests.post(ADD_DOMAIN_ENDPOINT, json=data, headers=headers)
+    return response
+
+def add_source_in_profile(original_request: HttpRequest,domain_id,source_id):
+    status, details = extract_token(original_request)
+
+    if not status:
+        return {"status": "FAILURE", "details": details}
+
+    jwt = details
+    headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+    data = {"domain_id":domain_id,"source_id":source_id}
+    response = requests.post(ADD_SOURCE_ENDPOINT, json=data, headers=headers)
     return response

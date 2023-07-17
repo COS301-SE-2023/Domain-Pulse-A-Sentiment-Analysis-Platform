@@ -126,5 +126,28 @@ def add_domain(request):
         return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
     else:
         return JsonResponse({"status": "FAILURE", "details":"Foreign Request"})
+    
+@csrf_exempt
+def add_source(request):
+    if request.META.get('REMOTE_ADDR')== "127.0.0.1":
+
+        if request.method == "POST":
+            flag,token=extract_token(request)
+
+            user=get_user_from_token(token)
+            if user == None:
+                return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identity"})
+
+            userID =user.id
+
+            raw_data = json.loads(request.body)
+            response=profilescrud.add_source_to_domain(userID,raw_data["domain_id"],raw_data["source_id"])
+            if response["status"]=="SUCCESS":
+                return JsonResponse({"status":"SUCCESS", "details":"Valid access"})
+            else:
+                return JsonResponse({"status":"FAILURE", "details":"Failed to add domain to profile"})
+        return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
+    else:
+        return JsonResponse({"status": "FAILURE", "details":"Foreign Request"})    
 
         

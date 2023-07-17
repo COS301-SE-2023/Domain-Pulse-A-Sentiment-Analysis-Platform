@@ -129,23 +129,24 @@ def add_source(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
-        #     original_request=request, domain_id_list=[(raw_data["id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_domain_ids(
+            original_request=request, domain_id_list=[(raw_data["id"])]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
         params = raw_data["params"]
-
-        return JsonResponse(
-            {
-                "status": "SUCCESS",
-                "domain": domainscrud.add_source(
+        domain= domainscrud.add_source(
                     raw_data["id"],
                     raw_data["source_name"],
                     raw_data["source_icon"],
-                    params,  # includes the source type too
-                ),
+                    params,  
+                )
+        auth_checks.add_source_in_profile(request,raw_data["id"],domain["new_source_id"])
+        return JsonResponse(
+            {
+                "status": "SUCCESS",
+                "domain": domain,
             }
         )
     return JsonResponse({"status": "FAILURE"})
