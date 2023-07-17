@@ -27,10 +27,12 @@ psycopg2-binary = "*"
 mock = "*"
 pymongo = "*"
 python-dotenv = "*"
+djangorestframework-simplejwt = "*"
 sshtunnel = "*"
 # find linkgs
 # -f https://download.pytorch.org/whl/torch_stable.html
 torch = "==2.0.1+cpu"
+outscraper = "*"
 
 [dev-packages]
 
