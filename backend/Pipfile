@@ -3,6 +3,10 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[[source]]
+url = "https://download.pytorch.org/whl/torch_stable.html"
+name = "pytorch stable"
+
 [scripts]
 check_all = "bash scripts/check_all.sh"
 coverage_gen = "bash scripts/coverage.sh"
@@ -18,13 +22,15 @@ vadersentiment = "*"
 django-cors-headers = "*"
 coverage = "*"
 nltk = "*"
-torch = "*"
 transformers = "*"
 psycopg2-binary = "*"
 mock = "*"
 pymongo = "*"
 python-dotenv = "*"
 sshtunnel = "*"
+# find linkgs
+# -f https://download.pytorch.org/whl/torch_stable.html
+torch = "==2.0.1+cpu"
 
 [dev-packages]
 
