@@ -156,11 +156,11 @@ def remove_source(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_source_ids(
-        #     original_request=request, source_id_list=[(raw_data["source_id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[(raw_data["source_id"])], action="remove_source"
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(

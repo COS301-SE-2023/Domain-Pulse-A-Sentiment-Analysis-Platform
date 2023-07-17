@@ -138,7 +138,6 @@ def change_password(request, id, oldpass, newpass):
 
 
 def add_domain_to_profile(request, id, domain_id):
-    if request.user.is_authenticated:
         id = int(id)
         profile = None
         try:
@@ -158,12 +157,9 @@ def add_domain_to_profile(request, id, domain_id):
             "domainIDs": domain_list,
             "userID": profile.userID_id,
         }
-    else:
-        return {"status": "FAILURE"}
 
 
 def remove_domain_from_profile(request, id, domain_id):
-    if request.user.is_authenticated:
         id = int(id)
         profile = None
         try:
@@ -190,8 +186,7 @@ def remove_domain_from_profile(request, id, domain_id):
             "domainIDs": domain_list,
             "userID": profile.userID_id,
         }
-    else:
-        return {"status": "FAILURE"}
+    
 
 
 def get_domains_for_user(request, id):
@@ -354,7 +349,7 @@ def remove_source_from_domain(user_id, domain_id, source_id):
             if source_id in domain.sourceIDs:
                 domain.sourceIDs.remove(source_id)
                 domain.save()
-                return {"domainID": domain_id, "sourceIDs": domain.sourceIDs}
+                return {"status":"SUCCESS","domainID": domain_id, "sourceIDs": domain.sourceIDs}
             else:
                 return {"status": "FAILURE", "details": "No Source ID found"}
         else:

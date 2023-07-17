@@ -1,9 +1,15 @@
+import json
 import requests
 from django.http import HttpResponse, HttpRequest, JsonResponse
 
 PROFILES_SERVICE_ADDRESS = "http://localhost:8002"
 VERIFY_SOURCES_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/source_ids/"
 VERIFY_DOMAINS_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/domain_ids/"
+VERIFY_DOMAINS_AND_ADD_DOMAIN_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/domain_ids_and_add_domain/"
+VERIFY_DOMAINS_AND_REMOVE_DOMAIN_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/domain_ids_and_remove_domain/"
+VERIFY_DOMAINS_AND_ADD_SOURCE_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/domain_ids_and_add_source/"
+VERIFY_DOMAINS_AND_REMOVE_SOURCE_ENDPOINT= PROFILES_SERVICE_ADDRESS+"/check/source_ids_and_remove_source/"
+
 
 
 def extract_token(original_request: HttpRequest):
@@ -21,7 +27,7 @@ def extract_token(original_request: HttpRequest):
     return (True, token)
 
 
-def verify_user_owns_source_ids(original_request: HttpRequest, source_id_list: list):
+def verify_user_owns_source_ids(original_request: HttpRequest, source_id_list: list, action=None):
     status, details = extract_token(original_request)
 
     if not status:
@@ -31,10 +37,12 @@ def verify_user_owns_source_ids(original_request: HttpRequest, source_id_list: l
     source_ids = list(source_id_list)
 
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-
-    data = {"source_ids": source_ids}
-
-    response = requests.post(VERIFY_SOURCES_ENDPOINT, json=data, headers=headers)
+    item = dict(json.loads(original_request.body))
+    data = {"source_ids": source_ids, "item": item}
+    if action==None:
+        response = requests.post(VERIFY_SOURCES_ENDPOINT, json=data, headers=headers)
+    elif action=="remove_source":
+        response = requests.post(VERIFY_DOMAINS_AND_REMOVE_SOURCE_ENDPOINT, json=data, headers=headers)
 
     if response.status_code == 200:
         response_data = response.json()

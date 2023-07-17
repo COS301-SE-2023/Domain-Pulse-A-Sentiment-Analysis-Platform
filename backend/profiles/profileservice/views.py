@@ -119,6 +119,7 @@ def add_domain_to_profile(request: HttpRequest):
 @csrf_exempt
 def remove_domain_from_profile(request: HttpRequest):
     if request.method == "POST":
+        print(request.META.get('REMOTE_ADDR'))
         raw_data = json.loads(request.body)
         return JsonResponse(
             profilescrud.remove_domain_from_profile(
