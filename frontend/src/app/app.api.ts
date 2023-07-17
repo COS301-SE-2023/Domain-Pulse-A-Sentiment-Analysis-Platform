@@ -8,9 +8,7 @@ export class AppApi {
   private engineBaseUrl = `/api/engine/`;
   private profilesBaseUrl = `/api/profiles/`;
   private warehouseBaseUrl = `/api/warehouse/`;
-
-  // using the below to back in the source_id
-  private source_id_gen = 1;
+  private domainBaseUrl = `/api/domains/`;
 
   constructor(private http: HttpClient) {}
 
@@ -27,7 +25,7 @@ export class AppApi {
   }
 
   getDomainInfo(domainID: number): Observable<any> {
-    const getDomainInfoUrl = this.profilesBaseUrl + 'profiles/get_domain';
+    const getDomainInfoUrl = this.domainBaseUrl + 'domains/get_domain';
     return this.http.post(
       getDomainInfoUrl,
       { id: domainID },
@@ -40,7 +38,7 @@ export class AppApi {
     domainDescrption: string,
     domainImageUrl: string
   ): Observable<any> {
-    const addDomainUrl = this.profilesBaseUrl + 'profiles/create_domain';
+    const addDomainUrl = this.domainBaseUrl + 'domains/create_domain';
     const body = {
       name: domainName,
       description: domainDescrption,
@@ -56,14 +54,14 @@ export class AppApi {
     domainDescrption: string,
     domainImageUrl: string
   ): Observable<any> {
-    const editDomainUrl = this.profilesBaseUrl + 'profiles/edit_domain';
+    const editDomainUrl = this.domainBaseUrl + 'domains/edit_domain';
     const body = {};
     alert('FIND THE CORRECT BODY FOR THIS CODE');
     return this.http.post(editDomainUrl, body, { withCredentials: true });
   }
 
   removeDomain(domainID: number): Observable<any> {
-    const removeDomainUrl = this.profilesBaseUrl + 'profiles/remove_domain';
+    const removeDomainUrl = this.domainBaseUrl + 'domains/remove_domain';
     const body = {
       id: domainID,
     };
@@ -90,9 +88,10 @@ export class AppApi {
     sourceImageUrl: string
   ): Observable<any> {
     const addSourceUrl = this.profilesBaseUrl + 'profiles/add_source';
+    const randomInteger = Math.floor(Math.random() * 1000000);
     const body = {
       domain_id: domainID,
-      source_id: this.source_id_gen++,
+      source_id: randomInteger,
       // icon: sourceImageUrl,
     };
 

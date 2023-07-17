@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ModalContainerComponent } from './modal-container/modal-container.component';
-import { BackendService } from './backend.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { StatisticSelectorComponent } from './statistic-selector/statistic-selector.component';
@@ -49,7 +48,6 @@ import { ApiInterceptor } from './api.interceptor';
   ],
   providers: [
     AppApi,
-    BackendService,
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],

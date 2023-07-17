@@ -25,6 +25,8 @@ mock = "*"
 pymongo = "*"
 python-dotenv = "*"
 djangorestframework-simplejwt = "*"
+sshtunnel = "*"
+outscraper = "*"
 
 [dev-packages]
 

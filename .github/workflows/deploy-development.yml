@@ -2,50 +2,15 @@ name: Development deployment
 on:
   push:
     branches: [dev]
+
 jobs:
   check_backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: setup .envs
-        working-directory: ./backend
-        run: |
-          echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
-          echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
-
-      - name: Install Dependencies
-        run: |
-          cd backend
-          pip install pipenv
-          pipenv sync
-      - name: Verify backend
-        run: |
-          cd backend
-          pipenv run check_all
+    uses: ./.github/workflows/backend-build.yml
+    secrets: inherit
 
   build_frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: setup
-        uses: actions/checkout@v3
-
-      - name: setup port .env
-        working-directory: ./backend
-        run: |
-          echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
-
-      - name: install dependancies
-
-        run: |
-          cd frontend
-          npm ci
-          npm link @angular/cli
-          npm run build:dev
+    uses: ./.github/workflows/frontend-build.yml
+    secrets: inherit
 
   update_deployment_environment:
     needs: [check_backend, build_frontend]

@@ -1,13 +1,11 @@
-import csv
-import os
+from utils import db_connection
 import pymongo
 from bson.objectid import ObjectId
 
-mongo_host = "localhost"
-mongo_port = 27017
+mongo_host = db_connection.HOST
+mongo_port = db_connection.PORT
 mongo_db = "domain_pulse_domains"
 mongo_collection = "domains"
-
 
 def get_source(source_id):
     client = pymongo.MongoClient(mongo_host, mongo_port)
