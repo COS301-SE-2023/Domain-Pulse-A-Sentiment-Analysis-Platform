@@ -25,6 +25,7 @@ def handler(params):
         is_valid = youtube_validate_video_id(params["video_id"])
         if not is_valid:
             return False, "video_id is invalid"
+        return True, "Source details are valid"
 
     elif type_of_source.lower() == "googlereviews":
         if "maps_url" not in params:
@@ -32,6 +33,7 @@ def handler(params):
         is_valid = validate_google_reviews(params["maps_url"])
         if not is_valid:
             return False, "maps_url is invalid"
+        return True, "Source details are valid"
 
     elif type_of_source.lower() == "tripadvisor":
         if "tripadvisor_url" not in params:
@@ -39,8 +41,10 @@ def handler(params):
         is_valid = validate_tripadvisor(params["tripadvisor_url"])
         if not is_valid:
             return False, "tripadvisor_url is invalid"
+        return True, "Source details are valid"
 
-    return True, "Source details are valid"
+    else:
+        return False, "Unknown source_type"
 
 
 def youtube_validate_video_id(video_id: str):
