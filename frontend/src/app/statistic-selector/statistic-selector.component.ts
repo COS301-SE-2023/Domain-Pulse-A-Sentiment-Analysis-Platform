@@ -68,6 +68,7 @@ export class StatisticSelectorComponent {
     });
   }
 
+
   selectStatisticCategory(categoryIndex: number) {
     this.store.dispatch(new ChooseStatistic(categoryIndex));
   }
@@ -77,6 +78,7 @@ export class StatisticSelectorComponent {
     metaData?: any
   ): DisplayableMetrics {
     const aggregatedMetrics = freshData;
+
 
     const overallScore = Math.floor(aggregatedMetrics.general.score * 100);
     const positiveScore = Math.floor(aggregatedMetrics.ratios.positive * 100);
@@ -88,7 +90,8 @@ export class StatisticSelectorComponent {
       emotions[a] > emotions[b] ? a : b
     );
 
-    const emotionIconUrl = `../../assets/logos/${emotion.toLowerCase()}.png`;
+    const emotionIconUrl = `../../assets/icons/${emotion.toLowerCase()}.svg`;
+  
 
     const toxicity = Math.floor(aggregatedMetrics.toxicity.score * 100);
 

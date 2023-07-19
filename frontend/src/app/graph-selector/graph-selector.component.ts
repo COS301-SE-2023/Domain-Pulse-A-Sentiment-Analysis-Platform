@@ -24,6 +24,7 @@ export class GraphSelectorComponent implements OnInit {
   graphs = [
     {
       type: 'doughnut',
+      fontColor: 'white',
       data: {
         labels: ['Overall Score'],
         datasets: [
@@ -39,48 +40,63 @@ export class GraphSelectorComponent implements OnInit {
         ],
       },
       options: {
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex); 
+          }
+        },
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '50%', // Adjust the cutout percentage to control the size of the gauge
-        rotation: 1 * Math.PI, // Adjust the rotation angle to position the gauge needle
+        cutout: '50%', 
+        rotation: 1 * Math.PI,
         tooltips: {
-          enabled: false, // Disable tooltips to prevent them from appearing on hover
+          enabled: false,
         },
         plugins: {
           legend: {
-            display: false, // Disable legend display
+            display: false,
           },
+          labels:{
+            fontColor: 'white'
+          }
         },
       },
     },
     {
       type: 'pie',
       data: {
-        labels: ['Positive', 'Negative', 'Neutral'], // Replace with your data labels
+        labels: ['Positive', 'Negative', 'Neutral'], 
         datasets: [
           {
-            data: [], // Replace with your data values
+            data: [], 
             backgroundColor: [
-              'rgba(75, 192, 192, 0.8)', // Color for slice 1
-              'rgba(255, 99, 132, 0.8)', // Color for slice 2
-              'rgba(54, 162, 235, 0.8)', // Color for slice 3
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
             ],
             borderColor: [
-              'rgba(75, 192, 192, 1)', // Border color for slice 1
-              'rgba(255, 99, 132, 1)', // Border color for slice 2
-              'rgba(54, 162, 235, 1)', // Border color for slice 3
+              'rgba(75, 192, 192, 1)', 
+              'rgba(255, 99, 132, 1)', 
+              'rgba(54, 162, 235, 1)', 
             ],
             borderWidth: 1,
           },
         ],
       },
       options: {
-        // Additional options for your chart
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex);
+          }
+        }
       },
     },
     {
-      type: 'bar', // Replace with your desired chart type (e.g., line, pie, etc.)
+      type: 'bar', 
       data: {
+
         labels: [
           'anger',
           'disgust',
@@ -89,11 +105,11 @@ export class GraphSelectorComponent implements OnInit {
           'neutral',
           'sadness',
           'surprise',
-        ], // Replace with your data labels
+        ],
         datasets: [
           {
-            label: 'Rating per Emotion', // Replace with your dataset label
-            data: [], // Replace with your dataset values
+            label: 'Rating per Emotion', 
+            data: [], 
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
@@ -101,8 +117,10 @@ export class GraphSelectorComponent implements OnInit {
               'rgba(255, 99, 132, 0.8)',
               'rgba(54, 162, 235, 0.8)',
               'rgba(255, 206, 86, 0.8)',
-              'rgba(75, 192, 192, 0.8)',
-            ], // Replace with desired colors
+
+              'rgba(75, 192, 192, 0.8)'
+            ], 
+            
 
             borderColor: [
               'rgba(3, 127, 255, 1)',
@@ -128,21 +146,27 @@ export class GraphSelectorComponent implements OnInit {
         drawChartArea: false,
         maintainAspectRatio: false,
         interaction: {
-          mode: 'nearest', // Set the interaction mode to 'nearest' to prevent hover events
-          intersect: false, // Disable event interactions with elements
+          mode: 'nearest', 
+          intersect: false, 
         },
         legend: {
           display: false,
         },
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex);
+          }
+        }
       },
     },
     {
       type: 'pie',
       data: {
-        labels: ['Toxic', 'Non-Toxic'], // Replace with your data labels
+        labels: ['Toxic', 'Non-Toxic'], 
         datasets: [
           {
-            data: [], // Replace with your data values
+            data: [], 
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
@@ -156,22 +180,27 @@ export class GraphSelectorComponent implements OnInit {
         ],
       },
       options: {
-        // Additional options for your chart
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex);
+          }
+        }
       },
     },
     /* {
-      type: 'bar', // Replace with your desired chart type (e.g., line, pie, etc.)
+      type: 'bar', 
       data: {
-        labels: ['Facebook', 'Instagram', 'Reddit'], // Replace with your data labels
+        labels: ['Facebook', 'Instagram', 'Reddit'], 
         datasets: [
           {
-            label: 'Nr. of Sentiments', // Replace with your dataset label
-            data: [23000, 17530, 3450], // Replace with your dataset values
+            label: 'Nr. of Sentiments', 
+            data: [23000, 17530, 3450], 
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
               'rgba(23, 35, 76, 0.8)',
-            ], // Replace with desired colors
+            ], 
             borderColor: [
               'rgba(3, 127, 255, 1)',
               'rgba(145, 44, 246, 1)',
@@ -191,8 +220,8 @@ export class GraphSelectorComponent implements OnInit {
         drawChartArea: false,
         maintainAspectRatio: false,
         interaction: {
-          mode: 'nearest', // Set the interaction mode to 'nearest' to prevent hover events
-          intersect: false, // Disable event interactions with elements
+          mode: 'nearest', 
+          intersect: false, 
         },
         legend: {
           display: false,
@@ -206,6 +235,10 @@ export class GraphSelectorComponent implements OnInit {
     // ...
   ];
 
+
+  showPopup(index: number) {
+    console.log('Clicked on section:', index);
+  }
   constructor(private store: Store) {}
 
   ngOnInit(): void {
@@ -299,6 +332,16 @@ export class GraphSelectorComponent implements OnInit {
     if (this.chart) {
       this.chart.destroy();
     }
+
+    const element = document.querySelector('body'); // Replace with your actual element selector
+    if (element) {
+      const styles = window.getComputedStyle(element);
+      const backgroundColor = styles.getPropertyValue('--text-color');
+      Chart.defaults.global.defaultFontColor = backgroundColor;
+
+    }
+    
+
     if (!this.updatedGraphArray) return;
 
     const ctx = this.myChart.nativeElement.getContext('2d');
