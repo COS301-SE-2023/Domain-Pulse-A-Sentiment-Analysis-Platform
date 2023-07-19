@@ -3,6 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
 import requests
+from outscraper import ApiClient
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -46,3 +47,30 @@ def get_tripadvisor_reviews(url):
     if review_data == []:
         return False
     return True
+
+
+def get_google_reviews(maps_url):
+    client = ApiClient(api_key=GOOGLE_REVIEWS_API_KEY)
+    REVIEWS_LIMIT = 1
+    LIMIT = 1  # pls DO NOT change this
+    # ignores reviews with no text (please don't change this)
+    IGNORE_EMPTY = True
+    LANG = "en"  # language (models are trained in English so pls don't change)
+    COUNTRY = "ZA"  # South African Google
+
+    try:
+        results = client.google_maps_reviews(
+            query=[str(maps_url)],
+            reviews_limit=REVIEWS_LIMIT,
+            limit=LIMIT,
+            ignore_empty=IGNORE_EMPTY,
+            language=LANG,
+            region=COUNTRY,
+        )
+        print(results)
+
+        if results[0]["place_id"] == "__NO_PLACE_FOUND__":
+            return False
+        return True
+    except Exception:
+        return False
