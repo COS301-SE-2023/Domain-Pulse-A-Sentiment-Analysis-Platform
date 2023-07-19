@@ -1,11 +1,7 @@
-name: Check backend code builds
+name: Backend Checks
 on:
-  push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,12 +11,47 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install Dependencies
+
+      - name: setup .envs
+        working-directory: ./backend
         run: |
-          cd backend
+          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+          echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+          mkdir ~/.ssh
+          echo "${{ secrets.POSTGRES_USER_PRIV_KEY }}" >> ~/.ssh/posgresql-user-priv_key
+
+      - name: install pipenv
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
           pip install pipenv
-          pipenv sync
-      - name: Check all django projects
+
+      - name: cache pipenv
+        id: cache-pipenv
+        uses: actions/cache@v3
+        with:
+          path: backend/.venv
+          key: venv_cache-${{ hashFiles('backend/Pipfile.lock') }}
+
+      - name: install dependencies
+        working-directory: ./backend
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        env:
+          PIPENV_VENV_IN_PROJECT: 1
         run: |
-          cd backend
+          pipenv sync
+
+      - name: Check all django projects
+        working-directory: ./backend
+        run: |
           pipenv run check_all
+
+      - name: Run Tests
+        working-directory: ./backend
+        run: pipenv run coverage_gen
+        
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-test
+          path: backend/coverage.lcov

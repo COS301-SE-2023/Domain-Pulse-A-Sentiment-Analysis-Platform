@@ -1,0 +1,109 @@
+{
+    "metrics": [
+      {
+        "data": "Lost interest in this tournament when they changed the format the first time, didn’t think they could make it worse but they have. This competition will be dead soon",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0001
+        },
+        "emotions": {
+          "anger": 0.3734,
+          "disgust": 0.4473,
+          "sadness": 0.1793
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0006
+        },
+        "ratios": {
+          "positive": 0.112,
+          "neutral": 0.524,
+          "negative": 0.363
+        }
+      },
+      {
+        "data": "I didn't think the format could get worse, but you proved me wrong. What's next year's change? 1 pool?",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0028
+        },
+        "emotions": {
+          "surprise": 0.1454,
+          "disgust": 0.1964,
+          "neutral": 0.6582
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0006
+        },
+        "ratios": {
+          "positive": 0.0,
+          "neutral": 0.743,
+          "negative": 0.257
+        }
+      },
+      {
+        "data": "What's going on in Pool 4??? It is ridiculously stacked. I don't see how the Stormers are getting out of that one🥴😅.",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.001
+        },
+        "emotions": {
+          "anger": 0.0683,
+          "neutral": 0.1277,
+          "surprise": 0.804
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0401
+        },
+        "ratios": {
+          "positive": 0.107,
+          "neutral": 0.809,
+          "negative": 0.084
+        }
+      },
+      {
+        "data": "This is just illogical formatting. But as a Toulon fan, at least we got a manageable pool. Feel bad for all the great teams in pool 4 that won’t get any chance.",
+        "general": {
+          "category": "VERY_POSITIVE",
+          "score": 0.9643
+        },
+        "emotions": {
+          "sadness": 0.9413,
+          "surprise": 0.0202,
+          "joy": 0.0385
+        },
+        "toxicity": {
+          "level_of_toxic": "Non-toxic",
+          "score": 0.0005
+        },
+        "ratios": {
+          "positive": 0.319,
+          "neutral": 0.545,
+          "negative": 0.136
+        }
+      },
+      {
+        "data": "What kind of stupid format is this we don’t even know who we’re playing home and away ..",
+        "general": {
+          "category": "VERY_NEGATIVE",
+          "score": 0.0001
+        },
+        "emotions": {
+          "anger": 0.5157,
+          "disgust": 0.4622,
+          "neutral": 0.0221
+        },
+        "toxicity": {
+          "level_of_toxic": "Toxic",
+          "score": 0.9798
+        },
+        "ratios": {
+          "positive": 0.295,
+          "neutral": 0.511,
+          "negative": 0.193
+        }
+      }
+    ]
+  }

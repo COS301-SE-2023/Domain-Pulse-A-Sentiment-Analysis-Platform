@@ -4,15 +4,17 @@ import { AppComponent } from './app.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { MainComponent } from './main/main.component';
+import { AuthGuardService } from './auth.guard';
 
 const routes: Routes = [
-  { path: '', component: MainComponent },
   { path: 'login', component: LoginPageComponent },
-  { path: 'register', component: RegisterPageComponent }
+  { path: 'register', component: RegisterPageComponent },
+  { path: '', component: MainComponent, canActivate: [AuthGuardService] },
+  { path: '**', redirectTo: 'register' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -11,17 +11,19 @@
     style="width: 92%; gap: 1.3rem"
   >
     <div class="header flex-row centered" style="gap: 1.2rem">
+      <!-- [src]="'../assets/' + selectedDomain.imageUrl" -->
       <img
-        [src]="'../assets/' + selectedDomain.imageUrl"
+        [src]="
+          selectedDomain.id % 2 == 0
+            ? '../assets/cat-1.png'
+            : '../assets/cat-2.png'
+        "
         alt="Starbucks loog"
         height="80%"
       />
       <div class="flex-column">
         <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
-        <p class="domainDesc">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
-          magni ea sint, repellendus quam dolor consequatur sequi.
-        </p>
+        <p class="domainDesc">{{ selectedDomain.description }}</p>
       </div>
     </div>
 

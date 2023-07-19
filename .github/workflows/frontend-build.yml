@@ -1,25 +1,51 @@
----
-name: Check frontend code builds
+name: Frontend Checks
 on:
-  push:
-    branches:
-      - 'frontend/**'
-      - 'testcicd'
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     steps:
       - name: setup
         uses: actions/checkout@v3
-      - name: install dependancies
-        
-        run: |
-          cd frontend
-          npm ci
-          npm link @angular/cli
-          ng build --configuration=production
 
+      - name: setup port .env
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+
+      - name: cache dependencies
+        id: npm-cache
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: node_modules-${{hashFiles('frontend/package-lock.json') }}
+
+      - name: install dependancies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: |
+          npm ci
+
+      - name: Build
+        working-directory: ./frontend
+        run: |
+          npm link @angular/cli
+          npm run build:dev
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/dist
+
+      - name: Test
+        working-directory: ./frontend
+        run: |
+          npm run actions:test
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-test
+          path: frontend/coverage

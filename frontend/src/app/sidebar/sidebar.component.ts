@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { BackendService, Domain } from '../backend.service';
 import {
   trigger,
   state,
@@ -10,7 +9,12 @@ import {
 import { Select, Store } from '@ngxs/store';
 import { AppState, DisplayDomain } from '../app.state';
 import { Observable } from 'rxjs';
-import { SetDomain } from '../app.actions';
+import {
+  AddNewDomain,
+  DeleteDomain,
+  EditDomain,
+  SetDomain,
+} from '../app.actions';
 
 @Component({
   selector: 'dp-sidebar',
@@ -65,6 +69,8 @@ export class SidebarComponent {
   logoState = 'small';
   _expanded = false;
   @Input() set expanded(value: boolean) {
+    console.log('lets be serious');
+
     if (value) {
       this.smallLogoState = 'out';
       this._expanded = true;
@@ -115,13 +121,14 @@ export class SidebarComponent {
 
   newDomainName = '';
   newDomainImageName = '';
+  newDomainDescription = '';
 
   showAddDomainModal = false;
   showProfileModal = false;
   showEditDomainModal = false;
   showProfileEditModal = false;
 
-  constructor(private backendService: BackendService, private store: Store) {}
+  constructor(private store: Store) {}
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
@@ -164,13 +171,45 @@ export class SidebarComponent {
   }
 
   addNewDomain(): void {
-    console.log('addNewDomain');
-    console.log(this.newDomainName, this.newDomainImageName);
-    this.backendService.addNewDomain(
-      this.newDomainName,
-      this.newDomainImageName
+    this.store
+      .dispatch(
+        new AddNewDomain(
+          this.newDomainName,
+          this.newDomainImageName,
+          this.newDomainDescription
+        )
+      )
+      .subscribe(() => {
+        this.newDomainName = '';
+        this.newDomainImageName = '';
+        this.newDomainDescription = '';
+
+        this.toggleDomainModal();
+      });
+  }
+
+  editDomain() {
+    const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
+    if (!selectedDomain) return;
+    const selectedDomainId = selectedDomain.id;
+
+    this.store.dispatch(
+      new EditDomain(
+        selectedDomainId,
+        this.newDomainName,
+        this.newDomainImageName,
+        this.newDomainDescription
+      )
     );
-    this.toggleDomainModal();
+    this.newDomainName = '';
+    this.newDomainImageName = '';
+    this.newDomainDescription = '';
+
+    this.toggleEditDomainModal();
+  }
+
+  deleteDomain(domainToDeleteId: number) {
+    this.store.dispatch(new DeleteDomain(domainToDeleteId));
   }
 
   selectDomain(domain: DisplayDomain) {
@@ -193,7 +232,6 @@ export class SidebarComponent {
     }
   }
 
-
   imageSelected: boolean = false;
   selectedImage: File | undefined;
 
@@ -206,6 +244,4 @@ export class SidebarComponent {
     // Handle image upload logic here
     // You can access the selected image using this.selectedImage
   }
-
-  
 }

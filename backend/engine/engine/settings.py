@@ -9,18 +9,24 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ENV DIR is 2 parent directories up from BASE_DIR
+ENV_FILE = BASE_DIR.parent / '.env'
+load_dotenv(ENV_FILE)
+
+RUNSERVER_PORT = os.getenv("DJANGO_ENGINE_PORT")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m)!b_a)sc(p6i0r)6hniwi4dxki+l1!qq@v&cera7sq4y7sv(6'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -34,10 +40,10 @@ ALLOWED_HOSTS = [
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
-       'http://localhost:4200',
-       'http://127.0.0.1:4200',
-       'http://154.73.32.89',
-       'http://154.73.32.89:4200',
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
+    'http://154.73.32.89',
+    'http://154.73.32.89:4200',
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?:\/\/)?((\w(-\w)*)+\.)*thuthuka\.me$',
@@ -47,14 +53,15 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'analyser',
-    'corsheaders',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "analyser",
+    "aggregator",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [

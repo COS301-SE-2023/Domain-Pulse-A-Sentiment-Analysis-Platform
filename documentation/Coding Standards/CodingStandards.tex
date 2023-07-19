@@ -1,0 +1,94 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+
+\title{
+
+\\
+{COS 301 Coding Standards}
+}
+
+\author{Ctrl Alt Defeat}
+
+\begin{document}
+
+\input{cover.tex}
+
+\tableofcontents
+
+\newpage
+
+
+\section{File Structure}
+Our system (Domain Pulse) has multiple different services and components that are often times independant from one another, as a result of our service oriented architecture. Furthermore, our system makes use of a Angular frontend and Django backend. As a result of these factors, the file structure of our system is designed to with modularity and simplicity as focuses, and we have achieved such. These qualities have been achieved with there being three main folder paths of note within our system: 'backend', 'frontend' and 'documentation' (of which will not be covered as it is not 'Coding'). Each folder is self-explanitory in its purpose and all code relating to said folder is contained within it, with little to no overlap.
+
+\subsection{Frontend}
+\begin{itemize}
+    \item The frontend folder consists of a 'src' folder that contains the developed resources.
+    \item The 'assets' folder conveniently stores all assets (icons, backgrounds, etc.) required for UI development.
+    \item The 'app' folder houses all the developed Angular UI pages, neatly organized in their respective component folders (e.g., login-page, register-page, etc.).
+    \end{itemize}
+\subsection{Backend}
+\begin{itemize}
+    \item Within the backend folder, each separate service of the system is stored in relevant folders, following a clearly defined and separated software-oriented architecture.
+    \item This approach ensures modularity and flexibility within our system by clearly defining individual services.
+    \item Each service folder contains one folder dedicated to storing the necessary Django settings, while other folders contain the developed code required for the proper execution of the respective service.
+    \end{itemize}
+
+
+\newpage
+\section{Naming Conventions}
+\subsection{Frontend}
+
+When it comes to naming conventions for frontend development, follow these guidelines:
+
+\begin{enumerate}
+    \item \textbf{Use meaningful and descriptive names}: Choose names that accurately describe the purpose or functionality of the component, variable, function, or class. Avoid using vague or ambiguous names.
+    
+    \item \textbf{Follow camelCase for angular code}: Use camelCase notation for naming variables, functions, and object properties. Start with a lowercase letter and capitalize the first letter of each subsequent concatenated word. For example: \texttt{myVariable}, \texttt{getUserData()}, \texttt{myObject.property}.
+    
+    \item \textbf{Use kebab-case for HTML and CSS}: Use kebab-case notation for naming HTML elements and CSS classes. Start each word with a lowercase letter and separate words with a hyphen. For example: \texttt{<my-component></my-component>}, \texttt{.my-class}.
+
+    \item \textbf{Use PascalCase for class and component names}: Class names and component names should follow PascalCase notation. Start each word with an uppercase letter. For example: \texttt{MyClass}, \texttt{MyComponent}.
+        
+    \item \textbf{Use lowercase for file names}: File names should be in lowercase and use hyphens to separate words. For example: \texttt{my-file.js}, \texttt{my-component.html}, \texttt{styles.css}.
+            
+    \item \textbf{Use self-explanatory names for CSS classes}: Choose CSS class names that are descriptive and convey their purpose. Avoid using generic names or abbreviations. Use hyphens to separate words in class names. For example: \texttt{.main-container}, \texttt{.btn-primary}, \texttt{.error-message}.
+    
+    \item \textbf{Prefixes and suffixes}: Consider using consistent prefixes or suffixes for variables or functions to indicate their purpose or type. For example, prefixing boolean variables with "is" or "has" (\texttt{isActive}, \texttt{hasError}) or suffixing functions with verbs (\texttt{calculateTotal}, \texttt{validateForm}).
+    
+    \item \textbf{Avoid excessive abbreviation}: While it's important to keep names concise, avoid excessive abbreviation that may make the code less readable. Aim for a balance between brevity and clarity.
+\end{enumerate}
+
+\subsection{Backend}
+\begin{itemize}
+    \item Naming conventions are followed within the backend to ensure readable and understandable code.
+    \item Endpoints follow a well-defined structure, where the endpoint function has a descriptive name and the URL matches the endpoint name.
+    \item Auxiliary files are created to store the logic of backend functions, organized in folders such as 'util' or 'preprocess' to indicate their purpose.
+    \item Functions within auxiliary files include those with the same name as the endpoint (indicating they are called in the endpoint) and helper functions like \texttt{remove\_whitespace}, promoting an orderly structure within main functions.
+    \item Clear distinction between main and auxiliary functions enhances code readability and flexibility, making it easier to track down and fix bugs.
+    \item Variable names are chosen to clearly describe their purpose within the codebase.
+\end{itemize}
+
+\newpage
+\section{Formatting}
+\subsection{Frontend}
+
+\begin{itemize}
+    \item Use tabs for indentation.
+    \item Keep lines of code within a reasonable length, so it doesn't go off the screen.
+    \item Align related code vertically so it looks organized.
+    \item Put braces and parentheses where they look nice, either on the same line or the next line.
+    \item Leave comments to explain what the code does, but not too many.
+    \item Try to be consistent with how the code looks, so it doesn't confuse anyone.
+    \item Use vscode auto-formatting to ensure consistency.
+  \end{itemize}
+
+\subsection{Backend}
+\begin{itemize}
+    \item The backend code of our system is developed using Django, which utilizes Python as its programming language.
+    \item Python's inherent structure enforces a strict and ordered format due to its reliance on indentation.
+    \item We follow the \textit{Black} formatter guidelines to ensure code readability and maintain consistency within our development process.
+    \end{itemize}
+\end{document}

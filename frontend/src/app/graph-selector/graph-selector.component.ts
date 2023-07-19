@@ -1,43 +1,23 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as Chart from 'chart.js';
+import { Select, Store } from '@ngxs/store';
+import { AppState } from '../app.state';
+import { Observable } from 'rxjs';
+import { ChooseStatistic } from '../app.actions';
 
 @Component({
   selector: 'graph-selector',
   templateUrl: './graph-selector.component.html',
   styleUrls: ['./graph-selector.component.sass'],
 })
-export class GraphSelectorComponent {
+export class GraphSelectorComponent implements OnInit {
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
-  mockData =
-    {
-      "aggregated_metrics": {
-        "general": {
-          "category": "POSITIVE",
-          "score": 0.714
-        },
-        "emotions": {
-          "anger": 0.0231,
-          "disgust": 0.012,
-          "fear": 0,
-          "joy": 0.6777,
-          "neutral": 0.0434,
-          "sadness": 0.2187,
-          "surprise": 0.0251
-        },
-        "toxicity": {
-          "level_of_toxic": "Non-toxic",
-          "score": 0.0009
-        },
-        "ratios": {
-          "positive": 0.3031,
-          "neutral": 0.6213,
-          "negative": 0.0757
-        }
-      }
-    }
-
+  @Select(AppState.sourceOverallSentimentScores)
+  sourceOverallSentiment!: Observable<any | null>;
+  @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
+  currentGraphIndex: number = 0;
 
   chart: Chart | undefined;
   gradient: CanvasGradient | undefined;
@@ -116,13 +96,16 @@ export class GraphSelectorComponent {
     {
       type: 'bar', 
       data: {
-        labels: ["anger",
-          "disgust",
-          "fear",
-          "joy",
-          "neutral",
-          "sadness",
-          "surprise"], 
+
+        labels: [
+          'anger',
+          'disgust',
+          'fear',
+          'joy',
+          'neutral',
+          'sadness',
+          'surprise',
+        ],
         datasets: [
           {
             label: 'Rating per Emotion', 
@@ -134,9 +117,11 @@ export class GraphSelectorComponent {
               'rgba(255, 99, 132, 0.8)',
               'rgba(54, 162, 235, 0.8)',
               'rgba(255, 206, 86, 0.8)',
+
               'rgba(75, 192, 192, 0.8)'
             ], 
             
+
             borderColor: [
               'rgba(3, 127, 255, 1)',
               'rgba(145, 44, 246, 1)',
@@ -144,9 +129,9 @@ export class GraphSelectorComponent {
               'rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',
               'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'
+              'rgba(75, 192, 192, 1)',
             ],
-            
+
             borderWidth: 1,
           },
         ],
@@ -250,12 +235,37 @@ export class GraphSelectorComponent {
     // ...
   ];
 
+
   showPopup(index: number) {
     console.log('Clicked on section:', index);
   }
+  constructor(private store: Store) {}
+
+  ngOnInit(): void {
+    this.sourceOverallSentiment.subscribe((data) => {
+      console.log(data);
+      if (data) {
+        this.updatedGraphArray = this.assignGraphData(data, this.graphs);
+        setTimeout(() => {
+          this.renderGraph();
+        }, 300);
+      }
+    });
+
+    this.statisticIndex.subscribe((statIndex) => {
+      if (statIndex) {
+        this.currentGraphIndex = statIndex;
+        this.renderGraph();
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.renderGraph();
+  }
 
   assignGraphData(mockData: any, graphArray: any[]): any[] {
-    const aggregatedMetrics = mockData.aggregated_metrics;
+    const aggregatedMetrics = mockData;
 
     // Update the first graph (doughnut)
     const score = Math.floor(aggregatedMetrics.general.score * 100) / 2;
@@ -266,7 +276,7 @@ export class GraphSelectorComponent {
     graphArray[1].data.datasets[0].data = [
       Math.floor(aggregatedMetrics.ratios.positive * 100),
       Math.floor(aggregatedMetrics.ratios.negative * 100),
-      Math.floor(aggregatedMetrics.ratios.neutral * 100)
+      Math.floor(aggregatedMetrics.ratios.neutral * 100),
     ];
 
     // Update the third graph (bar)
@@ -277,28 +287,23 @@ export class GraphSelectorComponent {
       Math.floor(aggregatedMetrics.emotions.joy * 100),
       Math.floor(aggregatedMetrics.emotions.neutral * 100),
       Math.floor(aggregatedMetrics.emotions.sadness * 100),
-      Math.floor(aggregatedMetrics.emotions.surprise * 100)
+      Math.floor(aggregatedMetrics.emotions.surprise * 100),
     ];
 
     // Update the fourth graph (pie)
     graphArray[3].data.datasets[0].data = [
       Math.floor(aggregatedMetrics.toxicity.score * 100),
-      Math.floor((1 - aggregatedMetrics.toxicity.score) * 100)
+      Math.floor((1 - aggregatedMetrics.toxicity.score) * 100),
     ];
 
     return graphArray;
   }
 
-  updatedGraphArray = this.assignGraphData(this.mockData, this.graphs);
-
-
-  currentGraphIndex = 0;
-
-  ngAfterViewInit() {
-    this.renderGraph();
-  }
+  updatedGraphArray?: any[];
 
   switchToPreviousGraph() {
+    if (!this.updatedGraphArray) return;
+
     console.log('previous graph');
     if (this.currentGraphIndex > 0) {
       this.currentGraphIndex--;
@@ -307,10 +312,12 @@ export class GraphSelectorComponent {
       this.currentGraphIndex = this.updatedGraphArray.length - 1;
       this.renderGraph();
     }
+    this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
   }
 
   switchToNextGraph() {
-    console.log('next graph');
+    if (!this.updatedGraphArray) return;
+
     if (this.currentGraphIndex < this.updatedGraphArray.length - 1) {
       this.currentGraphIndex++;
       this.renderGraph();
@@ -318,12 +325,14 @@ export class GraphSelectorComponent {
       this.currentGraphIndex = 0;
       this.renderGraph();
     }
+    this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
   }
 
   renderGraph() {
     if (this.chart) {
       this.chart.destroy();
     }
+
     const element = document.querySelector('body'); // Replace with your actual element selector
     if (element) {
       const styles = window.getComputedStyle(element);
@@ -332,6 +341,9 @@ export class GraphSelectorComponent {
 
     }
     
+
+    if (!this.updatedGraphArray) return;
+
     const ctx = this.myChart.nativeElement.getContext('2d');
     const container = this.chartContainer.nativeElement;
     const containerWidth = container.offsetWidth;
