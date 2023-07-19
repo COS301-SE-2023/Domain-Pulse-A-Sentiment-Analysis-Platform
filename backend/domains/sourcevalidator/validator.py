@@ -13,6 +13,36 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 TRIPADVISOR_API_KEY = os.getenv("TRIPADVISOR_API_KEY")
 
 
+def handler(params):
+    if "source_type" in params:
+        type_of_source: str = params["source_type"]
+    else:
+        return False, "Missing parameter: source_type"
+
+    if type_of_source.lower() == "youtube":
+        if "video_id" not in params:
+            return False, "Missing parameter: video_id"
+        is_valid = youtube_validate_video_id(params["video_id"])
+        if not is_valid:
+            return False, "video_id is invalid"
+
+    elif type_of_source.lower() == "googlereviews":
+        if "maps_url" not in params:
+            return False, "Missing parameter: maps_url"
+        is_valid = validate_google_reviews(params["maps_url"])
+        if not is_valid:
+            return False, "maps_url is invalid"
+
+    elif type_of_source.lower() == "tripadvisor":
+        if "tripadvisor_url" not in params:
+            return False, "Missing parameter: tripadvisor_url"
+        is_valid = validate_tripadvisor(params["tripadvisor_url"])
+        if not is_valid:
+            return False, "tripadvisor_url is invalid"
+
+    return True, "Source details are valid"
+
+
 def youtube_validate_video_id(video_id: str):
     URL = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={video_id}&maxResults=1&key={YOUTUBE_API_KEY}"
 
@@ -24,7 +54,7 @@ def youtube_validate_video_id(video_id: str):
     return True
 
 
-def get_tripadvisor_reviews(url):
+def validate_tripadvisor(url):
     ENDPOINT = "https://api.app.outscraper.com/tripadvisor/reviews"
     REVIEWS_LIMIT = 1
 
@@ -49,7 +79,7 @@ def get_tripadvisor_reviews(url):
     return True
 
 
-def get_google_reviews(maps_url):
+def validate_google_reviews(maps_url):
     client = ApiClient(api_key=GOOGLE_REVIEWS_API_KEY)
     REVIEWS_LIMIT = 1
     LIMIT = 1  # pls DO NOT change this
