@@ -31,26 +31,35 @@ export class SourceSelectorComponent {
     console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
     this.store.dispatch(
-      new AddNewSource(this.newSourceName, this.newSourcePlatform)
+      new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     );
     this.newSourceName = '';
 
     this.toggleAddSourcesModal();
   }
 
-  determineSourceParams(): string | null {
-    if (this.newSourcePlatform === 'googlereviews' || this.newSourcePlatform === 'tripadvisor') {
-      return null; 
+  determineSourceParams(): any | null {
+    if (
+      this.newSourcePlatform === 'googlereviews' ||
+      this.newSourcePlatform === 'tripadvisor'
+    ) {
+      return null;
     } else if (this.newSourcePlatform === 'youtube') {
       const url = this.newSourceUrl;
       console.log('url: ' + url);
-      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const regExp =
+        /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
       const match = url.match(regExp);
       console.log('match: ' + match);
-      return match && match[7].length === 11 ? match[7] : null;
+
+      const videoID = match && match[7].length === 11 ? match[7] : null;
+      return {
+        source_type: 'youtube',
+        video_id: videoID,
+      };
     }
-  
-    return null; 
+
+    return null;
   }
 
   selectPlatform(platform: string) {
@@ -58,8 +67,6 @@ export class SourceSelectorComponent {
   }
 
   editSource() {
-    
-
     this.toggleEditSourceModal();
   }
 
@@ -78,6 +85,4 @@ export class SourceSelectorComponent {
       this.showEditSourceModal = false;
     }
   }
-
-
 }

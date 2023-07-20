@@ -32,7 +32,8 @@ export interface DisplayDomain {
   description: string;
   selected: boolean;
   imageUrl: string;
-  sourceIds: number[];
+  sourceIds: string[];
+  sources: DisplaySource[];
 }
 
 export interface DisplaySource {
@@ -174,7 +175,7 @@ export class AppState {
     this.appApi.getDomainIDs(ctx.getState().profileId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
         // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE');
+        alert('CHRIS ERROR HANDLE #1');
         return;
       }
 
@@ -186,17 +187,19 @@ export class AppState {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
             // CHRIS ERROR HANDLE
-            alert('CHRIS ERROR HANDLE');
+            alert('CHRIS ERROR HANDLE #2');
             return;
           }
 
           let domainRes = res.domain;
+          let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
           let domain: DisplayDomain = {
             id: domainRes._id,
             name: domainRes.name,
             description: domainRes.description,
             imageUrl: '../assets/' + domainRes.icon,
-            sourceIds: domainRes.sources,
+            sourceIds: domainsIDs,
+            sources: this.formatResponseSources(domainRes.sources),
             selected: false,
           };
 
@@ -212,12 +215,8 @@ export class AppState {
           }
 
           if (firstDomain) {
-            // domain.selected = true;
             firstDomain = false;
             this.store.dispatch(new SetDomain(domain));
-
-            // this will use the selected domain
-            this.store.dispatch(new GetSources());
           }
 
           console.log(ctx.getState().domains);
@@ -240,63 +239,22 @@ export class AppState {
       selectedDomain: state.domain,
     });
 
-    this.store.dispatch(new GetSources());
-  }
-
-  @Action(GetSources)
-  getSources(ctx: StateContext<AppStateModel>) {
-    let selectedDomain = ctx.getState().selectedDomain;
-    if (!selectedDomain) return;
-
+    let sources = state.domain.sources;
+    ctx.patchState({
+      sources: sources,
+    });
+    
     let firstSource = true;
 
-    // initialize sources to empty array
-    ctx.patchState({
-      sources: [],
-    });
-
-    for (let sourceID of selectedDomain.sourceIds) {
-      let sources = ctx.getState().sources;
-      let mockSource = this.idToSource(sourceID);
-
+    for (let source of sources) {
       if (firstSource) {
-        console.log('first source');
-        this.store.dispatch(new SetSource(mockSource));
+        this.store.dispatch(new SetSource(source));
         firstSource = false;
+        break;
       }
-
-      if (sources) {
-        ctx.patchState({
-          sources: [...sources, mockSource],
-        });
-      }
-
-      // this.appApi.getSourceInfo(sourceID).subscribe((sourceRes: any) => {
-      //   if (sourceRes.status === 'FAILURE') {
-      //     // CHRIS ERROR HANDLE
-      //     alert('CHRIS ERROR HANDLE');
-      //     return;
-      //   }
-
-      //   let source: DisplaySource = {
-      //     id: sourceRes.id,
-      //     name: sourceRes.name,
-      //     url: sourceRes.url,
-      //     selected: false,
-      //   };
-
-      //   let sources = ctx.getState().sources;
-      //   if (sources) {
-      //     ctx.patchState({
-      //       sources: [...sources, source],
-      //     });
-      //   } else {
-      //     ctx.patchState({
-      //       sources: [source],
-      //     });
-      //   }
-      // });
     }
+
+    this.store.dispatch(new GetSources());
   }
 
   @Action(SetSource)
@@ -329,6 +287,15 @@ export class AppState {
       case 'reddit':
         source_image_name = 'reddit-logo.png';
         break;
+      case 'tripadvisor':
+        source_image_name = 'tripadvisor-logo.png';
+        break;
+      case 'youtube':
+        source_image_name = 'youtube-logo.png';
+        break;
+      case 'googlereviews':
+        source_image_name = 'google-reviews.png';
+        break;
     }
 
     let selectedDomain = ctx.getState().selectedDomain;
@@ -336,7 +303,7 @@ export class AppState {
 
     let domainID = selectedDomain.id;
     this.appApi
-      .addSource(domainID, state.name, source_image_name)
+      .addSource(domainID, state.name, source_image_name, state.params)
       .subscribe((res) => {
         // Not sure as to whether i should just reget all the data or just use the response
         this.store.dispatch(new GetDomains());
@@ -352,22 +319,24 @@ export class AppState {
       .subscribe((res) => {
         if (res.status === 'FAILURE') {
           // CHRIS ERROR HANDLE
-          alert('CHRIS ERROR HANDLE');
+          alert('CHRIS ERROR HANDLE #3');
           return;
         }
 
         let userID = ctx.getState().profileId;
-        this.appApi.linkDomainToProfile(res.new_domain.id, userID).subscribe((res2) => {
-          console.log(res2);
+        this.appApi
+          .linkDomainToProfile(res.new_domain.id, userID)
+          .subscribe((res2) => {
+            console.log(res2);
 
-          if (res2.status === 'FAILURE') {
-            // CHRIS ERROR HANDLE
-            alert('CHRIS ERROR HANDLE');
-            return;
-          }
+            if (res2.status === 'FAILURE') {
+              // CHRIS ERROR HANDLE
+              alert('CHRIS ERROR HANDLE #4');
+              return;
+            }
 
-          this.store.dispatch(new GetDomains());
-        });
+            this.store.dispatch(new GetDomains());
+          });
       });
   }
 
@@ -455,7 +424,7 @@ export class AppState {
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE');
+        alert('CHRIS ERROR HANDLE #5');
         return;
       }
 
@@ -478,7 +447,7 @@ export class AppState {
       } else return false;
     });
   }
-  
+
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
     console.log("attempting password login");
@@ -493,7 +462,7 @@ export class AppState {
           this.router.navigate(['']);
         } else {
           // CHRIS ERROR HANDLE
-          alert('ERROR FOR CHRIS');
+          alert('ERROR FOR CHRIS #6');
         }
       });
   }
@@ -558,7 +527,7 @@ export class AppState {
           this.router.navigate(['']);
         } else {
           // CHRIS ERROR HANDLE
-          alert('ERROR FOR CHRIS');
+          alert('ERROR FOR CHRIS #7');
         }
       });
   }
@@ -625,49 +594,17 @@ export class AppState {
     });
   }
 
-  @Action(Demo2Setup)
-  setupForDemo2(ctx: StateContext<AppStateModel>) {
-    // add 2 domain 1 and 3 to domain 2
-
-    this.appApi.getDomainIDs(ctx.getState().profileId).subscribe((res: any) => {
-      if (res.status === 'FAILURE') {
-        // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE');
-        return;
-      }
-
-      let domainIDs: number[] = res.domainIDs;
-      if (domainIDs.length > 0) return;
-
-      // JIPPA for demo
-
-      this.store.dispatch(
-        new AddNewDomain(
-          'Spottie',
-          'irrel',
-          'This is a catalogie of the domains that my best friends spottie is quite a fan of'
-        )
-      );
-
-      this.store.dispatch(new AddNewSource('irell', 'irell'));
-
-      this.store.dispatch(new AddNewSource('irell', 'irell'));
-
-      setTimeout(() => {
-        this.store.dispatch(
-          new AddNewDomain(
-            'Kittie',
-            'irrel',
-            'Kittie is such a wierd kittie, i dont know other cats that are quite as knowledgable as her'
-          )
-        );
-
-        this.store.dispatch(new AddNewSource('irell', 'irell'));
-
-        this.store.dispatch(new AddNewSource('irell', 'irell'));
-
-        this.store.dispatch(new AddNewSource('irell', 'irell'));
-      }, 1000);
-    });
-  }
+  private formatResponseSources(responseSources :any[]): DisplaySource[] {
+    let displaySources: DisplaySource[] = [];
+    for (let responseSource of responseSources) {
+      let displaySource: DisplaySource = {
+        id: responseSource.source_id,
+        name: responseSource.source_name,
+        url: responseSource.source_icon,
+        selected: false,
+      };
+      displaySources.push(displaySource);
+    }
+    return displaySources;
+  } 
 }

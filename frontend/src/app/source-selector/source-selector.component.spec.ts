@@ -29,12 +29,12 @@ describe('SourceSelectorComponent', () => {
 	});
 
 	it('should fire a "AddNewSource" action', (done: DoneFn) => {
-		component.newSouceName = 'New Domain Name';
+		component.newSourceName = 'New Domain Name';
 
 		actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
 			// expect the clearing of the set variables
 			setTimeout(() => {
-				expect(component.newSouceName).toBe('');
+				expect(component.newSourceName).toBe('');
 
 				done();
 			}, 300);
