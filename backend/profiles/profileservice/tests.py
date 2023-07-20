@@ -153,7 +153,9 @@ class ProfilesTests(TestCase):
         post_request.user = MockUser()
         result = profilescrud.add_domain_to_profile(user["id"], testDomainID)
         if result["status"] == "SUCCESS":
-            assert result["id"] == user["id"] and str(testDomainID) in result["domainIDs"]
+            assert (
+                result["id"] == user["id"] and str(testDomainID) in result["domainIDs"]
+            )
         else:
             assert False
 
@@ -217,7 +219,7 @@ class ProfilesTests(TestCase):
             content_type="application/json",
         )
         post_request.user = MockUser()
-        profilescrud.add_domain_to_profile(post_request, user["id"], testDomainID)
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
         data = {"id": user["id"]}
         post_request = rf.post(
             "/profiles/get_domains_for_user", data, content_type="application/json"
@@ -225,7 +227,7 @@ class ProfilesTests(TestCase):
         post_request.user = MockUser()
         result = profilescrud.get_domains_for_user(post_request, user["id"])
         if result["status"] == "SUCCESS":
-            assert result["id"] == user["id"] and result["domainIDs"] == [testDomainID]
+            assert result["id"] == user["id"] and result["domainIDs"] == [str(testDomainID)]
         else:
             assert False
 
