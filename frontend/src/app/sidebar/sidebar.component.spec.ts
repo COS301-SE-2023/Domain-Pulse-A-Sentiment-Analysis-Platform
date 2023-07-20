@@ -122,7 +122,8 @@ describe('SidebarComponent', () => {
       description: 'Dummy Description',
       selected: false,
       imageUrl: 'Dummy Image Url',
-      sourceIds: [1, 2, 3],
+      sourceIds: ['1', '2', '3'],
+      sources: [],
     };
 
     component.selectDomain(dummyDisplayDomain);
