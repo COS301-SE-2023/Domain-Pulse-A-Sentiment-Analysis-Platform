@@ -140,3 +140,58 @@
     background-repeat: no-repeat
     background-size: cover
     width: 100%
+
+.platform-logo 
+  margin-right: 20px
+  margin-left: 20px
+  margin-top: 10px
+  margin-bottom: 10px
+  display: flex
+  flex-direction: column
+  align-items: center
+
+
+.platform-logo img 
+  height: 50px
+  width: auto
+  cursor: pointer
+  transition: height 0.3s ease
+  opacity: 0.5
+
+
+.platform-logo img.selected 
+  height: 55px
+  opacity: 1
+
+.sources-options
+  border: solid rgb(133, 133, 133) 2px
+  border-radius: 10px
+  height: 100px
+
+.outer-flex-row 
+  display: flex
+
+.source-type-title
+  font-size: 10px
+
+
+.inner-flex-row
+  flex-direction: row
+  flex-basis: 100%
+  overflow-x: auto
+  scrollbar-width: 5px
+  scrollbar-color: var(--grey-subtle)
+  border-bottom: transparent 5px solid
+
+  &::-webkit-scrollbar
+    height: 6px
+
+  &::-webkit-scrollbar-track
+    background-color: transparent
+
+  &::-webkit-scrollbar-thumb
+    background-color: var(--grey-subtle)
+    border-radius: 3px
+
+  &::-webkit-scrollbar-thumb:hover
+    background-color: var(--grey-item)

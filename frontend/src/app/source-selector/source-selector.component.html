@@ -28,7 +28,7 @@
 
   <div (click)="toggleAddSourcesModal()" class="flex-column center" style="cursor: pointer;" >
     <img
-      src="../assets/logos/add-blue.png"
+      src="../assets/icons/add-blue.svg"
       height="45px"
       style="padding-bottom: 0.5rem"
     />
@@ -75,15 +75,6 @@
       <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow" (click)="toggleAddSourcesModal()">
       <p class="modal-heading">Add a Source</p>
     </div>
-    <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">1</p>
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source Name:</p>
-          <input class="default-input" [(ngModel)]="newSouceName" type="text" />
-        </div>
-
-      </div>
       <div class="flex-column center content" style="width: 80%; gap: 0.5rem">
         <div class="flex-row" style="width: 80%">
           <p class="modal-step-tag">1</p>
@@ -91,37 +82,43 @@
             <p class="step-heading">Source Name:</p>
             <input
               class="default-input"
-              [(ngModel)]="newSouceName"
+              [(ngModel)]="newSourceName"
               type="text"
             />
           </div>
         </div>
+      
+      
 
-        <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">2</p>
-          <div class="flex-column" style="width: 100%">
-            <p class="step-heading">Source Type:</p>
-            <select
-              [(ngModel)]="newSourcePlatform"
-              style="
-                border: solid rgb(133, 133, 133) 2px;
-                height: 30px;
-                border-radius: 10px;
-              "
-            >
-              <option value="facebook">facebook</option>
-              <option value="instagram">instagram</option>
-              <option value="reddit">reddit</option>
-            </select>
+      <div class="flex-row" style="width: 80%">
+        <p class="modal-step-tag">2</p>
+
+        <div class="flex-column" style="width: 100%">
+          <p class="step-heading">Source Type:</p>
+          <div class="outer-flex-row sources-options" >
+            <div class="inner-flex-row" style="overflow-x: auto; display: flex;">
+              <div class="platform-logo" (click)="selectPlatform('googlereviews')">
+                <img src="../assets/google-reviews-logo.png" [ngClass]="{'selected': newSourcePlatform === 'googlereviews'}" alt="Google Reviews" />
+                <p class="source-type-title">Google Reviews</p>
+              </div>
+              <div class="platform-logo"  (click)="selectPlatform('tripadvisor')">
+                <img src="../assets/tripadvisor-logo.png" [ngClass]="{'selected': newSourcePlatform === 'tripadvisor'}"  alt="Trip Advisor" />
+                <p class="source-type-title">Trip Advisor</p>
+              </div>
+              <div class="platform-logo"  (click)="selectPlatform('youtube')">
+                <img src="../assets/youtube-logo.png"  [ngClass]="{'selected': newSourcePlatform === 'youtube'}" alt="Youtube" />
+                <p class="source-type-title">Youtube</p>
+              </div>
+              
+            </div>
           </div>
         </div>
-
-        <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">3</p>
-          <div class="flex-column" style="width: 100%">
-            <p class="step-heading">Source url:</p>
-            <input class="default-input" type="text" />
-          </div>
+      </div>
+      <div class="flex-row" style="width: 80%">
+        <p class="modal-step-tag">3</p>
+        <div class="flex-column" style="width: 100%">
+          <p class="step-heading">Source url:</p>
+          <input class="default-input" [(ngModel)]="newSourceUrl" type="text" />
         </div>
       </div>
 
@@ -129,7 +126,7 @@
         <button class="new-source-btn" (click)="addNewSource()">Confirm</button>
       </div>
     </div>
-    <div class="picture"></div>
+    
   </div>
 
   <div
@@ -156,7 +153,7 @@
         <p class="modal-step-tag">1</p>
         <div class="flex-column" style="width: 100%">
           <p class="step-heading">Source Name:</p>
-          <input class="default-input" [(ngModel)]="newSouceName" type="text" />
+          <input class="default-input" [(ngModel)]="newSourceName" type="text" />
         </div>
       </div>
 

@@ -16,8 +16,9 @@ export class SourceSelectorComponent {
 
   showAddSourcesModal = false;
   showEditSourceModal = false;
-  newSouceName = '';
+  newSourceName = '';
   newSourcePlatform = '';
+  newSourceUrl = '';
 
   constructor(private store: Store) {}
 
@@ -26,13 +27,34 @@ export class SourceSelectorComponent {
   }
 
   addNewSource() {
+    var params = this.determineSourceParams();
+    console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
     this.store.dispatch(
-      new AddNewSource(this.newSouceName, this.newSourcePlatform)
+      new AddNewSource(this.newSourceName, this.newSourcePlatform)
     );
-    this.newSouceName = '';
+    this.newSourceName = '';
 
     this.toggleAddSourcesModal();
+  }
+
+  determineSourceParams(): string | null {
+    if (this.newSourcePlatform === 'googlereviews' || this.newSourcePlatform === 'tripadvisor') {
+      return null; 
+    } else if (this.newSourcePlatform === 'youtube') {
+      const url = this.newSourceUrl;
+      console.log('url: ' + url);
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = url.match(regExp);
+      console.log('match: ' + match);
+      return match && match[7].length === 11 ? match[7] : null;
+    }
+  
+    return null; 
+  }
+
+  selectPlatform(platform: string) {
+    this.newSourcePlatform = platform;
   }
 
   editSource() {
