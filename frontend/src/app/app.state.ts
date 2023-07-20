@@ -21,6 +21,8 @@ import {
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ToastrService  } from 'ngx-toastr';
+
 export interface Source {
   source_id: number;
   source_name: string;
@@ -82,6 +84,7 @@ export class Comment {
   }
 }
 
+
 interface AppStateModel {
   profileId: number;
   authenticated: boolean;
@@ -110,7 +113,9 @@ export class AppState {
   constructor(
     private readonly appApi: AppApi,
     private readonly store: Store,
-    private readonly router: Router
+    private readonly router: Router,
+    private toastr: ToastrService
+
   ) {
     this.store.dispatch(new CheckAuthenticate());
     // setTimeout(() => {
@@ -492,6 +497,7 @@ export class AppState {
 
   @Action(SetProfileDetails)
   setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
+  
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         
@@ -509,6 +515,9 @@ export class AppState {
             });
 
             localStorage.setItem('profileId', state.profileId.toString());
+            this.toastr.show('This is a custom toast message!', 'Custom Toast', {
+              toastClass: 'custom-toast', // Apply the custom CSS class to the toast
+            });
 
             return true;
           } else return false;
