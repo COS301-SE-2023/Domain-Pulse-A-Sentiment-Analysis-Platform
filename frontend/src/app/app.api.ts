@@ -85,21 +85,23 @@ export class AppApi {
   addSource(
     domainID: number,
     sourceName: string,
-    sourceImageUrl: string
+    sourceImageUrl: string,
+    params: any
   ): Observable<any> {
-    const addSourceUrl = this.profilesBaseUrl + 'profiles/add_source';
-    const randomInteger = Math.floor(Math.random() * 1000000);
+    const addSourceUrl = this.domainBaseUrl + 'domains/add_source';
+
     const body = {
-      domain_id: domainID,
-      source_id: randomInteger,
-      // icon: sourceImageUrl,
-    };
+      id: domainID,
+      source_name: sourceName,
+      source_icon: sourceImageUrl,
+      params: params,
+    }
 
     return this.http.post(addSourceUrl, body, { withCredentials: true });
   }
 
   getSourceInfo(sourceID: number): Observable<any> {
-    const getSourceInfoUrl = this.profilesBaseUrl + 'profiles/get_source';
+    const getSourceInfoUrl = this.domainBaseUrl + 'domains/get_source';
     return this.http.post(
       getSourceInfoUrl,
       { id: sourceID },

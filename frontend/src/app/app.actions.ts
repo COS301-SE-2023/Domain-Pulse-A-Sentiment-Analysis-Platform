@@ -61,7 +61,7 @@ export class SetSource {
 
 export class AddNewSource {
   static readonly type = '[App] Add New Source';
-  constructor(public name: string, public platform: string) {}
+  constructor(public name: string, public platform: string, public params: any) {}
 }
 
 export class CheckAuthenticate {
