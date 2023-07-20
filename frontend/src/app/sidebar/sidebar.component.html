@@ -39,7 +39,7 @@
 
     <div class = "domain-name" *ngIf="domain.selected && _expanded" class="icons-container flex-row align-center">
       <img (click)="toggleEditDomainModal()" src="../assets/icons/pen-solid.svg" height="15px" />
-      <img src="../assets/icons/grey-trash.svg" height="15px" (click)="deleteDomain(domain.id/>
+      <img src="../assets/icons/grey-trash.svg" height="15px" (click)="deleteDomain(domain.id)"/>
 
     </div>
   </div>
@@ -248,6 +248,7 @@
     </div>
     <div class="picture"></div>
   </div>
+</div>
 </dp-modal-container>
 
 <dp-modal-container
