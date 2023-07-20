@@ -56,13 +56,11 @@ export class MainComponent implements OnInit {
     this.store.dispatch(new GetDomains());
   }
 
-  openSidebar() {
-    this.sidebarCollapsed = false;
+  
+
+  toggleSidebar() {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
-  colapseSidebar() {
-    setTimeout(() => {
-      this.sidebarCollapsed = true;
-    }, 300);
-  }
+  
 }

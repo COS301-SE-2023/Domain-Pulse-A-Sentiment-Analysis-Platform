@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   trigger,
   state,
@@ -74,6 +74,14 @@ export class SidebarComponent implements OnInit {
       console.log('Profile ID not found in local storage.');
     }
   }
+
+  @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
+
+  clickSidebar() {
+    this.sidebarClicked.emit();
+  }
+
+ 
 
 
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;

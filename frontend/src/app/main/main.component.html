@@ -1,10 +1,9 @@
 <div class="flex-row app-container">
   <dp-sidebar
-    [expanded]="!sidebarCollapsed"
-    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-    (mouseenter)="openSidebar()"
-    (mouseleave)="colapseSidebar()"
-  ></dp-sidebar>
+  [expanded]="!sidebarCollapsed"
+  [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+  (sidebarClicked)="toggleSidebar()"
+></dp-sidebar>
   <div
     *ngIf="selectedDomain$ | async as selectedDomain"
     class="flex-column"
