@@ -10,7 +10,15 @@ export class LoadUserDomains {
 
 export class SetProfileId {
   static readonly type = '[App] Set Profile Id';
-  constructor(public profileId: number) {}
+  constructor(public profileId: number) { }
+}
+
+export class SetProfileDetails {
+  static readonly type = '[App] Set Profile Details';
+  constructor(
+      public profileDetails: any,
+      public profileId: number
+    ) { }
 }
 
 export class SetUser {
@@ -23,7 +31,7 @@ export class GetDomains {
 
 export class SetDomain {
   static readonly type = '[App] Set Domain';
-  constructor(public domain: DisplayDomain) {}
+  constructor(public domain: DisplayDomain) { }
 }
 
 export class AddNewDomain {
@@ -32,7 +40,7 @@ export class AddNewDomain {
     public domainName: string,
     public domainImagUrl: string,
     public description: string
-  ) {}
+  ) { }
 }
 
 export class EditDomain {
@@ -42,12 +50,12 @@ export class EditDomain {
     public domainName: string,
     public domainImagUrl: string,
     public description: string
-  ) {}
+  ) { }
 }
 
 export class DeleteDomain {
   static readonly type = '[App] Delete Domain';
-  constructor(public domainID: number) {}
+  constructor(public domainID: number) { }
 }
 
 export class GetSources {
@@ -56,12 +64,12 @@ export class GetSources {
 
 export class SetSource {
   static readonly type = '[App] Set Source';
-  constructor(public source: DisplaySource) {}
+  constructor(public source: DisplaySource) { }
 }
 
 export class AddNewSource {
   static readonly type = '[App] Add New Source';
-  constructor(public name: string, public platform: string) {}
+  constructor(public name: string, public platform: string) { }
 }
 
 export class CheckAuthenticate {
@@ -74,7 +82,7 @@ export class GetSourceDashBoardInfo {
 
 export class AttempPsswdLogin {
   static readonly type = '[Auth] Attemp Login';
-  constructor(public username: string, public password: string) {}
+  constructor(public username: string, public password: string) { }
 }
 
 export class RegisterUser {
@@ -83,10 +91,10 @@ export class RegisterUser {
     public username: string,
     public password: string,
     public email: string
-  ) {}
+  ) { }
 }
 
 export class ChooseStatistic {
   static readonly type = '[App] Choose Statistic';
-  constructor(public statisticIndex: number) {}
+  constructor(public statisticIndex: number) { }
 }

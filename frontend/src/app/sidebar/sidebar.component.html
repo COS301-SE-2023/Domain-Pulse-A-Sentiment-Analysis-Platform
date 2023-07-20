@@ -79,8 +79,10 @@
         height="44px"
       />
     </div>
-    <p class="domain-name" *ngIf="_expanded" style="color: black">John Doe</p>
-    <div *ngIf="_expanded" class="icons-container flex-row align-center">
+    <ng-container *ngIf="(profileDetails$ | async) as profileDetails">
+      <p class="domain-name" *ngIf="_expanded" style="color: black">{{ profileDetails.username }}</p>
+    </ng-container>
+        <div *ngIf="_expanded" class="icons-container flex-row align-center">
       <img src="../assets/icons/settings.svg" height="15px" />
     </div>
   </div>

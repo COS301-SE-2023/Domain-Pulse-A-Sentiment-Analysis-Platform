@@ -61,6 +61,7 @@ import {
 })
 export class SidebarComponent {
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
+  @Select(AppState.profileDetails) profileDetails$!: Observable<any | null>;
   smallLogoState = 'in';
   showSmallLogo = true;
   fullLogoState = 'out';

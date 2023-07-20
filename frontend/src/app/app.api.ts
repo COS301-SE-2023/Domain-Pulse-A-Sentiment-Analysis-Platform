@@ -148,4 +148,66 @@ export class AppApi {
       withCredentials: true,
     });
   }
+
+  /* export interface ProfileDetails {
+  userId: number;
+  username: string;
+  profileIconUrl: string;
+} */
+
+/* 
+  @Action(SetProfileDetails)
+  setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
+    this.appApi.setProfileDetails().subscribe((res: any) => {
+      if (res.status == 'SUCCESS') {
+        
+        ctx.patchState({
+          profileDetails: res.profileDetails,
+        });
+        return true;
+      } else return false;
+    });
+  } */
+
+  getProfile(profileID: number): Observable<any> {
+    const getProfileUrl = this.profilesBaseUrl + 'profiles/get_profile';
+    const body = {
+      id: profileID,
+    };
+    // send with credentials enabled
+    return this.http.post(getProfileUrl, body, {
+      withCredentials: true,
+    });
+  }
+
+  //gte user
+  getUserByID(userID: number): Observable<any> {
+    const getUserUrl = this.profilesBaseUrl + 'profiles/get_user_by_id';
+    const body = {
+      id: userID,
+    };
+    // send with credentials enabled
+    return this.http.post(getUserUrl, body, {
+      withCredentials: true,
+    });
+  }
+
+  /* setProfileDetails(): Observable<any> {
+    const setProfileDetailsUrl =
+      this.profilesBaseUrl + 'profiles/get_profile';
+    const profile= this.http.post(setProfileDetailsUrl, {}, { withCredentials: true });
+    if(profile.status)
+  } */
+    
+    
+
+  /* setProfileID(profileID: number): Observable<any> {
+
+    const setProfileIDUrl = this.profilesBaseUrl + 'profiles/set_profile_id';
+    const body = {
+      id: profileID,
+    };
+
+    return this.http.post(setProfileIDUrl, body, { withCredentials: true });
+  } */
 }

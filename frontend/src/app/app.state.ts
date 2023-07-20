@@ -17,6 +17,7 @@ import {
   EditDomain,
   DeleteDomain,
   Demo2Setup,
+  SetProfileDetails,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -49,6 +50,12 @@ export interface SentimentScores {
   objectivityScore: number;
   subjectivityScore: number;
   analysedSum: number;
+}
+
+export interface ProfileDetails {
+  userId: number;
+  username: string;
+  profileIconUrl: string;
 }
 
 export class Comment {
@@ -85,6 +92,7 @@ interface AppStateModel {
   // sampleData?: Comment[];
   sampleData?: any[];
   selectedStatisticIndex: number;
+  profileDetails?: ProfileDetails;
 }
 
 @State<AppStateModel>({
@@ -153,6 +161,12 @@ export class AppState {
   @Selector()
   static statisticIndex(state: AppStateModel) {
     return state.selectedStatisticIndex;
+  }
+
+  @Selector()
+  static profileDetails(state: AppStateModel) {
+    if (state.profileDetails) return state.profileDetails;
+    return undefined;
   }
 
   @Action(GetDomains)
@@ -467,11 +481,14 @@ export class AppState {
   
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
+    console.log("attempting password login");
     this.appApi
       .attemptPsswdLogin(state.username, state.password)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
           this.store.dispatch(new SetProfileId(res.id));
+          console.log("here");
+          this.store.dispatch(new SetProfileDetails(res, res.id));
           this.store.dispatch(new GetDomains());
           this.router.navigate(['']);
         } else {
@@ -480,6 +497,41 @@ export class AppState {
         }
       });
   }
+
+  @Action(SetProfileId)
+  setProfileId(ctx: StateContext<AppStateModel>, state: SetProfileId) {
+    ctx.patchState({
+      profileId: state.profileId,
+    });
+    //just testing
+    console.log(state.profileId);
+    localStorage.setItem('profileID', JSON.stringify(state.profileId));
+  }
+
+  @Action(SetProfileDetails)
+  setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
+    this.appApi.getProfile(state.profileId).subscribe((res: any) => {
+      if (res.status == 'SUCCESS') {
+        
+        this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
+          if (res.status == 'SUCCESS') {
+            
+
+            ctx.patchState({
+             profileDetails: {
+                userId: res.userID,
+                username: res2.username,
+                profileIconUrl: res.profileIconUrl,
+              }
+            });
+            return true;
+          } else return false;
+        });
+        return true;
+      } else return false;
+    });
+  }
+
 
   @Action(RegisterUser)
   registerUser(ctx: StateContext<AppStateModel>, state: RegisterUser) {
