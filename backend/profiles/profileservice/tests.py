@@ -180,7 +180,7 @@ class ProfilesTests(TestCase):
             content_type="application/json",
         )
         post_request.user = MockUser()
-        profilescrud.add_domain_to_profile(post_request, user["id"], testDomainID)
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
         data = {"id": user["id"], "domain_id": testDomainID}
         post_request = rf.post(
             "/profiles/remove_domain_from_profile",
@@ -188,12 +188,11 @@ class ProfilesTests(TestCase):
             content_type="application/json",
         )
         post_request.user = MockUser()
-        result = profilescrud.remove_domain_from_profile(
-            post_request, user["id"], testDomainID
-        )
+        result = profilescrud.remove_domain_from_profile(user["id"], testDomainID)
         if result["status"] == "SUCCESS":
             assert (
-                result["id"] == user["id"] and testDomainID not in result["domainIDs"]
+                result["id"] == user["id"]
+                and str(testDomainID) not in result["domainIDs"]
             )
         else:
             assert False
@@ -227,7 +226,9 @@ class ProfilesTests(TestCase):
         post_request.user = MockUser()
         result = profilescrud.get_domains_for_user(post_request, user["id"])
         if result["status"] == "SUCCESS":
-            assert result["id"] == user["id"] and result["domainIDs"] == [str(testDomainID)]
+            assert result["id"] == user["id"] and result["domainIDs"] == [
+                str(testDomainID)
+            ]
         else:
             assert False
 
