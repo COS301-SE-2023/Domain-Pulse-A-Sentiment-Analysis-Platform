@@ -226,8 +226,9 @@
       </div>
       <ng-container *ngIf="(profileDetails$ | async) as profileDetails">
         <p class="profile-name">{{profileDetails.username}}</p>
+        <p class="email">{{profileDetails.email}}</p>
       </ng-container>
-      <img (click)="toggleProfileEditModal()" src="../assets/icons/editdark.svg" class="profile-icon" />
+      <img (click)="toggleProfileEditModal()" src="../assets/icons/editdark.svg" class="profile-icon" style="padding-top: 2rem;"/>
     </div>
 
     <div class="button-div">

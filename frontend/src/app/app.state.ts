@@ -56,6 +56,7 @@ export interface SentimentScores {
 export interface ProfileDetails {
   userId: number;
   username: string;
+  email: string;
   profileIconUrl: string;
 }
 
@@ -502,6 +503,7 @@ export class AppState {
              profileDetails: {
                 userId: res.userID,
                 username: res2.username,
+                email: res2.email,
                 profileIconUrl: res.profileIconUrl,
               }
             });
