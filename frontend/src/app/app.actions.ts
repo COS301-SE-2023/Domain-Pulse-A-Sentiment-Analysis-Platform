@@ -13,10 +13,13 @@ export class SetProfileId {
   constructor(public profileId: number) { }
 }
 
+/* export class GetProfileID {
+  static readonly type = '[App] Get Profile ID';
+} */
+
 export class SetProfileDetails {
   static readonly type = '[App] Set Profile Details';
   constructor(
-      public profileDetails: any,
       public profileId: number
     ) { }
 }

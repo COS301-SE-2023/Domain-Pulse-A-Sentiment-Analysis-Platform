@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   trigger,
   state,
@@ -7,13 +7,14 @@ import {
   transition,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
-import { AppState, DisplayDomain } from '../app.state';
+import { AppState, DisplayDomain, ProfileDetails } from '../app.state';
 import { Observable } from 'rxjs';
 import {
   AddNewDomain,
   DeleteDomain,
   EditDomain,
   SetDomain,
+  SetProfileDetails,
 } from '../app.actions';
 
 @Component({
@@ -59,9 +60,24 @@ import {
     ]),
   ],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+
+  ngOnInit(): void {
+    const profileIdFromLocalStorage = localStorage.getItem('profileId');
+
+    if (profileIdFromLocalStorage !== null) {
+      const profileIdValue = parseInt(profileIdFromLocalStorage, 10);
+
+      this.store.dispatch(new SetProfileDetails(profileIdValue));
+    } else {
+
+      console.log('Profile ID not found in local storage.');
+    }
+  }
+
+
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
-  @Select(AppState.profileDetails) profileDetails$!: Observable<any | null>;
+  @Select(AppState.profileDetails) profileDetails$!: Observable<ProfileDetails | null>;
   smallLogoState = 'in';
   showSmallLogo = true;
   fullLogoState = 'out';

@@ -488,7 +488,7 @@ export class AppState {
         if (res.status == 'SUCCESS') {
           this.store.dispatch(new SetProfileId(res.id));
           console.log("here");
-          this.store.dispatch(new SetProfileDetails(res, res.id));
+          this.store.dispatch(new SetProfileDetails(res.id));
           this.store.dispatch(new GetDomains());
           this.router.navigate(['']);
         } else {
@@ -503,10 +503,22 @@ export class AppState {
     ctx.patchState({
       profileId: state.profileId,
     });
-    //just testing
+    /* //just testing
     console.log(state.profileId);
-    localStorage.setItem('profileID', JSON.stringify(state.profileId));
+    localStorage.setItem('profileID', JSON.stringify(state.profileId)); */
   }
+
+  /* @Action(GetProfileID)
+  getProfileID(ctx: StateContext<AppStateModel>) {
+    this.appApi.getProfileID().subscribe((res: any) => {
+      if (res.status == 'SUCCESS') {
+        ctx.patchState({
+          profileId: res.id,
+        });
+        return true;
+      } else return false;
+    });
+  } */
 
   @Action(SetProfileDetails)
   setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
@@ -524,6 +536,9 @@ export class AppState {
                 profileIconUrl: res.profileIconUrl,
               }
             });
+
+            localStorage.setItem('profileId', state.profileId.toString());
+
             return true;
           } else return false;
         });
@@ -531,6 +546,7 @@ export class AppState {
       } else return false;
     });
   }
+  
 
 
   @Action(RegisterUser)
