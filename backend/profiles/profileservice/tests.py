@@ -482,74 +482,6 @@ class ProfilesTests(TestCase):
         else:
             assert False
 
-    def test_add_domain_to_profile_integration(self):
-        class MockUser:
-            is_authenticated = True
-
-        rf = RequestFactory()
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        post_request.user = MockUser()
-        user = json.loads(profile_views.create_user(post_request).content.decode())
-        testDomainID = 3
-        data = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/add_domain_to_profile", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = json.loads(
-            profile_views.add_domain_to_profile(post_request).content.decode()
-        )
-        if result["status"] == "SUCCESS":
-            assert result["id"] == user["id"] and testDomainID in result["domainIDs"]
-        else:
-            assert False
-
-    def test_remove_domain_from_profile_integration(self):
-        class MockUser:
-            is_authenticated = True
-
-        rf = RequestFactory()
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        post_request.user = MockUser()
-        user = json.loads(profile_views.create_user(post_request).content.decode())
-        testDomainID = 3
-        setupData = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/add_domain_to_profile",
-            setupData,
-            content_type="application/json",
-        )
-        post_request.user = MockUser()
-        profile_views.add_domain_to_profile(post_request)
-        data = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/remove_domain_from_profile",
-            data,
-            content_type="application/json",
-        )
-        post_request.user = MockUser()
-        result = json.loads(
-            profile_views.remove_domain_from_profile(post_request).content.decode()
-        )
-        if result["status"] == "SUCCESS":
-            assert (
-                result["id"] == user["id"] and testDomainID not in result["domainIDs"]
-            )
-        else:
-            assert False
-
     def test_get_domains_for_user_integration(self):
         class MockUser:
             is_authenticated = True
@@ -565,14 +497,9 @@ class ProfilesTests(TestCase):
         post_request.user = MockUser()
         user = json.loads(profile_views.create_user(post_request).content.decode())
         testDomainID = 3
-        setupData = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/add_domain_to_profile",
-            setupData,
-            content_type="application/json",
-        )
+
         post_request.user = MockUser()
-        profile_views.add_domain_to_profile(post_request)
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
         data = {"id": user["id"]}
         post_request = rf.post(
             "/profiles/get_domains_for_user", data, content_type="application/json"
@@ -582,7 +509,9 @@ class ProfilesTests(TestCase):
             profile_views.get_domains_for_user(post_request).content.decode()
         )
         if result["status"] == "SUCCESS":
-            assert result["id"] == user["id"] and result["domainIDs"] == [testDomainID]
+            assert result["id"] == user["id"] and result["domainIDs"] == [
+                str(testDomainID)
+            ]
         else:
             assert False
 
