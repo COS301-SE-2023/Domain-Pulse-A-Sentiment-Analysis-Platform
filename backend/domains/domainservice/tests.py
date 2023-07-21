@@ -81,3 +81,11 @@ class DomainsTests(TestCase):
     def test_get_domain(self, mock_find):
         result = domainscrud.get_domain("64a2d2a2580b40e94e42b72a")
         self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
+
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    def test_update_last_refresh(self, mock_update, mock_find):
+        result = domainscrud.update_last_refresh("64a2d2a2580b40e94e42b72a", 1)
+        self.assertEqual(result, True)
