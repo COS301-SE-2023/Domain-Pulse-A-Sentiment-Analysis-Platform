@@ -96,7 +96,7 @@ class DomainsTests(TestCase):
     )
     def test_add_source(self, mock_find, mock_update):
         result = domainscrud.add_source(
-            "64a2d2a2580b40e94e42b72a", "testSource", "testSource.com", {}
+            "64a2d2a2580b40e94e42b72a", "testSource2", "testSource2.com", {}
         )
         self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
         self.assertEqual(result["name"], "test")
@@ -106,9 +106,19 @@ class DomainsTests(TestCase):
             {
                 "source_id": result["new_source_id"],
                 "last_refresh_timestamp": 0,
-                "source_name": "testSource",
-                "source_icon": "testSource.com",
+                "source_name": "testSource2",
+                "source_icon": "testSource2.com",
                 "params": {},
             },
             result["sources"],
         )
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_remove_source(self, mock_find, mock_update):
+        result = domainscrud.remove_source(
+            "64a2d2a2580b40e94e42b72a", "64a2d2e0b5b66c122b03e8d2"
+        )
+        self.assertNotIn("64a2d2e0b5b66c122b03e8d2", result["sources"])
