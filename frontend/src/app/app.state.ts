@@ -608,62 +608,7 @@ export class AppState {
         }
       });
   }
-
-  // fake soruce to info
-  private idToSource(id: string): DisplaySource {
-    let displaySource: DisplaySource;
-    switch (id) {
-      case '0':
-        displaySource = {
-          id: id,
-          name: 'Goddess Cafe Waterkloof',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-        break;
-      case '1':
-        displaySource = {
-          id: id,
-          name: 'Goddess Cafe Rietondale',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-        break;
-      case '2':
-        displaySource = {
-          id: id,
-          name: "Heineken Champion's Cup",
-          url: 'instagram-Icon.png',
-          selected: false,
-        };
-        break;
-      case '3':
-        displaySource = {
-          id: id,
-          name: 'Cell C Sharks',
-          url: 'instagram-Icon.png',
-          selected: false,
-        };
-        break;
-      case '4':
-        displaySource = {
-          id: id,
-          name: 'Tuks',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-        break;
-      default:
-        displaySource = {
-          id: id,
-          name: 'Goddess Cafe Waterkloof',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-    }
-    return displaySource;
-  }
-
+  
   @Action(ChooseStatistic)
   chooseStatistic(ctx: StateContext<AppStateModel>, state: ChooseStatistic) {
     ctx.patchState({
