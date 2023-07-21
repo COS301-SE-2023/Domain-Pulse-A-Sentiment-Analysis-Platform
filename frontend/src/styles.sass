@@ -111,8 +111,8 @@ p
     transition: transform 0.4s ease 
     will-change: transform
 
-.clickable-item:active
-    animation: click-animation 0.4s ease-in-out 
+.clickable-item:not(:active)
+    animation: click-animation 0.4s ease 
 
 .clickable-item:hover
     transform: scale(1.075)
@@ -130,8 +130,8 @@ p
     cursor: pointer
     will-change: transform
 
-.clickable-item-nohover:active
-    animation: click-animation 0.4s ease-in-out 
+.clickable-item-nohover:not(:active)
+    animation: click-animation 0.4s ease
 
 
 @keyframes click-animation
