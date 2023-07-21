@@ -108,11 +108,11 @@ p
 //Clickable items
 .clickable-item
     cursor: pointer
-    transition: transform 0.4s ease
+    transition: transform 0.4s ease 
     will-change: transform
 
 .clickable-item:active
-    animation: click-animation 0.4s ease-in-out
+    animation: click-animation 0.4s ease-in-out 
 
 .clickable-item:hover
     transform: scale(1.075)
@@ -122,5 +122,22 @@ p
         transform: scale(1)
     50%
         transform: scale(1.1)
+    100%
+        transform: scale(1)
+
+//Clickable items without hover
+.clickable-item-nohover
+    cursor: pointer
+    will-change: transform
+
+.clickable-item-nohover:active
+    animation: click-animation 0.4s ease-in-out 
+
+
+@keyframes click-animation
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(0.95)
     100%
         transform: scale(1)
