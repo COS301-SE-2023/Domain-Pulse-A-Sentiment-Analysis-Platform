@@ -5,7 +5,7 @@ import pymongo
 def add_record(new_record):
     client = pymongo.MongoClient(db_connection.HOST, db_connection.PORT)
     db = client[db_connection.DB_NAME]
-    collection = db[db_connection.SENTIMENT_RECORDS]
+    collection = db["sentiment_records"]
     collection.insert_one(new_record)
     client.close()
 

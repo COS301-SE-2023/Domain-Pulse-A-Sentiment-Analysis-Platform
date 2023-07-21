@@ -50,6 +50,8 @@ CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?:\/\/)?((\w(-\w)*)+\.)*domain-pulse\.co\.za$',
 )
 
+CORS_ALLOW_CREDENTIALS = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,7 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'query',
-    "corsheaders",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
