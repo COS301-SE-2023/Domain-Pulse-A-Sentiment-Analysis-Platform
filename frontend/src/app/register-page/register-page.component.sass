@@ -12,7 +12,11 @@
     display: flex
     height: 100vh
 
-.left-side, .right-side
+.left-side
+    flex: 1
+    height: 100%
+
+.right-side
     flex: 1
     height: 100%
 
@@ -55,7 +59,7 @@ body
     height: 2rem
     width: 60%
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
-    margin-bottom: 20px
+    margin-bottom: 10px
     padding: 4px
 
 .inputBar2
@@ -64,7 +68,7 @@ body
     height: 2rem
     width: 60%
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
-    margin-bottom: 20px
+    margin-bottom: 10px
     padding: 4px
 
 .email
@@ -107,3 +111,11 @@ body
     height: 30px
     font-size: 8px
     margin-top: 5%
+
+.wave-art
+    position: absolute
+    bottom: 0
+    left: 0
+    width: 100%
+    height: auto
+    pointer-events: none
