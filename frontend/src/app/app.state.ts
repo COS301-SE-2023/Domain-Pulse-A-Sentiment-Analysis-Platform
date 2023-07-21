@@ -184,7 +184,7 @@ export class AppState {
         this.toastr.error('Your domains could not be retrieved', '', {
           timeOut: 3000,
           positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+          toastClass: 'custom-toast error ngx-toastr',
         });
         return;
       }
@@ -202,7 +202,7 @@ export class AppState {
               {
                 timeOut: 3000,
                 positionClass: 'toast-bottom-center',
-                toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+                toastClass: 'custom-toast error ngx-toastr',
               }
             );
             return;
@@ -353,7 +353,7 @@ export class AppState {
         this.toastr.error('Source data could not be refreshed', '', {
           timeOut: 3000,
           positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+          toastClass: 'custom-toast error ngx-toastr',
         });
         return;
       }
@@ -372,7 +372,7 @@ export class AppState {
           this.toastr.error('Your domain could not be added', '', {
             timeOut: 3000,
             positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+            toastClass: 'custom-toast error ngx-toastr',
           });
           return;
         }
@@ -390,7 +390,7 @@ export class AppState {
                 {
                   timeOut: 3000,
                   positionClass: 'toast-bottom-center',
-                  toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+                  toastClass: 'custom-toast error ngx-toastr',
                 }
               );
               return;
@@ -487,7 +487,7 @@ export class AppState {
         this.toastr.error('Sentiment data could not be retrieved', '', {
           timeOut: 3000,
           positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+          toastClass: 'custom-toast error ngx-toastr',
         });
         return;
       }
@@ -530,7 +530,7 @@ export class AppState {
             this.toastr.error('Login failed', '', {
               timeOut: 3000,
               positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+              toastClass: 'custom-toast error ngx-toastr',
             });
           });
         }
@@ -564,13 +564,7 @@ export class AppState {
     ctx: StateContext<AppStateModel>,
     state: SetProfileDetails
   ) {
-    this.ngZone.run(() => {
-      this.toastr.error('Login failed', '', {
-        timeOut: 3000,
-        positionClass: 'toast-bottom-center',
-        toastClass: 'custom-toast error ngx-toastr', // Add the custom CSS class here
-      });
-    });
+    
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
@@ -602,11 +596,14 @@ export class AppState {
         if (res.status == 'SUCCESS') {
           this.router.navigate(['']);
         } else {
-          this.toastr.error('Your account could not be registered', '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast ngx-toastr', // Add the custom CSS class here
+          this.ngZone.run(() => {
+            this.toastr.error('Your account could not be registered', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast error ngx-toastr',
+            });
           });
+          
         }
       });
   }

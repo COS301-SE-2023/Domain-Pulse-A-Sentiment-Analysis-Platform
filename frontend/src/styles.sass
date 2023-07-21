@@ -91,15 +91,19 @@ p
     transition: all 0.3s ease
 
     &.error
-        background-color: rgba(184, 0, 0, 0.8) !important
+        background-color: rgba(184, 0, 0, 0.7) !important
 
     &.success
-        background-color: rgba(0, 184, 0, 0.8) !important
+        background-color: rgba(0, 184, 0, 0.7) !important
+
+    &.error:hover
+        background-color: rgba(184, 0, 0, 0.9) !important
+
+    &.success:hover
+        background-color: rgba(0, 184, 0, 0.9) !important
 
 
 .custom-toast:hover
     cursor: pointer
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4) !important
-    opacity: 0.6 !important
-
 
