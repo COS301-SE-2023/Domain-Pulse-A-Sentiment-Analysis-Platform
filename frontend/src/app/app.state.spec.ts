@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { ToastrModule } from 'ngx-toastr'; // Add this import
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppState } from './app.state';
 import {
@@ -30,15 +31,17 @@ describe('AppState', () => {
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
 
     await TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([AppState])],
+      imports: [
+        NgxsModule.forRoot([AppState]),
+        ToastrModule.forRoot(), // Add ToastrModule here
+      ],
       providers: [{ provide: AppApi, useValue: apiSpy }],
-      //   teardown: { destroyAfterEach: false },
     }).compileComponents();
 
     store = TestBed.inject(Store);
     actions$ = TestBed.inject(Actions);
   });
-
+  
   it('set the correct dashboard info if there is a source that is selected', () => {
     // dispatch event
 
