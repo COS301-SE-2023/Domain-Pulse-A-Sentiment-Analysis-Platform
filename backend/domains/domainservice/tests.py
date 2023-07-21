@@ -76,3 +76,8 @@ class DomainsTests(TestCase):
     def test_delete_domain(self, mock_delete):
         result = domainscrud.delete_domain("64a2d2a2580b40e94e42b72a")
         self.assertEqual(result["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    def test_get_domain(self, mock_find):
+        result = domainscrud.get_domain("64a2d2a2580b40e94e42b72a")
+        self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
