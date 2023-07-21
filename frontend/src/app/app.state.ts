@@ -22,6 +22,9 @@ import {
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ToastrService  } from 'ngx-toastr';
+import { NgZone } from '@angular/core';
+
+
 
 export interface Source {
   source_id: number;
@@ -100,6 +103,8 @@ interface AppStateModel {
   profileDetails?: ProfileDetails;
 }
 
+
+
 @State<AppStateModel>({
   name: 'app',
   defaults: {
@@ -114,7 +119,9 @@ export class AppState {
     private readonly appApi: AppApi,
     private readonly store: Store,
     private readonly router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private ngZone: NgZone
+
 
   ) {
     this.store.dispatch(new CheckAuthenticate());
@@ -180,8 +187,12 @@ export class AppState {
   getDomains(ctx: StateContext<AppStateModel>) {
     this.appApi.getDomainIDs(ctx.getState().profileId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
-        // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE #1');
+        
+        this.toastr.error('Your domains could not be retrieved', '', {
+          timeOut: 3000,
+          positionClass: 'toast-bottom-center',
+          toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+        });
         return;
       }
 
@@ -192,8 +203,12 @@ export class AppState {
       domainIDs.map((domainID: number) => {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
-            // CHRIS ERROR HANDLE
-            alert('CHRIS ERROR HANDLE #2');
+            
+            this.toastr.error('The info for one of your domains could not be retrieved', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+            });
             return;
           }
 
@@ -324,8 +339,11 @@ export class AppState {
       .addDomain(state.domainName, state.description, state.domainImagUrl)
       .subscribe((res) => {
         if (res.status === 'FAILURE') {
-          // CHRIS ERROR HANDLE
-          alert('CHRIS ERROR HANDLE #3');
+          this.toastr.error('Your domain could not be added', '', {
+            timeOut: 3000,
+            positionClass: 'toast-bottom-center',
+            toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+          });
           return;
         }
 
@@ -336,8 +354,11 @@ export class AppState {
             console.log(res2);
 
             if (res2.status === 'FAILURE') {
-              // CHRIS ERROR HANDLE
-              alert('CHRIS ERROR HANDLE #4');
+              this.toastr.error('Your domain could not be linked to your profile', '', {
+                timeOut: 3000,
+                positionClass: 'toast-bottom-center',
+                toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+              });
               return;
             }
 
@@ -429,8 +450,11 @@ export class AppState {
 
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE #5');
+        this.toastr.error('Sentiment data could not be retrieved', '', {
+          timeOut: 3000,
+          positionClass: 'toast-bottom-center',
+          toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+        });
         return;
       }
 
@@ -457,21 +481,29 @@ export class AppState {
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
     console.log("attempting password login");
-    this.appApi
-      .attemptPsswdLogin(state.username, state.password)
-      .subscribe((res) => {
-        if (res.status == 'SUCCESS') {
-          this.store.dispatch(new SetProfileId(res.id));
-          console.log("here");
-          this.store.dispatch(new SetProfileDetails(res.id));
-          this.store.dispatch(new GetDomains());
-          this.router.navigate(['']);
-        } else {
-          // CHRIS ERROR HANDLE
-          alert('ERROR FOR CHRIS #6');
-        }
-      });
+
+      this.appApi
+        .attemptPsswdLogin(state.username, state.password)
+        .subscribe((res) => {
+          if (res.status == 'SUCCESS') {
+            this.store.dispatch(new SetProfileId(res.id));
+            console.log("here");
+            this.store.dispatch(new SetProfileDetails(res.id));
+            this.store.dispatch(new GetDomains());
+            this.router.navigate(['']);
+          } else {
+            this.ngZone.run(() => {
+              this.toastr.error('Login failed', '', {
+                timeOut: 3000,
+                positionClass: 'toast-bottom-center',
+                toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+              });
+            });
+          }
+        });
+    
   }
+
 
   @Action(SetProfileId)
   setProfileId(ctx: StateContext<AppStateModel>, state: SetProfileId) {
@@ -497,7 +529,11 @@ export class AppState {
 
   @Action(SetProfileDetails)
   setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
-  
+    this.toastr.error('Login failed', '', {
+      timeOut: 3000,
+      positionClass: 'toast-bottom-center',
+      toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+    });
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         
@@ -515,12 +551,7 @@ export class AppState {
             });
 
             localStorage.setItem('profileId', state.profileId.toString());
-            this.toastr.success('Success message', '', {
-              
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
-            });
+            
             
 
             return true;
@@ -541,8 +572,11 @@ export class AppState {
         if (res.status == 'SUCCESS') {
           this.router.navigate(['']);
         } else {
-          // CHRIS ERROR HANDLE
-          alert('ERROR FOR CHRIS #7');
+          this.toastr.error('Your account could not be registered', '', {
+            timeOut: 3000,
+            positionClass: 'toast-bottom-center',
+            toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+          });;
         }
       });
   }
