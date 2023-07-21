@@ -17,7 +17,7 @@ class MockedItem:
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
-                "params": {},
+                "params": {"t": "t"},
             }
         ]
 
@@ -48,7 +48,7 @@ def mocked_find_one(dummy):
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
-                "params": {},
+                "params": {"t": "t"},
             }
         ],
     }
@@ -136,3 +136,15 @@ class DomainsTests(TestCase):
         )
         self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
         self.assertEqual(result["sources"][0]["params"][test_key], test_value)
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_delete_param(self, mock_find, mock_update):
+        test_key = "t"
+        result = domainscrud.delete_param(
+            "64a2d2a2580b40e94e42b72a", "64a2d2e0b5b66c122b03e8d2", test_key
+        )
+        self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
+        self.assertNotIn(test_key, result["sources"][0]["params"])
