@@ -28,6 +28,7 @@
           type="text"
           class="inputBar"
           name="username"
+          style="margin-bottom: 40px"
         />
 
         <label for="password" class="password">Password</label>
@@ -52,9 +53,7 @@
       </div>
     </div>
 
-    <div class="forgot">
-      <p>Already have an account?</p>
-    </div>
+    
 
     <div
       class="flex-row content center"
@@ -62,11 +61,14 @@
     >
       <div class="flex-column" style="width: 100%">
         <div>
-          <button routerLink="/login" class="button">Log In</button>
+          
+          <div class="alternative-option">
+            <p class="clickable-item"  routerLink="/login">Already have an account?</p>
+          </div>
         </div>
-        <div>
+        <!-- <div>
           <button class="button2">Sign in with Google</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
