@@ -56,6 +56,7 @@ def get_dashboard_data_source(request: HttpRequest):
             agg_response_body = response_from_aggregator.json()
 
             response["aggregated_metrics"] = agg_response_body["overall"]
+            response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
 
             return JsonResponse(response)
@@ -108,6 +109,7 @@ def get_dashboard_data_domain(request: HttpRequest):
             agg_response_body = response_from_aggregator.json()
 
             response["aggregated_metrics"] = agg_response_body["overall"]
+            response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
 
             return JsonResponse(response)
