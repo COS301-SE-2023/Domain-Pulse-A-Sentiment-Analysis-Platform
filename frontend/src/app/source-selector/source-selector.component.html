@@ -2,7 +2,7 @@
   <ng-container *ngIf="sources$ | async as sources; else loadingSources">
     <div
       *ngFor="let source of sources"
-      class="source-cat flex-column center"
+      class="source-cat flex-column center clickable-item-nohover"
       (click)="selectSource(source)"
       [ngClass]="{ 'source-cat-selected': source.selected }"
     >
