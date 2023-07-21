@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap')
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap')
-
+@import 'ngx-toastr/toastr'
 // global style variables
 $background-light: #e0efff
 $primary-light: #037fff
@@ -84,15 +84,16 @@ p
     align-items: center
 
 
-.toast-container 
-  position: fixed
-  top: 1rem
-  right: 1rem
-
 .custom-toast 
-  background-color: #ff0000
-  color: #ffffff
-  font-size: 16px
-  padding: 12px
-  border-radius: 4px
+    width: 40% !important
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) !important
+    opacity: 0.8 !important
+    border-radius: 0.5rem !important
+    transition: all 0.3s ease
+
+.custom-toast:hover
+    cursor: pointer
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4) !important
+    opacity: 1 !important
+
 

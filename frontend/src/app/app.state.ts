@@ -515,9 +515,13 @@ export class AppState {
             });
 
             localStorage.setItem('profileId', state.profileId.toString());
-            this.toastr.show('This is a custom toast message!', 'Custom Toast', {
-              toastClass: 'custom-toast', // Apply the custom CSS class to the toast
+            this.toastr.success('Success message', '', {
+              
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
             });
+            
 
             return true;
           } else return false;
