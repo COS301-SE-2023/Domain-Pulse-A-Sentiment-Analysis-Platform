@@ -24,7 +24,8 @@
     *ngFor="let domain of domains$ | async"
     (click)="selectDomain(domain);$event.stopPropagation()"
     class="domain flex-row align-center clickable-item"
-    [ngClass]="{ 'selected-domain': domain.selected }"
+    [ngClass]="{ 'selected-domain': domain.selected,
+    'clickable-item': !_expanded}"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
       width: _expanded ? '90%' : 'fit-content',
@@ -51,7 +52,7 @@
 
   <div
     (click)="toggleDomainModal();$event.stopPropagation()"
-    class="domain flex-row align-center clickable-item"
+    class="domain add-domain-plus flex-row align-center clickable-item"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
       width: _expanded ? '90%' : 'fit-content'
