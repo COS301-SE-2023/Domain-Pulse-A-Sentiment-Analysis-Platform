@@ -7,6 +7,7 @@ mongo_port = db_connection.PORT
 mongo_db = "domain_pulse_domains"
 mongo_collection = "domains"
 
+
 def get_source(source_id):
     client = pymongo.MongoClient(mongo_host, mongo_port)
     db = client[mongo_db]
@@ -51,8 +52,6 @@ def update_last_refresh(source_id, new_last_refresh):
 
     client.close()
 
-    print("got here")
-
     return True
 
 
@@ -73,7 +72,6 @@ def create_domain(domain_name, domain_icon, description):
         "id": str(ret.inserted_id),
         "name": domain_name,
         "icon": domain_icon,
-        "description": "",
         "description": description,
         "sources": [],
     }
