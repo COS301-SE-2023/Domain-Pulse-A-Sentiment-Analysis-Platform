@@ -1,5 +1,6 @@
 from django.test import TestCase
 from unittest import mock
+from utils import domainscrud
 
 
 class MockedItem:
@@ -10,7 +11,15 @@ class MockedItem:
         self.name = "test"
         self.icon = "test.com"
         self.description = "mock data"
-        self.sources = []
+        self.sources = [
+            {
+                "source_id": "Source1230",
+                "last_refresh_timestamp": 0,
+                "source_name": "testSource",
+                "source_icon": "testSource.com",
+                "params": {},
+            }
+        ]
 
 
 def mocked_insert_one(dummy):
@@ -32,9 +41,30 @@ def mocked_find_one(dummy):
         "name": "test",
         "icon": "test.com",
         "description": "mock data",
-        "sources": [],
+        "sources": [
+            {
+                "source_id": "Source1230",
+                "last_refresh_timestamp": 0,
+                "source_name": "testSource",
+                "source_icon": "testSource.com",
+                "params": {},
+            }
+        ],
     }
 
 
 def mocked_update_one(dummy1, dummy2):
-    return True
+    return {}
+
+
+class DomainsTests(TestCase):
+    @mock.patch(
+        "pymongo.collection.Collection.insert_one", side_effect=mocked_insert_one
+    )
+    def test_create_domain(self, mock_insert):
+        result = domainscrud.create_domain("test", "test.com", "mock data")
+        self.assertEqual(result["id"], "1234567890")
+        self.assertEqual(result["name"], "test")
+        self.assertEqual(result["icon"], "test.com")
+        self.assertEqual(result["description"], "mock data")
+        self.assertEqual(result["sources"], [])
