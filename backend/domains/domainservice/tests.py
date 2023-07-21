@@ -1,19 +1,20 @@
 from django.test import TestCase
 from unittest import mock
 from utils import domainscrud
+from bson.objectid import ObjectId
 
 
 class MockedItem:
     def __init__(self):
         self.deleted_count = 1
-        self.inserted_id = "64a2d2a2580b40e94e42b72a"
+        self.inserted_id = ObjectId("64a2d2a2580b40e94e42b72a")
         self._id = "64a2d2a2580b40e94e42b72a"
         self.name = "test"
         self.icon = "test.com"
         self.description = "mock data"
         self.sources = [
             {
-                "source_id": "64a2d2e0b5b66c122b03e8d2",
+                "source_id": ObjectId("64a2d2e0b5b66c122b03e8d2"),
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
@@ -38,13 +39,13 @@ def mocked_delete_one(dummy):
 
 def mocked_find_one(dummy):
     return {
-        "_id": "64a2d2a2580b40e94e42b72a",
+        "_id": ObjectId("64a2d2a2580b40e94e42b72a"),
         "name": "test",
         "icon": "test.com",
         "description": "mock data",
         "sources": [
             {
-                "source_id": "64a2d2e0b5b66c122b03e8d2",
+                "source_id": ObjectId("64a2d2e0b5b66c122b03e8d2"),
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
@@ -148,3 +149,8 @@ class DomainsTests(TestCase):
         )
         self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
         self.assertNotIn(test_key, result["sources"][0]["params"])
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    def test_get_source(self, mock_find):
+        result = domainscrud.get_source("64a2d2e0b5b66c122b03e8d2")
+        self.assertEqual(result["source_id"], "64a2d2e0b5b66c122b03e8d2")
