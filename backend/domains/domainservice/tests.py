@@ -121,4 +121,18 @@ class DomainsTests(TestCase):
         result = domainscrud.remove_source(
             "64a2d2a2580b40e94e42b72a", "64a2d2e0b5b66c122b03e8d2"
         )
+        self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
         self.assertNotIn("64a2d2e0b5b66c122b03e8d2", result["sources"])
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_create_param(self, mock_find, mock_update):
+        test_key = "test_key"
+        test_value = "test_value"
+        result = domainscrud.create_param(
+            "64a2d2a2580b40e94e42b72a", "64a2d2e0b5b66c122b03e8d2", test_key, test_value
+        )
+        self.assertEqual(result["_id"], "64a2d2a2580b40e94e42b72a")
+        self.assertEqual(result["sources"][0]["params"][test_key], test_value)
