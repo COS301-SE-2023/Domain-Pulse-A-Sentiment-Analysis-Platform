@@ -20,12 +20,12 @@ describe('MainComponent', () => {
   });
 
   it('should open the sidebar', () => {
-    component.openSidebar();
+    component.toggleSidebar();
     expect(component.sidebarCollapsed).toBeFalse();
   });
 
   it('should collapse the sidebar', (done) => {
-    component.colapseSidebar();
+    component.toggleSidebar();
     setTimeout(() => {
       expect(component.sidebarCollapsed).toBeTrue();
       done();
