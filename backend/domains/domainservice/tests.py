@@ -6,14 +6,14 @@ from utils import domainscrud
 class MockedItem:
     def __init__(self):
         self.deleted_count = 1
-        self.inserted_id = "1234567890"
-        self._id = "1234567890"
+        self.inserted_id = "64a2d2a2580b40e94e42b72a"
+        self._id = "64a2d2a2580b40e94e42b72a"
         self.name = "test"
         self.icon = "test.com"
         self.description = "mock data"
         self.sources = [
             {
-                "source_id": "Source1230",
+                "source_id": "64a2d2e0b5b66c122b03e8d2",
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
@@ -32,18 +32,19 @@ def mocked_insert_one(dummy):
 
 
 def mocked_delete_one(dummy):
-    return MockedItem()
+    mock = MockedItem()
+    return mock
 
 
 def mocked_find_one(dummy):
     return {
-        "_id": "1234567890",
+        "_id": "64a2d2a2580b40e94e42b72a",
         "name": "test",
         "icon": "test.com",
         "description": "mock data",
         "sources": [
             {
-                "source_id": "Source1230",
+                "source_id": "64a2d2e0b5b66c122b03e8d2",
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
@@ -63,8 +64,15 @@ class DomainsTests(TestCase):
     )
     def test_create_domain(self, mock_insert):
         result = domainscrud.create_domain("test", "test.com", "mock data")
-        self.assertEqual(result["id"], "1234567890")
+        self.assertEqual(result["id"], "64a2d2a2580b40e94e42b72a")
         self.assertEqual(result["name"], "test")
         self.assertEqual(result["icon"], "test.com")
         self.assertEqual(result["description"], "mock data")
         self.assertEqual(result["sources"], [])
+
+    @mock.patch(
+        "pymongo.collection.Collection.delete_one", side_effect=mocked_delete_one
+    )
+    def test_delete_domain(self, mock_delete):
+        result = domainscrud.delete_domain("64a2d2a2580b40e94e42b72a")
+        self.assertEqual(result["status"], "SUCCESS")
