@@ -26,12 +26,14 @@ describe('AppState', () => {
       'getDomainIDs',
       'checkAuthenticate',
       'attemptPsswdLogin',
+      'getProfile',
     ]);
     apiSpy.getDomainIDs.and.returnValue(of({ status: 'SUCCESS', domainIDs: [] }));
     apiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS' }));
     apiSpy.checkAuthenticate.and.returnValue(of({ status: 'SUCCESS' }));
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
-
+    apiSpy.getProfile.and.returnValue(of({ status: 'FAILURE' })); // CHANGE TO SUCCESS AND RETURN MOCK USER
+    
     await TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
@@ -40,7 +42,7 @@ describe('AppState', () => {
       ],
       providers: [{ provide: AppApi, useValue: apiSpy }],
     }).compileComponents();
-    
+
     store = TestBed.inject(Store);
     actions$ = TestBed.inject(Actions);
     toastrService = TestBed.inject(ToastrService);
