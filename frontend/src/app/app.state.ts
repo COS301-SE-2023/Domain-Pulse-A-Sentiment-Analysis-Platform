@@ -496,7 +496,7 @@ export class AppState {
               this.toastr.error('Login failed', '', {
                 timeOut: 3000,
                 positionClass: 'toast-bottom-center',
-                toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+                toastClass: 'custom-toast error ngx-toastr' // Add the custom CSS class here
               });
             });
           }
@@ -529,10 +529,12 @@ export class AppState {
 
   @Action(SetProfileDetails)
   setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
-    this.toastr.error('Login failed', '', {
-      timeOut: 3000,
-      positionClass: 'toast-bottom-center',
-      toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+    this.ngZone.run(() => {
+      this.toastr.error('Login failed', '', {
+        timeOut: 3000,
+        positionClass: 'toast-bottom-center',
+        toastClass: 'custom-toast error ngx-toastr' // Add the custom CSS class here
+      });
     });
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {

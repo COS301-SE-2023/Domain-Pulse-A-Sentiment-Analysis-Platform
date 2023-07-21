@@ -87,13 +87,19 @@ p
 .custom-toast 
     width: 40% !important
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) !important
-    opacity: 0.8 !important
     border-radius: 0.5rem !important
     transition: all 0.3s ease
+
+    &.error
+        background-color: rgba(184, 0, 0, 0.8) !important
+
+    &.success
+        background-color: rgba(0, 184, 0, 0.8) !important
+
 
 .custom-toast:hover
     cursor: pointer
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4) !important
-    opacity: 1 !important
+    opacity: 0.6 !important
 
 
