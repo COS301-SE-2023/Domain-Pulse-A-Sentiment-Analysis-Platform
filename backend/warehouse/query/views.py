@@ -149,12 +149,12 @@ def refresh_source(request: HttpRequest):
         headers = {"Content-Type": "application/json"}
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # checked, jwt = auth_checks.extract_token(originalRequest)
-        # if not checked:
-        #     return JsonResponse(
-        #         {"status": "FAILURE", "details": "JWT not found in header of request"}
-        #     )
-        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         # ------------------------------------------------------------
 
         data = {"source_id": source_id_raw}
@@ -244,12 +244,12 @@ def refresh_source(request: HttpRequest):
 
         headers = {"Content-Type": "application/json"}
         # ------------------- VERIFYING ACCESS -----------------------
-        # checked, jwt = auth_checks.extract_token(originalRequest)
-        # if not checked:
-        #     return JsonResponse(
-        #         {"status": "FAILURE", "details": "JWT not found in header of request"}
-        #     )
-        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         # ------------------------------------------------------------
 
         data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
