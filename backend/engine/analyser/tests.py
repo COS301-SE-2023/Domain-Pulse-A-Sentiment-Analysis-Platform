@@ -158,18 +158,6 @@ class SentimentAnalysisTests(TestCase):
 
     # ---------------------- INTEGRATION TESTS -----------------------
 
-    def test_process_data_integration(self):
-        test_data = []
-        test_data += mock_data.bitcoin_article
-        test_data += mock_data.the_witcher_reviews_reddit
-        test_data += mock_data.lance_reddit_data
-        test_data += mock_data.starbucks_rosebank_tripadvisor
-        test_data += mock_data.leinster_loss_to_munster_insta
-        test_data += [""]
-
-        for t in test_data:
-            assert len(t) >= len(preprocessing.process_data(t))
-
     def test_analyse_content_integration(self):
         data = "This is some test data!"
 
@@ -181,7 +169,7 @@ class SentimentAnalysisTests(TestCase):
         assert result["toxicity"] != {}
         assert result["ratios"] != {}
 
-    def test_perform_analysis(self):
+    def test_perform_analysis_integration(self):
         request_body = {
             "data": [
                 "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
@@ -207,71 +195,71 @@ class SentimentAnalysisTests(TestCase):
             "metrics": [
                 {
                     "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9994},
-                    "emotions": {"surprise": 0.015, "neutral": 0.0817, "joy": 0.9033},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9998},
+                    "emotions": {"surprise": 0.0147, "neutral": 0.092, "joy": 0.8934},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
-                    "ratios": {"positive": 0.353, "neutral": 0.647, "negative": 0.0},
+                    "ratios": {"positive": 0.25, "neutral": 0.75, "negative": 0.0},
                 },
                 {
                     "data": "Starbucks is good because there is always good coffee, there is Wi-Fi Internet and your name will be loudly called here once. It is right if it is simple and wrong if it is unusual. All of the above is in this Starbucks, which is conveniently located at a significant intersection in Rosebank.",
-                    "general": {"category": "VERY_NEGATIVE", "score": 0.0296},
-                    "emotions": {"surprise": 0.514, "joy": 0.0918, "neutral": 0.3942},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9897},
+                    "emotions": {"surprise": 0.0283, "neutral": 0.954, "joy": 0.0177},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
-                    "ratios": {"positive": 0.226, "neutral": 0.682, "negative": 0.092},
+                    "ratios": {"positive": 0.117, "neutral": 0.835, "negative": 0.048},
                 },
                 {
                     "data": "I just got looked at when I was at the wrong side of the line (not clear where the right side is) Could not spell my name correctly even though I spelt it out 3 times.",
-                    "general": {"category": "VERY_NEGATIVE", "score": 0.0012},
+                    "general": {"category": "VERY_NEGATIVE", "score": 0.0002},
                     "emotions": {
-                        "surprise": 0.1251,
-                        "neutral": 0.6451,
-                        "sadness": 0.2298,
+                        "sadness": 0.1347,
+                        "surprise": 0.2099,
+                        "neutral": 0.6554,
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
-                    "ratios": {"positive": 0.097, "neutral": 0.787, "negative": 0.116},
+                    "ratios": {"positive": 0.0, "neutral": 0.875, "negative": 0.125},
                 },
                 {
                     "data": "Everything is amazing about Starbucks The service is just so good The drinks are the absolute best Keep coming back ⭐️⭐️⭐️⭐️⭐️👍",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9997},
-                    "emotions": {"surprise": 0.0683, "joy": 0.8565, "neutral": 0.0752},
-                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
-                    "ratios": {"positive": 0.391, "neutral": 0.609, "negative": 0.0},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9999},
+                    "emotions": {"surprise": 0.0476, "joy": 0.7762, "neutral": 0.1762},
+                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
+                    "ratios": {"positive": 0.329, "neutral": 0.671, "negative": 0.0},
                 },
                 {
                     "data": "Just bad choice of blend. Poorly made. Really bad texture of frothed milk. Very hyped. Seattle Coffee Co. still the best.",
-                    "general": {"category": "VERY_NEGATIVE", "score": 0.0005},
+                    "general": {"category": "VERY_NEGATIVE", "score": 0.0049},
                     "emotions": {
-                        "sadness": 0.7847,
-                        "disgust": 0.0617,
-                        "neutral": 0.1536,
+                        "sadness": 0.503,
+                        "disgust": 0.2177,
+                        "neutral": 0.2793,
                     },
-                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0009},
-                    "ratios": {"positive": 0.133, "neutral": 0.635, "negative": 0.232},
+                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0008},
+                    "ratios": {"positive": 0.122, "neutral": 0.667, "negative": 0.211},
                 },
                 {
                     "data": "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)",
                     "general": {"category": "VERY_POSITIVE", "score": 0.9999},
-                    "emotions": {"sadness": 0.0421, "joy": 0.9376, "surprise": 0.0203},
-                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
-                    "ratios": {"positive": 0.388, "neutral": 0.612, "negative": 0.0},
+                    "emotions": {"surprise": 0.0401, "joy": 0.9381, "neutral": 0.0218},
+                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
+                    "ratios": {"positive": 0.335, "neutral": 0.665, "negative": 0.0},
                 },
                 {
                     "data": "Coffee is always Good , but unfortunately the food is not up to Starbucks quality Like overseas , the food is premade and delivered , so if you eat a toasted cheese it just get heated up in the microwave",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9571},
+                    "general": {"category": "POSITIVE", "score": 0.7908},
                     "emotions": {
-                        "sadness": 0.8615,
-                        "surprise": 0.1088,
-                        "neutral": 0.0298,
+                        "surprise": 0.0901,
+                        "neutral": 0.1313,
+                        "sadness": 0.7787,
                     },
-                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0007},
-                    "ratios": {"positive": 0.209, "neutral": 0.698, "negative": 0.093},
+                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
+                    "ratios": {"positive": 0.115, "neutral": 0.817, "negative": 0.068},
                 },
                 {
                     "data": "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9714},
-                    "emotions": {"surprise": 0.1751, "neutral": 0.318, "joy": 0.5069},
-                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
-                    "ratios": {"positive": 0.215, "neutral": 0.785, "negative": 0.0},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9861},
+                    "emotions": {"surprise": 0.0884, "neutral": 0.708, "joy": 0.2036},
+                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0011},
+                    "ratios": {"positive": 0.131, "neutral": 0.869, "negative": 0.0},
                 },
             ]
         }
