@@ -253,7 +253,7 @@ export class GraphSelectorComponent implements OnInit {
     });
 
     this.statisticIndex.subscribe((statIndex) => {
-      if (statIndex) {
+      if (statIndex!== this.currentGraphIndex &&statIndex!== undefined) {
         this.currentGraphIndex = statIndex;
         this.renderGraph();
       }
