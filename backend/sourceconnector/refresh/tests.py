@@ -89,6 +89,96 @@ class TestingRefreshHandler(TestCase):
             == datetime(datetime.now().year, 2, 18, 0, 0, 0).timestamp()
         )
 
+    def test_handle_request_youtube(self):
+        params = {
+            "video_id": "test_video_id",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        comments = [
+            {"comment_id": 1, "text": "Comment 1"},
+            {"comment_id": 2, "text": "Comment 2"},
+        ]
+        latest_retrieval = 1597534567.0
+
+        with mock.patch(
+            "youtube.youtube_connector.get_comments_by_video_id"
+        ) as mock_get_comments:
+            mock_get_comments.return_value = (comments, latest_retrieval)
+
+            response = youtube_connector.handle_request(params)
+
+            self.assertIsInstance(response, JsonResponse)
+
+            content = json.loads(response.content)
+            self.assertEqual(content["status"], "SUCCESS")
+            self.assertEqual(content["newdata"], comments)
+            self.assertEqual(content["latest_retrieval"], latest_retrieval)
+
+            mock_get_comments.assert_called_once_with(
+                params["video_id"], float(params["last_refresh_timestamp"])
+            )
+
+    def test_handle_request_google_reviews(self):
+        params = {
+            "maps_url": "test url",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        reviews = [
+            {"review_id": 1, "text": "review 1"},
+            {"review_id": 2, "text": "review 2"},
+        ]
+        latest_retrieval = 1597534567.0
+
+        with mock.patch(
+            "googlereviews.google_reviews_connector.get_google_reviews"
+        ) as mock_get_reviews:
+            mock_get_reviews.return_value = (reviews, latest_retrieval)
+
+            response = google_reviews_connector.handle_request(params)
+
+            self.assertIsInstance(response, JsonResponse)
+
+            content = json.loads(response.content)
+            self.assertEqual(content["status"], "SUCCESS")
+            self.assertEqual(content["newdata"], reviews)
+            self.assertEqual(content["latest_retrieval"], latest_retrieval)
+
+            mock_get_reviews.assert_called_once_with(
+                params["maps_url"], float(params["last_refresh_timestamp"])
+            )
+
+    def test_handle_request_tripadvisor(self):
+        params = {
+            "tripadvisor_url": "test_url",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        reviews = [
+            {"review_id": 1, "text": "review 1"},
+            {"review_id": 2, "text": "review 2"},
+        ]
+        latest_retrieval = 1597534567.0
+
+        with mock.patch(
+            "tripadvisor.tripadvisor_connector.get_tripadvisor_reviews"
+        ) as mock_get_reviews:
+            mock_get_reviews.return_value = (reviews, latest_retrieval)
+
+            response = tripadvisor_connector.handle_request(params)
+
+            self.assertIsInstance(response, JsonResponse)
+
+            content = json.loads(response.content)
+            self.assertEqual(content["status"], "SUCCESS")
+            self.assertEqual(content["newdata"], reviews)
+            self.assertEqual(content["latest_retrieval"], latest_retrieval)
+
+            mock_get_reviews.assert_called_once_with(
+                params["tripadvisor_url"], float(params["last_refresh_timestamp"])
+            )
+
     # ---------------------------------------------------
 
     # ------------------INTEGRATION TESTS------------------
