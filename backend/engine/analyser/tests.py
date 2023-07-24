@@ -154,6 +154,22 @@ class SentimentAnalysisTests(TestCase):
         assert result["toxicity"] == {}
         assert result["ratios"] == {}
 
+    def test_lemmatize_word(self):
+        test_cases = [
+            ("kites", "kite"),
+            ("babies", "baby"),
+            ("dogs", "dog"),
+            ("flying", "flying"),
+        ]
+
+        for word, lemma in test_cases:
+            assert preprocessing.lemmatize_word(word) == lemma
+
+    def test_remove_whitespace(self):
+        test_case = "hello the    e  dnm 1       mkmff"
+
+        assert preprocessing.remove_whitespace(test_case) == "hello the e dnm 1 mkmff"
+
     # ----------------------------------------------------------------
 
     # ---------------------- INTEGRATION TESTS -----------------------
