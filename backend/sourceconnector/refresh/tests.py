@@ -222,4 +222,41 @@ class TestingRefreshHandler(TestCase):
             )
             self.assertEqual(latest_ret, latest_retrieval)
 
+    def test_get_tripadvisor_reviews(self):
+        params = {
+            "tripadvisor_url": "test_url",
+            "last_refresh_timestamp": 0,
+        }
+
+        reviews = [
+            {"description": "test", "reviewed": "Feb 2023"},
+            {"description": "test", "reviewed": "Feb 2023"},
+            {"description": "test", "reviewed": "18 Feb"},
+        ]
+        latest_retrieval = datetime(datetime.now().year, 2, 18, 0, 0, 0).timestamp()
+
+        with mock.patch(
+            "tripadvisor.tripadvisor_connector.call_outscraper"
+        ) as mock_call_outscraper:
+            mock_call_outscraper.return_value = reviews
+
+            ret_data, latest_ret = tripadvisor_connector.get_tripadvisor_reviews(
+                params, 0
+            )
+
+            self.assertEqual(
+                ret_data,
+                [
+                    {"text": "test", "timestamp": 1675209600},
+                    {"text": "test", "timestamp": 1675209600},
+                    {
+                        "text": "test",
+                        "timestamp": datetime(
+                            datetime.now().year, 2, 18, 0, 0, 0
+                        ).timestamp(),
+                    },
+                ],
+            )
+            self.assertEqual(latest_ret, latest_retrieval)
+
     # ---------------------------------------------------
