@@ -6,12 +6,17 @@ from googlereviews import google_reviews_connector
 from tripadvisor import tripadvisor_connector
 from youtube import youtube_connector
 from . import views
+from datetime import datetime
 import json
 import mock
 
 
 def mocked_source_handler(dummy_params):
     return JsonResponse({"status": "SUCCESS", "newdata": [], "latest_retrieval": 0})
+
+
+def mocked_month_name_to_number(dummy_param):
+    return 2
 
 
 class TestingRefreshHandler(TestCase):
@@ -49,6 +54,40 @@ class TestingRefreshHandler(TestCase):
         assert data2["status"] == "SUCCESS"
         assert data3["status"] == "SUCCESS"
         assert data4["status"] == "FAILURE"
+
+    def test_month_name_to_number_tripadvisor(self):
+        months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ]
+
+        for num, letters in enumerate(months):
+            assert num + 1 == tripadvisor_connector.month_name_to_number(letters)
+
+    @mock.patch(
+        "tripadvisor.tripadvisor_connector.month_name_to_number",
+        side_effect=mocked_month_name_to_number,
+    )
+    def test_get_timestamp_from_date(self, *mocked_functions):
+        test_cases = ["Feb 2023", "18 Feb"]
+
+        assert (
+            tripadvisor_connector.get_timestamp_from_date(test_cases[0]) == 1675209600
+        )
+        assert (
+            tripadvisor_connector.get_timestamp_from_date(test_cases[1])
+            == datetime(datetime.now().year, 2, 18, 0, 0, 0).timestamp()
+        )
 
     # ---------------------------------------------------
 
