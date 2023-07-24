@@ -21,6 +21,11 @@ def tokenize(data: str):
     return nltk.word_tokenize(data)
 
 
+# Newline character removal
+def remove_newlines(data: str):
+    return data.replace("\n", " ")
+
+
 # Spelling Correction
 # def correct_spelling(word: str):
 #     spell = Speller(lang="en")
@@ -47,6 +52,7 @@ def lemmatize_word(word: str):
 
 def process_data(raw_text: str):
     new_data = remove_whitespace(raw_text)
+    new_data = remove_newlines(new_data)
     new_data = remove_urls(new_data)
     tokens = tokenize(new_data)
     # tokens = remove_stopwords(tokens)
