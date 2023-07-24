@@ -468,25 +468,24 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = False
 
-        rf = RequestFactory()
         data = {"username": "test", "email": "test@t.com", "password": "test"}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
         middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        post_request.user = MockUser()
-        user = json.loads(profile_views.create_user(post_request).content.decode())
+        middleware.process_request(request1)
+        request1.session.save()
+        request1.user = MockUser()
+        user = json.loads(profile_views.create_user(request1).content.decode())
         data = {"username": "test", "password": "test"}
-        post_request = rf.post(
-            "/profiles/login_user", data, content_type="application/json"
-        )
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
         middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        post_request.user = MockUser()
-        result = json.loads(profile_views.login_user(post_request).content.decode())
+        middleware.process_request(request2)
+        request2.session.save()
+        request2.user = MockUser()
+        result = json.loads(profile_views.login_user(request2).content.decode())
         if result["status"] == "SUCCESS":
             assert result["id"] == user["id"]
         else:
@@ -496,16 +495,15 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = False
 
-        rf = RequestFactory()
         data = {"username": "testWrong", "password": "test"}
-        post_request = rf.post(
-            "/profiles/login_user", data, content_type="application/json"
-        )
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
         middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        post_request.user = MockUser()
-        result = json.loads(profile_views.login_user(post_request).content.decode())
+        middleware.process_request(request1)
+        request1.session.save()
+        request1.user = MockUser()
+        result = json.loads(profile_views.login_user(request1).content.decode())
         if result["status"] == "SUCCESS":
             assert False
         else:
