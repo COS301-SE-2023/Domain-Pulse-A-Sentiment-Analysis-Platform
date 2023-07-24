@@ -353,4 +353,41 @@ class DataAggregationTests(TestCase):
 
         self.assertEqual(response.json(), expected_data)
 
+    def test_aggregate_metrics_empty_data(self):
+        request_body = {"metrics": []}
+
+        response: JsonResponse = self.client.post(
+            path="/aggregator/aggregate/",
+            data=request_body,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        assert response.json() == {
+            "overall": {
+                "general": {"category": "No data", "score": 0},
+                "emotions": {
+                    "anger": 0,
+                    "disgust": 0,
+                    "fear": 0,
+                    "joy": 0,
+                    "neutral": 0,
+                    "sadness": 0,
+                    "surprise": 0,
+                },
+                "toxicity": {
+                    "level_of_toxic": "No data",
+                    "score": 0,
+                },
+                "ratios": {
+                    "positive": 0,
+                    "neutral": 0,
+                    "negative": 0,
+                },
+            },
+            "metadata": {"num_analysed": 0},
+            "individual_data": [],
+        }
+
     # ----------------------------------------------------------------
