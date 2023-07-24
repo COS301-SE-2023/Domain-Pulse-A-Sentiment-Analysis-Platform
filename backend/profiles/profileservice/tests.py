@@ -203,7 +203,6 @@ class ProfilesTests(TestCase):
         request1= HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        request1.user = MockUser()
         user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testUsername = "test"
         testPassword = "test"
@@ -226,15 +225,14 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = False
 
-        rf = RequestFactory()
         testUsername = "testWrong"
         testPassword = "test"
         data = {"username": "testWrong", "password": "test"}
-        post_request = rf.post(
-            "/profiles/login_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profilescrud.login_user(post_request, testUsername, testPassword)
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
+        request1.user = MockUser()
+        result = profilescrud.login_user(request1, testUsername, testPassword)
         if result["status"] == "SUCCESS":
             assert False
         else:
@@ -245,13 +243,12 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
         data = {}
-        post_request = rf.post(
-            "/profiles/logout_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profilescrud.logout_user(post_request)
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
+        request1.user = MockUser()
+        result = profilescrud.logout_user(request1)
         if result["status"] == "SUCCESS":
             assert True
         else:
