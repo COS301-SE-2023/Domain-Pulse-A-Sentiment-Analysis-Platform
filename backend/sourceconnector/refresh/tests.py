@@ -259,4 +259,57 @@ class TestingRefreshHandler(TestCase):
             )
             self.assertEqual(latest_ret, latest_retrieval)
 
+    @mock.patch("youtube.youtube_connector.call_youtube_api")
+    def test_get_comments_by_video_id(self, mock_call_youtube_api):
+        video_id = "test_video_id"
+        last_refresh_time = 0
+
+        youtube_api_data = {
+            "items": [
+                {
+                    "snippet": {
+                        "topLevelComment": {
+                            "snippet": {
+                                "textOriginal": "Comment 1",
+                                "updatedAt": "2023-07-23T10:00:00Z",
+                            }
+                        }
+                    }
+                },
+                {
+                    "snippet": {
+                        "topLevelComment": {
+                            "snippet": {
+                                "textOriginal": "Comment 2",
+                                "updatedAt": "2023-07-25T15:30:00Z",
+                            }
+                        }
+                    }
+                },
+            ]
+        }
+
+        last_refresh_datetime = datetime.strptime(
+            "2023-07-24T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ"
+        ).timestamp()
+
+        mock_call_youtube_api.return_value = youtube_api_data
+
+        comments, latest_retrieval = youtube_connector.get_comments_by_video_id(
+            video_id, last_refresh_datetime
+        )
+
+        print(comments)
+
+        expected_comments = [
+            {
+                "text": "Comment 2",
+                "timestamp": int(datetime(2023, 7, 25, 15, 30).timestamp()),
+            }
+        ]
+        expected_latest_retrieval = int(datetime(2023, 7, 25, 15, 30).timestamp())
+
+        self.assertEqual(comments, expected_comments)
+        self.assertEqual(latest_retrieval, expected_latest_retrieval)
+
     # ---------------------------------------------------
