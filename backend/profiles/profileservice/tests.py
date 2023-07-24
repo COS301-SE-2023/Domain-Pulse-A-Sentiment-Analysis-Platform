@@ -259,13 +259,12 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = False
 
-        rf = RequestFactory()
         data = {}
-        post_request = rf.post(
-            "/profiles/logout_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profilescrud.logout_user(post_request)
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
+        request1.user = MockUser()
+        result = profilescrud.logout_user(request1)
         if result["status"] == "SUCCESS":
             assert False
         else:
@@ -279,21 +278,20 @@ class ProfilesTests(TestCase):
 
         rf = RequestFactory()
         data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testId = user["id"]
         testOldPassword = "test"
         testNewPassword = "test2"
-        data = {user["id"], "test", "test2"}
-        post_request = rf.post(
-            "/profiles/change_password", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
         result = profilescrud.change_password(
-            post_request, testId, testOldPassword, testNewPassword
+            request2, testId, testOldPassword, testNewPassword
         )
         if result["status"] == "SUCCESS":
             assert True
@@ -307,23 +305,22 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
         data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testUsername = "test"
         testPassword = "test"
-        data = {user["id"], "test", "test2"}
-        post_request = rf.post(
-            "/profiles/delete_user", data, content_type="application/json"
-        )
+        data = {"username":user["id"], "oldpassword":"test", "newpassword":"test2"}
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        
         user = authenticate(username="test", password="test")
-        post_request.user = user
-
-        result = profilescrud.delete_user(post_request, testUsername, testPassword)
+        request2.user = user
+        result = profilescrud.delete_user(request2, testUsername, testPassword)
         if result["status"] == "SUCCESS":
             assert True
         else:
