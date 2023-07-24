@@ -39,13 +39,11 @@ class ProfilesTests(TestCase):
         testUsername = "test"
         testEmail = "test@t.com"
         testPassword = "testP"
-        rf = RequestFactory()
-        data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
+        request= HttpRequest()
+        request.method = "POST"
+       
         result = profilescrud.create_user(
-            post_request, testUsername, testEmail, testPassword
+            request, testUsername, testEmail, testPassword
         )
         if result["status"] == "SUCCESS":
             assert (
@@ -61,19 +59,15 @@ class ProfilesTests(TestCase):
     def test_swap_mode(self, mocked_create_profile, mocked_login):
         class MockUser:
             is_authenticated = True
-
-        rf = RequestFactory()
-        data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         data = {"id": user["profileID"]}
-        post_request = rf.post(
-            "/profiles/swap_mode", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profilescrud.swap_mode(post_request, user["profileID"])
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+        result = profilescrud.swap_mode(request2, user["profileID"])
         if result["status"] == "SUCCESS":
             assert result["id"] == user["id"] and result["mode"] == True
         else:
@@ -85,20 +79,18 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
-        data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testPictureURL = "test.com"
         data = {"id": user["id"], "pictureURL": testPictureURL}
-        post_request = rf.post(
-            "/profiles/edit_profile_picture", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
         result = profilescrud.edit_profile_picture(
-            post_request, user["id"], testPictureURL
+            request2, user["id"], testPictureURL
         )
         if result["status"] == "SUCCESS":
             assert (
@@ -113,20 +105,20 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
         testMode = True
         data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         data = {"id": user["id"], "mode": testMode}
-        post_request = rf.post(
-            "/profiles/edit_profile_mode", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profilescrud.edit_profile_mode(post_request, user["id"], testMode)
+        
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+
+        result = profilescrud.edit_profile_mode(request2, user["id"], testMode)
         if result["status"] == "SUCCESS":
             assert result["id"] == user["id"] and result["mode"] == testMode
         else:
