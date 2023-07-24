@@ -334,15 +334,14 @@ class ProfilesTests(TestCase):
         testUsername = "test"
         testEmail = "test@t.com"
         testPassword = "testP"
-        rf = RequestFactory()
         data = {"username": testUsername, "email": testEmail, "password": testPassword}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
         middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        result = json.loads(profile_views.create_user(post_request).content.decode())
+        middleware.process_request(request1)
+        request1.session.save()
+        result = json.loads(profile_views.create_user(request1).content.decode())
         if result["status"] == "SUCCESS":
             assert (
                 result["profileID"] == result["id"]
@@ -356,23 +355,22 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
         data = {"username": "test", "email": "test@t.com", "password": "test"}
         self.client.login(username="test", password="test")
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
         middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        user = profile_views.create_user(post_request).content.decode()
+        middleware.process_request(request1)
+        request1.session.save()
+        user = profile_views.create_user(request1).content.decode()
         user = json.loads(user)
         data = {"id": user["profileID"]}
-        post_request = rf.post(
-            "/profiles/swap_mode", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profile_views.swap_mode(post_request).content.decode()
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+        result = profile_views.swap_mode(request2).content.decode()
         result = json.loads(result)
         if result["status"] == "SUCCESS":
             assert result["id"] == user["id"] and result["mode"] == True
@@ -383,23 +381,22 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
         data = {"username": "test", "email": "test@t.com", "password": "test"}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
         middleware = SessionMiddleware(lambda x: None)
-        middleware.process_request(post_request)
-        post_request.session.save()
-        user = json.loads(profile_views.create_user(post_request).content.decode())
+        middleware.process_request(request1)
+        request1.session.save()
+        user = json.loads(profile_views.create_user(request1).content.decode())
         testPictureURL = "test.com"
         data = {"id": user["id"], "pictureURL": testPictureURL}
-        post_request = rf.post(
-            "/profiles/edit_profile_picture", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
         result = json.loads(
-            profile_views.edit_profile_picture(post_request).content.decode()
+            profile_views.edit_profile_picture(request2).content.decode()
         )
         if result["status"] == "SUCCESS":
             assert (
