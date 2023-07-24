@@ -2,6 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.http import HttpRequest, JsonResponse
 from utils import mock_data
+from outscraper import ApiClient
 from googlereviews import google_reviews_connector
 from tripadvisor import tripadvisor_connector
 from youtube import youtube_connector
@@ -89,10 +90,226 @@ class TestingRefreshHandler(TestCase):
             == datetime(datetime.now().year, 2, 18, 0, 0, 0).timestamp()
         )
 
+    def test_handle_request_youtube(self):
+        params = {
+            "video_id": "test_video_id",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        comments = [
+            {"comment_id": 1, "text": "Comment 1"},
+            {"comment_id": 2, "text": "Comment 2"},
+        ]
+        latest_retrieval = 1597534567.0
+
+        with mock.patch(
+            "youtube.youtube_connector.get_comments_by_video_id"
+        ) as mock_get_comments:
+            mock_get_comments.return_value = (comments, latest_retrieval)
+
+            response = youtube_connector.handle_request(params)
+
+            self.assertIsInstance(response, JsonResponse)
+
+            content = json.loads(response.content)
+            self.assertEqual(content["status"], "SUCCESS")
+            self.assertEqual(content["newdata"], comments)
+            self.assertEqual(content["latest_retrieval"], latest_retrieval)
+
+            mock_get_comments.assert_called_once_with(
+                params["video_id"], float(params["last_refresh_timestamp"])
+            )
+
+    def test_handle_request_google_reviews(self):
+        params = {
+            "maps_url": "test url",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        reviews = [
+            {"review_id": 1, "text": "review 1"},
+            {"review_id": 2, "text": "review 2"},
+        ]
+        latest_retrieval = 1597534567.0
+
+        with mock.patch(
+            "googlereviews.google_reviews_connector.get_google_reviews"
+        ) as mock_get_reviews:
+            mock_get_reviews.return_value = (reviews, latest_retrieval)
+
+            response = google_reviews_connector.handle_request(params)
+
+            self.assertIsInstance(response, JsonResponse)
+
+            content = json.loads(response.content)
+            self.assertEqual(content["status"], "SUCCESS")
+            self.assertEqual(content["newdata"], reviews)
+            self.assertEqual(content["latest_retrieval"], latest_retrieval)
+
+            mock_get_reviews.assert_called_once_with(
+                params["maps_url"], float(params["last_refresh_timestamp"])
+            )
+
+    def test_handle_request_tripadvisor(self):
+        params = {
+            "tripadvisor_url": "test_url",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        reviews = [
+            {"review_id": 1, "text": "review 1"},
+            {"review_id": 2, "text": "review 2"},
+        ]
+        latest_retrieval = 1597534567.0
+
+        with mock.patch(
+            "tripadvisor.tripadvisor_connector.get_tripadvisor_reviews"
+        ) as mock_get_reviews:
+            mock_get_reviews.return_value = (reviews, latest_retrieval)
+
+            response = tripadvisor_connector.handle_request(params)
+
+            self.assertIsInstance(response, JsonResponse)
+
+            content = json.loads(response.content)
+            self.assertEqual(content["status"], "SUCCESS")
+            self.assertEqual(content["newdata"], reviews)
+            self.assertEqual(content["latest_retrieval"], latest_retrieval)
+
+            mock_get_reviews.assert_called_once_with(
+                params["tripadvisor_url"], float(params["last_refresh_timestamp"])
+            )
+
     # ---------------------------------------------------
 
     # ------------------INTEGRATION TESTS------------------
     def setUp(self):
-        self.factory = RequestFactory()
+        pass
+
+    def test_get_google_reviews(self):
+        params = {
+            "maps_url": "test_url",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        reviews = [
+            {
+                "reviews_data": [
+                    {"review_text": "test", "review_timestamp": 1234567892},
+                    {"review_text": "test", "review_timestamp": 1234567890},
+                    {"review_text": "test", "review_timestamp": 1234567891},
+                ]
+            }
+        ]
+        latest_retrieval = 1234567892
+
+        with mock.patch(
+            "googlereviews.google_reviews_connector.call_outscraper"
+        ) as mock_call_outscraper:
+            mock_call_outscraper.return_value = reviews
+
+            ret_data, latest_ret = google_reviews_connector.get_google_reviews(
+                params, 0
+            )
+
+            self.assertEqual(
+                ret_data,
+                [
+                    {"text": "test", "timestamp": 1234567892},
+                    {"text": "test", "timestamp": 1234567890},
+                    {"text": "test", "timestamp": 1234567891},
+                ],
+            )
+            self.assertEqual(latest_ret, latest_retrieval)
+
+    def test_get_tripadvisor_reviews(self):
+        params = {
+            "tripadvisor_url": "test_url",
+            "last_refresh_timestamp": 0,
+        }
+
+        reviews = [
+            {"description": "test", "reviewed": "Feb 2023"},
+            {"description": "test", "reviewed": "Feb 2023"},
+            {"description": "test", "reviewed": "18 Feb"},
+        ]
+        latest_retrieval = datetime(datetime.now().year, 2, 18, 0, 0, 0).timestamp()
+
+        with mock.patch(
+            "tripadvisor.tripadvisor_connector.call_outscraper"
+        ) as mock_call_outscraper:
+            mock_call_outscraper.return_value = reviews
+
+            ret_data, latest_ret = tripadvisor_connector.get_tripadvisor_reviews(
+                params, 0
+            )
+
+            self.assertEqual(
+                ret_data,
+                [
+                    {"text": "test", "timestamp": 1675209600},
+                    {"text": "test", "timestamp": 1675209600},
+                    {
+                        "text": "test",
+                        "timestamp": datetime(
+                            datetime.now().year, 2, 18, 0, 0, 0
+                        ).timestamp(),
+                    },
+                ],
+            )
+            self.assertEqual(latest_ret, latest_retrieval)
+
+    @mock.patch("youtube.youtube_connector.call_youtube_api")
+    def test_get_comments_by_video_id(self, mock_call_youtube_api):
+        video_id = "test_video_id"
+        last_refresh_time = 0
+
+        youtube_api_data = {
+            "items": [
+                {
+                    "snippet": {
+                        "topLevelComment": {
+                            "snippet": {
+                                "textOriginal": "Comment 1",
+                                "updatedAt": "2023-07-23T10:00:00Z",
+                            }
+                        }
+                    }
+                },
+                {
+                    "snippet": {
+                        "topLevelComment": {
+                            "snippet": {
+                                "textOriginal": "Comment 2",
+                                "updatedAt": "2023-07-25T15:30:00Z",
+                            }
+                        }
+                    }
+                },
+            ]
+        }
+
+        last_refresh_datetime = datetime.strptime(
+            "2023-07-24T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ"
+        ).timestamp()
+
+        mock_call_youtube_api.return_value = youtube_api_data
+
+        comments, latest_retrieval = youtube_connector.get_comments_by_video_id(
+            video_id, last_refresh_datetime
+        )
+
+        print(comments)
+
+        expected_comments = [
+            {
+                "text": "Comment 2",
+                "timestamp": int(datetime(2023, 7, 25, 15, 30).timestamp()),
+            }
+        ]
+        expected_latest_retrieval = int(datetime(2023, 7, 25, 15, 30).timestamp())
+
+        self.assertEqual(comments, expected_comments)
+        self.assertEqual(latest_retrieval, expected_latest_retrieval)
 
     # ---------------------------------------------------
