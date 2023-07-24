@@ -170,6 +170,22 @@ class SentimentAnalysisTests(TestCase):
 
         assert preprocessing.remove_whitespace(test_case) == "hello the e dnm 1 mkmff"
 
+    def test_remove_newlines(self):
+        test_case = """hi there\nthis is a\nlong test\nbro\n\n\n"""
+
+        assert (
+            preprocessing.remove_newlines(test_case)
+            == "hi there this is a long test bro   "
+        )
+
+    def test_remove_urls(self):
+        test_case = """https://docs.google.com/document/u/0/ hi there https://clickup.up.ac.za/ultra/stream this is a long https://github.com/ test bro"""
+
+        assert (
+            preprocessing.remove_urls(test_case)
+            == " hi there  this is a long  test bro"
+        )
+
     # ----------------------------------------------------------------
 
     # ---------------------- INTEGRATION TESTS -----------------------
