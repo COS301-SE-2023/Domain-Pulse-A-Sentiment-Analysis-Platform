@@ -2,6 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.http import HttpRequest, JsonResponse
 from utils import mock_data
+from outscraper import ApiClient
 from googlereviews import google_reviews_connector
 from tripadvisor import tripadvisor_connector
 from youtube import youtube_connector
@@ -183,6 +184,42 @@ class TestingRefreshHandler(TestCase):
 
     # ------------------INTEGRATION TESTS------------------
     def setUp(self):
-        self.factory = RequestFactory()
+        pass
+
+    def test_get_google_reviews(self):
+        params = {
+            "maps_url": "test_url",
+            "last_refresh_timestamp": "1234567890.0",
+        }
+
+        reviews = [
+            {
+                "reviews_data": [
+                    {"review_text": "test", "review_timestamp": 1234567892},
+                    {"review_text": "test", "review_timestamp": 1234567890},
+                    {"review_text": "test", "review_timestamp": 1234567891},
+                ]
+            }
+        ]
+        latest_retrieval = 1234567892
+
+        with mock.patch(
+            "googlereviews.google_reviews_connector.call_outscraper"
+        ) as mock_call_outscraper:
+            mock_call_outscraper.return_value = reviews
+
+            ret_data, latest_ret = google_reviews_connector.get_google_reviews(
+                params, 0
+            )
+
+            self.assertEqual(
+                ret_data,
+                [
+                    {"text": "test", "timestamp": 1234567892},
+                    {"text": "test", "timestamp": 1234567890},
+                    {"text": "test", "timestamp": 1234567891},
+                ],
+            )
+            self.assertEqual(latest_ret, latest_retrieval)
 
     # ---------------------------------------------------

@@ -21,8 +21,8 @@ LANG = "en"  # language (models are trained in English so pls don't change)
 COUNTRY = "ZA"  # South African Google
 
 
-def get_google_reviews(maps_url, last_refreshed_timestamp):
-    results = client.google_maps_reviews(
+def call_outscraper(maps_url, last_refreshed_timestamp):
+    return client.google_maps_reviews(
         query=[str(maps_url)],
         reviews_limit=REVIEWS_LIMIT,
         limit=LIMIT,
@@ -32,6 +32,10 @@ def get_google_reviews(maps_url, last_refreshed_timestamp):
         language=LANG,
         region=COUNTRY,
     )
+
+
+def get_google_reviews(maps_url, last_refreshed_timestamp):
+    results = call_outscraper(maps_url, last_refreshed_timestamp)
 
     latest_retrieval = last_refreshed_timestamp
 
