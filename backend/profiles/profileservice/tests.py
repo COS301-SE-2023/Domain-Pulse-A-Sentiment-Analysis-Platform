@@ -130,19 +130,12 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
-        data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testDomainID = 3
-        data = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/add_domain_to_profile", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
+        
         result = profilescrud.add_domain_to_profile(user["id"], testDomainID)
         if result["status"] == "SUCCESS":
             assert (
@@ -157,29 +150,14 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
-        data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testDomainID = 3
-        setupData = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/add_domain_to_profile",
-            setupData,
-            content_type="application/json",
-        )
-        post_request.user = MockUser()
+        
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
-        data = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/remove_domain_from_profile",
-            data,
-            content_type="application/json",
-        )
-        post_request.user = MockUser()
+        
         result = profilescrud.remove_domain_from_profile(user["id"], testDomainID)
         if result["status"] == "SUCCESS":
             assert (
