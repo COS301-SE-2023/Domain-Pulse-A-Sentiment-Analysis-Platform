@@ -1,7 +1,11 @@
+import json
+from django.http import JsonResponse
 from django.test import TestCase
 from unittest import mock
 from utils import domainscrud
 from bson.objectid import ObjectId
+from domainservice import views as domain_views
+from django.test.client import RequestFactory
 
 
 class MockedItem:
@@ -33,8 +37,7 @@ def mocked_insert_one(dummy):
 
 
 def mocked_delete_one(dummy):
-    mock = MockedItem()
-    return mock
+    return JsonResponse({"status": "SUCCESS", "details": "Domain deleted successfully"})
 
 
 def mocked_find_one(dummy):
@@ -58,6 +61,17 @@ def mocked_find_one(dummy):
 def mocked_update_one(dummy1, dummy2):
     return {}
 
+class MockedRequest:
+    def __init__(self):
+        self.status_code = 200
+        data = {
+            "status": "SUCCESS",
+            "details": "User is authorized",
+        }
+        self.json = json.dumps(data)
+
+def mocked_request_post(dummy1, dummy2, dummy3):
+    return MockedRequest()
 
 class DomainsTests(TestCase):
     @mock.patch(
@@ -154,3 +168,19 @@ class DomainsTests(TestCase):
     def test_get_source(self, mock_find):
         result = domainscrud.get_source("64a2d2e0b5b66c122b03e8d2")
         self.assertEqual(result["source_id"], "64a2d2e0b5b66c122b03e8d2")
+
+
+    # ----------------------------------------------------------------
+
+    # ---------------------- INTEGRATION TESTS -----------------------
+    @mock.patch(
+        "pymongo.collection.Collection.insert_one", side_effect=mocked_insert_one
+    )
+    @mock.patch(
+        "requests.post", side_effect=mocked_request_post
+    )
+    def test_create_domain_integration(self):
+        data = {"name": "test", "icon": "test.com", "description":"mocked"}
+        response: JsonResponse = self.client.post(path="/domains/create_domain", data=data, content_type="application/json")
+        response_data= json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")

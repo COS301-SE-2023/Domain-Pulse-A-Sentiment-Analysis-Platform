@@ -15,11 +15,11 @@ def update_last_refresh(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_source_ids(
-        #     original_request=request, source_id_list=[(raw_data["source_id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[(raw_data["source_id"])]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         if domainscrud.update_last_refresh(
@@ -39,11 +39,11 @@ def get_source(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_source_ids(
-        #     original_request=request, source_id_list=[(raw_data["source_id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[(raw_data["source_id"])]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(
@@ -115,11 +115,11 @@ def get_domain(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_domain_ids(
-        #     original_request=request, domain_id_list=[(raw_data["id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_domain_ids(
+            original_request=request, domain_id_list=[(raw_data["id"])]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(
@@ -198,11 +198,11 @@ def create_param(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_source_ids(
-        #     original_request=request, source_id_list=[(raw_data["source_id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[(raw_data["source_id"])]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(
@@ -225,11 +225,11 @@ def delete_param(request: HttpRequest):
         raw_data = json.loads(request.body)
 
         # ------------------- VERIFYING ACCESS -----------------------
-        # check_passed, details = auth_checks.verify_user_owns_source_ids(
-        #     original_request=request, source_id_list=[(raw_data["source_id"])]
-        # )
-        # if not check_passed:
-        #     return JsonResponse({"status": "FAILURE", "details": details})
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[(raw_data["source_id"])]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
         return JsonResponse(
