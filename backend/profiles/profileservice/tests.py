@@ -173,28 +173,20 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        rf = RequestFactory()
-        data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testDomainID = 3
-        setupData = {"id": user["id"], "domain_id": testDomainID}
-        post_request = rf.post(
-            "/profiles/add_domain_to_profile",
-            setupData,
-            content_type="application/json",
-        )
-        post_request.user = MockUser()
+        
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
         data = {"id": user["id"]}
-        post_request = rf.post(
-            "/profiles/get_domains_for_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profilescrud.get_domains_for_user(post_request, user["id"])
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+
+        result = profilescrud.get_domains_for_user(request2, user["id"])
         if result["status"] == "SUCCESS":
             assert result["id"] == user["id"] and result["domainIDs"] == [
                 str(testDomainID)
@@ -208,21 +200,19 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = False
 
-        rf = RequestFactory()
-        data = {}
-        post_request = rf.post(
-            "/profiles/create_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        user = profilescrud.create_user(post_request, "test", "t@test.com", "test")
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
         testUsername = "test"
         testPassword = "test"
         data = {"username": "test", "password": "test"}
-        post_request = rf.post(
-            "/profiles/login_user", data, content_type="application/json"
-        )
-        post_request.user = MockUser()
-        result = profilescrud.login_user(post_request, testUsername, testPassword)
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+        result = profilescrud.login_user(request2, testUsername, testPassword)
         if result["status"] == "SUCCESS":
             assert result["id"] == user["id"]
         else:
