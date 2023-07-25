@@ -234,7 +234,7 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should toggle showComment[index] to true', () => {
-    component.comments = mockCommentData; // Replace this with your test data
+    component.comments = mockCommentData;
     component.initializeShowCommentArray();
     component.toggleShowComment(1);
     expect(component.showComment).toEqual([false, true, false, false, false, false, false]);
