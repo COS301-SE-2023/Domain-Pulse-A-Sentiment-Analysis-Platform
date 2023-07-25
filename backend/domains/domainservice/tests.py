@@ -202,3 +202,48 @@ class DomainsTests(TestCase):
         )
         response_data = json.loads(response.content)
         self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_create_param_integration(self, mock_find, mock_update, mock_post):
+        test_key = "test_key"
+        test_value = "test_value"
+        data = {
+            "id": "64a2d2a2580b40e94e42b72a",
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+            "key": test_key,
+            "value": test_value,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/create_param", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(
+            response_data["confirmation"]["_id"], "64a2d2a2580b40e94e42b72a"
+        )
+        self.assertEqual(
+            response_data["confirmation"]["sources"][0]["params"][test_key], test_value
+        )
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_delete_param_integration(self, mock_find, mock_update, mock_post):
+        test_key = "t"
+        data = {
+            "id": "64a2d2a2580b40e94e42b72a",
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+            "key": test_key,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/delete_param", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertNotIn(
+            test_key, response_data["confirmation"]["sources"][0]["params"]
+        )
