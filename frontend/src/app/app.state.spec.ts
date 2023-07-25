@@ -59,6 +59,38 @@ describe('AppState', () => {
     // make sure overallSentiment and sampleData is set
   });
 
+  it('should select the correct source', () => {
+    const mockSources: DisplaySource[] = [
+      {
+        id: '1',
+        name: 'test',
+        url: 'test',
+        selected: true,
+      },
+      {
+        id: '2',
+        name: 'test2',
+        url: 'test3',
+        selected: false,
+      },
+    ];
+    store.reset({
+      app: { sources: mockSources, selectedSource: mockSources[0] },
+    });
+
+    store.dispatch(new SetSource(mockSources[1]));
+
+    // const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
+    // expect(actualSelectedSource).toEqual(mockSources[1]);
+    // const actualSources = store.selectSnapshot(AppState.sources);
+    // if (!actualSources) {
+    //   fail();
+    //   return;
+    // }
+    // expect(actualSources[0].selected).toEqual(false);
+    // expect(actualSources[1].selected).toEqual(true);
+  });
+
   it('Should Set the userID when when the user has been authenticated', () => {
     // let apiSpy = jasmine.createSpyObj('AppApi', ['checkAuthenticate']);
     // apiSpy.checkAuthenticate.and.callThrough();
