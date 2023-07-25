@@ -53,7 +53,7 @@ jobs:
             cd backend
             # pipenv sync
             echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
-            echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+            echo "${{ secrets.POSTGRES_CONFIG_SERVER }}" > .postgresql.env
 
             cd ../frontend
             exit
