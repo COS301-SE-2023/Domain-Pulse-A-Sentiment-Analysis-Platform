@@ -81,19 +81,23 @@ describe('AppState', () => {
   });
 
   it('React correctly to registering user', () => {
-    // let mockResponse1 = { status: 'SUCCESS' };
-    // let apiSpy = jasmine.createSpyObj('AppApi', ['registerUser']);
-    // apiSpy.registerUser.and.returnValue(mockResponse1);
-    // TestBed.inject(AppApi);
+    apiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS' }));
 
     store.dispatch(new RegisterUser('test', 'test', 'test@test.com'));
     const actual = store.selectSnapshot(AppState.statisticIndex);
     expect(apiSpy.registerUser).toHaveBeenCalled();
+
+    spyOn(toastrSpy, 'error').and.callThrough();
+
+    apiSpy.registerUser.and.returnValue(of({ status: 'FAILURE' }));
+    store.dispatch(new RegisterUser('test', 'test', 'test@test.com'));
+    expect(apiSpy.registerUser).toHaveBeenCalled();
+    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
   it('Set the selected Statistic Index', () => {
     store.dispatch(new ChooseStatistic(1));
-    
+
     const actual = store.selectSnapshot(AppState.statisticIndex);
     expect(actual).toEqual(1);
   });
