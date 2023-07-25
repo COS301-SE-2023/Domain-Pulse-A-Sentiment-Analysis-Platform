@@ -68,6 +68,23 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
+  it("should correctly refresh source failed 'RefreshSourceData' event", () => {
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      selected: true,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
+
+    spyOn(toastrSpy, 'error').and.callThrough();
+    expect(toastrSpy.error).not.toHaveBeenCalled();
+
+    store.dispatch(new RefreshSourceData());
+  });
+
   it('should correctly get stats on a source', () => {
     // test above that correctly reacts to not having a selected source
 
