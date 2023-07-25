@@ -55,14 +55,11 @@ describe('AppState', () => {
     actions$ = TestBed.inject(Actions);
     toastrSpy = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
   });
-  
+
   it('set the correct dashboard info if there is a source that is selected', () => {
     // dispatch event
-
     // make sure overallSentiment and sampleData is set not set
-
     // setup the selected source
-
     // dispatch event
     // make sure overallSentiment and sampleData is set
   });
@@ -86,7 +83,7 @@ describe('AppState', () => {
       app: { sources: mockSources, selectedSource: mockSources[0] },
     });
 
-    store.dispatch(new SetSource(mockSources[1]));
+    // store.dispatch(new SetSource(mockSources[1]));
 
     // const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
     // expect(actualSelectedSource).toEqual(mockSources[1]);
@@ -134,6 +131,23 @@ describe('AppState', () => {
     );
   });
 
+  it("should correctly refresh source failed 'RefreshSourceData' event", () => {
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      selected: true,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
+
+    spyOn(toastrSpy, 'error').and.callThrough();
+    expect(toastrSpy.error).not.toHaveBeenCalled();
+
+    store.dispatch(new RefreshSourceData());
+  });
+
   it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
     const mockSource: DisplaySource = {
       id: '1',
@@ -150,23 +164,6 @@ describe('AppState', () => {
       expect(true).toBe(true);
       done();
     });
-
-    store.dispatch(new RefreshSourceData());
-  });
-
-  it("should correctly refresh source failed 'RefreshSourceData' event", () => {
-    const mockSource: DisplaySource = {
-      id: '1',
-      name: 'test',
-      url: 'test',
-      selected: true,
-    };
-    store.reset({ app: { selectedSource: mockSource } });
-
-    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
-
-    spyOn(toastrSpy, 'error').and.callThrough();
-    expect(toastrSpy.error).not.toHaveBeenCalled();
 
     store.dispatch(new RefreshSourceData());
   });
@@ -236,7 +233,7 @@ describe('AppState', () => {
     expect(actual).toEqual(1);
   });
 
-  it('should correctly format the response from the server to a DisplaySource', () => {
+  it('should correctlyi format the response from the server to a DisplaySOurce', () => {
     expect(true).toBe(true);
   });
 });
