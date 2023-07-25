@@ -214,6 +214,13 @@ describe('CommentsViewComponent', () => {
     expect(component.getToxicityColor('non-toxic')).toBe('very-positive-color');
   });
 
+  it('getRatingClass() function should correctly return the color class based on index and score', () => {
+    expect(component.getRatingClass(0, '70%')).toBe('positive-color');
+    expect(component.getRatingClass(1, 'somewhat negative')).toBe('somewhat-negative-color');
+    expect(component.getRatingClass(2, 'joy')).toBe('positive-color');
+    expect(component.getRatingClass(3, 'toxic')).toBe('very-negative-color');
+  });
+
   
 
   
