@@ -36,20 +36,101 @@ export class CommentsViewComponent {
     }));
   }
 
+  getRatingClass(index: number, score: string): string {
+    let colorClass = '';
+    if (index === 0) {
+      colorClass = this.getRatingColor(score);
+    }
+    else if (index===1){
+      colorClass = this.getCategoryColor(score);
+    }
+    else if (index===2){
+      colorClass = this.getEmotionColor(score);
+    }
+    return colorClass;
+  }
+
+
   getRatingColor(score: string): string {
     let colorClass = '';
     if (score.includes('%')) {
       const percentage = parseInt(score, 10);
-      if (percentage >= 70) {
+      if (percentage >= 90) {
+        colorClass = 'very-positive-color';
+      } else if (percentage >= 70) {
         colorClass = 'positive-color';
-      } else if (percentage >= 40 && percentage < 70) {
+      } else if (percentage >= 60) {
+        colorClass = 'somewhat-positive-color';
+      } else if (percentage >= 40) {
         colorClass = 'neutral-color';
-      } else {
+      } else if (percentage >= 30) {
+        colorClass = 'somewhat-negative-color';
+      } else if (percentage >= 10) {
         colorClass = 'negative-color';
+      } else {
+        colorClass = 'very-negative-color';
       }
     } else {
       colorClass = 'neutral-color';
     }
+
     return colorClass;
   }
+
+  getCategoryColor(category: string): string {
+    let colorClass = '';
+    switch (category) {
+      case 'very negative':
+        colorClass = 'very-negative-color';
+        break;
+      case 'negative':
+        colorClass = 'negative-color';
+        break;
+      case 'somewhat negative':
+        colorClass = 'somewhat-negative-color';
+        break;
+      case 'somewhat positive':
+        colorClass = 'somewhat-positive-color';
+        break;
+      case 'positive':
+        colorClass = 'positive-color';
+        break;
+      case 'very positive':
+        colorClass = 'very-positive-color';
+        break;
+      default:
+        colorClass = 'neutral-color';
+    }
+    return colorClass;
+  }
+
+  getEmotionColor(emotion: string): string {
+    let colorClass = '';
+  
+    switch (emotion) {
+      case 'anger':
+      case 'disgust':
+      case 'fear':
+        colorClass = 'negative-color';
+        break;
+      case 'joy':
+      case 'surprise':
+        colorClass = 'positive-color';
+        break;
+      case 'sadness':
+        colorClass = 'sad-color';
+        break;
+      case 'neutral':
+        colorClass = 'neutral-color';
+        break;
+      default:
+        colorClass = 'neutral-color';
+    }
+  
+    return colorClass;
+  }
+  
+
+  
+
 }

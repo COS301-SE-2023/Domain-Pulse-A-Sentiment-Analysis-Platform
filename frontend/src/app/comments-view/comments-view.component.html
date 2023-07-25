@@ -3,8 +3,15 @@
     <div class="flex-column" *ngFor="let comment of comments">
         <p>{{comment.comment}}</p>
         <div class="flex-row"  style="padding-top:10px">
-            <div class="tag-container">
+            <!-- <div class="tag-container">
               <div class = "tag" [ngClass]="getRatingColor(comment.ratings[0])" *ngFor="let rating of comment.ratings">{{rating}}</div>
+            </div> -->
+            <div class="tag-container">
+                <ng-container *ngFor="let rating of comment.ratings; let i = index">
+                  <div class="tag" [ngClass]="getRatingClass(i, comment.ratings[i])">
+                    {{ rating }}
+                  </div>
+                </ng-container>
             </div>
         </div>
         <hr>
