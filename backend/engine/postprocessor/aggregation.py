@@ -3,6 +3,33 @@ def aggregate_sentiment_data(sentiment_data):
 
     num_individuals = len(sentiment_data)
 
+    if num_individuals == 0:
+        return {
+            "overall": {
+                "general": {"category": "No data", "score": 0},
+                "emotions": {
+                    "anger": 0,
+                    "disgust": 0,
+                    "fear": 0,
+                    "joy": 0,
+                    "neutral": 0,
+                    "sadness": 0,
+                    "surprise": 0,
+                },
+                "toxicity": {
+                    "level_of_toxic": "No data",
+                    "score": 0,
+                },
+                "ratios": {
+                    "positive": 0,
+                    "neutral": 0,
+                    "negative": 0,
+                },
+            },
+            "metadata": {"num_analysed": len(sentiment_data)},
+            "individual_data": [],
+        }
+
     summed_overall_score = 0
 
     emotions = {

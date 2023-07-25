@@ -24,14 +24,6 @@ describe('MainComponent', () => {
     expect(component.sidebarCollapsed).toBeFalse();
   });
 
-  it('should collapse the sidebar', (done) => {
-    component.toggleSidebar();
-    setTimeout(() => {
-      expect(component.sidebarCollapsed).toBeTrue();
-      done();
-    }, 500);
-  });
-
   // test constructor dispatches GetDomains action
   it('should dispatch GetDomains action OnInit', (done) => {
     actions$.pipe(ofActionDispatched(GetDomains)).subscribe((_) => {

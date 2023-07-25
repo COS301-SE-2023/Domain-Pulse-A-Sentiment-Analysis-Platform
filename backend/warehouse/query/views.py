@@ -5,6 +5,7 @@ from datamanager import sentiment_record_model
 import json
 import requests
 from authchecker import auth_checks
+import os
 
 # Create your views here.
 
@@ -43,7 +44,7 @@ def get_dashboard_data_source(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = "http://localhost:8001/aggregator/aggregate/"
+        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -55,6 +56,7 @@ def get_dashboard_data_source(request: HttpRequest):
             agg_response_body = response_from_aggregator.json()
 
             response["aggregated_metrics"] = agg_response_body["overall"]
+            response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
 
             return JsonResponse(response)
@@ -95,7 +97,7 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = "http://localhost:8001/aggregator/aggregate/"
+        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -107,6 +109,7 @@ def get_dashboard_data_domain(request: HttpRequest):
             agg_response_body = response_from_aggregator.json()
 
             response["aggregated_metrics"] = agg_response_body["overall"]
+            response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
 
             return JsonResponse(response)
@@ -128,10 +131,14 @@ def refresh_source(request: HttpRequest):
 
     originalRequest = request
 
-    GET_SOURCE_ENDPOINT = "http://localhost:8000/domains/get_source"
-    UPDATE_LAST_REFRESHED_ENDPOINT = "http://localhost:8000/domains/update_last_refresh"
-    SOURCE_CONNECTOR_ENDPOINT = "http://localhost:8003/refresh/source/"
-    ANALYSER_ENDPOINT = "http://localhost:8001/analyser/compute/"
+    GET_SOURCE_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+    )
+    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
+    SOURCE_CONNECTOR_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
+    ANALYSER_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    )
 
     if request.method == "POST":
         raw_data = json.loads(request.body)
@@ -140,13 +147,14 @@ def refresh_source(request: HttpRequest):
         # 0. Make a request to the domains service to get the info on the source (this also authenticates the request)
 
         headers = {"Content-Type": "application/json"}
+
         # ------------------- VERIFYING ACCESS -----------------------
-        # checked, jwt = auth_checks.extract_token(originalRequest)
-        # if not checked:
-        #     return JsonResponse(
-        #         {"status": "FAILURE", "details": "JWT not found in header of request"}
-        #     )
-        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         # ------------------------------------------------------------
 
         data = {"source_id": source_id_raw}
@@ -236,12 +244,12 @@ def refresh_source(request: HttpRequest):
 
         headers = {"Content-Type": "application/json"}
         # ------------------- VERIFYING ACCESS -----------------------
-        # checked, jwt = auth_checks.extract_token(originalRequest)
-        # if not checked:
-        #     return JsonResponse(
-        #         {"status": "FAILURE", "details": "JWT not found in header of request"}
-        #     )
-        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         # ------------------------------------------------------------
 
         data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}

@@ -30,4 +30,19 @@ describe('ModalContainerComponent', () => {
     component.closeModal();
     expect(fired).toBeTrue();
   });
+  
+  it('should set transition and modal display after modalDisplay value is set', (done: DoneFn) => {
+    component.modalDisplay = true;
+    expect(component.transition).toBeTrue();
+    expect(component._modalDisplay).toBeTrue();
+  
+    component.modalDisplay = false;
+    expect(component.transition).toBeFalse();
+    expect(component._modalDisplay).toBeTrue();
+    setTimeout(() => {
+      expect(component._modalDisplay).toBeFalse();
+      done();
+    }, 400);
+  });
 });
+

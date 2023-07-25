@@ -36,7 +36,7 @@ def get_timestamp_from_date(date_str: str):
         ).timestamp()
 
 
-def get_tripadvisor_reviews(url, last_refresh_timestamp):
+def call_outscraper(url, last_refresh_timestamp):
     response = requests.get(
         url=ENDPOINT
         + "?"
@@ -50,6 +50,12 @@ def get_tripadvisor_reviews(url, last_refresh_timestamp):
     )
 
     review_data = response.json()["data"][0]
+
+    return review_data
+
+
+def get_tripadvisor_reviews(url, last_refresh_timestamp):
+    review_data = call_outscraper(url, last_refresh_timestamp)
 
     latest_retrieval = last_refresh_timestamp
     ret_data = []

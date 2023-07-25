@@ -100,6 +100,15 @@ export class AppApi {
     return this.http.post(addSourceUrl, body, { withCredentials: true });
   }
 
+  refreshSourceInfo(sourceID: string): Observable<any> {
+    const refreshSourceInfoUrl = this.warehouseBaseUrl + 'query/refresh_source/';
+    const body = {
+      source_id: sourceID,
+    }
+
+    return this.http.post(refreshSourceInfoUrl, body, { withCredentials: true });
+  }
+
   getSourceInfo(sourceID: number): Observable<any> {
     const getSourceInfoUrl = this.domainBaseUrl + 'domains/get_source';
     return this.http.post(
@@ -109,11 +118,11 @@ export class AppApi {
     );
   }
 
-  getSourceSentimentData(domainID: number): Observable<any> {
+  getSourceSentimentData(sourceID: string): Observable<any> {
     const getOverallSentimentScoresUrl =
       this.warehouseBaseUrl + 'query/get_source_dashboard/';
     const body = {
-      source_id: domainID,
+      source_id: sourceID,
     };
 
     return this.http.post(getOverallSentimentScoresUrl, body);

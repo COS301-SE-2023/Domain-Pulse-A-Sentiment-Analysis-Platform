@@ -61,7 +61,6 @@ import {
   ],
 })
 export class SidebarComponent implements OnInit {
-
   ngOnInit(): void {
     const profileIdFromLocalStorage = localStorage.getItem('profileId');
 
@@ -70,7 +69,6 @@ export class SidebarComponent implements OnInit {
 
       this.store.dispatch(new SetProfileDetails(profileIdValue));
     } else {
-
       console.log('Profile ID not found in local storage.');
     }
   }
@@ -81,11 +79,9 @@ export class SidebarComponent implements OnInit {
     this.sidebarClicked.emit();
   }
 
- 
-
-
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
-  @Select(AppState.profileDetails) profileDetails$!: Observable<ProfileDetails | null>;
+  @Select(AppState.profileDetails)
+  profileDetails$!: Observable<ProfileDetails | null>;
   smallLogoState = 'in';
   showSmallLogo = true;
   fullLogoState = 'out';
@@ -196,21 +192,18 @@ export class SidebarComponent implements OnInit {
   }
 
   addNewDomain(): void {
-    this.store
-      .dispatch(
-        new AddNewDomain(
-          this.newDomainName,
-          this.newDomainImageName,
-          this.newDomainDescription
-        )
+    this.store.dispatch(
+      new AddNewDomain(
+        this.newDomainName,
+        this.newDomainImageName,
+        this.newDomainDescription
       )
-      .subscribe(() => {
-        this.newDomainName = '';
-        this.newDomainImageName = '';
-        this.newDomainDescription = '';
+    );
+    this.newDomainName = '';
+    this.newDomainImageName = '';
+    this.newDomainDescription = '';
 
-        this.toggleDomainModal();
-      });
+    this.toggleDomainModal();
   }
 
   editDomain() {

@@ -18,16 +18,15 @@ import {
   DeleteDomain,
   Demo2Setup,
   SetProfileDetails,
+  RefreshSourceData,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ToastrService  } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { NgZone } from '@angular/core';
 
-
-
 export interface Source {
-  source_id: number;
+  source_id: string;
   source_name: string;
   sourceImageUrl: string;
 }
@@ -42,7 +41,7 @@ export interface DisplayDomain {
 }
 
 export interface DisplaySource {
-  id: number;
+  id: string;
   name: string;
   url: string;
   selected: boolean;
@@ -87,7 +86,6 @@ export class Comment {
   }
 }
 
-
 interface AppStateModel {
   profileId: number;
   authenticated: boolean;
@@ -102,8 +100,6 @@ interface AppStateModel {
   selectedStatisticIndex: number;
   profileDetails?: ProfileDetails;
 }
-
-
 
 @State<AppStateModel>({
   name: 'app',
@@ -121,8 +117,6 @@ export class AppState {
     private readonly router: Router,
     private toastr: ToastrService,
     private ngZone: NgZone
-
-
   ) {
     this.store.dispatch(new CheckAuthenticate());
     // setTimeout(() => {
@@ -187,11 +181,10 @@ export class AppState {
   getDomains(ctx: StateContext<AppStateModel>) {
     this.appApi.getDomainIDs(ctx.getState().profileId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
-        
         this.toastr.error('Your domains could not be retrieved', '', {
           timeOut: 3000,
           positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+          toastClass: 'custom-toast error ngx-toastr',
         });
         return;
       }
@@ -203,17 +196,22 @@ export class AppState {
       domainIDs.map((domainID: number) => {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
-            
-            this.toastr.error('The info for one of your domains could not be retrieved', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
-            });
+            this.toastr.error(
+              'The info for one of your domains could not be retrieved',
+              '',
+              {
+                timeOut: 3000,
+                positionClass: 'toast-bottom-center',
+                toastClass: 'custom-toast error ngx-toastr',
+              }
+            );
             return;
           }
 
           let domainRes = res.domain;
-          let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
+          let domainsIDs = domainRes.sources.map(
+            (source: any) => source.source_id
+          );
           let domain: DisplayDomain = {
             id: domainRes._id,
             name: domainRes.name,
@@ -264,7 +262,7 @@ export class AppState {
     ctx.patchState({
       sources: sources,
     });
-    
+
     let firstSource = true;
 
     for (let source of sources) {
@@ -328,7 +326,39 @@ export class AppState {
       .subscribe((res) => {
         // Not sure as to whether i should just reget all the data or just use the response
         this.store.dispatch(new GetDomains());
+
+        if (res.status === 'SUCCESS') {
+          // refresh for the source that was just added
+          this.store.dispatch(new RefreshSourceData(res.source_id));
+        }
       });
+  }
+
+  @Action(RefreshSourceData)
+  refreshSourceData(
+    ctx: StateContext<AppStateModel>,
+    state: RefreshSourceData
+  ) {
+    let sourceID = '';
+    if (state.sourceId) {
+      sourceID = state.sourceId;
+    } else {
+      let selectedSource = ctx.getState().selectedSource;
+      if (!selectedSource) return;
+      sourceID = selectedSource.id;
+    }
+
+    this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.toastr.error('Source data could not be refreshed', '', {
+          timeOut: 3000,
+          positionClass: 'toast-bottom-center',
+          toastClass: 'custom-toast error ngx-toastr',
+        });
+        return;
+      }
+      this.store.dispatch(new GetSourceDashBoardInfo());
+    });
   }
 
   @Action(AddNewDomain)
@@ -342,7 +372,7 @@ export class AppState {
           this.toastr.error('Your domain could not be added', '', {
             timeOut: 3000,
             positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+            toastClass: 'custom-toast error ngx-toastr',
           });
           return;
         }
@@ -354,11 +384,15 @@ export class AppState {
             console.log(res2);
 
             if (res2.status === 'FAILURE') {
-              this.toastr.error('Your domain could not be linked to your profile', '', {
-                timeOut: 3000,
-                positionClass: 'toast-bottom-center',
-                toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
-              });
+              this.toastr.error(
+                'Your domain could not be linked to your profile',
+                '',
+                {
+                  timeOut: 3000,
+                  positionClass: 'toast-bottom-center',
+                  toastClass: 'custom-toast error ngx-toastr',
+                }
+              );
               return;
             }
 
@@ -370,73 +404,76 @@ export class AppState {
   @Action(EditDomain)
   editDomain(ctx: StateContext<AppStateModel>, state: EditDomain) {
     // console.log(state);
+    console.log('siffies');
+
+    // call edit domain api
 
     // hard coded for now
-    let selectedDomain = ctx.getState().selectedDomain;
-    if (!selectedDomain) return;
+    // let selectedDomain = ctx.getState().selectedDomain;
+    // if (!selectedDomain) return;
 
-    selectedDomain.name = state.domainName;
-    selectedDomain.description = state.description;
-    // selectedDomain.imageUrl = state.domainImagUrl;
+    // selectedDomain.name = state.domainName;
+    // selectedDomain.description = state.description;
+    // // selectedDomain.imageUrl = state.domainImagUrl;
 
-    ctx.patchState({
-      selectedDomain: selectedDomain,
-    });
+    // ctx.patchState({
+    //   selectedDomain: selectedDomain,
+    // });
 
-    let domains = ctx.getState().domains;
-    if (!domains) return;
+    // let domains = ctx.getState().domains;
+    // if (!domains) return;
 
-    for (let domain of domains) {
-      if (domain.id == selectedDomain.id) {
-        domain.name = state.domainName;
-        domain.description = state.description;
-        // domain.imageUrl = state.domainImagUrl;
-        break;
-      }
-    }
+    // for (let domain of domains) {
+    //   if (domain.id == selectedDomain.id) {
+    //     domain.name = state.domainName;
+    //     domain.description = state.description;
+    //     // domain.imageUrl = state.domainImagUrl;
+    //     break;
+    //   }
+    // }
   }
 
   @Action(DeleteDomain)
   deleteDomain(ctx: StateContext<AppStateModel>, state: DeleteDomain) {
-    // this.appApi.removeDomain(state.domainID).subscribe((res) => {
-    //   if (res.status === 'FAILURE') {
-    //     // CHRIS ERROR HANDLE
-    //     alert('CHRIS ERROR HANDLE');
-    //     return;
-    //   }
-
-    //   // will hardcode removal instead of re-fetching domains for now
-    //   // this.store.dispatch(new GetDomains());
-    // });
-
-    let domains = ctx.getState().domains;
-    if (!domains) return;
-
-    for (let domain of domains) {
-      if (domain.id == state.domainID) {
-        let selectedDomain = ctx.getState().selectedDomain;
-        if (selectedDomain && selectedDomain.id == state.domainID) {
-          // switch to the next domain
-          if (domains.length > 1) {
-            let nextDomain = domains[0];
-            if (nextDomain.id == state.domainID) {
-              nextDomain = domains[1];
-            }
-
-            this.store.dispatch(new SetDomain(nextDomain));
-          }
-        }
-
-        // remove domain from domains
-        domains.splice(domains.indexOf(domain), 1);
-
-        ctx.patchState({
-          domains: domains,
-        });
-
-        break;
+    this.appApi.removeDomain(state.domainID).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        // CHRIS ERROR HANDLE
+        alert('CHRIS ERROR HANDLE');
+        return;
       }
-    }
+
+      // will hardcode removal instead of re-fetching domains for now
+      // this.store.dispatch(new GetDomains());
+    });
+
+    // let domains = ctx.getState().domains;
+    // if (!domains) return;
+
+    // for (let domain of domains) {
+    //   if (domain.id == state.domainID) {
+    //     let selectedDomain = ctx.getState().selectedDomain;
+    //     if (selectedDomain && selectedDomain.id == state.domainID) {
+    //       // switch to the next domain
+    //       if (domains.length > 1) {
+    //         let nextDomain = domains[0];
+    //         if (nextDomain.id == state.domainID) {
+    //           nextDomain = domains[1];
+    //         }
+
+    //         this.store.dispatch(new SetDomain(nextDomain));
+    //       }
+    //     }
+
+    //     // remove domain from domains
+    //     domains.splice(domains.indexOf(domain), 1);
+
+    //     ctx.patchState({
+    //       domains: domains,
+    //     });
+
+    //     break;
+    //   }
+    // }
   }
 
   @Action(GetSourceDashBoardInfo)
@@ -453,7 +490,7 @@ export class AppState {
         this.toastr.error('Sentiment data could not be retrieved', '', {
           timeOut: 3000,
           positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
+          toastClass: 'custom-toast error ngx-toastr',
         });
         return;
       }
@@ -480,30 +517,28 @@ export class AppState {
 
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
-    console.log("attempting password login");
+    console.log('attempting password login');
 
-      this.appApi
-        .attemptPsswdLogin(state.username, state.password)
-        .subscribe((res) => {
-          if (res.status == 'SUCCESS') {
-            this.store.dispatch(new SetProfileId(res.id));
-            console.log("here");
-            this.store.dispatch(new SetProfileDetails(res.id));
-            this.store.dispatch(new GetDomains());
-            this.router.navigate(['']);
-          } else {
-            this.ngZone.run(() => {
-              this.toastr.error('Login failed', '', {
-                timeOut: 3000,
-                positionClass: 'toast-bottom-center',
-                toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
-              });
+    this.appApi
+      .attemptPsswdLogin(state.username, state.password)
+      .subscribe((res) => {
+        if (res.status == 'SUCCESS') {
+          this.store.dispatch(new SetProfileId(res.id));
+          console.log('here');
+          this.store.dispatch(new SetProfileDetails(res.id));
+          this.store.dispatch(new GetDomains());
+          this.router.navigate(['']);
+        } else {
+          this.ngZone.run(() => {
+            this.toastr.error('Login failed', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast error ngx-toastr',
             });
-          }
-        });
-    
+          });
+        }
+      });
   }
-
 
   @Action(SetProfileId)
   setProfileId(ctx: StateContext<AppStateModel>, state: SetProfileId) {
@@ -528,31 +563,25 @@ export class AppState {
   } */
 
   @Action(SetProfileDetails)
-  setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
-    this.toastr.error('Login failed', '', {
-      timeOut: 3000,
-      positionClass: 'toast-bottom-center',
-      toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
-    });
+  setProfileDetails(
+    ctx: StateContext<AppStateModel>,
+    state: SetProfileDetails
+  ) {
+    
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
-        
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
           if (res.status == 'SUCCESS') {
-            
-
             ctx.patchState({
-             profileDetails: {
+              profileDetails: {
                 userId: res.userID,
                 username: res2.username,
                 email: res2.email,
                 profileIconUrl: res.profileIconUrl,
-              }
+              },
             });
 
             localStorage.setItem('profileId', state.profileId.toString());
-            
-            
 
             return true;
           } else return false;
@@ -561,8 +590,6 @@ export class AppState {
       } else return false;
     });
   }
-  
-
 
   @Action(RegisterUser)
   registerUser(ctx: StateContext<AppStateModel>, state: RegisterUser) {
@@ -572,70 +599,18 @@ export class AppState {
         if (res.status == 'SUCCESS') {
           this.router.navigate(['']);
         } else {
-          this.toastr.error('Your account could not be registered', '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast ngx-toastr' // Add the custom CSS class here
-          });;
+          this.ngZone.run(() => {
+            this.toastr.error('Your account could not be registered', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast error ngx-toastr',
+            });
+          });
+          
         }
       });
   }
-
-  // fake soruce to info
-  private idToSource(id: number): DisplaySource {
-    let displaySource: DisplaySource;
-    switch (id) {
-      case 0:
-        displaySource = {
-          id: id,
-          name: 'Goddess Cafe Waterkloof',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-        break;
-      case 1:
-        displaySource = {
-          id: id,
-          name: 'Goddess Cafe Rietondale',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-        break;
-      case 2:
-        displaySource = {
-          id: id,
-          name: "Heineken Champion's Cup",
-          url: 'instagram-Icon.png',
-          selected: false,
-        };
-        break;
-      case 3:
-        displaySource = {
-          id: id,
-          name: 'Cell C Sharks',
-          url: 'instagram-Icon.png',
-          selected: false,
-        };
-        break;
-      case 4:
-        displaySource = {
-          id: id,
-          name: 'Tuks',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-        break;
-      default:
-        displaySource = {
-          id: id,
-          name: 'Goddess Cafe Waterkloof',
-          url: 'google-reviews.png',
-          selected: false,
-        };
-    }
-    return displaySource;
-  }
-
+  
   @Action(ChooseStatistic)
   chooseStatistic(ctx: StateContext<AppStateModel>, state: ChooseStatistic) {
     ctx.patchState({
@@ -643,7 +618,7 @@ export class AppState {
     });
   }
 
-  private formatResponseSources(responseSources :any[]): DisplaySource[] {
+  private formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
     for (let responseSource of responseSources) {
       let displaySource: DisplaySource = {
@@ -655,5 +630,5 @@ export class AppState {
       displaySources.push(displaySource);
     }
     return displaySources;
-  } 
+  }
 }

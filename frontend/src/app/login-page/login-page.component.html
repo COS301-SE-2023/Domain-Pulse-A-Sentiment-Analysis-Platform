@@ -1,12 +1,11 @@
 <div class="container">
 
-    <div class="left-side flex-column center" style="gap: 10%;">
+    <div class="left-side flex-column center" style="gap: 5%;">
         <div class="flex-row content" >
-            <img src="../assets/dp-logo-blue.svg" style="width: 70%;" >
+            <img src="../assets/dp-logo-blue.png" style="width: 70%;" >
         </div>
 
         
-
 
     <div
       class="flex-row content"
@@ -44,13 +43,17 @@
     >
       <div class="flex-column" style="width: 100%">
         <div>
-          <button (click)="login()" class="button">Log In</button>
+          <button (click)="login()" class="button clickable-item">Log In</button>
         </div>
-        <div>
+        <div class="alternative-option">
+          <p class="clickable-item"  routerLink="/register">Don't have an account?</p>
+        </div>
+        <!-- <div>
           <button class="button2">Sign in with Google</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
   <div class="right-side"></div>
+  <img class="wave-art" src="../assets/wave-squished.svg" alt="Wave Art">
 </div>
