@@ -247,3 +247,34 @@ class DomainsTests(TestCase):
         self.assertNotIn(
             test_key, response_data["confirmation"]["sources"][0]["params"]
         )
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    def test_get_source_integration(self, mock_find, mock_post):
+        source_id = "64a2d2e0b5b66c122b03e8d2"
+        data = {
+            "source_id": source_id,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/get_source", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["source"]["source_id"], source_id)
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_update_last_refresh_integration(self, mock_find, mock_update, mock_post):
+        data = {
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+            "new_last_refresh": 2,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/update_last_refresh",
+            data=data,
+            content_type="application/json",
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
