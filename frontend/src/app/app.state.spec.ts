@@ -68,6 +68,32 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
+  it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
+    const mockDomain: DisplayDomain = {
+      id: 1,
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: ['1'],
+      sources: [],
+    };
+    store.reset({ app: { selectedDomain: mockDomain } });
+    apiSpy.addSource.and.returnValue(of({ status: 'SUCCESS' }));
+
+    actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    store.dispatch(
+      new AddNewSource('newSourceName', 'newSOurcePlatform', {
+        platform: 'youtube',
+        video_id: 'QblahQw',
+      })
+    );
+  });
+
   it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
     const mockSource: DisplaySource = {
       id: '1',
