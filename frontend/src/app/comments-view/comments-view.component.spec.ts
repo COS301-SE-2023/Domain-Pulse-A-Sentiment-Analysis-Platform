@@ -195,5 +195,26 @@ describe('CommentsViewComponent', () => {
     expect(component.getRatingColor('')).toBe('neutral-color');
   });
 
+  it('getCategoryColor() function should correctly classify the category', () => {
+    expect(component.getCategoryColor('very negative')).toBe('very-negative-color');
+    expect(component.getCategoryColor('somewhat negative')).toBe('somewhat-negative-color');
+    expect(component.getCategoryColor('neutral')).toBe('neutral-color');
+
+  });
+
+  it('getEmotionColor() function should correctly classify the emotion', () => {
+    expect(component.getEmotionColor('anger')).toBe('negative-color');
+    expect(component.getEmotionColor('joy')).toBe('positive-color');
+    expect(component.getEmotionColor('sadness')).toBe('sad-color');
+    expect(component.getEmotionColor('neutral')).toBe('neutral-color');
+  });
+
+  it('getToxicityColor() function should correctly classify the toxicity', () => {
+    expect(component.getToxicityColor('toxic')).toBe('very-negative-color');
+    expect(component.getToxicityColor('non-toxic')).toBe('very-positive-color');
+  });
+
+  
+
   
 });
