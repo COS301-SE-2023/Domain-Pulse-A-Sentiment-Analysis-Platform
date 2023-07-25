@@ -1,7 +1,13 @@
+import json
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.test import TestCase
 from unittest import mock
+
+from requests import Response
 from utils import domainscrud
 from bson.objectid import ObjectId
+from domainservice import views as domain_views
+from django.test.client import RequestFactory
 
 
 class MockedItem:
@@ -33,8 +39,7 @@ def mocked_insert_one(dummy):
 
 
 def mocked_delete_one(dummy):
-    mock = MockedItem()
-    return mock
+    return MockedItem()
 
 
 def mocked_find_one(dummy):
@@ -57,6 +62,29 @@ def mocked_find_one(dummy):
 
 def mocked_update_one(dummy1, dummy2):
     return {}
+
+
+class MockedRequest:
+    def __init__(self):
+        self.status_code = 200
+        data = {
+            "status": "SUCCESS",
+            "details": "User is authorized",
+        }
+        self.conten= json.dumps(data)
+        self.json = json.dumps(data)
+
+
+def mocked_request_post(dummy1, dummy2, dummy3):
+    return MockedRequest()
+
+def mocked_request_get(url, headers=None):
+    response = Response()
+    data = {"key": "value"}
+    response._content=json.dumps(data).encode('utf-8')
+    response.headers['Content-Type'] = 'application/json'
+
+    return response
 
 
 class DomainsTests(TestCase):
@@ -154,3 +182,153 @@ class DomainsTests(TestCase):
     def test_get_source(self, mock_find):
         result = domainscrud.get_source("64a2d2e0b5b66c122b03e8d2")
         self.assertEqual(result["source_id"], "64a2d2e0b5b66c122b03e8d2")
+
+    # ----------------------------------------------------------------
+
+    # ---------------------- INTEGRATION TESTS -----------------------
+    @mock.patch(
+        "pymongo.collection.Collection.insert_one", side_effect=mocked_insert_one
+    )
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    def test_create_domain_integration(self, mock_insert, mock_query):
+        data = {"name": "test", "icon": "test.com", "description": "mocked"}
+        response: JsonResponse = self.client.post(
+            path="/domains/create_domain", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_remove_source_integration(self, mock_find, mock_update, mock_post):
+        data = {
+            "id": "64a2d2a2580b40e94e42b72a",
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/remove_source", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_create_param_integration(self, mock_find, mock_update, mock_post):
+        test_key = "test_key"
+        test_value = "test_value"
+        data = {
+            "id": "64a2d2a2580b40e94e42b72a",
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+            "key": test_key,
+            "value": test_value,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/create_param", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(
+            response_data["confirmation"]["_id"], "64a2d2a2580b40e94e42b72a"
+        )
+        self.assertEqual(
+            response_data["confirmation"]["sources"][0]["params"][test_key], test_value
+        )
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_delete_param_integration(self, mock_find, mock_update, mock_post):
+        test_key = "t"
+        data = {
+            "id": "64a2d2a2580b40e94e42b72a",
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+            "key": test_key,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/delete_param", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertNotIn(
+            test_key, response_data["confirmation"]["sources"][0]["params"]
+        )
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    def test_get_source_integration(self, mock_find, mock_post):
+        source_id = "64a2d2e0b5b66c122b03e8d2"
+        data = {
+            "source_id": source_id,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/get_source", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["source"]["source_id"], source_id)
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_update_last_refresh_integration(self, mock_find, mock_update, mock_post):
+        data = {
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+            "new_last_refresh": 2,
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/update_last_refresh",
+            data=data,
+            content_type="application/json",
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+    
+    @mock.patch(
+        "pymongo.collection.Collection.delete_one", side_effect=mocked_delete_one
+    )
+    @mock.patch(
+        "requests.post", side_effect=mocked_request_post
+    )
+    def test_create_domain_integration(self, mock_insert, mock_post):
+        data = {"id": "64a2d2a2580b40e94e42b72a"}
+        response: JsonResponse = self.client.post(path="/domains/delete_domain", data=data, content_type="application/json")
+        response_data= json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch(
+        "pymongo.collection.Collection.find_one", side_effect=mocked_find_one
+    )
+    @mock.patch(
+        "requests.post", side_effect=mocked_request_post
+    )
+    def test_get_domain_integration(self, mock_insert, mock_post):
+        data = {"id": "64a2d2a2580b40e94e42b72a"}
+        response: JsonResponse = self.client.post(path="/domains/get_domain", data=data, content_type="application/json")
+        response_data= json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch(
+        "pymongo.collection.Collection.find_one", side_effect=mocked_find_one
+    )
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    @mock.patch(
+        "requests.post", side_effect=mocked_request_post
+    )
+    @mock.patch(
+        "requests.get", side_effect=mocked_request_get
+    )
+    def test_add_source_integration(self,mock_insert,mock_update,mock_post,mock_get):
+        data = {"id": "64a2d2a2580b40e94e42b72a", "source_name": "testSource2", "source_icon": "testSource2.com", "params": {"source_type": "youtube", "video_id":""} }
+        response: JsonResponse = self.client.post(path="/domains/add_source", data=data, content_type="application/json")
+       
+        response_data= json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
