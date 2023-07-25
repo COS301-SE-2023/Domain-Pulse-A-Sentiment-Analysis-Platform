@@ -27,7 +27,7 @@ export class CommentsViewComponent {
     return individualMetrics.map((metric: any) => ({
       comment: metric.data,
       ratings: [
-        `${Math.floor(metric.ratios.positive * 100)}%`,
+        `${Math.floor(metric.general.score * 100)}%`,
         metric.general.category.toLowerCase().replace(/_/g, ' '),
         Object.keys(metric.emotions).reduce((a, b) =>
           metric.emotions[a] > metric.emotions[b] ? a : b
