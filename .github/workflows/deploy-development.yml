@@ -1,7 +1,8 @@
 name: Development deployment
 on:
-  push:
-    branches: [dev]
+  workflow_call:
+  # push:
+  #   branches: [dev]
 
 jobs:
   check_backend:
