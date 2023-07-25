@@ -37,7 +37,7 @@ def mocked_insert_one(dummy):
 
 
 def mocked_delete_one(dummy):
-    return JsonResponse({"status": "SUCCESS", "details": "Domain deleted successfully"})
+    return MockedItem()
 
 
 def mocked_find_one(dummy):
@@ -61,6 +61,7 @@ def mocked_find_one(dummy):
 def mocked_update_one(dummy1, dummy2):
     return {}
 
+
 class MockedRequest:
     def __init__(self):
         self.status_code = 200
@@ -70,8 +71,10 @@ class MockedRequest:
         }
         self.json = json.dumps(data)
 
+
 def mocked_request_post(dummy1, dummy2, dummy3):
     return MockedRequest()
+
 
 class DomainsTests(TestCase):
     @mock.patch(
@@ -169,18 +172,33 @@ class DomainsTests(TestCase):
         result = domainscrud.get_source("64a2d2e0b5b66c122b03e8d2")
         self.assertEqual(result["source_id"], "64a2d2e0b5b66c122b03e8d2")
 
-
     # ----------------------------------------------------------------
 
     # ---------------------- INTEGRATION TESTS -----------------------
     @mock.patch(
         "pymongo.collection.Collection.insert_one", side_effect=mocked_insert_one
     )
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    def test_create_domain_integration(self, mock_insert, mock_query):
+        data = {"name": "test", "icon": "test.com", "description": "mocked"}
+        response: JsonResponse = self.client.post(
+            path="/domains/create_domain", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
     @mock.patch(
-        "requests.post", side_effect=mocked_request_post
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
     )
-    def test_create_domain_integration(self):
-        data = {"name": "test", "icon": "test.com", "description":"mocked"}
-        response: JsonResponse = self.client.post(path="/domains/create_domain", data=data, content_type="application/json")
-        response_data= json.loads(response.content)
+    def test_remove_source_integration(self, mock_find, mock_update, mock_post):
+        data = {
+            "id": "64a2d2a2580b40e94e42b72a",
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+        }
+        response: JsonResponse = self.client.post(
+            path="/domains/remove_source", data=data, content_type="application/json"
+        )
+        response_data = json.loads(response.content)
         self.assertEqual(response_data["status"], "SUCCESS")
