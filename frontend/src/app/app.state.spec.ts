@@ -1,14 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { ToastrModule, ToastrService } from 'ngx-toastr'; // Add this import
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
-import { AppState } from './app.state';
+import { AppState, DisplayDomain, DisplaySource } from './app.state';
 import {
+  AddNewSource,
   AttempPsswdLogin,
   CheckAuthenticate,
   ChooseStatistic,
   GetDomains,
+  GetSourceDashBoardInfo,
+  RefreshSourceData,
   RegisterUser,
   SetProfileId,
+  SetSource,
 } from './app.actions';
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
@@ -16,7 +20,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppState', () => {
   let store: Store;
-  let toastrService: ToastrService;
+  // let toastrService: ToastrService;
+  let toastrSpy: jasmine.SpyObj<ToastrService>;
   let apiSpy: jasmine.SpyObj<AppApi>;
   let actions$: Observable<any>;
 
@@ -27,13 +32,16 @@ describe('AppState', () => {
       'checkAuthenticate',
       'attemptPsswdLogin',
       'getProfile',
+      'getSourceSentimentData',
+      'refreshSourceInfo',
+      'addSource',
     ]);
-    apiSpy.getDomainIDs.and.returnValue(of({ status: 'SUCCESS', domainIDs: [] }));
-    apiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS' }));
+    apiSpy.getDomainIDs.and.returnValue(
+      of({ status: 'SUCCESS', domainIDs: [] })
+    );
     apiSpy.checkAuthenticate.and.returnValue(of({ status: 'SUCCESS' }));
-    apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
     apiSpy.getProfile.and.returnValue(of({ status: 'FAILURE' })); // CHANGE TO SUCCESS AND RETURN MOCK USER
-    
+
     await TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
@@ -45,7 +53,7 @@ describe('AppState', () => {
 
     store = TestBed.inject(Store);
     actions$ = TestBed.inject(Actions);
-    toastrService = TestBed.inject(ToastrService);
+    toastrSpy = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
   });
   
   it('set the correct dashboard info if there is a source that is selected', () => {
