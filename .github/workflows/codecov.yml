@@ -1,11 +1,12 @@
 name: Uplaod to Codecov
 on:
-  push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+  # push:
+  #   branches:
+  #     - "**"
+  # pull_request:
+  #   branches:
+  #     - main
 jobs:
   test_frontend:
     uses: ./.github/workflows/frontend-build.yml

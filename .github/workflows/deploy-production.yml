@@ -1,7 +1,8 @@
 name: Production Deployment
 on:
-  push:
-    branches: [main]
+  workflow_call:
+  # push:
+  #   branches: [main]
 jobs:
   check_backend:
     runs-on: ubuntu-latest
