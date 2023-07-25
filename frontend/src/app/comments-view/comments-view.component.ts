@@ -12,13 +12,28 @@ export class CommentsViewComponent {
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
 
   comments?: any[];
-
+  showComment: boolean[] = [];
   constructor() {
     this.sampleData.subscribe((newSampleData) => {
       if (newSampleData) {
         this.comments = this.transformComments(newSampleData);
       }
     });
+    this.initializeShowCommentArray();
+  }
+
+  initializeShowCommentArray() {
+    if(this.comments){
+      this.showComment = Array(this.comments.length).fill(false);
+
+    }
+    console.log("comments")
+    console.log(this.showComment);
+  }
+
+  toggleShowComment(index: number) {
+    console.log("toggle comment index")
+    this.showComment[index] = !this.showComment[index];
   }
 
   transformComments(jsonData: any): any[] {
@@ -32,12 +47,13 @@ export class CommentsViewComponent {
         Object.keys(metric.emotions).reduce((a, b) =>
           metric.emotions[a] > metric.emotions[b] ? a : b
         ),
+        metric.toxicity.level_of_toxic
       ],
     }));
   }
 
   getRatingClass(index: number, score: string): string {
-    let colorClass = '';
+    let colorClass = 'neutral-color';
     if (index === 0) {
       colorClass = this.getRatingColor(score);
     }
@@ -46,6 +62,9 @@ export class CommentsViewComponent {
     }
     else if (index===2){
       colorClass = this.getEmotionColor(score);
+    }
+    else if(index===3){
+      colorClass = this.getToxicityColor(score);
     }
     return colorClass;
   }
@@ -122,6 +141,24 @@ export class CommentsViewComponent {
         break;
       case 'neutral':
         colorClass = 'neutral-color';
+        break;
+      default:
+        colorClass = 'neutral-color';
+    }
+  
+    return colorClass;
+  }
+
+  //Toxic, Non-toxic
+  getToxicityColor(toxicity: string): string {
+    let colorClass = '';
+    toxicity = toxicity.toLowerCase();
+    switch (toxicity) {
+      case 'toxic':
+        colorClass = 'very-negative-color';
+        break;
+      case 'non-toxic':
+        colorClass = 'very-positive-color';
         break;
       default:
         colorClass = 'neutral-color';

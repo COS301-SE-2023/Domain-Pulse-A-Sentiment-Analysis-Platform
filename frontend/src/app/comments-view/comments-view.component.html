@@ -1,7 +1,26 @@
 <h2 style="margin-top: 0;">Sample data</h2>
 <div class="flex-column" style="gap: 1rem" >
     <div class="flex-column" *ngFor="let comment of comments">
-        <p>{{comment.comment}}</p>
+        <div *ngFor="let comment of comments; let i = index">
+            <!-- Add click event to the comment text to toggle visibility -->
+            <div class="comment" >
+              <!-- Display the comment content -->
+              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
+                <p class="comment-text">{{ comment.comment }}</p>
+              </ng-container>
+          
+              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
+                <p class="comment-text">{{ comment.comment }}</p>
+                <p (click)="toggleShowComment(i)" class="warning-text comment-text">Hide Comment</p>
+              </ng-container>
+              <!-- Display warning if the comment is "Toxic" and not clicked -->
+              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
+                <div class="blur-text"><p>{{ comment.comment }}</p></div>
+                <p (click)="toggleShowComment(i)" class="warning-text comment-text">Warning: potentially toxic comment</p>
+              </ng-container>
+            </div>
+          
+        
         <div class="flex-row"  style="padding-top:10px">
             <!-- <div class="tag-container">
               <div class = "tag" [ngClass]="getRatingColor(comment.ratings[0])" *ngFor="let rating of comment.ratings">{{rating}}</div>
