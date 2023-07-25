@@ -16,7 +16,7 @@
               <!-- Display warning if the comment is "Toxic" and not clicked -->
               <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
                 <div class="blur-text"><p>{{ comment.comment }}</p></div>
-                <p (click)="toggleShowComment(i)" class="warning-text comment-text">Warning: potentially toxic comment</p>
+                <p (click)="toggleShowComment(i)" class="warning-text comment-text">Click to view toxic comment</p>
               </ng-container>
             </div>
           
