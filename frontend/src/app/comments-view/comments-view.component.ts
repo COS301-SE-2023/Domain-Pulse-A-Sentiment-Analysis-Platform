@@ -25,14 +25,12 @@ export class CommentsViewComponent {
   initializeShowCommentArray() {
     if(this.comments){
       this.showComment = Array(this.comments.length).fill(false);
-
+    }else{
+      this.showComment = [];
     }
-    console.log("comments")
-    console.log(this.showComment);
   }
 
   toggleShowComment(index: number) {
-    console.log("toggle comment index")
     this.showComment[index] = !this.showComment[index];
   }
 

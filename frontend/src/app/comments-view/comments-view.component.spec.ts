@@ -221,7 +221,23 @@ describe('CommentsViewComponent', () => {
     expect(component.getRatingClass(3, 'toxic')).toBe('very-negative-color');
   });
 
+  it('should initialize showComment array with false values', () => {
+    component.comments = mockCommentData; 
+    component.initializeShowCommentArray();
+    expect(component.showComment).toEqual([false, false, false, false, false, false, false]);
+  });
   
+  it('should not initialize showComment array when comments is not defined', () => {
+    component.comments = undefined;
+    component.initializeShowCommentArray();
+    expect(component.showComment).toEqual([]);
+  });
 
+  it('should toggle showComment[index] to true', () => {
+    component.comments = mockCommentData; // Replace this with your test data
+    component.initializeShowCommentArray();
+    component.toggleShowComment(1);
+    expect(component.showComment).toEqual([false, true, false, false, false, false, false]);
+  });
   
 });
