@@ -1,4 +1,4 @@
-<div class="sources-div flex-row center">
+<div class="sources-div flex-row">
   <ng-container *ngIf="sources$ | async as sources; else loadingSources">
     <div
       *ngFor="let source of sources"
