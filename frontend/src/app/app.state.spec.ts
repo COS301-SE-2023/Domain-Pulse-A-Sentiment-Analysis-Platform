@@ -68,6 +68,27 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
+  it('should correctly get stats on a source', () => {
+    // test above that correctly reacts to not having a selected source
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      selected: true,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    // test positive below this it'should... function
+
+    spyOn(toastrSpy, 'error').and.callThrough();
+
+    store.dispatch(new GetSourceDashBoardInfo());
+
+    expect(apiSpy.getSourceSentimentData).toHaveBeenCalled();
+    expect(toastrSpy.error).toHaveBeenCalled();
+  });
+
   it('React correctly positive "AttempPsswdLogin"  event', (done: DoneFn) => {
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
 
