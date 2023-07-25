@@ -68,6 +68,20 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
+  it('React correctly positive "AttempPsswdLogin"  event', (done: DoneFn) => {
+    apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
+
+    zip(
+      actions$.pipe(ofActionDispatched(SetProfileId)),
+      actions$.pipe(ofActionDispatched(GetDomains))
+    ).subscribe((_) => {
+      expect(apiSpy.attemptPsswdLogin).toHaveBeenCalled();
+      done();
+    });
+
+    store.dispatch(new AttempPsswdLogin('test_username', 'test_password'));
+  });
+
   it('React correctly bad "AttempPsswdLogin"  event', () => {
     spyOn(toastrSpy, 'error').and.callThrough();
 
