@@ -68,6 +68,26 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
+  it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      selected: true,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'SUCCESS' }));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+
+    actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    store.dispatch(new RefreshSourceData());
+  });
+
   it("should correctly refresh source failed 'RefreshSourceData' event", () => {
     const mockSource: DisplaySource = {
       id: '1',
