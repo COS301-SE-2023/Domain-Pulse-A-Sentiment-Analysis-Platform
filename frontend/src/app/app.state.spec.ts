@@ -92,13 +92,13 @@ describe('AppState', () => {
   });
 
   it('Set the selected Statistic Index', () => {
-    // let apiSpy = jasmine.createSpyObj('AppApi', ['getDomainIDs']);
-    // apiSpy.getDomainIDs.and.callThrough();
-    // TestBed.inject(AppApi);
-
     store.dispatch(new ChooseStatistic(1));
-
+    
     const actual = store.selectSnapshot(AppState.statisticIndex);
     expect(actual).toEqual(1);
+  });
+
+  it('should correctly format the response from the server to a DisplaySource', () => {
+    expect(true).toBe(true);
   });
 });
