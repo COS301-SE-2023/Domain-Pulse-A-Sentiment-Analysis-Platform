@@ -1,33 +1,78 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarComponent } from './sidebar.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
-import { Observable } from 'rxjs';
+import { Observable, first, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { AddNewDomain, EditDomain, SetDomain } from '../app.actions';
-import { DisplayDomain } from '../app.state';
+import {
+  AddNewDomain,
+  DeleteDomain,
+  EditDomain,
+  SetDomain,
+} from '../app.actions';
+import { AppState, DisplayDomain } from '../app.state';
+import { ModalContainerComponent } from '../modal-container/modal-container.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
+  let fixture: ComponentFixture<SidebarComponent>;
   let storeSpy: jasmine.SpyObj<Store>;
   let appApiSpy: jasmine.SpyObj<AppApi>;
   let actions$: Observable<any>;
 
-  beforeEach(() => {
-    appApiSpy = jasmine.createSpyObj('AppApi', ['addDomain', 'editDomain', 'removeDomain']);
-    appApiSpy.addDomain.and.callThrough();
+  beforeEach(async () => {
+    appApiSpy = jasmine.createSpyObj('AppApi', [
+      'addDomain',
+      'linkDomainToProfile',
+      'editDomain',
+      'removeDomain',
+    ]);
+    appApiSpy.addDomain.and.returnValue(
+      of({ status: 'SUCCESS', new_domain: { id: 1 } })
+    );
+    appApiSpy.linkDomainToProfile.and.returnValue(of({ status: 'FAILURE' }));
     appApiSpy.editDomain.and.callThrough();
-    appApiSpy.removeDomain.and.callThrough();
+    appApiSpy.removeDomain.and.returnValue(of({ status: 'SUCCESS' }));
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
+      declarations: [SidebarComponent, ModalContainerComponent],
       providers: [SidebarComponent, { provide: AppApi, useValue: appApiSpy }],
-      imports: [NgxsModule.forRoot([]), FormsModule],
-    });
+      imports: [
+        BrowserAnimationsModule,
+        NgxsModule.forRoot([AppState]),
+        FormsModule,
+        ToastrModule.forRoot(),
+      ],
+    }).compileComponents();
 
-    component = TestBed.inject(SidebarComponent);
+    fixture = TestBed.createComponent(SidebarComponent);
+    component = fixture.componentInstance;
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
+    spyOn(storeSpy, 'select').and.returnValue(of(null)); // be sure to mock the implementation here
+    spyOn(storeSpy, 'selectSnapshot').and.returnValue(null); // same here
+
     actions$ = TestBed.inject(Actions);
+    TestBed.inject(ToastrService);
+    fixture.detectChanges();
+  });
+
+  it('should change the document.body.classlist theme property when toggleTheme() is called', () => {
+    expect(component.theme).toBe(0);
+
+    component.toggleTheme();
+    expect(component.theme).toBe(1);
+    console.log(document.body.classList);
+    // expect(document.body.classList.contains('dark')).toBeTrue();
+    // expect(document.body.classList.contains('light')).toBeFalse();
+
+    component.toggleTheme();
+    expect(component.theme).toBe(0);
+    console.log(document.body.classList);
+    // expect(document.body.classList.contains('dark')).toBeFalse();
+    // expect(document.body.classList.contains('light')).toBeTrue();
   });
 
   it('should fire a "AddDomain" action', (done: DoneFn) => {
@@ -49,26 +94,36 @@ describe('SidebarComponent', () => {
     component.addNewDomain();
   });
 
-  // it('should fire an "EditDomain" action', (done: DoneFn) => {
-  //   // mock out teh selectSnapshot
+  it('should fire an "EditDomain" action', (done: DoneFn) => {
+    // mock out teh selectSnapshot
+    component.newDomainName = 'New Domain Name';
+    component.newDomainImageName = 'New Domain Image Name';
+    component.newDomainDescription = 'New Domain Description';
 
-  //   component.newDomainName = 'New Domain Name';
-  //   component.newDomainImageName = 'New Domain Image Name';
-  //   component.newDomainDescription = 'New Domain Description';
+    actions$.pipe(ofActionDispatched(EditDomain)).subscribe(() => {
+      // expect the clearing of the set variables
+      setTimeout(() => {
+        expect(component.newDomainName).toBe('');
+        expect(component.newDomainImageName).toBe('');
+        expect(component.newDomainDescription).toBe('');
 
-  //   actions$.pipe(ofActionDispatched(EditDomain)).subscribe(() => {
-  //     // expect the clearing of the set variables
-  //     setTimeout(() => {
-  //       expect(component.newDomainName).toBe('');
-  //       expect(component.newDomainImageName).toBe('');
-  //       expect(component.newDomainDescription).toBe('');
+        done();
+      }, 300);
+    });
 
-  //       done();
-  //     }, 300);
-  //   });
+    const dummyDisplayDomain: DisplayDomain = {
+      id: 1,
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
 
-  //   component.editDomain();
-  // });
+    storeSpy.selectSnapshot.and.returnValue(dummyDisplayDomain);
+    component.editDomain();
+  });
 
   it('should Toggle The domain flag', () => {
     component.showAddDomainModal = false;
@@ -129,13 +184,33 @@ describe('SidebarComponent', () => {
     component.selectDomain(dummyDisplayDomain);
   });
 
-  // it('should fire a "DeleteDomain" action', (done: DoneFn) => {
-  //   actions$.pipe(ofActionDispatched(SetDomain)).subscribe(() => {
-  //     expect(true).toBe(true);
-  //     done();
-  //   });
+  it('should fire a "DeleteDomain" action', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(DeleteDomain)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
 
-  //   const displayId = 1;
-  //   component.deleteDomain(displayId);
-  // });
+    const displayId = 1;
+    component.deleteDomain(displayId);
+  });
+
+  it('should fire sideBarClicked event when the sidebar is clicked', () => {
+    let eventFired = false;
+    component.sidebarClicked.pipe(first()).subscribe(() => (eventFired = true));
+
+    component.clickSidebar();
+    expect(eventFired).toBeTrue();
+  });
+
+  it('should switch out the logo when sidebar state changes', () => {
+    component.expanded = true;
+    expect(component.smallLogoState).toBe('out');
+    expect(component._expanded).toBe(true);
+    // test what happens afterwards
+
+    component.expanded = false;
+    expect(component.fullLogoState).toBe('out');
+    expect(component._expanded).toBe(false);
+    // test what happens afterwards
+  });
 });

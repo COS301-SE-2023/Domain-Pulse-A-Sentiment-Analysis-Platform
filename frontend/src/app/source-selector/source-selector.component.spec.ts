@@ -50,7 +50,7 @@ describe('SourceSelectorComponent', () => {
 		});
 
 		const dummyDisplaySource: DisplaySource = {
-			id: 1,
+			id: '1',
 			name: 'test',
 			url: 'test',
 			selected: true,

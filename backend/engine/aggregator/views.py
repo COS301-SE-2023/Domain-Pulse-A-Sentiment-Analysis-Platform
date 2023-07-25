@@ -12,4 +12,4 @@ def aggregate_metrics(request: HttpRequest):
         raw_data = json.loads(request.body)
         metrics_list = raw_data["metrics"]
         return JsonResponse(aggregation.aggregate_sentiment_data(metrics_list))
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request type"})

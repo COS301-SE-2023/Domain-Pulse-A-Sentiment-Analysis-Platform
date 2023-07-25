@@ -26,7 +26,6 @@ $text-color-dark: #ffffff
 $sidebar-top-dark: #0058b2
 $sidebar-bottom-dark: #0058b2
 
-
 body.light
     --background: #{$background-light}
     --primary: #{$primary-light}
@@ -83,17 +82,62 @@ p
     justify-content: center
     align-items: center
 
-
-.custom-toast 
+//Toasts
+.custom-toast
     width: 40% !important
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) !important
-    opacity: 0.8 !important
     border-radius: 0.5rem !important
     transition: all 0.3s ease
+
+    &.error
+        background-color: rgba(184, 0, 0, 0.7) !important
+
+    &.success
+        background-color: rgba(0, 184, 0, 0.7) !important
+
+    &.error:hover
+        background-color: rgba(184, 0, 0, 0.9) !important
+
+    &.success:hover
+        background-color: rgba(0, 184, 0, 0.9) !important
 
 .custom-toast:hover
     cursor: pointer
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4) !important
-    opacity: 1 !important
+
+//Clickable items
+.clickable-item
+    cursor: pointer
+    transition: transform 0.4s ease 
+    will-change: transform
+
+.clickable-item:not(:active)
+    animation: click-animation 0.4s ease 
+
+.clickable-item:hover
+    transform: scale(1.075)
+
+@keyframes click-animation
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(1.1)
+    100%
+        transform: scale(1)
+
+//Clickable items without hover
+.clickable-item-nohover
+    cursor: pointer
+    will-change: transform
+
+.clickable-item-nohover:not(:active)
+    animation: click-animation 0.4s ease
 
 
+@keyframes click-animation
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(0.95)
+    100%
+        transform: scale(1)

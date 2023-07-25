@@ -11,11 +11,17 @@ load_dotenv(ENV_FILE)
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 
-def get_comments_by_video_id(video_id: str, last_refresh_time):
+def call_youtube_api(video_id: str, last_refresh_time):
     URL = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={video_id}&maxResults=100&key={YOUTUBE_API_KEY}"
 
     response = requests.get(url=URL)
     data = response.json()
+
+    return data
+
+
+def get_comments_by_video_id(video_id: str, last_refresh_time):
+    data = call_youtube_api(video_id, last_refresh_time)
 
     comments = []
 

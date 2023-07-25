@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ToastrModule } from 'ngx-toastr'; // Add this import
+import { ToastrModule, ToastrService } from 'ngx-toastr'; // Add this import
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppState } from './app.state';
 import {
@@ -12,9 +12,11 @@ import {
 } from './app.actions';
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppState', () => {
   let store: Store;
+  let toastrService: ToastrService;
   let apiSpy: jasmine.SpyObj<AppApi>;
   let actions$: Observable<any>;
 
@@ -24,14 +26,17 @@ describe('AppState', () => {
       'getDomainIDs',
       'checkAuthenticate',
       'attemptPsswdLogin',
+      'getProfile',
     ]);
     apiSpy.getDomainIDs.and.returnValue(of({ status: 'SUCCESS', domainIDs: [] }));
     apiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS' }));
     apiSpy.checkAuthenticate.and.returnValue(of({ status: 'SUCCESS' }));
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
-
+    apiSpy.getProfile.and.returnValue(of({ status: 'FAILURE' })); // CHANGE TO SUCCESS AND RETURN MOCK USER
+    
     await TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         NgxsModule.forRoot([AppState]),
         ToastrModule.forRoot(), // Add ToastrModule here
       ],
@@ -40,6 +45,7 @@ describe('AppState', () => {
 
     store = TestBed.inject(Store);
     actions$ = TestBed.inject(Actions);
+    toastrService = TestBed.inject(ToastrService);
   });
   
   it('set the correct dashboard info if there is a source that is selected', () => {

@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="left-side flex-column center" style="gap: 2rem">
+  <div class="left-side flex-column center" style="gap: 1rem">
     <div class="flex-row content">
       <img src="../assets/dp-logo-blue.png" style="width: 70%" />
     </div>
@@ -47,14 +47,12 @@
         />
 
         <div class="flex-row" style="margin-top: 12px">
-          <button (click)="register()" class="button">Register</button>
+          <button (click)="register()" class="button clickable-item">Register</button>
         </div>
       </div>
     </div>
 
-    <div class="forgot">
-      <p>Already have an account?</p>
-    </div>
+    
 
     <div
       class="flex-row content center"
@@ -62,13 +60,17 @@
     >
       <div class="flex-column" style="width: 100%">
         <div>
-          <button routerLink="/login" class="button">Log In</button>
+          
+          <div class="alternative-option">
+            <p class="clickable-item"  routerLink="/login">Already have an account?</p>
+          </div>
         </div>
-        <div>
+        <!-- <div>
           <button class="button2">Sign in with Google</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
   <div class="right-side"></div>
+  <img class="wave-art" src="../assets/wave-squished.svg" alt="Wave Art">
 </div>
