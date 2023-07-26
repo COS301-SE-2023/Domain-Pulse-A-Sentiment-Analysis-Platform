@@ -46,6 +46,7 @@ export interface DisplaySource {
   name: string;
   url: string;
   selected: boolean;
+  isRefreshing: boolean;
 }
 
 export interface SentimentScores {
@@ -302,7 +303,7 @@ export class AppState {
     ctx.patchState({
       sources: sources,
       selectedSource: state.source,
-/*       sourceIsLoading: false, */
+      /*       sourceIsLoading: false, */
     });
   }
 
@@ -352,25 +353,49 @@ export class AppState {
     ctx: StateContext<AppStateModel>,
     state: RefreshSourceData
   ) {
+    let selectedSource = ctx.getState().selectedSource;
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
     } else {
-      let selectedSource = ctx.getState().selectedSource;
       if (!selectedSource) return;
       sourceID = selectedSource.id;
+
+      selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
     }
 
+    console.log("refreshing with sourceID" + sourceID)
     this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.toastr.error('Source data could not be refreshed', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
+        this.ngZone.run(() => {
+          this.toastr.error('Source data could not be refreshed: ' + res.details , '', {
+            timeOut: 3000,
+            positionClass: 'toast-bottom-center',
+            toastClass: 'custom-toast error ngx-toastr',
+          });
         });
+
+        if(selectedSource){
+          selectedSource.isRefreshing = false;
+          ctx.patchState({
+            selectedSource,
+          });
+        }
+
         return;
       }
       this.store.dispatch(new GetSourceDashBoardInfo());
+      
+      if(selectedSource){
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+      }
+      
     });
   }
 
@@ -581,7 +606,6 @@ export class AppState {
     ctx: StateContext<AppStateModel>,
     state: SetProfileDetails
   ) {
-    
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
@@ -620,11 +644,10 @@ export class AppState {
               toastClass: 'custom-toast error ngx-toastr',
             });
           });
-          
         }
       });
   }
-  
+
   @Action(ChooseStatistic)
   chooseStatistic(ctx: StateContext<AppStateModel>, state: ChooseStatistic) {
     ctx.patchState({
@@ -633,7 +656,10 @@ export class AppState {
   }
 
   @Action(SetSourceIsLoading)
-  setSourceIsLoading(ctx: StateContext<AppStateModel>, action: SetSourceIsLoading) {
+  setSourceIsLoading(
+    ctx: StateContext<AppStateModel>,
+    action: SetSourceIsLoading
+  ) {
     const state = ctx.getState();
     ctx.setState({
       ...state,
@@ -649,6 +675,7 @@ export class AppState {
         name: responseSource.source_name,
         url: responseSource.source_icon,
         selected: false,
+        isRefreshing: false,
       };
       displaySources.push(displaySource);
     }
