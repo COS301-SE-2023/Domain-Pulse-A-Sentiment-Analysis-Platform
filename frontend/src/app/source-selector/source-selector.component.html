@@ -13,9 +13,12 @@
       />
 
       <p>{{ source.name}}</p>
-      <!-- <ng-container *ngIf="sourceIsLoading$ | async as sourceIsLoading" >
-        <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;"/>
-      </ng-container> -->
+      <ng-container *ngIf="source.selected" >
+        <div class="loading-spinner"></div>
+        <!-- <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;position: absolute;
+        top: 0;
+        right: 0;"/> -->
+      </ng-container>
     </div>
     
 
