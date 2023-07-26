@@ -3,6 +3,7 @@ from django.http import JsonResponse, HttpRequest
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from unittest.mock import patch, MagicMock
+from authchecker import auth_checks
 import json
 import os
 import mock
@@ -149,6 +150,34 @@ class QueryEngineTests(TestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], "FAILURE")
         self.assertEqual(data["details"], "Unauthorized error")
+
+    def test_extract_token(self):
+        # Valid case
+        request = HttpRequest()
+        request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
+        result, token = auth_checks.extract_token(request)
+        self.assertTrue(result)
+        self.assertEqual(token, "valid_token")
+
+        # Missing header
+        request = HttpRequest()
+        result, error_msg = auth_checks.extract_token(request)
+        self.assertFalse(result)
+        self.assertEqual(error_msg, "Authorization header missing")
+
+        # Test invalid token
+        request = HttpRequest()
+        request.META["HTTP_AUTHORIZATION"] = "InvalidToken"
+        result, error_msg = auth_checks.extract_token(request)
+        self.assertFalse(result)
+        self.assertEqual(error_msg, "Invalid token format")
+
+        # Test invalid type of header
+        request = HttpRequest()
+        request.META["HTTP_AUTHORIZATION"] = "Basic invalid_token"
+        result, error_msg = auth_checks.extract_token(request)
+        self.assertFalse(result)
+        self.assertEqual(error_msg, "Authorization header - Missing Bearer")
 
     # ----------------------------------------------------------------
 
