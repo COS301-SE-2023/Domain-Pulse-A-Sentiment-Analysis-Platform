@@ -309,13 +309,6 @@ def get_user_by_id(id):
     }
 
 
-def check_logged_in(request):
-    if request.user.is_authenticated:
-        return {"status": "SUCCESS", "id": request.user.id}
-    else:
-        return {"status": "FAILURE"}
-
-
 def add_source_to_domain(user_id, domain_id, source_id):
     domain = None
     try:

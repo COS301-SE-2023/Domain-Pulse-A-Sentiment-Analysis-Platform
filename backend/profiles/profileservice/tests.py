@@ -405,20 +405,6 @@ class ProfilesTests(TestCase):
         else:
             assert False
         
-    def test_check_logged_in(self):
-        class MockUser:
-            is_authenticated = True
-            id = 1
-        data = {}
-        request1= HttpRequest()
-        request1.method = "POST"
-        request1._body=json.dumps(data)
-        request1.user = MockUser()
-        result = profilescrud.check_logged_in(request1)
-        if result["status"] == "SUCCESS":
-            assert True
-        else:
-            assert False
 
     @mock.patch("utils.profilescrud.logout", side_effect=mocked_logout)
     def test_logout_user_logged_out(self, mocked_logout):

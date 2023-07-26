@@ -8,5 +8,5 @@ urlpatterns = [
     path("add_domain/",views.add_domain),
     path("add_source/",views.add_source),
     path("domain_ids_and_remove_domain/",views.check_domain_ids_and_remove_domain),
-
+    path("check_logged_in/",views.check_logged_in),
 ]
