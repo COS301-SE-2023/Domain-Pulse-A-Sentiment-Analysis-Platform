@@ -8,6 +8,8 @@ import json
 import os
 import mock
 import requests
+from . import views
+from datamanager import sentiment_record_model
 
 # Create your tests here.
 
@@ -30,7 +32,7 @@ class QueryEngineTests(TestCase):
     @patch("datamanager.sentiment_record_model.get_records_by_source_id")
     @patch("requests.post")
     def test_valid_request_get_source_dashboard(
-        self, mock_post, mock_get_records, mock_verify_user
+        self, mocked_response, mock_get_records, mock_verify_user
     ):
         url = "/query/get_source_dashboard/"
         source_id = "hbfhwbgufbo724n2n7"
@@ -51,7 +53,7 @@ class QueryEngineTests(TestCase):
             "metadata": {},
             "individual_data": {},
         }
-        mock_post.return_value = mock_response
+        mocked_response.return_value = mock_response
 
         response = self.client.post(
             path=url, data=json.dumps(request_body), content_type="application/json"
@@ -68,7 +70,7 @@ class QueryEngineTests(TestCase):
             original_request=mock.ANY, source_id_list=[source_id]
         )
         mock_get_records.assert_called_once_with(source_id)
-        mock_post.assert_called_once_with(
+        mocked_response.assert_called_once_with(
             f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/",
             data=json.dumps({"metrics": mock_records}),
         )
@@ -101,7 +103,7 @@ class QueryEngineTests(TestCase):
     @patch("datamanager.sentiment_record_model.get_records_by_source_id")
     @patch("requests.post")
     def test_valid_request_get_domain_dashboard(
-        self, mock_post, mock_get_records, mock_verify_user
+        self, mocked_response, mock_get_records, mock_verify_user
     ):
         url = "/query/get_domain_dashboard/"
         source_ids = ["hbfhwbgufbo724n2n7", "hbfhwbgufbo724n2n7"]
@@ -122,7 +124,7 @@ class QueryEngineTests(TestCase):
             "metadata": {},
             "individual_data": {},
         }
-        mock_post.return_value = mock_response
+        mocked_response.return_value = mock_response
 
         response = self.client.post(
             path=url, data=json.dumps(request_body), content_type="application/json"
@@ -196,5 +198,70 @@ class QueryEngineTests(TestCase):
         self.assertEqual(response1.json(), expected_data)
         self.assertEqual(response2.json(), expected_data)
         self.assertEqual(response3.json(), expected_data)
+
+    @patch("requests.post")
+    def test_successful_refresh(self, mocked_response):
+        mocked_response.return_value.status_code = 200
+        mocked_response.return_value.json.return_value = {
+            "status": "SUCCESS",
+            "newdata": [],
+            "latest_retrieval": 123456789,
+            "metrics": [],
+            "source": {
+                "params": {
+                    "source_type": "youtube",
+                },
+                "last_refresh_timestamp": 123456789,
+            },
+        }
+        data = {"source_id": "djwbhbwg28732b72b3n"}
+        headers = {
+            "Authorization": f"Bearer {'some_test_jwt'}",
+            "Content-Type": "application/json",
+        }
+        request = self.factory.post(
+            "/refresh_source/",
+            json.dumps(data),
+            content_type="application/json",
+            headers=headers,
+        )
+        response: JsonResponse = views.refresh_source(request)
+        response_data = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response_data,
+            {"status": "SUCCESS", "details": "Data source refreshed successfully"},
+        )
+
+    @patch("requests.post")
+    def test_failed_domains_requests_on_refresh(self, mocked_response):
+        mocked_response.return_value.status_code = 500
+        data = {"source_id": "djwbhbwg28732b72b3n"}
+        headers = {
+            "Authorization": f"Bearer {'some_test_jwt'}",
+            "Content-Type": "application/json",
+        }
+        request = self.factory.post(
+            "/refresh_source/",
+            json.dumps(data),
+            content_type="application/json",
+            headers=headers,
+        )
+        response = views.refresh_source(request)
+        response_data = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response_data,
+            {"status": "FAILURE", "details": "Could not connect to Domains Service"},
+        )
+
+    def test_invalid_request_on_refresh(self):
+        request = self.factory.get("/refresh_source/")
+        response = views.refresh_source(request)
+        response_data = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response_data, {"status": "FAILURE", "details": "Invalid request"}
+        )
 
     # ----------------------------------------------------------------
