@@ -108,6 +108,23 @@ class ProfilesTests(TestCase):
             assert result["id"] == user["id"]
         else:
             assert False
+    
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_profile_failure(self, mocked_create_profile, mocked_login):
+        class MockUser:
+            is_authenticated = True
+        request1= HttpRequest()
+        request1.method = "POST"
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        data = {"id": user["profileID"]}
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+        incorrectID= user["profileID"]+1
+        result = profilescrud.get_profile(request2, incorrectID)
+        self.assertEqual(result["status"], "FAILURE")
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
@@ -346,6 +363,29 @@ class ProfilesTests(TestCase):
             ]
         else:
             assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_domains_for_user_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID = 3
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        incorrectID = user["id"] + 1
+        data = {"id": incorrectID}
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+
+        result = profilescrud.get_domains_for_user(request2, incorrectID)
+        self.assertEqual(result["status"], "FAILURE")
     
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
@@ -360,7 +400,7 @@ class ProfilesTests(TestCase):
         testDomainID = 3
         
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
-
+        
         result = profilescrud.get_domains_for_user_internal(user["id"])
         if result["status"] == "SUCCESS":
             assert result["id"] == user["id"] and result["domainIDs"] == [
@@ -368,6 +408,23 @@ class ProfilesTests(TestCase):
             ]
         else:
             assert False
+        
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_domains_for_user_internal_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID = 3
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        incorrectID = user["id"] + 1
+        result = profilescrud.get_domains_for_user_internal(incorrectID)
+        self.assertEqual(result["status"], "FAILURE")
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
