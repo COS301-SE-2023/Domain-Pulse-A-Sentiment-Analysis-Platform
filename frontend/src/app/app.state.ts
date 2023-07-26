@@ -435,7 +435,6 @@ export class AppState {
         return;
       }
 
-      // will hardcode removal instead of re-fetching domains for now
       this.store.dispatch(new GetDomains());
     });
 

@@ -61,7 +61,7 @@ export class AppApi {
   }
 
   removeDomain(domainID: number): Observable<any> {
-    const removeDomainUrl = this.domainBaseUrl + 'domains/remove_domain';
+    const removeDomainUrl = this.domainBaseUrl + 'domains/delete_domain';
     const body = {
       id: domainID,
     };
