@@ -13,8 +13,8 @@ cd ..
 ls
 
 cd $project2
-coverage run --source='.' manage.py test
-echo "yes" | coverage report -m 
+echo "yes" | coverage run --source='.' manage.py test
+coverage report -m 
 cd ..
 
 cd $project3
