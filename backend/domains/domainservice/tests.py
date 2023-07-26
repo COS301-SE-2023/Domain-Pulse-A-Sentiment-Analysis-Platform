@@ -409,86 +409,86 @@ class DomainsTests(TestCase):
         self.assertFalse(result)
         self.assertEqual(error_msg, "Authorization header - Missing Bearer")
 
-    # @mock.patch("requests.post")
-    # def test_auth_checker(self, mocked_response):
-    #     # FOR DOMAIN IDs
+    @mock.patch("requests.post")
+    def test_auth_checker(self, mocked_response):
+        # FOR DOMAIN IDs
 
-    #     # Successful case
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 200
-    #     mock_response.json.return_value = {
-    #         "status": "SUCCESS",
-    #         "details": "Successful case",
-    #     }
-    #     mocked_response.return_value = mock_response
-    #     request = HttpRequest()
-    #     request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
-    #     domain_ids = ["1", "2", "3"]
-    #     status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
+        # Successful case
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "status": "SUCCESS",
+            "details": "Successful case",
+        }
+        mocked_response.return_value = mock_response
+        request = HttpRequest()
+        request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
+        domain_ids = ["1", "2", "3"]
+        status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
 
-    #     self.assertEqual(status, True)
-    #     self.assertEqual(details, "User is authorized")
+        self.assertEqual(status, True)
+        self.assertEqual(details, "User is authorized")
 
-    #     # Unsuccessful case (auth failed)
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 200
-    #     mock_response.json.return_value = {
-    #         "status": "FAILURE",
-    #         "details": "Some authentication failure",
-    #     }
-    #     mocked_response.return_value = mock_response
-    #     request = HttpRequest()
-    #     request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
-    #     domain_ids = ["1", "2", "3"]
-    #     status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
+        # # Unsuccessful case (auth failed)
+        # mock_response = MagicMock()
+        # mock_response.status_code = 200
+        # mock_response.json.return_value = {
+        #     "status": "FAILURE",
+        #     "details": "Some authentication failure",
+        # }
+        # mocked_response.return_value = mock_response
+        # request = HttpRequest()
+        # request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
+        # domain_ids = ["1", "2", "3"]
+        # status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
 
-    #     self.assertEqual(status, False)
-    #     self.assertEqual(details, "Some authentication failure")
+        # self.assertEqual(status, False)
+        # self.assertEqual(details, "Some authentication failure")
 
-    #     # Unsuccessful case (token extraction issue)
-    #     request = HttpRequest()
-    #     domain_ids = ["1", "2", "3"]
-    #     status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
-    #     self.assertEqual(status, False)
-    #     self.assertEqual(details, "Authorization header missing")
+        # Unsuccessful case (token extraction issue)
+        request = HttpRequest()
+        domain_ids = ["1", "2", "3"]
+        status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
+        self.assertEqual(status, False)
+        self.assertEqual(details, "Authorization header missing")
 
-    #     # FOR SOURCE IDs
+        # # FOR SOURCE IDs
 
-    #     # Successful case
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 200
-    #     mock_response.json.return_value = {
-    #         "status": "SUCCESS",
-    #         "details": "Successful case",
-    #     }
-    #     mocked_response.return_value = mock_response
-    #     request = HttpRequest()
-    #     request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
-    #     source_ids = ["1", "2", "3"]
-    #     status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
+        # # Successful case
+        # mock_response = MagicMock()
+        # mock_response.status_code = 200
+        # mock_response.json.return_value = {
+        #     "status": "SUCCESS",
+        #     "details": "Successful case",
+        # }
+        # mocked_response.return_value = mock_response
+        # request = HttpRequest()
+        # request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
+        # source_ids = ["1", "2", "3"]
+        # status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
 
-    #     self.assertEqual(status, True)
-    #     self.assertEqual(details, "User is authorized")
+        # self.assertEqual(status, True)
+        # self.assertEqual(details, "User is authorized")
 
-    #     # Unsuccessful case (auth failed)
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 200
-    #     mock_response.json.return_value = {
-    #         "status": "FAILURE",
-    #         "details": "Some authentication failure",
-    #     }
-    #     mocked_response.return_value = mock_response
-    #     request = HttpRequest()
-    #     request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
-    #     source_ids = ["1", "2", "3"]
-    #     status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
+        # # Unsuccessful case (auth failed)
+        # mock_response = MagicMock()
+        # mock_response.status_code = 200
+        # mock_response.json.return_value = {
+        #     "status": "FAILURE",
+        #     "details": "Some authentication failure",
+        # }
+        # mocked_response.return_value = mock_response
+        # request = HttpRequest()
+        # request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
+        # source_ids = ["1", "2", "3"]
+        # status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
 
-    #     self.assertEqual(status, False)
-    #     self.assertEqual(details, "Some authentication failure")
+        # self.assertEqual(status, False)
+        # self.assertEqual(details, "Some authentication failure")
 
-    #     # Unsuccessful case (token extraction issue)
-    #     request = HttpRequest()
-    #     source_ids = ["1", "2", "3"]
-    #     status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
-    #     self.assertEqual(status, False)
-    #     self.assertEqual(details, "Authorization header missing")
+        # Unsuccessful case (token extraction issue)
+        request = HttpRequest()
+        source_ids = ["1", "2", "3"]
+        status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
+        self.assertEqual(status, False)
+        self.assertEqual(details, "Authorization header missing")
