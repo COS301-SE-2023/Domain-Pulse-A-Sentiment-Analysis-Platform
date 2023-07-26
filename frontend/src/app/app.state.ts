@@ -182,7 +182,8 @@ export class AppState {
 
   @Selector()
   static sourceIsLoading(state: AppStateModel) {
-    return state.sourceIsLoading;
+    if (state.sourceIsLoading) return state.sourceIsLoading;
+    return false;
   }
 
   @Action(GetDomains)

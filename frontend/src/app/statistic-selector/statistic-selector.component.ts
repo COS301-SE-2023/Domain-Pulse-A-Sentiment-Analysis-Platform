@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { ChooseStatistic } from '../app.actions';
 
+
+
 export interface aggregated_metrics {
   general: {
     category: string;
@@ -49,6 +51,7 @@ export class StatisticSelectorComponent {
   @Select(AppState.sourceOverallSentimentScores)
   sourceOverallSentiment!: Observable<any | null>;
   @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   displayedMetrics?: DisplayableMetrics;
 
