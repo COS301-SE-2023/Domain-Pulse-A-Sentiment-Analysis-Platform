@@ -239,6 +239,76 @@ class ProfilesTests(TestCase):
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_remove_source_to_domain(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+
+        result = profilescrud.remove_source_from_domain(user["id"], testDomainID, testSourceID)
+        if result["status"] == "SUCCESS":
+            self.assertEqual (result["domainID"] , testDomainID) 
+            self.assertNotIn(testSourceID, result["sourceIDs"])
+        else:
+            assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_sources_for_domain(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+
+        result = profilescrud.get_sources_for_domain(user["id"], testDomainID)
+        if result["status"] == "SUCCESS":
+            self.assertEqual(result["id"], user["id"])
+            self.assertEqual (result["domain_id"] , testDomainID) 
+            self.assertIn(testSourceID, result["source_ids"])
+        else:
+            assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_sources_for_user_internal(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+
+        result = profilescrud.get_sources_for_user_internal(user["id"])
+        if result["status"] == "SUCCESS":
+            self.assertEqual(result["id"], user["id"])
+            self.assertIn(testSourceID, result["source_ids"])
+        else:
+            assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     def test_login_user_correct_credentials(self, mocked_login, mocked_create_profile):
         class MockUser:
             is_authenticated = False
