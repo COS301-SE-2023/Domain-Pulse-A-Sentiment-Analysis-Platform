@@ -201,10 +201,13 @@ export class AppState {
 
     this.appApi.getDomainIDs(profileDetails.userId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
-        this.toastr.error('Your domains could not be retrieved', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
+        
+        this.ngZone.run(() => {
+          this.toastr.error('Your domains could not be retrieved', '', {
+            timeOut: 3000,
+            positionClass: 'toast-bottom-center',
+            toastClass: 'custom-toast error ngx-toastr',
+          });
         });
         return;
       }
@@ -216,6 +219,7 @@ export class AppState {
       domainIDs.map((domainID: number) => {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
+            this.ngZone.run(() => {
             this.toastr.error(
               'The info for one of your domains could not be retrieved',
               '',
@@ -225,6 +229,9 @@ export class AppState {
                 toastClass: 'custom-toast error ngx-toastr',
               }
             );
+            });
+
+            
             return;
           }
 
@@ -425,10 +432,12 @@ export class AppState {
       .addDomain(state.domainName, state.description, state.domainImagUrl)
       .subscribe((res) => {
         if (res.status === 'FAILURE') {
+          this.ngZone.run(() => {
           this.toastr.error('Your domain could not be added', '', {
             timeOut: 3000,
             positionClass: 'toast-bottom-center',
             toastClass: 'custom-toast error ngx-toastr',
+          });
           });
           return;
         }
@@ -521,10 +530,12 @@ export class AppState {
 
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
+        this.ngZone.run(() => {
         this.toastr.error('Sentiment data could not be retrieved', '', {
           timeOut: 3000,
           positionClass: 'toast-bottom-center',
           toastClass: 'custom-toast error ngx-toastr',
+        });
         });
         return;
       }
