@@ -3,8 +3,11 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse, HttpRequest
 from utils import profilescrud
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 @csrf_exempt
@@ -74,6 +77,18 @@ def extract_token(original_request: HttpRequest):
         return (False, "Invalid token format")
 
     return (True, token)
+
+def validate_token(request):
+    try:
+        flag,token=extract_token(request)
+        if not flag:
+            return {"status": "FAILURE", "details": token}
+        else:
+            AccessToken(token)
+            return {"status": "SUCCESS"}
+    except TokenError as e:
+        return {"status": "FAILURE", "details": "Token is invalid (Expired or Invalid)"}
+
 
 @csrf_exempt
 def check_source_ids_and_remove_source(request):
@@ -178,5 +193,17 @@ def check_domain_ids_and_remove_domain(request):
         return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
     else:
         return JsonResponse({"status": "FAILURE", "details":"Foreign Request"})
+    
+@csrf_exempt
+def check_logged_in(request):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            check = validate_token(request)
+            if check["status"] == "SUCCESS":
+                return JsonResponse({"status": "SUCCESS", "id": request.user.id})
+            else:
+                return JsonResponse(check)
+        else:
+            return JsonResponse({"status": "FAILURE"})
 
         

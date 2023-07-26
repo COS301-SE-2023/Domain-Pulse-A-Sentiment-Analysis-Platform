@@ -1,7 +1,8 @@
 name: Development deployment
 on:
-  push:
-    branches: [dev]
+  workflow_call:
+  # push:
+  #   branches: [dev]
 
 jobs:
   check_backend:
@@ -16,6 +17,9 @@ jobs:
     needs: [check_backend, build_frontend]
     runs-on: ubuntu-latest
     steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+
       - name: install ssh keys
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
@@ -35,6 +39,8 @@ jobs:
             echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
 
             cd ../frontend
-            npm run build:dev
             exit
             EOF
+
+      - name: copy build artifacts
+        run: scp -r frontend-build ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/frontend/dist/domain-pulse

@@ -57,11 +57,37 @@ export class ApiInterceptor implements HttpInterceptor {
           break;
       }
 
-      console.log('apiUrl: ' + apiUrl + '/' + urlParts.join('/'));
+      // console.log('apiUrl: ' + apiUrl + '/' + urlParts.join('/'));
+
+      // append jwt from localstorage to "authorization" header
+      const jwt = localStorage.getItem('JWT');
+      if (jwt) {
+        const modifiedReq = req.clone({
+          url: apiUrl + '/' + urlParts.join('/'),
+          headers: req.headers.set(
+            'authorization',
+            'Bearer ' + jwt
+          ),
+        });
+        return next.handle(modifiedReq);
+      }
 
       const modifiedReq = req.clone({ url: apiUrl + '/' + urlParts.join('/') });
       return next.handle(modifiedReq);
     } else {
+      // append jwt from localstorage to "authorization" header
+      const jwt = localStorage.getItem('JWT');
+      if (jwt) {
+        const modifiedReq = req.clone({
+          url: apiUrl + req.url,
+          headers: req.headers.set(
+            'authorization',
+            'Bearer ' + jwt
+          ),
+        });
+        return next.handle(modifiedReq);
+      }
+
       return next.handle(req);
     }
   }

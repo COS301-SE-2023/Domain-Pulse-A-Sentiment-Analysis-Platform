@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   trigger,
   state,
@@ -61,18 +61,7 @@ import {
     ]),
   ],
 })
-export class SidebarComponent implements OnInit {
-  ngOnInit(): void {
-    const profileIdFromLocalStorage = localStorage.getItem('profileId');
-
-    if (profileIdFromLocalStorage !== null) {
-      const profileIdValue = parseInt(profileIdFromLocalStorage, 10);
-
-      this.store.dispatch(new SetProfileDetails(profileIdValue));
-    } else {
-      console.log('Profile ID not found in local storage.');
-    }
-  }
+export class SidebarComponent {
 
   @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
 

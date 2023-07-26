@@ -10,20 +10,18 @@ import {
   GetSources,
   RegisterUser,
   SetDomain,
-  SetProfileId,
   SetSource,
   GetSourceDashBoardInfo,
   ChooseStatistic,
   EditDomain,
   DeleteDomain,
-  Demo2Setup,
   SetProfileDetails,
   RefreshSourceData,
   SetSourceIsLoading,
   ChangePassword,
+  Initialise,
 } from './app.actions';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { NgZone } from '@angular/core';
 
@@ -92,7 +90,6 @@ export class Comment {
 }
 
 interface AppStateModel {
-  profileId: number;
   authenticated: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
@@ -110,10 +107,9 @@ interface AppStateModel {
 @State<AppStateModel>({
   name: 'app',
   defaults: {
-    profileId: 1,
     authenticated: false,
     selectedStatisticIndex: 0,
-    sourceIsLoading: false,
+    sourceIsLoading: true,
   },
 })
 @Injectable()
@@ -125,16 +121,18 @@ export class AppState {
     private toastr: ToastrService,
     private ngZone: NgZone
   ) {
-    this.store.dispatch(new CheckAuthenticate());
-    // setTimeout(() => {
-    //   this.store.dispatch(new CheckAuthenticate()).subscribe(() => {
-    //     if (this.store.selectSnapshot((state) => state.app.authenticated)) {
-    //       this.store.dispatch(new GetDomains());
-    //     } else {
-    //       this.router.navigate(['/register']);
-    //     }
-    //   });
-    // }, 300);
+    // // subscipte to changes to profile details
+    let detailsSet = false;
+    this.store
+      .select((state) => state)
+      .subscribe((res) => {
+        if (!detailsSet) {
+          if (res.app?.profileDetails) {
+            this.store.dispatch(new GetDomains());
+            detailsSet = true;
+          }
+        }
+      });
   }
 
   @Selector()
@@ -191,9 +189,17 @@ export class AppState {
   }
   
 
+  @Action(Initialise)
+  initiliaze(ctx: StateContext<AppStateModel>) {
+    this.store.dispatch(new CheckAuthenticate());
+  }
+
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
-    this.appApi.getDomainIDs(ctx.getState().profileId).subscribe((res: any) => {
+    const profileDetails = ctx.getState().profileDetails;
+    if (!profileDetails) return;
+
+    this.appApi.getDomainIDs(profileDetails.userId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
         this.toastr.error('Your domains could not be retrieved', '', {
           timeOut: 3000,
@@ -237,19 +243,26 @@ export class AppState {
           };
 
           let domains = ctx.getState().domains;
-          if (domains) {
-            ctx.patchState({
-              domains: [...domains, domain],
-            });
-          } else {
-            ctx.patchState({
-              domains: [domain],
-            });
-          }
+          // domains.push(domain);
+          // domains = domains?.filter((domain) => domain.id != domainRes._id);
 
           if (firstDomain) {
             firstDomain = false;
+            ctx.patchState({
+              domains: [domain],
+            });
+
             this.store.dispatch(new SetDomain(domain));
+          } else {
+            if (domains) {
+              ctx.patchState({
+                domains: [...domains, domain],
+              });
+            } else {
+              ctx.patchState({
+                domains: [domain],
+              });
+            }
           }
 
           /* ctx.patchState({
@@ -313,6 +326,7 @@ export class AppState {
 
   @Action(AddNewSource)
   addNewSource(ctx: StateContext<AppStateModel>, state: AddNewSource) {
+    // replace this with a function
     let source_image_name = '';
     switch (state.platform) {
       case 'facebook':
@@ -418,28 +432,7 @@ export class AppState {
           });
           return;
         }
-
-        let userID = ctx.getState().profileId;
-        this.appApi
-          .linkDomainToProfile(res.new_domain.id, userID)
-          .subscribe((res2) => {
-            console.log(res2);
-
-            if (res2.status === 'FAILURE') {
-              this.toastr.error(
-                'Your domain could not be linked to your profile',
-                '',
-                {
-                  timeOut: 3000,
-                  positionClass: 'toast-bottom-center',
-                  toastClass: 'custom-toast error ngx-toastr',
-                }
-              );
-              return;
-            }
-
-            this.store.dispatch(new GetDomains());
-          });
+        this.store.dispatch(new GetDomains());
       });
   }
 
@@ -484,8 +477,7 @@ export class AppState {
         return;
       }
 
-      // will hardcode removal instead of re-fetching domains for now
-      // this.store.dispatch(new GetDomains());
+      this.store.dispatch(new GetDomains());
     });
 
     // let domains = ctx.getState().domains;
@@ -547,14 +539,16 @@ export class AppState {
 
   @Action(CheckAuthenticate)
   checkAuthenticate(ctx: StateContext<AppStateModel>) {
+    if (ctx.getState().authenticated) return;
+
     this.appApi.checkAuthenticate().subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
-        // There is no res.id, one should store the userID in local storage
+        const userID: number = res.id;
         ctx.patchState({
-          profileId: res.id,
+          authenticated: true,
         });
-        return true;
-      } else return false;
+        this.store.dispatch(new SetProfileDetails(userID));
+      }
     });
   }
 
@@ -566,8 +560,9 @@ export class AppState {
       .attemptPsswdLogin(state.username, state.password)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
-          this.store.dispatch(new SetProfileId(res.id));
-          console.log('here');
+          // set jwt in local storage
+          localStorage.setItem('JWT', res.JWT);
+
           this.store.dispatch(new SetProfileDetails(res.id));
           this.store.dispatch(new GetDomains());
           this.router.navigate(['']);
@@ -581,16 +576,6 @@ export class AppState {
           });
         }
       });
-  }
-
-  @Action(SetProfileId)
-  setProfileId(ctx: StateContext<AppStateModel>, state: SetProfileId) {
-    ctx.patchState({
-      profileId: state.profileId,
-    });
-    /* //just testing
-    console.log(state.profileId);
-    localStorage.setItem('profileID', JSON.stringify(state.profileId)); */
   }
 
   /* @Action(GetProfileID)
@@ -616,22 +601,21 @@ export class AppState {
       if (res.status == 'SUCCESS') {
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
           if (res.status == 'SUCCESS') {
+            const profileDetails: ProfileDetails = {
+              userId: res.userID,
+              username: res2.username,
+              email: res2.email,
+              profileIconUrl: res.profileIcon,
+            };
+
             ctx.patchState({
-              profileDetails: {
-                userId: res.userID,
-                username: res2.username,
-                email: res2.email,
-                profileIconUrl: res.profileIconUrl,
-              },
+              profileDetails: profileDetails,
             });
 
-            localStorage.setItem('profileId', state.profileId.toString());
-
-            return true;
-          } else return false;
+            // localStorage.setItem('profileId', state.profileId.toString());
+          }
         });
-        return true;
-      } else return false;
+      }
     });
   }
 
@@ -641,6 +625,7 @@ export class AppState {
       .registerUser(state.username, state.password, state.email)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
+          localStorage.setItem('JWT', res.JWT);
           this.router.navigate(['']);
         } else {
           this.ngZone.run(() => {

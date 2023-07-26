@@ -41,26 +41,31 @@ export class SourceSelectorComponent {
   }
 
   determineSourceParams(): any | null {
-    if (
-      this.newSourcePlatform === 'googlereviews' ||
-      this.newSourcePlatform === 'tripadvisor'
-    ) {
-      return null;
-    } else if (this.newSourcePlatform === 'youtube') {
-      const url = this.newSourceUrl;
-      console.log('url: ' + url);
-      const regExp =
-        /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-      const match = url.match(regExp);
-      console.log('match: ' + match);
+    switch (this.newSourcePlatform) {
+      case 'googlereviews':
+        return {
+          source_type: 'googlereviews',
+          maps_url: this.newSourceUrl,
+        }
+      case 'tripadvisor':
+        return {
+          source_type: 'TripAdvisor',
+          tripadvisor_url: this.newSourceUrl,
+        }
+      case 'youtube':
+        const url = this.newSourceUrl;
+        console.log('url: ' + url);
+        const regExp =
+          /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        const match = url.match(regExp);
+        console.log('match: ' + match);
 
-      const videoID = match && match[7].length === 11 ? match[7] : null;
-      return {
-        source_type: 'youtube',
-        video_id: videoID,
-      };
+        const videoID = match && match[7].length === 11 ? match[7] : null;
+        return {
+          source_type: 'youtube',
+          video_id: videoID,
+        };
     }
-
     return null;
   }
 

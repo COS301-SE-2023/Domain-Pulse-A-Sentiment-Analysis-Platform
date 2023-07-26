@@ -3,7 +3,6 @@ from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from utils import profilescrud
-from utils import domainscrud
 
 
 # Create your views here.
@@ -117,13 +116,6 @@ def get_user_by_id(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
         return JsonResponse(profilescrud.get_user_by_id(raw_data["id"]))
-    return JsonResponse({"status": "FAILURE"})
-
-
-@csrf_exempt
-def check_logged_in(request: HttpRequest):
-    if request.method == "POST":
-        return JsonResponse(profilescrud.check_logged_in(request))
     return JsonResponse({"status": "FAILURE"})
 
 

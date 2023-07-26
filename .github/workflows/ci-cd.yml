@@ -1,0 +1,63 @@
+name: CI/CD
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - main
+jobs:
+  test_frontend:
+    uses: ./.github/workflows/frontend-build.yml
+    secrets: inherit
+
+  test_backend:
+    uses: ./.github/workflows/backend-build.yml
+    secrets: inherit
+
+  upload__test_reslts:
+    runs-on: ubuntu-latest
+    needs: [test_frontend, test_backend]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download Test Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: backend-test/coverage.lcov, frontend-test/lcov-report/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  update_deployment_environment:
+    needs: [test_backend, test_frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+
+      - name: install ssh keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: connect and pull
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.WORK_DIR_DEV }}
+            git checkout ${{ secrets.DEV_BRANCH }}
+            git pull
+
+            cd backend
+            # pipenv sync
+            echo "${{ secrets.DEV_DJANGO_PORTS }}" > .env
+            echo "${{ secrets.POSTGRES_CONFIG_SERVER }}" > .postgresql.env
+
+            cd ../frontend
+            exit
+            EOF
+
+      - name: copy build artifacts
+        run: scp -r frontend-build/domain-pulse ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/frontend/dist

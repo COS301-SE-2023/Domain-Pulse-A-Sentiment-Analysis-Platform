@@ -61,7 +61,7 @@ export class AppApi {
   }
 
   removeDomain(domainID: number): Observable<any> {
-    const removeDomainUrl = this.domainBaseUrl + 'domains/remove_domain';
+    const removeDomainUrl = this.domainBaseUrl + 'domains/delete_domain';
     const body = {
       id: domainID,
     };
@@ -130,7 +130,7 @@ export class AppApi {
 
   checkAuthenticate(): Observable<any> {
     const checkAuthenticateUrl =
-      this.profilesBaseUrl + 'profiles/check_logged_in';
+      this.profilesBaseUrl + 'check/check_logged_in/';
     return this.http.post(checkAuthenticateUrl, {}, { withCredentials: true });
   }
 
