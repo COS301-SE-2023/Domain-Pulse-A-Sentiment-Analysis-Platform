@@ -72,6 +72,44 @@ class ProfilesTests(TestCase):
             assert result["id"] == user["id"] and result["mode"] == True
         else:
             assert False
+    
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_profile(self, mocked_create_profile, mocked_login):
+        class MockUser:
+            is_authenticated = True
+        request1= HttpRequest()
+        request1.method = "POST"
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        data = {"id": user["profileID"]}
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+        result = profilescrud.get_profile(request2, user["profileID"])
+        if result["status"] == "SUCCESS":
+            assert result["id"] == user["id"]
+        else:
+            assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_user_by_id(self, mocked_create_profile, mocked_login):
+        class MockUser:
+            is_authenticated = True
+        request1= HttpRequest()
+        request1.method = "POST"
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        data = {"id": user["profileID"]}
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+        result = profilescrud.get_user_by_id(user["profileID"])
+        if result["status"] == "SUCCESS":
+            assert result["id"] == user["id"]
+        else:
+            assert False
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
@@ -362,6 +400,21 @@ class ProfilesTests(TestCase):
         request1._body=json.dumps(data)
         request1.user = MockUser()
         result = profilescrud.logout_user(request1)
+        if result["status"] == "SUCCESS":
+            assert True
+        else:
+            assert False
+        
+    def test_check_logged_in(self):
+        class MockUser:
+            is_authenticated = True
+            id = 1
+        data = {}
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
+        request1.user = MockUser()
+        result = profilescrud.check_logged_in(request1)
         if result["status"] == "SUCCESS":
             assert True
         else:
