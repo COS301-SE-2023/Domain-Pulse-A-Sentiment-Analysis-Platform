@@ -232,19 +232,23 @@ export class AppState {
           // domains.push(domain);
           // domains = domains?.filter((domain) => domain.id != domainRes._id);
 
-          if (domains) {
-            ctx.patchState({
-              domains: [...domains, domain],
-            });
-          } else {
+          if (firstDomain) {
+            firstDomain = false;
             ctx.patchState({
               domains: [domain],
             });
-          }
 
-          if (firstDomain) {
-            firstDomain = false;
             this.store.dispatch(new SetDomain(domain));
+          } else {
+            if (domains) {
+              ctx.patchState({
+                domains: [...domains, domain],
+              });
+            } else {
+              ctx.patchState({
+                domains: [domain],
+              });
+            }
           }
 
           console.log(ctx.getState().domains);
@@ -386,31 +390,7 @@ export class AppState {
           });
           return;
         }
-
-        let userDetails = ctx.getState().profileDetails;
-        if (!userDetails) return;
-        let userID = userDetails.userId;
-
-        this.appApi
-          .linkDomainToProfile(res.new_domain.id, userID)
-          .subscribe((res2) => {
-            console.log(res2);
-
-            if (res2.status === 'FAILURE') {
-              this.toastr.error(
-                'Your domain could not be linked to your profile',
-                '',
-                {
-                  timeOut: 3000,
-                  positionClass: 'toast-bottom-center',
-                  toastClass: 'custom-toast error ngx-toastr',
-                }
-              );
-              return;
-            }
-
-            this.store.dispatch(new GetDomains());
-          });
+        this.store.dispatch(new GetDomains());
       });
   }
 
