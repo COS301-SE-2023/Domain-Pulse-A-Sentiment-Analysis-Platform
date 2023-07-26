@@ -147,6 +147,23 @@ class ProfilesTests(TestCase):
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_user_by_id_failure(self, mocked_create_profile, mocked_login):
+        class MockUser:
+            is_authenticated = True
+        request1= HttpRequest()
+        request1.method = "POST"
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        incorrectID= user["profileID"]+1
+        data = {"id": incorrectID}
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        request2.user = MockUser()
+        result = profilescrud.get_user_by_id(incorrectID)
+        self.assertEqual(result["status"], "FAILURE")
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     def test_edit_profile_picture_success(self, mocked_create_profile, mocked_login):
         class MockUser:
             is_authenticated = True
@@ -446,6 +463,44 @@ class ProfilesTests(TestCase):
             self.assertIn(testSourceID, result["sourceIDs"])
         else:
             assert False
+    
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_add_source_to_domain_user_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        incorrectID = user["id"] + 1
+        result = profilescrud.add_source_to_domain(incorrectID, testDomainID, testSourceID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No user exists")
+    
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_add_source_to_domain_domain_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        incorrectDomainID = "4"
+        result = profilescrud.add_source_to_domain(user["id"], incorrectDomainID, testSourceID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No domain exists")
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
@@ -469,6 +524,46 @@ class ProfilesTests(TestCase):
             self.assertNotIn(testSourceID, result["sourceIDs"])
         else:
             assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_remove_source_to_domain_user_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+        incorrectID = user["id"] + 1
+        result = profilescrud.remove_source_from_domain(incorrectID, testDomainID, testSourceID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No user exists")
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_remove_source_to_domain_domain_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+        incorrectDomainID = "4"
+        result = profilescrud.remove_source_from_domain(user["id"], incorrectDomainID, testSourceID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No domain exists")
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
@@ -496,6 +591,46 @@ class ProfilesTests(TestCase):
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_sources_for_domain_user_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+        incorrectID = user["id"] + 1
+        result = profilescrud.get_sources_for_domain(incorrectID, testDomainID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No user exists")
+    
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_sources_for_domain_domain_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+        incorrectDomainID = "4"
+        result = profilescrud.get_sources_for_domain(user["id"], incorrectDomainID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No domain exists")
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     def test_get_sources_for_user_internal(self, mocked_login, mocked_create_profile):
         class MockUser:
             is_authenticated = True
@@ -516,6 +651,27 @@ class ProfilesTests(TestCase):
             self.assertIn(testSourceID, result["source_ids"])
         else:
             assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_sources_for_user_internal_user_failure(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+        incorrectID = user["id"] + 1
+        result = profilescrud.get_sources_for_user_internal(incorrectID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No user exists")
+
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
@@ -673,6 +829,32 @@ class ProfilesTests(TestCase):
             assert True
         else:
             assert False
+
+    @mock.patch("utils.profilescrud.logout", side_effect=mocked_logout)
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_delete_user_failure(self, mocked_logout, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        data = {}
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1._body=json.dumps(data)
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testUsername = "test"
+        testPassword = "test"
+        data = {"username":user["id"], "oldpassword":"test", "newpassword":"test2"}
+        request2= HttpRequest()
+        request2.method = "POST"
+        request2._body=json.dumps(data)
+        
+        user = authenticate(username="test", password="test")
+        user.id = user.id+1
+        request2.user = user
+        result = profilescrud.delete_user(request2, testUsername, testPassword)
+        self.assertEqual(result["status"], "FAILURE")
 
     # ----------------------------------------------------------------
 
