@@ -247,6 +247,9 @@ export class AppState {
             this.store.dispatch(new SetDomain(domain));
           }
 
+          /* ctx.patchState({
+            sourceIsLoading: false,
+          }); */
           console.log(ctx.getState().domains);
         });
       });

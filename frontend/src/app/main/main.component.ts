@@ -12,7 +12,7 @@ import {
 import { AppState, DisplayDomain } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { Demo2Setup, GetDomains } from '../app.actions';
+import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -45,6 +45,8 @@ import { Demo2Setup, GetDomains } from '../app.actions';
 export class MainComponent implements OnInit {
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+
   sidebarCollapsed = true;
 
   constructor(private store: Store) {
@@ -53,7 +55,9 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new GetDomains());
+
   }
 
   

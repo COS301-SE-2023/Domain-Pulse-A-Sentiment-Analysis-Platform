@@ -4,11 +4,9 @@
   [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
   (sidebarClicked)="toggleSidebar()"
 ></dp-sidebar>
-  <div
-    *ngIf="selectedDomain$ | async as selectedDomain"
-    class="flex-column"
-    style="width: 92%; gap: 1.3rem"
-  >
+<ng-container *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif">
+  <!-- Display the content when selectedDomain$ emits a value (selectedDomain is defined) -->
+  <div class="flex-column" style="width: 92%; gap: 1.3rem">
     <div class="header flex-row centered" style="gap: 1.2rem">
       <!-- [src]="'../assets/' + selectedDomain.imageUrl" -->
       <img
@@ -38,4 +36,11 @@
       <comments-view></comments-view>
     </div>
   </div>
+</ng-container>
+<ng-template #loadingGif>
+  <div class="loading-container">
+    <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
+  </div>
+</ng-template>
 </div>
+
