@@ -37,7 +37,7 @@ def verify_user_owns_source_ids(
     status, details = extract_token(original_request)
 
     if not status:
-        return {"status": "FAILURE", "details": details}
+        return False, details
 
     jwt = details
     source_ids = list(source_id_list)
@@ -71,7 +71,7 @@ def verify_user_owns_domain_ids(
     status, details = extract_token(original_request)
 
     if not status:
-        return {"status": "FAILURE", "details": details}
+        return False, details
 
     jwt = details
     domain_ids = list(domain_id_list)
