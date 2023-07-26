@@ -15,6 +15,7 @@ import {
   EditDomain,
   SetDomain,
   SetProfileDetails,
+  SetSourceIsLoading,
 } from '../app.actions';
 
 @Component({
@@ -82,6 +83,8 @@ export class SidebarComponent implements OnInit {
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
   @Select(AppState.profileDetails)
   profileDetails$!: Observable<ProfileDetails | null>;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+
   smallLogoState = 'in';
   showSmallLogo = true;
   fullLogoState = 'out';
@@ -231,6 +234,7 @@ export class SidebarComponent implements OnInit {
   }
 
   selectDomain(domain: DisplayDomain) {
+    this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new SetDomain(domain));
   }
 
