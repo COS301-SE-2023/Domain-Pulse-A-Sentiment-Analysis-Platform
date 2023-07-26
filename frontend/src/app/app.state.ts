@@ -229,6 +229,9 @@ export class AppState {
           };
 
           let domains = ctx.getState().domains;
+          // domains.push(domain);
+          // domains = domains?.filter((domain) => domain.id != domainRes._id);
+
           if (domains) {
             ctx.patchState({
               domains: [...domains, domain],
@@ -453,7 +456,7 @@ export class AppState {
       }
 
       // will hardcode removal instead of re-fetching domains for now
-      // this.store.dispatch(new GetDomains());
+      this.store.dispatch(new GetDomains());
     });
 
     // let domains = ctx.getState().domains;
@@ -535,6 +538,9 @@ export class AppState {
       .attemptPsswdLogin(state.username, state.password)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
+          // set jwt in local storage
+          localStorage.setItem('JWT', res.JWT);
+
           this.store.dispatch(new SetProfileDetails(res.id));
           this.store.dispatch(new GetDomains());
           this.router.navigate(['']);
@@ -595,6 +601,7 @@ export class AppState {
       .registerUser(state.username, state.password, state.email)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
+          localStorage.setItem('JWT', res.JWT);
           this.router.navigate(['']);
         } else {
           this.ngZone.run(() => {
