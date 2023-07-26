@@ -60,4 +60,4 @@ jobs:
             EOF
 
       - name: copy build artifacts
-        run: scp -r frontend-build/domain-pulse ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/frontend/dist/domain-pulse
+        run: scp -r frontend-build/domain-pulse ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/frontend/dist
