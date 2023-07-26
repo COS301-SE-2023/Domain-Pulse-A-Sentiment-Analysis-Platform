@@ -18,6 +18,7 @@ export class GraphSelectorComponent implements OnInit {
   sourceOverallSentiment!: Observable<any | null>;
   @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
   currentGraphIndex: number = 0;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   chart: Chart | undefined;
   gradient: CanvasGradient | undefined;
