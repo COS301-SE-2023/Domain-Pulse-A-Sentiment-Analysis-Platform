@@ -10,6 +10,7 @@ from . import views
 from datetime import datetime
 import json
 import mock
+import requests
 
 
 def mocked_source_handler(dummy_params):
@@ -299,8 +300,6 @@ class TestingRefreshHandler(TestCase):
             video_id, last_refresh_datetime
         )
 
-        print(comments)
-
         expected_comments = [
             {
                 "text": "Comment 2",
@@ -311,5 +310,141 @@ class TestingRefreshHandler(TestCase):
 
         self.assertEqual(comments, expected_comments)
         self.assertEqual(latest_retrieval, expected_latest_retrieval)
+
+    @mock.patch("youtube.youtube_connector.call_youtube_api")
+    def test_handle_youtube_request_integration(self, mocked_youtube):
+        youtube_api_data = {
+            "items": [
+                {
+                    "snippet": {
+                        "topLevelComment": {
+                            "snippet": {
+                                "textOriginal": "Comment 1",
+                                "updatedAt": "2023-07-23T10:00:00Z",
+                            }
+                        }
+                    }
+                },
+                {
+                    "snippet": {
+                        "topLevelComment": {
+                            "snippet": {
+                                "textOriginal": "Comment 2",
+                                "updatedAt": "2023-07-25T15:30:00Z",
+                            }
+                        }
+                    }
+                },
+            ]
+        }
+
+        mocked_youtube.return_value = youtube_api_data
+
+        # Youtube
+        data1 = {
+            "source": "youtube",
+            "params": {
+                "video_id": "testid",
+                "last_refresh_timestamp": datetime.strptime(
+                    "2023-07-24T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ"
+                ).timestamp(),
+            },
+        }
+        response1: JsonResponse = self.client.post(
+            path="/refresh/source/",
+            data=json.dumps(data1),
+            content_type="application/json",
+        )
+        response1_data = json.loads(response1.content)
+        self.assertEqual(response1.status_code, 200)
+        self.assertEqual(response1_data["status"], "SUCCESS")
+        expected_comments = [
+            {
+                "text": "Comment 2",
+                "timestamp": int(datetime(2023, 7, 25, 15, 30).timestamp()),
+            }
+        ]
+        expected_latest_retrieval = int(datetime(2023, 7, 25, 15, 30).timestamp())
+        self.assertEqual(expected_comments, response1_data["newdata"])
+        self.assertEqual(expected_latest_retrieval, response1_data["latest_retrieval"])
+
+    @mock.patch("tripadvisor.tripadvisor_connector.call_outscraper")
+    def test_handle_tripadvisor_request_integration(self, mocked_tripadvisor):
+        tripadvisor_api_data = [
+            {"description": "test", "reviewed": "Feb 2023"},
+            {"description": "test", "reviewed": "Feb 2023"},
+            {"description": "test", "reviewed": "18 Feb"},
+        ]
+
+        mocked_tripadvisor.return_value = tripadvisor_api_data
+
+        data1 = {
+            "source": "tripadvisor",
+            "params": {
+                "tripadvisor_url": "testurl",
+                "last_refresh_timestamp": 0,
+            },
+        }
+        response1: JsonResponse = self.client.post(
+            path="/refresh/source/",
+            data=json.dumps(data1),
+            content_type="application/json",
+        )
+        response1_data = json.loads(response1.content)
+        self.assertEqual(response1.status_code, 200)
+        self.assertEqual(response1_data["status"], "SUCCESS")
+        expected_reviews = [
+            {"text": "test", "timestamp": 1675209600},
+            {"text": "test", "timestamp": 1675209600},
+            {
+                "text": "test",
+                "timestamp": datetime(datetime.now().year, 2, 18, 0, 0, 0).timestamp(),
+            },
+        ]
+        self.assertEqual(expected_reviews, response1_data["newdata"])
+        self.assertEqual(
+            datetime(datetime.now().year, 2, 18, 0, 0, 0).timestamp(),
+            response1_data["latest_retrieval"],
+        )
+
+    @mock.patch("googlereviews.google_reviews_connector.call_outscraper")
+    def test_handle_googlereviews_request_integration(self, mocked_google_reviews):
+        google_api_data = [
+            {
+                "reviews_data": [
+                    {"review_text": "test", "review_timestamp": 1234567892},
+                    {"review_text": "test", "review_timestamp": 1234567890},
+                    {"review_text": "test", "review_timestamp": 1234567891},
+                ]
+            }
+        ]
+
+        mocked_google_reviews.return_value = google_api_data
+
+        data1 = {
+            "source": "googlereviews",
+            "params": {
+                "maps_url": "testurl",
+                "last_refresh_timestamp": 0,
+            },
+        }
+        response1: JsonResponse = self.client.post(
+            path="/refresh/source/",
+            data=json.dumps(data1),
+            content_type="application/json",
+        )
+        response1_data = json.loads(response1.content)
+        self.assertEqual(response1.status_code, 200)
+        self.assertEqual(response1_data["status"], "SUCCESS")
+        expected_reviews = [
+            {"text": "test", "timestamp": 1234567892},
+            {"text": "test", "timestamp": 1234567890},
+            {"text": "test", "timestamp": 1234567891},
+        ]
+        self.assertEqual(expected_reviews, response1_data["newdata"])
+        self.assertEqual(
+            1234567892,
+            response1_data["latest_retrieval"],
+        )
 
     # ---------------------------------------------------
