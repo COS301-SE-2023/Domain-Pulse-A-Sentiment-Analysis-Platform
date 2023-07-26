@@ -286,6 +286,42 @@ class ProfilesTests(TestCase):
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_remove_domain_from_profile_failure_user(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID = 3
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        incorrectID = user["id"] + 1
+        result = profilescrud.remove_domain_from_profile(incorrectID, testDomainID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No user exists")
+    
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_remove_domain_from_profile_failure_domain(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID = 3
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        incorrectDomainID =testDomainID + 1
+        result = profilescrud.remove_domain_from_profile(user["id"], incorrectDomainID)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "No domain exists")
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     def test_get_domains_for_user(self, mocked_login, mocked_create_profile):
         class MockUser:
             is_authenticated = True
