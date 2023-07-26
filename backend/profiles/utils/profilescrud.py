@@ -309,13 +309,6 @@ def get_user_by_id(id):
     }
 
 
-def check_logged_in(request):
-    if request.user.is_authenticated:
-        return {"status": "SUCCESS", "id": request.user.id}
-    else:
-        return {"status": "FAILURE"}
-
-
 def add_source_to_domain(user_id, domain_id, source_id):
     domain = None
     try:
@@ -381,6 +374,7 @@ def get_sources_for_domain(user_id, domain_id):
         return {"status": "FAILURE", "details": "No user exists"}
     if domain_id in profile.domainIDs.all().values_list("id", flat=True):
         return {
+            "status":"SUCCESS",
             "id": user_id,
             "domain_id": domain_id,
             "source_ids": domain.sourceIDs,
@@ -403,4 +397,4 @@ def get_sources_for_user_internal(user_id):
     for domain_id in domain_list:
         domain = profile_models.Domains.objects.get(id=domain_id)
         source_list.extend(domain.sourceIDs)
-    return {"id": user_id, "source_ids": source_list}
+    return {"status":"SUCCESS","id": user_id, "source_ids": source_list}
