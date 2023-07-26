@@ -147,10 +147,14 @@ export class SidebarComponent implements OnInit {
   newDomainImageName = '';
   newDomainDescription = '';
 
+  oldPassword=''
+  newPassword=''
+
   showAddDomainModal = false;
   showProfileModal = false;
   showEditDomainModal = false;
   showProfileEditModal = false;
+  showChangePasswordModal = false;
 
   constructor(private store: Store) {}
 
@@ -191,6 +195,16 @@ export class SidebarComponent implements OnInit {
     } else {
       // this.windows[0].scrolling = true;
       this.showProfileEditModal = false;
+    }
+  }
+
+  toggleChangePasswordModal(): void {
+    if (!this.showChangePasswordModal) {
+      // this.windows[0].scrolling = false;
+      this.showChangePasswordModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showChangePasswordModal = false;
     }
   }
 
@@ -265,5 +279,8 @@ export class SidebarComponent implements OnInit {
   uploadImage() {
     // Handle image upload logic here
     // You can access the selected image using this.selectedImage
+  }
+
+  changePassword(){
   }
 }
