@@ -148,6 +148,18 @@ export class AppApi {
     return this.http.post(registerUserUrl, body);
   }
 
+  changePassword(
+    oldPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    const changePasswordUrl = this.profilesBaseUrl + 'profiles/change_password';
+    const body = {
+      old_password: oldPassword,
+      new_password: newPassword,
+    };
+    return this.http.post(changePasswordUrl, body, { withCredentials: true });
+  }
+
   attemptPsswdLogin(username: string, password: string): Observable<any> {
     const attemptPsswdLoginUrl = this.profilesBaseUrl + 'profiles/login_user';
     const body = {

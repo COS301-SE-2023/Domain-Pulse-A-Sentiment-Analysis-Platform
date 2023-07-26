@@ -20,6 +20,7 @@ import {
   SetProfileDetails,
   RefreshSourceData,
   SetSourceIsLoading,
+  ChangePassword,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -64,6 +65,8 @@ export interface ProfileDetails {
   username: string;
   email: string;
   profileIconUrl: string;
+  oldPassword?: string;
+  newPassword?: string;
 }
 
 export class Comment {
@@ -186,6 +189,7 @@ export class AppState {
     if (state.sourceIsLoading) return state.sourceIsLoading;
     return false;
   }
+  
 
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
@@ -601,6 +605,8 @@ export class AppState {
     });
   } */
 
+
+
   @Action(SetProfileDetails)
   setProfileDetails(
     ctx: StateContext<AppStateModel>,
@@ -639,6 +645,33 @@ export class AppState {
         } else {
           this.ngZone.run(() => {
             this.toastr.error('Your account could not be registered', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast error ngx-toastr',
+            });
+          });
+        }
+      });
+  }
+
+  @Action(ChangePassword)
+  changePassword(ctx: StateContext<AppStateModel>, state: ChangePassword) {//check ProfileDetails
+
+    const userId = ctx.getState().profileDetails?.userId;
+
+    if (!userId) {
+      console.error('User ID is not available in the state.');
+      return;
+    }
+
+    this.appApi
+      .changePassword(state.oldPassword, state.newPassword)
+      .subscribe((res) => {
+        if (res.status == 'SUCCESS') {
+          this.router.navigate(['']);
+        } else {
+          this.ngZone.run(() => {
+            this.toastr.error('Your password could not be changed', '', {
               timeOut: 3000,
               positionClass: 'toast-bottom-center',
               toastClass: 'custom-toast error ngx-toastr',
