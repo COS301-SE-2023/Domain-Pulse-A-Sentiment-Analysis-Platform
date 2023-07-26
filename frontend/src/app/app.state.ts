@@ -19,6 +19,7 @@ import {
   Demo2Setup,
   SetProfileDetails,
   RefreshSourceData,
+  SetSourceIsLoading,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -99,6 +100,7 @@ interface AppStateModel {
   sampleData?: any[];
   selectedStatisticIndex: number;
   profileDetails?: ProfileDetails;
+  sourceIsLoading: boolean;
 }
 
 @State<AppStateModel>({
@@ -107,6 +109,7 @@ interface AppStateModel {
     profileId: 1,
     authenticated: false,
     selectedStatisticIndex: 0,
+    sourceIsLoading: false,
   },
 })
 @Injectable()
@@ -175,6 +178,11 @@ export class AppState {
   static profileDetails(state: AppStateModel) {
     if (state.profileDetails) return state.profileDetails;
     return undefined;
+  }
+
+  @Selector()
+  static sourceIsLoading(state: AppStateModel) {
+    return state.sourceIsLoading;
   }
 
   @Action(GetDomains)
@@ -290,6 +298,7 @@ export class AppState {
     ctx.patchState({
       sources: sources,
       selectedSource: state.source,
+/*       sourceIsLoading: false, */
     });
   }
 
@@ -498,6 +507,7 @@ export class AppState {
       ctx.patchState({
         overallSentimentScores: res.aggregated_metrics,
         sampleData: res.individual_metrics,
+        sourceIsLoading: false,
       });
     });
   }
@@ -615,6 +625,15 @@ export class AppState {
   chooseStatistic(ctx: StateContext<AppStateModel>, state: ChooseStatistic) {
     ctx.patchState({
       selectedStatisticIndex: state.statisticIndex,
+    });
+  }
+
+  @Action(SetSourceIsLoading)
+  setSourceIsLoading(ctx: StateContext<AppStateModel>, action: SetSourceIsLoading) {
+    const state = ctx.getState();
+    ctx.setState({
+      ...state,
+      sourceIsLoading: true,
     });
   }
 

@@ -108,3 +108,8 @@ export class ChooseStatistic {
   static readonly type = '[App] Choose Statistic';
   constructor(public statisticIndex: number) {}
 }
+
+export class SetSourceIsLoading {
+  static readonly type = '[Source] Set Loading';
+  constructor(public isLoading: boolean) {}
+}

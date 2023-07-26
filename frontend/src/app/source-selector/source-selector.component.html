@@ -13,7 +13,11 @@
       />
 
       <p>{{ source.name}}</p>
+      <ng-container *ngIf="sourceIsLoading$ | async as sourceIsLoading" >
+        <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;"/>
+      </ng-container>
     </div>
+    
 
     
   </ng-container>

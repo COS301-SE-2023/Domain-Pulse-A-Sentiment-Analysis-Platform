@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, RefreshSourceData, SetSource } from '../app.actions';
+import { AddNewSource, RefreshSourceData, SetSource, SetSourceIsLoading } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -13,7 +13,8 @@ export class SourceSelectorComponent {
   @Select(AppState.sources) sources$!: Observable<DisplaySource[] | null>;
   @Select(AppState.selectedSource)
   selectedSource$!: Observable<DisplaySource | null>;
-
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  
   showAddSourcesModal = false;
   showEditSourceModal = false;
   newSourceName = '';
@@ -23,6 +24,7 @@ export class SourceSelectorComponent {
   constructor(private store: Store) {}
 
   selectSource(source: DisplaySource) {
+    this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new SetSource(source));
   }
 
