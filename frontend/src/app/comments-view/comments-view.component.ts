@@ -10,6 +10,7 @@ import { Select } from '@ngxs/store';
 })
 export class CommentsViewComponent {
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   comments?: any[];
   showComment: boolean[] = [];

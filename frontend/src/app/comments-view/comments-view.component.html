@@ -1,3 +1,10 @@
+<ng-container *ngIf="(sourceIsLoading$ | async) === true; else loadingContent">
+  <div class="loading-container">
+      <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
+  </div>
+</ng-container>
+
+<ng-template #loadingContent> 
 <div class="flex-row icon-div">
     <img
       src="../../assets/icons/comments.svg"
@@ -6,7 +13,7 @@
       style="padding-right: 1rem;"
     />
     <h2 style="margin-top: 0;">Sample data</h2>
-  </div>
+</div>
   
 <div class="flex-column" style="gap: 1rem" >
     <div class="flex-column" *ngFor="let comment of comments">
@@ -44,4 +51,6 @@
         </div>
         <hr>
     </div>
+  </div>
 </div>
+</ng-template>
