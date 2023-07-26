@@ -14,7 +14,7 @@ ls
 
 cd $project2
 coverage run --source='.' manage.py test
-echo "test_profiles" | coverage report -m 
+echo "yes" | coverage report -m 
 cd ..
 
 cd $project3
