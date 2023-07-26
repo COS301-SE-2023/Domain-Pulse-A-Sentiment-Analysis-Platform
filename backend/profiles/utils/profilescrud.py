@@ -251,9 +251,9 @@ def login_user(request, username, password):
             jwt = create_JWT(user)
             return {"status": "SUCCESS", "id": user.id, "JWT": jwt}
         else:
-            return {"status": "FAILURE"}
+            return {"status": "FAILURE", "details":"Invalid credentials"}
     else:
-        return {"status": "FAILURE"}
+        return {"status": "FAILURE", "details":"Already logged in"}
 
 
 def create_JWT(user):
