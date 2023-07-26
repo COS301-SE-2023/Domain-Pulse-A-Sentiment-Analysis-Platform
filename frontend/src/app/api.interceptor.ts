@@ -57,7 +57,7 @@ export class ApiInterceptor implements HttpInterceptor {
           break;
       }
 
-      console.log('apiUrl: ' + apiUrl + '/' + urlParts.join('/'));
+      // console.log('apiUrl: ' + apiUrl + '/' + urlParts.join('/'));
 
       const modifiedReq = req.clone({ url: apiUrl + '/' + urlParts.join('/') });
       return next.handle(modifiedReq);

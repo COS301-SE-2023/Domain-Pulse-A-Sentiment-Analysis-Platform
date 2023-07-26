@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   trigger,
   state,
@@ -10,9 +10,8 @@ import {
   query,
 } from '@angular/animations';
 import { AppState, DisplayDomain } from '../app.state';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { Demo2Setup, GetDomains } from '../app.actions';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -42,25 +41,14 @@ import { Demo2Setup, GetDomains } from '../app.actions';
     ]),
   ],
 })
-export class MainComponent implements OnInit {
+export class MainComponent {
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
   sidebarCollapsed = true;
 
-  constructor(private store: Store) {
-    // this.store.dispatch(new Demo2Setup());
-    // this.store.dispatch(new GetDomains());
-  }
-
-  ngOnInit(): void {
-    this.store.dispatch(new GetDomains());
-  }
-
-  
+  constructor() {}
 
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
-
-  
 }

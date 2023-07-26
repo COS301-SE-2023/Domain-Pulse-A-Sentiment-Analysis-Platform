@@ -1,16 +1,11 @@
 import { DisplayDomain, DisplaySource } from './app.state';
 
-export class Demo2Setup {
-  static readonly type = '[App] Demo2 Setup';
+export class Initialise {
+  static readonly type = '[App] Initialise';
 }
 
 export class LoadUserDomains {
   static readonly type = '[App] Load User Domains';
-}
-
-export class SetProfileId {
-  static readonly type = '[App] Set Profile Id';
-  constructor(public profileId: number) {}
 }
 
 /* export class GetProfileID {
