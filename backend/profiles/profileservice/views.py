@@ -3,7 +3,6 @@ from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from utils import profilescrud
-from utils import domainscrud
 
 
 # Create your views here.

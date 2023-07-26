@@ -193,6 +193,49 @@ class ProfilesTests(TestCase):
             ]
         else:
             assert False
+    
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_domains_for_user_internal(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID = 3
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+
+        result = profilescrud.get_domains_for_user_internal(user["id"])
+        if result["status"] == "SUCCESS":
+            assert result["id"] == user["id"] and result["domainIDs"] == [
+                str(testDomainID)
+            ]
+        else:
+            assert False
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_add_source_to_domain(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1= HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID ="3"
+        
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID="5"
+        result = profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+        if result["status"] == "SUCCESS":
+            self.assertEqual (result["domainID"] , testDomainID) 
+            self.assertIn(testSourceID, result["sourceIDs"])
+        else:
+            assert False
 
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
