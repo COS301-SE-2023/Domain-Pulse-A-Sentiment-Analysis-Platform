@@ -33,7 +33,7 @@ export class GraphSelectorComponent implements OnInit {
             data: [],
             backgroundColor: [
               'rgba(3, 127, 255, 1)',
-              'rgba(0, 0, 0, 0.1)',
+              'rgba(170, 170, 170, 0.71)',
               'rgba(0, 0, 0, 0)',
             ],
             borderWidth: 0,
