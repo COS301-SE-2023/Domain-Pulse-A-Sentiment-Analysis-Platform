@@ -149,11 +149,13 @@ export class AppApi {
   }
 
   changePassword(
+    userId: number,
     oldPassword: string,
     newPassword: string
   ): Observable<any> {
     const changePasswordUrl = this.profilesBaseUrl + 'profiles/change_password';
     const body = {
+      id: userId,
       old_password: oldPassword,
       new_password: newPassword,
     };

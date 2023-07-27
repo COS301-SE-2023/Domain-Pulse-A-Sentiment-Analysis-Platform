@@ -617,6 +617,8 @@ export class AppState {
               username: res2.username,
               email: res2.email,
               profileIconUrl: res.profileIcon,
+              oldPassword: res2.password,
+
             };
 
             ctx.patchState({
@@ -651,7 +653,7 @@ export class AppState {
   }
 
   @Action(ChangePassword)
-  changePassword(ctx: StateContext<AppStateModel>, state: ChangePassword) {//check ProfileDetails
+  changePassword(ctx: StateContext<AppStateModel>, state: ProfileDetails) {//check ProfileDetails
 
     const userId = ctx.getState().profileDetails?.userId;
 
@@ -660,11 +662,26 @@ export class AppState {
       return;
     }
 
+    
+
+    const { oldPassword, newPassword } = state;
+
+    if (oldPassword === undefined || newPassword === undefined) {
+      console.error('oldPassword and newPassword must be provided.');
+      return;
+    }
+
     this.appApi
-      .changePassword(state.oldPassword, state.newPassword)
+      .changePassword(userId, oldPassword, newPassword)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
-          this.router.navigate(['']);
+          this.ngZone.run(() => {
+            this.toastr.success('Your password has been changed', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast error ngx-toastr',
+            });
+          });
         } else {
           this.ngZone.run(() => {
             this.toastr.error('Your password could not be changed', '', {
