@@ -19,6 +19,7 @@ import {
   RefreshSourceData,
   SetSourceIsLoading,
   ChangePassword,
+  ChangeMode,
   Initialise,
 } from './app.actions';
 import { Router } from '@angular/router';
@@ -734,6 +735,46 @@ export class AppState {
       sourceIsLoading: true,
     });
   }
+
+  @Action(ChangeMode)
+  changeMode(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+    const profileId = ctx.getState().profileDetails?.profileId;
+
+    if (!profileId) {
+      console.error('Profile ID is not available in the state.');
+      return;
+    }
+
+    this.appApi
+      .changeMode(profileId)
+      .subscribe((res) => {
+        if (res.status == 'SUCCESS') {
+          ctx.patchState({
+            profileDetails: {
+              mode: res.mode,
+              profileIcon: state.profileIcon,
+              profileId: state.profileId,
+            },
+          });
+          this.ngZone.run(() => {
+            this.toastr.success('Your theme has been updated', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast success ngx-toastr',
+            });
+          });
+        } else {
+          this.ngZone.run(() => {
+            this.toastr.error('Your theme could not be changed', '', {
+              timeOut: 3000,
+              positionClass: 'toast-bottom-center',
+              toastClass: 'custom-toast error ngx-toastr',
+            });
+          });
+        }
+      });
+  }
+
   
 
   private formatResponseSources(responseSources: any[]): DisplaySource[] {

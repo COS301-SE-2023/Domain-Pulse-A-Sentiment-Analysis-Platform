@@ -104,6 +104,11 @@ export class ChangePassword {
   constructor(public oldPassword: string, public newPassword: string) {}
 }
 
+export class ChangeMode {
+  static readonly type = '[App] Change Mode';
+  constructor() {}
+}
+
 export class ChooseStatistic {
   static readonly type = '[App] Choose Statistic';
   constructor(public statisticIndex: number) {}

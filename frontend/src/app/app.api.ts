@@ -216,6 +216,19 @@ export class AppApi {
       withCredentials: true,
     });
   }
+
+  changeMode(profileID: number): Observable<any> {
+    const changeModeUrl = this.profilesBaseUrl + 'profiles/swap_mode';
+    const body = {
+      id: profileID,
+    };
+    // send with credentials enabled
+    return this.http.post(changeModeUrl, body, {
+      withCredentials: true,
+    });
+  }
+  
+
   
 
   /* setUserDetails(): Observable<any> {

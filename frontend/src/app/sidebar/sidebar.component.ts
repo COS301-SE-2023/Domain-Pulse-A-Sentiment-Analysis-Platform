@@ -7,7 +7,7 @@ import {
   transition,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
-import { AppState, DisplayDomain, UserDetails } from '../app.state';
+import { AppState, DisplayDomain, ProfileDetails, UserDetails } from '../app.state';
 import { Observable } from 'rxjs';
 import {
   AddNewDomain,
@@ -17,6 +17,7 @@ import {
   SetUserDetails,
   SetSourceIsLoading,
   ChangePassword,
+  ChangeMode,
 } from '../app.actions';
 
 @Component({
@@ -62,7 +63,7 @@ import {
     ]),
   ],
 })
-export class SidebarComponent {
+export class SidebarComponent{
 
   @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
 
@@ -147,7 +148,7 @@ export class SidebarComponent {
   showChangePasswordModal = false;
 
   constructor(private store: Store) {}
-
+  
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
       // this.windows[0].scrolling = false;
@@ -242,20 +243,17 @@ export class SidebarComponent {
     this.store.dispatch(new SetDomain(domain));
   }
 
-  theme = 0; //0 = light, 1 = dark
 
   toggleTheme() {
-    console.log('toggle theme');
-    if (this.theme == 0) {
-      this.theme = 1;
-      document.body.classList.toggle('light');
-      document.body.classList.toggle('dark');
-    } else {
-      this.theme = 0;
-      //document.body.style.setProperty('--background', '#e8ecfc');
-      document.body.classList.toggle('light');
-      document.body.classList.toggle('dark');
-    }
+    this.store.dispatch(new ChangeMode())
+    document.body.classList.toggle('light');
+    document.body.classList.toggle('dark');
+    /* if(document.body.classList.contains('light')){
+      localStorage.setItem('theme', 'dark');
+    }else{
+      localStorage.setItem('theme', 'light');
+    } */
+
   }
 
   imageSelected: boolean = false;
