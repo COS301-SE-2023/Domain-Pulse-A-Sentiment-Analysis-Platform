@@ -594,10 +594,10 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
         // set jwt in local storage
         localStorage.setItem('JWT', res.JWT);
 
-        return [
-          new SetUserDetails(res.id),
-          new GetDomains(),
-        ];
+        this.store.dispatch(new SetUserDetails(res.id));
+        this.store.dispatch(new GetDomains());
+        this.router.navigate(['']);
+        return of(res);
       } else {
         this.ngZone.run(() => {
           this.toastr.error('Login failed', '', {
@@ -655,23 +655,30 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
 
   @Action(RegisterUser)
   registerUser(ctx: StateContext<AppStateModel>, state: RegisterUser) {
-    this.appApi
-      .registerUser(state.username, state.password, state.email)
-      .subscribe((res) => {
-        if (res.status == 'SUCCESS') {
-          localStorage.setItem('JWT', res.JWT);
-          this.router.navigate(['']);
-        } else {
-          this.ngZone.run(() => {
-            this.toastr.error('Your account could not be registered', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast error ngx-toastr',
-            });
-          });
-        }
+  return this.appApi.registerUser(state.username, state.password, state.email).pipe(
+    switchMap((res) => {
+      if (res.status === 'SUCCESS') {
+        localStorage.setItem('JWT', res.JWT);
+        this.router.navigate(['']);
+        console.log('register success');
+        return of();
+      } else {
+
+        return throwError(() => new Error());
+      }
+    }),
+    catchError((error: any) => {
+      this.ngZone.run(() => {
+        this.toastr.error('Your account could not be registered', '', {
+          timeOut: 3000,
+          positionClass: 'toast-bottom-center',
+          toastClass: 'custom-toast error ngx-toastr',
+        });
       });
-  }
+      return of(error);
+    })
+  );
+}
 
   @Action(ChangePassword)
   changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {//check UserDetails
