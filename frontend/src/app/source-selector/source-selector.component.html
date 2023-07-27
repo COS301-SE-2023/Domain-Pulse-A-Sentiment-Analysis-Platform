@@ -1,4 +1,5 @@
-<div class="sources-div flex-row">
+<div class="gap-div flex-row align-center">
+<div class="sources-div flex-row align-center scrollable-div">
   <ng-container *ngIf="sources$ | async as sources; else loadingSources">
     <div
       *ngFor="let source of sources"
@@ -8,11 +9,11 @@
     >
       <img
         [src]="'../assets/' + source.url"
-        height="45px"
-        style="border-radius: 50%; margin-bottom: 0.5rem"
+        height="60%"
+        style="border-radius: 50%;"
       />
 
-      <p>{{ source.name}}</p>
+      <p class="source-name">{{ source.name}}</p>
       <ng-container *ngIf="source.isRefreshing" >
         <div class="loading-spinner"></div>
         <!-- <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;position: absolute;
@@ -32,16 +33,15 @@
   <div (click)="toggleAddSourcesModal()" class="flex-column center clickable-item" style="cursor: pointer;" >
     <img
       src="../assets/icons/add-blue.svg"
-      height="45px"
-      style="padding-bottom: 0.5rem"
+      style="border-radius: 50%; height: 3rem; padding-bottom: 0.5rem;"
     />
     <p>Add a Source</p>
   </div>
 </div>
 
+
 <div class="source-actions flex-row center">
   <div class="space-div flex-row center" style="margin-top: 0.5rem">
-    <p>source actions</p>
   </div>
   <div class="button-div flex-row center">
     <div class="button clickable-item" (click)="refreshSource()" >
@@ -63,6 +63,7 @@
     </div>
   </div>
   <div class="space-div flex-row center" style="margin-bottom: 0.5rem"></div>
+</div>
 </div>
 
 <dp-modal-container
