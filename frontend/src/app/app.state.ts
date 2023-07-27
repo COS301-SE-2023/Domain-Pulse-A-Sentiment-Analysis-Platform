@@ -597,7 +597,6 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
         return [
           new SetUserDetails(res.id),
           new GetDomains(),
-          // Additional actions to be dispatched after successful login
         ];
       } else {
         this.ngZone.run(() => {
@@ -607,72 +606,15 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
             toastClass: 'custom-toast error ngx-toastr',
           });
         });
-        // Throw the error to be caught by the outer subscriber
         return throwError(() => new Error('Login failed'));
       }
     }),
     catchError((error: any) => {
-      // Handle any error that occurs during the API call
-      // The error might be thrown from the throw new Error() statement above,
-      // or it might be an actual error from the API service.
-      // You can log the error or perform any other error handling here.
-      console.error('API Error:', error);
 
-      // Propagate the error to the outer subscriber using of
       return of(error);
     })
   );
 }
-
-
-  /* @Action(AttempPsswdLogin)
-  attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
-    console.log('attempting password login');
-
-    // Simulate a delay of 2 seconds before making the API call
-    const delayDurationInMilliseconds = 3000;
-    const apiCall$ = this.appApi.attemptPsswdLogin(state.username, state.password).pipe(
-      delay(delayDurationInMilliseconds)
-    );
-
-    apiCall$.subscribe((res) => {
-      if (res.status === 'SUCCESS') {
-        // set jwt in local storage
-        localStorage.setItem('JWT', res.JWT);
-
-        // Dispatch other actions after successful login
-        ctx.dispatch(new SetUserDetails(res.id));
-        ctx.dispatch(new GetDomains());
-
-        // Navigate to the desired route after login
-        this.router.navigate(['']);
-      } else {
-        // Show an error toast on login failure
-        this.ngZone.run(() => {
-          this.toastr.error('Login failed', '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast error ngx-toastr',
-          });
-        });
-      }
-    });
-  } */
-  
-
-  /* @Action(GetProfileID)
-  getProfileID(ctx: StateContext<AppStateModel>) {
-    this.appApi.getProfileID().subscribe((res: any) => {
-      if (res.status == 'SUCCESS') {
-        ctx.patchState({
-          profileId: res.id,
-        });
-        return true;
-      } else return false;
-    });
-  } */
-
-
 
   @Action(SetUserDetails)
   setUserDetails(
