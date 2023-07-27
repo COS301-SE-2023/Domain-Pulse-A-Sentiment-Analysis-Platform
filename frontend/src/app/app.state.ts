@@ -67,6 +67,12 @@ export interface UserDetails {
   newPassword?: string;
 }
 
+export interface ProfileDetails {
+  profileId: number;
+  mode: boolean;
+  profileIcon: string;
+}
+
 
 export class Comment {
   comment: string;
@@ -103,6 +109,7 @@ interface AppStateModel {
   selectedStatisticIndex: number;
   userDetails?: UserDetails;
   sourceIsLoading: boolean;
+  profileDetails?: ProfileDetails;
 }
 
 @State<AppStateModel>({
@@ -187,6 +194,12 @@ export class AppState {
   static sourceIsLoading(state: AppStateModel) {
     if (state.sourceIsLoading) return state.sourceIsLoading;
     return false;
+  }
+
+  @Selector()
+  static profileDetails(state: AppStateModel) {
+    if (state.profileDetails) return state.profileDetails;
+    return undefined;
   }
   
 
@@ -611,6 +624,13 @@ export class AppState {
   ) {
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
+        const profileDetails: ProfileDetails = {
+          profileId: res.id,
+          profileIcon: res.profileIcon,
+          mode: res.mode,
+        }
+
+
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
           if (res.status == 'SUCCESS') {
             const userDetails: UserDetails = {
@@ -624,6 +644,7 @@ export class AppState {
 
             ctx.patchState({
               userDetails: userDetails,
+              profileDetails: profileDetails,
             });
 
             // localStorage.setItem('profileId', state.profileId.toString());
@@ -713,6 +734,7 @@ export class AppState {
       sourceIsLoading: true,
     });
   }
+  
 
   private formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];

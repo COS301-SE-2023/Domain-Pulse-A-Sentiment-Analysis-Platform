@@ -216,6 +216,7 @@ export class AppApi {
       withCredentials: true,
     });
   }
+  
 
   /* setUserDetails(): Observable<any> {
     const setUserDetailsUrl =
