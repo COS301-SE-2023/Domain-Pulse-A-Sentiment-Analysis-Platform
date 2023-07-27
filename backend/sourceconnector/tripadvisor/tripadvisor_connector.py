@@ -17,6 +17,28 @@ REVIEWS_LIMIT = 5  # number of reviews to return (please keep this to a small nu
 HEADERS = {"X-API-KEY": TRIPADVISOR_API_KEY}
 
 
+def month_long_name_to_number(month_name):
+    months = {
+        "january": 1,
+        "february": 2,
+        "march": 3,
+        "april": 4,
+        "may": 5,
+        "june": 6,
+        "july": 7,
+        "august": 8,
+        "september": 9,
+        "october": 10,
+        "november": 11,
+        "december": 12,
+    }
+
+    if month_name.lower() in months:
+        return months[month_name.lower()]
+    else:
+        raise ValueError("Invalid month name encountered.")
+
+
 def month_name_to_number(month_name: str):
     month_name = month_name.lower().capitalize()
     month_number = list(calendar.month_abbr).index(month_name[:3])
@@ -24,6 +46,16 @@ def month_name_to_number(month_name: str):
 
 
 def get_timestamp_from_date(date_str: str):
+    num_spaces = date_str.count(" ")
+
+    if num_spaces > 1:
+        day, month_name, year = date_str.split(" ")
+        day = int(day)
+        month = month_long_name_to_number(month_name)
+        year = int(year)
+
+        return datetime(year, month, day, 0, 0, 0).timestamp()
+
     first, second = date_str.split(" ")
 
     if first.isnumeric():
