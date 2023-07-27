@@ -11,7 +11,7 @@ import {
   GetSourceDashBoardInfo,
   RefreshSourceData,
   RegisterUser,
-  SetProfileDetails,
+  SetUserDetails,
   SetSource,
 } from './app.actions';
 import { AppApi } from './app.api';
@@ -200,7 +200,7 @@ describe('AppState', () => {
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
 
     zip(
-      actions$.pipe(ofActionDispatched(SetProfileDetails)),
+      actions$.pipe(ofActionDispatched(SetUserDetails)),
       actions$.pipe(ofActionDispatched(GetDomains))
     ).subscribe((_) => {
       expect(apiSpy.attemptPsswdLogin).toHaveBeenCalled();

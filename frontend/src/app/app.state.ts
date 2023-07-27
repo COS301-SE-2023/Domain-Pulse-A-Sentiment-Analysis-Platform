@@ -15,7 +15,7 @@ import {
   ChooseStatistic,
   EditDomain,
   DeleteDomain,
-  SetProfileDetails,
+  SetUserDetails,
   RefreshSourceData,
   SetSourceIsLoading,
   ChangePassword,
@@ -58,7 +58,7 @@ export interface SentimentScores {
   analysedSum: number;
 }
 
-export interface ProfileDetails {
+export interface UserDetails {
   userId: number;
   username: string;
   email: string;
@@ -66,6 +66,7 @@ export interface ProfileDetails {
   oldPassword?: string;
   newPassword?: string;
 }
+
 
 export class Comment {
   comment: string;
@@ -100,7 +101,7 @@ interface AppStateModel {
   // sampleData?: Comment[];
   sampleData?: any[];
   selectedStatisticIndex: number;
-  profileDetails?: ProfileDetails;
+  userDetails?: UserDetails;
   sourceIsLoading: boolean;
 }
 
@@ -127,7 +128,7 @@ export class AppState {
       .select((state) => state)
       .subscribe((res) => {
         if (!detailsSet) {
-          if (res.app?.profileDetails) {
+          if (res.app?.userDetails) {
             this.store.dispatch(new GetDomains());
             detailsSet = true;
           }
@@ -177,8 +178,8 @@ export class AppState {
   }
 
   @Selector()
-  static profileDetails(state: AppStateModel) {
-    if (state.profileDetails) return state.profileDetails;
+  static userDetails(state: AppStateModel) {
+    if (state.userDetails) return state.userDetails;
     return undefined;
   }
 
@@ -196,10 +197,10 @@ export class AppState {
 
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
-    const profileDetails = ctx.getState().profileDetails;
-    if (!profileDetails) return;
+    const userDetails = ctx.getState().userDetails;
+    if (!userDetails) return;
 
-    this.appApi.getDomainIDs(profileDetails.userId).subscribe((res: any) => {
+    this.appApi.getDomainIDs(userDetails.userId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
         
         this.ngZone.run(() => {
@@ -558,7 +559,7 @@ export class AppState {
         ctx.patchState({
           authenticated: true,
         });
-        this.store.dispatch(new SetProfileDetails(userID));
+        this.store.dispatch(new SetUserDetails(userID));
       }
     });
   }
@@ -574,7 +575,7 @@ export class AppState {
           // set jwt in local storage
           localStorage.setItem('JWT', res.JWT);
 
-          this.store.dispatch(new SetProfileDetails(res.id));
+          this.store.dispatch(new SetUserDetails(res.id));
           this.store.dispatch(new GetDomains());
           this.router.navigate(['']);
         } else {
@@ -603,16 +604,16 @@ export class AppState {
 
 
 
-  @Action(SetProfileDetails)
-  setProfileDetails(
+  @Action(SetUserDetails)
+  setUserDetails(
     ctx: StateContext<AppStateModel>,
-    state: SetProfileDetails
+    state: SetUserDetails
   ) {
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
           if (res.status == 'SUCCESS') {
-            const profileDetails: ProfileDetails = {
+            const userDetails: UserDetails = {
               userId: res.userID,
               username: res2.username,
               email: res2.email,
@@ -622,7 +623,7 @@ export class AppState {
             };
 
             ctx.patchState({
-              profileDetails: profileDetails,
+              userDetails: userDetails,
             });
 
             // localStorage.setItem('profileId', state.profileId.toString());
@@ -653,9 +654,9 @@ export class AppState {
   }
 
   @Action(ChangePassword)
-  changePassword(ctx: StateContext<AppStateModel>, state: ProfileDetails) {//check ProfileDetails
+  changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {//check UserDetails
 
-    const userId = ctx.getState().profileDetails?.userId;
+    const userId = ctx.getState().userDetails?.userId;
 
     if (!userId) {
       console.error('User ID is not available in the state.');

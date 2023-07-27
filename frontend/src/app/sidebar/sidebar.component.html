@@ -85,8 +85,8 @@
         height="44px"
       />
     </div>
-    <ng-container *ngIf="(profileDetails$ | async) as profileDetails">
-      <p class="domain-name" *ngIf="_expanded" style="color: black">{{ profileDetails.username }}</p>
+    <ng-container *ngIf="(userDetails$ | async) as userDetails">
+      <p class="domain-name" *ngIf="_expanded" style="color: black">{{ userDetails.username }}</p>
     </ng-container>
         <div *ngIf="_expanded" class="icons-container flex-row align-center">
       <img src="../assets/icons/settings.svg" height="15px" />
@@ -230,9 +230,9 @@
         <img src="../assets/stock-profile-pic.jpg" alt="Profile Image" class="profile-image" />
         
       </div>
-      <ng-container *ngIf="(profileDetails$ | async) as profileDetails">
-        <p class="profile-name">{{profileDetails.username}}</p>
-        <p class="email">{{profileDetails.email}}</p>
+      <ng-container *ngIf="(userDetails$ | async) as userDetails">
+        <p class="profile-name">{{userDetails.username}}</p>
+        <p class="email">{{userDetails.email}}</p>
       </ng-container>
       <img (click)="toggleProfileEditModal()" src="../assets/icons/editdark.svg" class="profile-icon clickable-item" style="padding-top: 2rem;"/>
     </div>

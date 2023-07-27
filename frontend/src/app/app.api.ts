@@ -174,20 +174,20 @@ export class AppApi {
     });
   }
 
-  /* export interface ProfileDetails {
+  /* export interface UserDetails {
   userId: number;
   username: string;
   profileIconUrl: string;
 } */
 
 /* 
-  @Action(SetProfileDetails)
-  setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
-    this.appApi.setProfileDetails().subscribe((res: any) => {
+  @Action(SetUserDetails)
+  setUserDetails(ctx: StateContext<AppStateModel>, state: SetUserDetails) {
+    this.appApi.setUserDetails().subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         
         ctx.patchState({
-          profileDetails: res.profileDetails,
+          userDetails: res.userDetails,
         });
         return true;
       } else return false;
@@ -217,10 +217,10 @@ export class AppApi {
     });
   }
 
-  /* setProfileDetails(): Observable<any> {
-    const setProfileDetailsUrl =
+  /* setUserDetails(): Observable<any> {
+    const setUserDetailsUrl =
       this.profilesBaseUrl + 'profiles/get_profile';
-    const profile= this.http.post(setProfileDetailsUrl, {}, { withCredentials: true });
+    const profile= this.http.post(setUserDetailsUrl, {}, { withCredentials: true });
     if(profile.status)
   } */
     

@@ -12,7 +12,7 @@ export class LoadUserDomains {
   static readonly type = '[App] Get Profile ID';
 } */
 
-export class SetProfileDetails {
+export class SetUserDetails {
   static readonly type = '[App] Set Profile Details';
   constructor(public profileId: number) {}
 }

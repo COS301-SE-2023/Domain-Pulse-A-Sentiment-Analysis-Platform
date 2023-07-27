@@ -7,14 +7,14 @@ import {
   transition,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
-import { AppState, DisplayDomain, ProfileDetails } from '../app.state';
+import { AppState, DisplayDomain, UserDetails } from '../app.state';
 import { Observable } from 'rxjs';
 import {
   AddNewDomain,
   DeleteDomain,
   EditDomain,
   SetDomain,
-  SetProfileDetails,
+  SetUserDetails,
   SetSourceIsLoading,
   ChangePassword,
 } from '../app.actions';
@@ -71,8 +71,8 @@ export class SidebarComponent {
   }
 
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
-  @Select(AppState.profileDetails)
-  profileDetails$!: Observable<ProfileDetails | null>;
+  @Select(AppState.userDetails)
+  userDetails$!: Observable<UserDetails | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   smallLogoState = 'in';
