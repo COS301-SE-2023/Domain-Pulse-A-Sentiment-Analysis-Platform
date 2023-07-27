@@ -742,6 +742,13 @@ export class AppState {
 
     if (!profileId) {
       console.error('Profile ID is not available in the state.');
+      this.ngZone.run(() => {
+        this.toastr.error('Your theme could not be changed', '', {
+          timeOut: 3000,
+          positionClass: 'toast-bottom-center',
+          toastClass: 'custom-toast error ngx-toastr',
+        });
+      });
       return;
     }
 
@@ -749,13 +756,16 @@ export class AppState {
       .changeMode(profileId)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
+          const profileDetails: ProfileDetails = {
+            profileId: res.id,
+            profileIcon: res.profileIcon,
+            mode: res.mode,
+          }
+
           ctx.patchState({
-            profileDetails: {
-              mode: res.mode,
-              profileIcon: state.profileIcon,
-              profileId: state.profileId,
-            },
+            profileDetails: profileDetails,
           });
+
           this.ngZone.run(() => {
             this.toastr.success('Your theme has been updated', '', {
               timeOut: 3000,
