@@ -659,7 +659,7 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
     switchMap((res) => {
       if (res.status === 'SUCCESS') {
         localStorage.setItem('JWT', res.JWT);
-        this.router.navigate(['']);
+        /* this.router.navigate(['']); */
         console.log('register success');
         return of();
       } else {
