@@ -16,6 +16,7 @@ import {
   SetDomain,
   SetProfileDetails,
   SetSourceIsLoading,
+  ChangePassword,
 } from '../app.actions';
 
 @Component({
@@ -271,5 +272,9 @@ export class SidebarComponent {
   }
 
   changePassword(){
+    this.store.dispatch(new ChangePassword(this.oldPassword, this.newPassword))
+    this.oldPassword=''
+    this.newPassword=''
+    this.toggleChangePasswordModal()
   }
 }

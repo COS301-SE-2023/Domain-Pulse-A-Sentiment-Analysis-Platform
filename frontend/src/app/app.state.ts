@@ -679,7 +679,7 @@ export class AppState {
             this.toastr.success('Your password has been changed', '', {
               timeOut: 3000,
               positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast error ngx-toastr',
+              toastClass: 'custom-toast success ngx-toastr',
             });
           });
         } else {

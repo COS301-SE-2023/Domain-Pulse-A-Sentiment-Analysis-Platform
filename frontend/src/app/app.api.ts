@@ -156,8 +156,8 @@ export class AppApi {
     const changePasswordUrl = this.profilesBaseUrl + 'profiles/change_password';
     const body = {
       id: userId,
-      old_password: oldPassword,
-      new_password: newPassword,
+      oldpassword: oldPassword,
+      newpassword: newPassword,
     };
     return this.http.post(changePasswordUrl, body, { withCredentials: true });
   }
