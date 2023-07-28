@@ -366,3 +366,95 @@ class ProfileChecksTests(TestCase):
         flag, token = check_views.extract_token(request2)
         user = check_views.get_user_from_token(token)
         self.assertEqual(user.id, response["id"])
+
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
+    @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
+    @mock.patch(
+        "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
+    )
+    @mock.patch(
+        "utils.profilescrud.get_sources_for_user_internal",
+        side_effect=mocked_get_sources_for_user_internal,
+    )
+    def test_check_source_ids(
+        self,
+        mock_create_profile,
+        mock_login,
+        mock_address,
+        mock_extract_token,
+        mock_get_user,
+        mock_get_sources,
+    ):
+        class MockUserNotLoggedIn:
+            is_authenticated = False
+
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUserNotLoggedIn()
+        response = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        request2 = HttpRequest()
+        request2.method = "POST"
+
+        class MockUserLoggedIn:
+            is_authenticated = True
+            id = 5
+
+        profilescrud.add_domain_to_profile(response["id"], "1")
+
+        data = {"source_ids": ["1"], "item": {"id": "1", "source_id": "1"}}
+        request2.user = MockUserLoggedIn()
+        request2._body = json.dumps(data)
+        jwt = response["JWT"]
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        request2.headers = headers
+        response = check_views.check_source_ids(request2)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "SUCCESS")
+
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
+    @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
+    @mock.patch(
+        "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
+    )
+    @mock.patch(
+        "utils.profilescrud.get_domains_for_user_internal",
+        side_effect=mocked_get_domains_for_user_internal,
+    )
+    def test_check_source_ids(
+        self,
+        mock_create_profile,
+        mock_login,
+        mock_address,
+        mock_extract_token,
+        mock_get_user,
+        mock_get_domains,
+    ):
+        class MockUserNotLoggedIn:
+            is_authenticated = False
+
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUserNotLoggedIn()
+        response = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        request2 = HttpRequest()
+        request2.method = "POST"
+
+        class MockUserLoggedIn:
+            is_authenticated = True
+            id = 5
+
+        profilescrud.add_domain_to_profile(response["id"], "1")
+
+        data = {"domain_ids": ["1"]}
+        request2.user = MockUserLoggedIn()
+        request2._body = json.dumps(data)
+        jwt = response["JWT"]
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        request2.headers = headers
+        response = check_views.check_domain_ids(request2)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "SUCCESS")
