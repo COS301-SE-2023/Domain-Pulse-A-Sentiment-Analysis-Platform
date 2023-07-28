@@ -327,3 +327,42 @@ class ProfileChecksTests(TestCase):
         response = check_views.check_source_ids_and_remove_source(request2)
         data = json.loads(response.content)
         self.assertEqual(data["status"], "SUCCESS")
+
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    def test_extract_token(self, mock_create_profile, mock_login):
+        class MockUserNotLoggedIn:
+            is_authenticated = False
+
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUserNotLoggedIn()
+        response = profilescrud.create_user(request1, "test", "t@test.com", "test")
+
+        request2 = HttpRequest()
+        request2.method = "POST"
+        jwt = response["JWT"]
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        request2.headers = headers
+        flag, token = check_views.extract_token(request2)
+        self.assertEqual(flag, True)
+
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    def test_extract_token(self, mock_create_profile, mock_login):
+        class MockUserNotLoggedIn:
+            is_authenticated = False
+
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUserNotLoggedIn()
+        response = profilescrud.create_user(request1, "test", "t@test.com", "test")
+
+        request2 = HttpRequest()
+        request2.method = "POST"
+        jwt = response["JWT"]
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        request2.headers = headers
+        flag, token = check_views.extract_token(request2)
+        user = check_views.get_user_from_token(token)
+        self.assertEqual(user.id, response["id"])
