@@ -157,7 +157,6 @@ describe('AppState', () => {
     ];
 
     const actualDomains = store.selectSnapshot(AppState.domains);
-    console.log('actual domains: ', actualDomains);
     expect(actualDomains).toEqual(expectedDomains);
   });
 
