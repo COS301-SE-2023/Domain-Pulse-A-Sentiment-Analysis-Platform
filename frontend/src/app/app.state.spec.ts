@@ -257,7 +257,7 @@ describe('AppState', () => {
         },
       },
     ];
-    
+
     let expected: DisplaySource[] = [
       {
         id: '64b940ec9bbccdb7731b81f9',
@@ -271,10 +271,23 @@ describe('AppState', () => {
         url: 'youtube-logo.png',
         selected: false,
       },
-    ]
+    ];
 
     let actual = AppState.formatResponseSources(mockResponseSources);
 
     expect(actual).toEqual(expected);
+  });
+
+  it('should choose the correct source icon for the platform', () => {
+    expect(AppState.platformToIcon('facebook')).toEqual('facebook-logo.png');
+    expect(AppState.platformToIcon('instagram')).toEqual('instagram-Icon.png');
+    expect(AppState.platformToIcon('reddit')).toEqual('reddit-logo.png');
+    expect(AppState.platformToIcon('tripadvisor')).toEqual(
+      'tripadvisor-logo.png'
+    );
+    expect(AppState.platformToIcon('youtube')).toEqual('youtube-logo.png');
+    expect(AppState.platformToIcon('googlereviews')).toEqual(
+      'google-reviews.png'
+    );
   });
 });
