@@ -24,7 +24,7 @@ export class AppApi {
     );
   }
 
-  getDomainInfo(domainID: number): Observable<any> {
+  getDomainInfo(domainID: string): Observable<any> {
     const getDomainInfoUrl = this.domainBaseUrl + 'domains/get_domain';
     return this.http.post(
       getDomainInfoUrl,
@@ -83,7 +83,7 @@ export class AppApi {
   }
 
   addSource(
-    domainID: number,
+    domainID: string,
     sourceName: string,
     sourceImageUrl: string,
     params: any

@@ -29,7 +29,7 @@ export interface Source {
   sourceImageUrl: string;
 }
 export interface DisplayDomain {
-  id: number;
+  id: string;
   name: string;
   description: string;
   selected: boolean;
@@ -186,6 +186,7 @@ export class AppState {
     if (!profileDetails) return;
 
     this.appApi.getDomainIDs(profileDetails.userId).subscribe((res: any) => {
+
       if (res.status === 'FAILURE') {
         this.toastr.error('Your domains could not be retrieved', '', {
           timeOut: 3000,
@@ -195,11 +196,11 @@ export class AppState {
         return;
       }
 
-      let domainIDs: number[] = res.domainIDs;
+      let domainIDs: string[] = res.domainIDs;
 
       let firstDomain = true;
 
-      domainIDs.map((domainID: number) => {
+      domainIDs.map((domainID: string) => {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
             this.toastr.error(

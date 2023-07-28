@@ -112,7 +112,7 @@ describe('SidebarComponent', () => {
     });
 
     const dummyDisplayDomain: DisplayDomain = {
-      id: 1,
+      id: '1',
       name: 'Dummy Domain',
       description: 'Dummy Description',
       selected: false,
@@ -172,7 +172,7 @@ describe('SidebarComponent', () => {
     });
 
     const dummyDisplayDomain: DisplayDomain = {
-      id: 1,
+      id: '1',
       name: 'Dummy Domain',
       description: 'Dummy Description',
       selected: false,

@@ -1,7 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ToastrModule, ToastrService } from 'ngx-toastr'; // Add this import
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
-import { AppState, DisplayDomain, DisplaySource } from './app.state';
+import {
+  AppState,
+  DisplayDomain,
+  DisplaySource,
+  ProfileDetails,
+} from './app.state';
 import {
   AddNewSource,
   AttempPsswdLogin,
@@ -75,10 +80,91 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
+  it('GetDomains should fail on api "failure"', () => {
+    const mockProfile: ProfileDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'test@thugger.com',
+      profileIconUrl: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfile } });
+    apiSpy.getDomainIDs.and.returnValue(of({ status: 'FAILURE' }));
+    spyOn(toastrSpy, 'error').and.callThrough();
+
+    store.dispatch(new GetDomains());
+
+    expect(toastrSpy.error).toHaveBeenCalled();
+  });
+
+  it('GetDomains should fail on api "success"', () => {
+    const mockProfile: ProfileDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'test@thugger.com',
+      profileIconUrl: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfile } });
+    apiSpy.getDomainIDs.and.returnValue(
+      of({ status: 'SUCCESS', domainIDs: ['dskjafl', 'sdjfkl'] })
+    );
+    apiSpy.getDomainInfo.and.callFake((domainID: string) => {
+      if (domainID === 'dskjafl') {
+        return of({
+          status: 'SUCCESS',
+          domain: {
+            _id: '1',
+            name: 'test',
+            description: 'test',
+            icon: 'test',
+            sources: [],
+          },
+        });
+      } else {
+        return of({
+          status: 'SUCCESS',
+          domain: {
+            _id: '2',
+            name: 'test2',
+            description: 'test2',
+            icon: 'test2',
+            sources: [],
+          },
+        });
+      }
+    });
+
+    store.dispatch(new GetDomains());
+
+    const expectedDomains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: '../assets/test',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'test2',
+        description: 'test2',
+        selected: false,
+        imageUrl: '../assets/test2',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+
+    const actualDomains = store.selectSnapshot(AppState.domains);
+    console.log('actual domains: ', actualDomains);
+    expect(actualDomains).toEqual(expectedDomains);
+  });
+
   it('should select the correct domain on "SetDomain" event', () => {
     const mockDomains: DisplayDomain[] = [
       {
-        id: 1,
+        id: '1',
         name: 'test',
         description: 'test',
         selected: true,
@@ -87,7 +173,7 @@ describe('AppState', () => {
         sources: [],
       },
       {
-        id: 2,
+        id: '2',
         name: 'test2',
         description: 'test2',
         selected: false,
@@ -96,7 +182,9 @@ describe('AppState', () => {
         sources: [],
       },
     ];
-    store.reset({ app: { domains: mockDomains, selectedDomain: mockDomains[0] } });
+    store.reset({
+      app: { domains: mockDomains, selectedDomain: mockDomains[0] },
+    });
 
     store.dispatch(new SetDomain(mockDomains[1]));
 
@@ -147,7 +235,7 @@ describe('AppState', () => {
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
     const mockDomain: DisplayDomain = {
-      id: 1,
+      id: '1',
       name: 'test',
       description: 'test',
       selected: true,
