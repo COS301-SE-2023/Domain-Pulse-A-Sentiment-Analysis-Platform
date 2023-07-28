@@ -17,10 +17,8 @@ export class ApiInterceptor implements HttpInterceptor {
     let apiUrl: string;
 
     if (environment.environment === 'server') {
-      // Use actual server URL for public environment
-      apiUrl = 'https://api.example.com';
+      apiUrl = window.location.origin;
     } else {
-      // Use localhost URL for private environment
       apiUrl = 'http://localhost';
     }
 
