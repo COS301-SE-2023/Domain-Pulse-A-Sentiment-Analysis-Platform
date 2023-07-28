@@ -13,7 +13,7 @@
       <!-- [src]="'../assets/' + selectedDomain.imageUrl" -->
       <img
         [src]="
-          selectedDomain.id % 2 == 0
+          selectedDomain.id == '0'
             ? '../assets/cat-1.png'
             : '../assets/cat-2.png'
         "

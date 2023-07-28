@@ -35,7 +35,7 @@
   
   
     <div class="circle-wrapper">
-      <img [src]="domain.id % 2 == 0 ? '../assets/cat-1.png' : '../assets/cat-2.png'" alt="Source logo" height="44px" />
+      <img [src]="domain.id == '0' ? '../assets/cat-1.png' : '../assets/cat-2.png'" alt="Source logo" height="44px" />
       <!-- <img [src]="domain.imageUrl" alt="Source logo" height="44px" /> -->
     </div>
     <p *ngIf="_expanded">{{ domain.name }}</p>

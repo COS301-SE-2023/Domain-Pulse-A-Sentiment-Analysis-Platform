@@ -60,7 +60,7 @@ export class AppApi {
     return this.http.post(editDomainUrl, body, { withCredentials: true });
   }
 
-  removeDomain(domainID: number): Observable<any> {
+  removeDomain(domainID: string): Observable<any> {
     const removeDomainUrl = this.domainBaseUrl + 'domains/delete_domain';
     const body = {
       id: domainID,

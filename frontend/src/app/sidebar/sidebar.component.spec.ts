@@ -190,7 +190,7 @@ describe('SidebarComponent', () => {
       done();
     });
 
-    const displayId = 1;
+    const displayId = '1';
     component.deleteDomain(displayId);
   });
 
