@@ -37,9 +37,31 @@ def perform_analysis(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
         new_records = raw_data["data"]
+
         scores = []
-        for item in new_records:
-            scores.append(processing.analyse_content(item))
+
+        if raw_data["room_id"]:
+            sio = socketio.Client()
+            sio.connect('http://localhost:5000')
+
+            room_id = raw_data["room_id"]
+
+
+            for item in new_records:
+                new_score = processing.analyse_content(item, room_id)
+                # compute aggregated metrics
+                aggregated_metrics = aggregation.aggregate_sentiment_data(scores)
+                new_data_to_send = { "new_individual_metrics": new_score, "aggregated_metrics": aggregated_metrics, "room_id": room_id }
+
+                sio.emit('new_source_data', new_data_to_send)
+
+                scores.append(new_score)
+
+            sio.disconnect()
+        else:
+            for item in new_records:
+                scores.append(processing.analyse_content(item))
+        
         return JsonResponse({"metrics": scores})
     return JsonResponse({"status": "FAILURE"})
 

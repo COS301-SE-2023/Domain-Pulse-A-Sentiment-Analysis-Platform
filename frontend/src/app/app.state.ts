@@ -198,8 +198,7 @@ export class AppState {
 
   @Selector()
   static sourceIsLoading(state: AppStateModel) {
-    if (state.sourceIsLoading) return state.sourceIsLoading;
-    return false;
+    return state.sourceIsLoading;
   }
 
   @Selector()
