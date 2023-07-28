@@ -1,3 +1,6 @@
+import datetime
+
+
 def aggregate_sentiment_data(sentiment_data):
     sentiment_data = list(sentiment_data)
 
@@ -26,7 +29,11 @@ def aggregate_sentiment_data(sentiment_data):
                     "negative": 0,
                 },
             },
-            "metadata": {"num_analysed": len(sentiment_data)},
+            "metadata": {
+                "num_analysed": len(sentiment_data),
+                "earliest_record": "NA",
+                "latest_record": "NA",
+            },
             "individual_data": [],
         }
 
@@ -48,6 +55,9 @@ def aggregate_sentiment_data(sentiment_data):
 
     summed_toxicity = 0
 
+    earliest_timestamp = 9999999999
+    latest_timestamp = -1
+
     for item in sentiment_data:
         # General
         summed_overall_score += item["general"]["score"]
@@ -63,6 +73,16 @@ def aggregate_sentiment_data(sentiment_data):
         summed_positive_ratio += item["ratios"]["positive"]
         summed_neutral_ratio += item["ratios"]["neutral"]
         summed_negative_ratio += item["ratios"]["negative"]
+
+        timestamp = float(item["timestamp"])
+
+        # Searching for latest date
+        if timestamp > latest_timestamp:
+            latest_timestamp = timestamp
+
+        # Searching for earlier data
+        if timestamp < earliest_timestamp:
+            earliest_timestamp = timestamp
 
     agg_overall_score = round(summed_overall_score / num_individuals, 4)
     overall_cat = ""
@@ -98,6 +118,12 @@ def aggregate_sentiment_data(sentiment_data):
     agg_neutral_ratio = round(summed_neutral_ratio / num_individuals, 4)
     agg_negative_ratio = round(summed_negative_ratio / num_individuals, 4)
 
+    earliest = datetime.datetime.fromtimestamp(earliest_timestamp)
+    latest = datetime.datetime.fromtimestamp(latest_timestamp)
+
+    earliest = earliest.strftime("%d %B %Y")
+    latest = latest.strftime("%d %B %Y")
+
     return {
         "overall": {
             "general": {"category": overall_cat, "score": agg_overall_score},
@@ -109,6 +135,10 @@ def aggregate_sentiment_data(sentiment_data):
                 "negative": agg_negative_ratio,
             },
         },
-        "metadata": {"num_analysed": len(sentiment_data)},
+        "metadata": {
+            "num_analysed": len(sentiment_data),
+            "earliest_record": earliest,
+            "latest_record": latest,
+        },
         "individual_data": sentiment_data,
     }
