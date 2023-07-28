@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "profileservice",
+    "check_auth",
     "corsheaders",
 ]
 
@@ -104,12 +105,12 @@ WSGI_APPLICATION = "profiles.wsgi.application"
 
 from sshtunnel import SSHTunnelForwarder
 
-#setup ssh tunnel
+# setup ssh tunnel
 ssh_tunnel = SSHTunnelForwarder(
     os.getenv("DB_TUNNEL_HOST"),
     ssh_username=os.getenv("DB_TUNNEL_USERNAME"),
     ssh_pkey=os.getenv("DB_TUNNEL_PRIVATE_KEY"),
-    remote_bind_address=('127.0.0.1', int(os.getenv("SQL_DATABASE_PORT"))),
+    remote_bind_address=("127.0.0.1", int(os.getenv("SQL_DATABASE_PORT"))),
 )
 
 ssh_tunnel.start()
@@ -124,10 +125,10 @@ DATABASES = {
     #     "HOST": "localhost",
     #     "PORT": "5432",
     # },
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.getenv("SQL_DATABASE_HOST"),
-        'PORT': ssh_tunnel.local_bind_port,
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.getenv("SQL_DATABASE_HOST"),
+        "PORT": ssh_tunnel.local_bind_port,
         "NAME": os.getenv("SQL_DATABASE_NAME"),
         "USER": os.getenv("SQL_DATABASE_USER"),
         "PASSWORD": os.getenv("SQL_DATABASE_PASS"),
