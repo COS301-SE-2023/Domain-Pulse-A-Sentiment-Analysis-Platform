@@ -136,7 +136,25 @@
       </div>
       <div class="flex-column item-stats">
         <p>Analysed</p>
-        <p>{{ displayedMetrics.analysedSum }}</p>
+        <p>{{ displayedMetrics.analysedSum }} sentiments</p>
+      </div>
+    </div>
+  </div>
+  <div style="width: 3px; height: 100%; background-color: #e0e0e0"></div>
+
+
+  <div class="statistic-category">
+    <div class="statistic-item flex-row">
+      <div class="flex-row center icon-div">
+        <img
+          src="../../assets/icons/calendar.svg"
+          width="100%"
+          alt="Positive Icon"
+        />
+      </div>
+      <div class="flex-column item-stats">
+        <p>Date Range</p>
+        <p>{{ displayedMetrics.earliestDate }} - {{displayedMetrics.latestDate}}</p>
       </div>
     </div>
   </div>

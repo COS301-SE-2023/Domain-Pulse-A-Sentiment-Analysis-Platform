@@ -246,7 +246,7 @@ export class GraphSelectorComponent implements OnInit {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
-        this.updatedGraphArray = this.assignGraphData(data, this.graphs);
+        this.updatedGraphArray = this.assignGraphData(data.aggregated_metrics, this.graphs);
         setTimeout(() => {
           this.renderGraph();
         }, 300);
