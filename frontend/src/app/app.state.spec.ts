@@ -65,6 +65,15 @@ describe('AppState', () => {
     // make sure overallSentiment and sampleData is set
   });
 
+  it('Should Set the userID when when the user has been authenticated', () => {
+    // let apiSpy = jasmine.createSpyObj('AppApi', ['checkAuthenticate']);
+    // apiSpy.checkAuthenticate.and.callThrough();
+    // TestBed.inject(AppApi);
+
+    store.dispatch(new CheckAuthenticate());
+    // check that the userid in local storage is set if the user is indeed authenticated
+  });
+
   it('should select the correct source', () => {
     const mockSources: DisplaySource[] = [
       {
@@ -84,26 +93,19 @@ describe('AppState', () => {
       app: { sources: mockSources, selectedSource: mockSources[0] },
     });
 
-    // store.dispatch(new SetSource(mockSources[1]));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'SUCCESS' }));
 
-    // const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
-    // expect(actualSelectedSource).toEqual(mockSources[1]);
-    // const actualSources = store.selectSnapshot(AppState.sources);
-    // if (!actualSources) {
-    //   fail();
-    //   return;
-    // }
-    // expect(actualSources[0].selected).toEqual(false);
-    // expect(actualSources[1].selected).toEqual(true);
-  });
+    store.dispatch(new SetSource(mockSources[1]));
 
-  it('Should Set the userID when when the user has been authenticated', () => {
-    // let apiSpy = jasmine.createSpyObj('AppApi', ['checkAuthenticate']);
-    // apiSpy.checkAuthenticate.and.callThrough();
-    // TestBed.inject(AppApi);
-
-    store.dispatch(new CheckAuthenticate());
-    // check that the userid in local storage is set if the user is indeed authenticated
+    const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
+    expect(actualSelectedSource).toEqual(mockSources[1]);
+    const actualSources = store.selectSnapshot(AppState.sources);
+    if (!actualSources) {
+      fail();
+      return;
+    }
+    expect(actualSources[0].selected).toEqual(false);
+    expect(actualSources[1].selected).toEqual(true);
   });
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {

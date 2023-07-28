@@ -291,7 +291,6 @@ export class AppState {
 
   @Action(SetSource)
   setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
-    this.store.dispatch(new GetSourceDashBoardInfo());
     let sources = ctx.getState().sources;
     if (!sources) return;
 
@@ -299,6 +298,8 @@ export class AppState {
       souce.selected = false;
     }
     state.source.selected = true;
+
+    this.store.dispatch(new GetSourceDashBoardInfo());
 
     ctx.patchState({
       sources: sources,
