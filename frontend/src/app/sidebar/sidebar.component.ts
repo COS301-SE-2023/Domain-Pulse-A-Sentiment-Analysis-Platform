@@ -20,6 +20,7 @@ import {
   ChangePassword,
   ChangeMode,
   ChangeProfileIcon,
+  ToastError,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -279,7 +280,9 @@ export class SidebarComponent{
     this.uploadSpinner = true;
     if (!this.selectedFile) {
       this.uploadSpinner = false;
+      this.store.dispatch(new ToastError('Please select an image'));
       return;
+
     }
     const userDetails = this.store.selectSnapshot(AppState.userDetails);
     if(!userDetails){
