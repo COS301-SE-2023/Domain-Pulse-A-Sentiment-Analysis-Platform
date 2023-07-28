@@ -79,11 +79,14 @@
     }"
   >
     <div class="circle-wrapper">
-      <img
-        src="../assets/stock-profile-pic.jpg"
+      
+        <img
+        [src]="(profileDetails$ | async)?.profileIcon"
         alt="Source logo"
         height="44px"
-      />
+      />  
+      
+      
     </div>
     <ng-container *ngIf="(userDetails$ | async) as userDetails">
       <p class="domain-name" *ngIf="_expanded" style="color: black">{{ userDetails.username }}</p>
@@ -227,7 +230,7 @@
     </div>
     <div class="flex-column center content" style="width: 80%">
       <div class="profile-container">
-        <img src="../assets/stock-profile-pic.jpg" alt="Profile Image" class="profile-image" />
+        <img [src]="(profileDetails$ | async)?.profileIcon" alt="Profile Image" class="profile-image" />
         
       </div>
       <ng-container *ngIf="(userDetails$ | async) as userDetails">
@@ -335,7 +338,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-domain-btn">Confirm</button>
+        <button class="new-domain-btn clickable-item" (click)="uploadImage()">Confirm</button>
       </div>
     </div>
     <div class="picture"></div>
