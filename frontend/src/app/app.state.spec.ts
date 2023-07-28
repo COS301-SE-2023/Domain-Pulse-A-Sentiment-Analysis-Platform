@@ -19,6 +19,8 @@ import {
   SetDomain,
   SetSource,
   SetUserDetails,
+  ToastError,
+  ToastSuccess,
 } from './app.actions';
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
@@ -26,8 +28,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppState', () => {
   let store: Store;
-  // let toastrService: ToastrService;
-  let toastrSpy: jasmine.SpyObj<ToastrService>;
   let apiSpy: jasmine.SpyObj<AppApi>;
   let actions$: Observable<any>;
 
@@ -53,14 +53,12 @@ describe('AppState', () => {
       imports: [
         BrowserAnimationsModule,
         NgxsModule.forRoot([AppState]),
-        ToastrModule.forRoot(), // Add ToastrModule here
       ],
       providers: [{ provide: AppApi, useValue: apiSpy }],
     }).compileComponents();
 
     store = TestBed.inject(Store);
     actions$ = TestBed.inject(Actions);
-    toastrSpy = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
   });
 
   it('set the correct dashboard info if there is a source that is selected', () => {
@@ -80,7 +78,12 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
-  it('GetDomains should fail on api "failure"', () => {
+  it('GetDomains should fail on api "failure"', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
     const mockUser: UserDetails = {
       userId: 1,
       username: 'test',
@@ -89,11 +92,8 @@ describe('AppState', () => {
     };
     store.reset({ app: { userDetails: mockUser } });
     apiSpy.getDomainIDs.and.returnValue(of({ status: 'FAILURE' }));
-    spyOn(toastrSpy, 'error').and.callThrough();
 
     store.dispatch(new GetDomains());
-
-    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
   it('GetDomains should fail on api "success"', () => {
@@ -260,7 +260,12 @@ describe('AppState', () => {
     );
   });
 
-  it("should correctly refresh source failed 'RefreshSourceData' event", () => {
+  it("should correctly refresh source failed 'RefreshSourceData' event", (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
     const mockSource: DisplaySource = {
       id: '1',
       name: 'test',
@@ -271,9 +276,6 @@ describe('AppState', () => {
     store.reset({ app: { selectedSource: mockSource } });
 
     apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
-
-    spyOn(toastrSpy, 'error').and.callThrough();
-    expect(toastrSpy.error).not.toHaveBeenCalled();
 
     store.dispatch(new RefreshSourceData());
   });
@@ -300,7 +302,11 @@ describe('AppState', () => {
     store.dispatch(new RefreshSourceData());
   });
 
-  it('should correctly get stats on a source', () => {
+  it('should correctly get stats on a source', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
     // test above that correctly reacts to not having a selected source
 
     const mockSource: DisplaySource = {
@@ -315,12 +321,9 @@ describe('AppState', () => {
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
     // test positive below this it'should... function
 
-    spyOn(toastrSpy, 'error').and.callThrough();
-
     store.dispatch(new GetSourceDashBoardInfo());
 
     expect(apiSpy.getSourceSentimentData).toHaveBeenCalled();
-    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
   it('React correctly positive "AttempPsswdLogin"  event', (done: DoneFn) => {
@@ -337,27 +340,34 @@ describe('AppState', () => {
     store.dispatch(new AttempPsswdLogin('test_username', 'test_password'));
   });
 
-  it('React correctly bad "AttempPsswdLogin"  event', () => {
-    spyOn(toastrSpy, 'error').and.callThrough();
+  it('React correctly bad "AttempPsswdLogin"  event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
 
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'FAILURE' }));
     store.dispatch(new AttempPsswdLogin('test_username', 'test_password'));
-    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
-  it('React correctly to registering user', () => {
-    apiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS' }));
+  it('React correctly to successful registering, and JWT set', () => {
+    apiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS', JWT: 'testJWT' }));
 
     store.dispatch(new RegisterUser('test', 'test', 'test@test.com'));
-    const actual = store.selectSnapshot(AppState.statisticIndex);
     expect(apiSpy.registerUser).toHaveBeenCalled();
+    const JWT = localStorage.getItem('JWT');
+    expect(JWT).toBe('testJWT');
+  });
 
-    spyOn(toastrSpy, 'error').and.callThrough();
+  it('React correctly to failed registering', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
 
     apiSpy.registerUser.and.returnValue(of({ status: 'FAILURE' }));
     store.dispatch(new RegisterUser('test', 'test', 'test@test.com'));
     expect(apiSpy.registerUser).toHaveBeenCalled();
-    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
   it('Set the selected Statistic Index', () => {

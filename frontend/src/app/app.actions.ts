@@ -1,4 +1,14 @@
-import { DisplayDomain, DisplaySource } from './app.state';
+import { DisplayDomain, DisplaySource, Toast } from './app.state';
+
+export class ToastError {
+  static readonly type = '[App] Toast Error';
+  constructor(public message: string, public timeout?: number) {}
+}
+
+export class ToastSuccess {
+  static readonly type = '[App] Toast Success';
+  constructor(public message: string, public timeout?: number) {}
+}
 
 export class Initialise {
   static readonly type = '[App] Initialise';
