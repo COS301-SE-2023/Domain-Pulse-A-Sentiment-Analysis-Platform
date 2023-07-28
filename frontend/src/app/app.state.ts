@@ -670,6 +670,7 @@ export class AppState {
           this.store.dispatch(
             new ToastSuccess('Your password has been changed')
           );
+          this.router.navigate(['/login']);
         } else {
           this.store.dispatch(
             new ToastError('Your password could not be changed')
