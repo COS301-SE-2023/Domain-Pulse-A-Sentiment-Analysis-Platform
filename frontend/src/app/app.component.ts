@@ -11,18 +11,16 @@ import { Observable } from 'rxjs';
 export class AppComponent implements OnInit {
   @Select(AppState.profileDetails) profileDetails$!: Observable<ProfileDetails>;
 
-  private theme: boolean | undefined; 
-
   constructor(private store: Store) {}
-  
+
   ngOnInit(): void {
     this.store.dispatch(new Initialise());
     this.profileDetails$.subscribe((profileDetails) => {
-      const mode = profileDetails.mode;
-      this.theme = mode;
-      console.log("mode is:" + mode);
-      document.body.classList.toggle('light', mode);
-      document.body.classList.toggle('dark', !mode);
+      if (profileDetails) {
+        const mode = profileDetails.mode;
+        document.body.classList.toggle('light', mode);
+        document.body.classList.toggle('dark', !mode);
+      }
     });
   }
 }
