@@ -21,10 +21,10 @@ import {
   ChangePassword,
   ChangeMode,
   Initialise,
+  ToastError,
+  ToastSuccess,
 } from './app.actions';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { NgZone } from '@angular/core';
 import { catchError, of, switchMap, throwError } from 'rxjs';
 
 export interface Source {
@@ -75,6 +75,10 @@ export interface ProfileDetails {
   profileIcon: string;
 }
 
+export interface Toast {
+  message: string;
+  timeout: number;
+}
 
 export class Comment {
   comment: string;
@@ -112,6 +116,8 @@ interface AppStateModel {
   userDetails?: UserDetails;
   sourceIsLoading: boolean;
   profileDetails?: ProfileDetails;
+  toasterError?: Toast;
+  toasterSuccess?: Toast;
 }
 
 @State<AppStateModel>({
@@ -127,9 +133,7 @@ export class AppState {
   constructor(
     private readonly appApi: AppApi,
     private readonly store: Store,
-    private readonly router: Router,
-    private toastr: ToastrService,
-    private ngZone: NgZone
+    private readonly router: Router
   ) {
     // // subscipte to changes to profile details
     let detailsSet = false;
@@ -203,7 +207,37 @@ export class AppState {
     if (state.profileDetails) return state.profileDetails;
     return undefined;
   }
-  
+
+  @Selector()
+  static toasterError(state: AppStateModel) {
+    if (state.toasterError) return state.toasterError;
+    return undefined;
+  }
+
+  @Selector()
+  static toasterSuccess(state: AppStateModel) {
+    if (state.toasterSuccess) return state.toasterSuccess;
+    return undefined;
+  }
+
+  @Action(ToastError)
+  toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
+    const toast: Toast = {
+      message: action.message,
+      timeout: action.timeout ? action.timeout : 3000,
+    };
+
+    ctx.patchState({ toasterError: toast });
+  }
+
+  @Action(ToastSuccess)
+  toastSuccess(ctx: StateContext<AppStateModel>, action: ToastSuccess) {
+    const toast: Toast = {
+      message: action.message,
+      timeout: action.timeout ? action.timeout : 3000,
+    };
+    ctx.patchState({ toasterSuccess: toast });
+  }
 
   @Action(Initialise)
   initiliaze(ctx: StateContext<AppStateModel>) {
@@ -217,14 +251,9 @@ export class AppState {
 
     this.appApi.getDomainIDs(userDetails.userId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
-        
-        this.ngZone.run(() => {
-          this.toastr.error('Your domains could not be retrieved', '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast error ngx-toastr',
-          });
-        });
+        this.store.dispatch(
+          new ToastError('Your domains could not be retrieved')
+        );
         return;
       }
 
@@ -235,19 +264,9 @@ export class AppState {
       domainIDs.map((domainID: string) => {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
-            this.ngZone.run(() => {
-            this.toastr.error(
-              'The info for one of your domains could not be retrieved',
-              '',
-              {
-                timeOut: 3000,
-                positionClass: 'toast-bottom-center',
-                toastClass: 'custom-toast error ngx-toastr',
-              }
+            this.store.dispatch(
+              new ToastError('Your domains could not be retrieved')
             );
-            });
-
-            
             return;
           }
 
@@ -389,18 +408,13 @@ export class AppState {
       });
     }
 
-    console.log("refreshing with sourceID" + sourceID)
+    console.log('refreshing with sourceID' + sourceID);
     this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.ngZone.run(() => {
-          this.toastr.error('Source data could not be refreshed: ' + res.details , '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast error ngx-toastr',
-          });
-        });
-
-        if(selectedSource){
+        this.store.dispatch(
+          new ToastError('Source data could not be refreshed')
+        );
+        if (selectedSource) {
           selectedSource.isRefreshing = false;
           ctx.patchState({
             selectedSource,
@@ -410,14 +424,13 @@ export class AppState {
         return;
       }
       this.store.dispatch(new GetSourceDashBoardInfo());
-      
-      if(selectedSource){
+
+      if (selectedSource) {
         selectedSource.isRefreshing = false;
         ctx.patchState({
           selectedSource,
         });
       }
-      
     });
   }
 
@@ -429,13 +442,7 @@ export class AppState {
       .addDomain(state.domainName, state.description, state.domainImagUrl)
       .subscribe((res) => {
         if (res.status === 'FAILURE') {
-          this.ngZone.run(() => {
-          this.toastr.error('Your domain could not be added', '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast error ngx-toastr',
-          });
-          });
+          this.store.dispatch(new ToastError('Your domain could not be added'));
           return;
         }
         this.store.dispatch(new GetDomains());
@@ -527,13 +534,7 @@ export class AppState {
 
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.ngZone.run(() => {
-        this.toastr.error('Sentiment data could not be retrieved', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
-        });
-        });
+        this.store.dispatch(new ToastError('Source data could not be loaded'));
         return;
       }
 
@@ -560,55 +561,42 @@ export class AppState {
     });
   }
 
+  // ...
 
+  @Action(AttempPsswdLogin)
+  attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
+    console.log('attempting password login');
 
-// ...
+    return this.appApi.attemptPsswdLogin(state.username, state.password).pipe(
+      switchMap((res) => {
+        if (res.status === 'SUCCESS') {
+          // set jwt in local storage
+          localStorage.setItem('JWT', res.JWT);
 
-@Action(AttempPsswdLogin)
-attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
-  console.log('attempting password login');
-
-  return this.appApi.attemptPsswdLogin(state.username, state.password).pipe(
-    switchMap((res) => {
-      if (res.status === 'SUCCESS') {
-        // set jwt in local storage
-        localStorage.setItem('JWT', res.JWT);
-
-        this.store.dispatch(new SetUserDetails(res.id));
-        this.store.dispatch(new GetDomains());
-        this.router.navigate(['']);
-        return of(res);
-      } else {
-        this.ngZone.run(() => {
-          this.toastr.error('Login failed', '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast error ngx-toastr',
-          });
-        });
-        return throwError(() => new Error('Login failed'));
-      }
-    }),
-    catchError((error: any) => {
-
-      return of(error);
-    })
-  );
-}
+          this.store.dispatch(new SetUserDetails(res.id));
+          this.store.dispatch(new GetDomains());
+          this.router.navigate(['']);
+          return of(res);
+        } else {
+          this.store.dispatch(new ToastError('Login failed'));
+          return throwError(() => new Error('Login failed'));
+        }
+      }),
+      catchError((error: any) => {
+        return of(error);
+      })
+    );
+  }
 
   @Action(SetUserDetails)
-  setUserDetails(
-    ctx: StateContext<AppStateModel>,
-    state: SetUserDetails
-  ) {
+  setUserDetails(ctx: StateContext<AppStateModel>, state: SetUserDetails) {
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         const profileDetails: ProfileDetails = {
           profileId: res.id,
           profileIcon: res.profileIcon,
           mode: res.mode,
-        }
-
+        };
 
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
           if (res.status == 'SUCCESS') {
@@ -618,7 +606,6 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
               email: res2.email,
               profileIconUrl: res.profileIcon,
               oldPassword: res2.password,
-
             };
 
             ctx.patchState({
@@ -635,33 +622,31 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
 
   @Action(RegisterUser)
   registerUser(ctx: StateContext<AppStateModel>, state: RegisterUser) {
-  return this.appApi.registerUser(state.username, state.password, state.email).pipe(
-    switchMap((res) => {
-      if (res.status === 'SUCCESS') {
-        localStorage.setItem('JWT', res.JWT);
-        /* this.router.navigate(['']); */
-        console.log('register success');
-        return of();
-      } else {
-
-        return throwError(() => new Error());
-      }
-    }),
-    catchError((error: any) => {
-      this.ngZone.run(() => {
-        this.toastr.error('Your account could not be registered', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
-        });
-      });
-      return of(error);
-    })
-  );
-}
+    return this.appApi
+      .registerUser(state.username, state.password, state.email)
+      .pipe(
+        switchMap((res) => {
+          if (res.status === 'SUCCESS') {
+            localStorage.setItem('JWT', res.JWT);
+            /* this.router.navigate(['']); */
+            console.log('register success');
+            return of();
+          } else {
+            return throwError(() => new Error());
+          }
+        }),
+        catchError((error: any) => {
+          this.store.dispatch(
+            new ToastError('Your account could not be registered')
+          );
+          return of(error);
+        })
+      );
+  }
 
   @Action(ChangePassword)
-  changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {//check UserDetails
+  changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {
+    //check UserDetails
 
     const userId = ctx.getState().userDetails?.userId;
 
@@ -669,8 +654,6 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
       console.error('User ID is not available in the state.');
       return;
     }
-
-    
 
     const { oldPassword, newPassword } = state;
 
@@ -683,21 +666,13 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
       .changePassword(userId, oldPassword, newPassword)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
-          this.ngZone.run(() => {
-            this.toastr.success('Your password has been changed', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast success ngx-toastr',
-            });
-          });
+          this.store.dispatch(
+            new ToastSuccess('Your password has been changed')
+          );
         } else {
-          this.ngZone.run(() => {
-            this.toastr.error('Your password could not be changed', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast error ngx-toastr',
-            });
-          });
+          this.store.dispatch(
+            new ToastError('Your password could not be changed')
+          );
         }
       });
   }
@@ -726,51 +701,28 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
     const profileId = ctx.getState().profileDetails?.profileId;
 
     if (!profileId) {
-      console.error('Profile ID is not available in the state.');
-      this.ngZone.run(() => {
-        this.toastr.error('Your theme could not be changed', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
-        });
-      });
+      this.store.dispatch(new ToastError('Your theme could not be changed'));
       return;
     }
 
-    this.appApi
-      .changeMode(profileId)
-      .subscribe((res) => {
-        if (res.status == 'SUCCESS') {
-          const profileDetails: ProfileDetails = {
-            profileId: res.id,
-            profileIcon: res.profileIcon,
-            mode: res.mode,
-          }
+    this.appApi.changeMode(profileId).subscribe((res) => {
+      if (res.status == 'SUCCESS') {
+        const profileDetails: ProfileDetails = {
+          profileId: res.id,
+          profileIcon: res.profileIcon,
+          mode: res.mode,
+        };
 
-          ctx.patchState({
-            profileDetails: profileDetails,
-          });
+        ctx.patchState({
+          profileDetails: profileDetails,
+        });
 
-          this.ngZone.run(() => {
-            this.toastr.success('Your theme has been updated', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast success ngx-toastr',
-            });
-          });
-        } else {
-          this.ngZone.run(() => {
-            this.toastr.error('Your theme could not be changed', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast error ngx-toastr',
-            });
-          });
-        }
-      });
+        this.store.dispatch(new ToastSuccess('Your theme has been updated'));
+      } else {
+        this.store.dispatch(new ToastError('Your theme could not be changed'));
+      }
+    });
   }
-
-  
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
