@@ -163,8 +163,8 @@
 
 .profile-container
     position: relative
-    width: 15vw
-    height: 15vw
+    width: 12vw
+    height: 12vw
     margin-bottom: 1rem
 
 .profile-overlay
@@ -225,3 +225,43 @@
     align-content: center
     justify-content: center
     margin-bottom: 6%
+
+.wrapper
+
+    width: 15vw
+    height: 15vw
+    align-items: center
+    justify-content: center
+
+.file-upload
+    height: 100%
+    width: 100%
+    border-radius: 15vw
+    position: relative
+    display: flex
+    justify-content: center
+    align-items: center
+    overflow: hidden
+    background-image: linear-gradient(to bottom, var(--primary) 50%, var(--button-highlight) 50%)
+    background-size: 100% 200%
+    transition: all 1s
+    color: #FFFFFF
+    font-size: 100px
+    input[type='file']
+        height: 200px
+        width: 200px
+        position: absolute
+        top: 0
+        left: 0
+        opacity: 0
+        cursor: pointer
+
+    &:hover
+        background-position: 0 -100%
+
+.preview-image
+    display: block
+    border: 1px solid #ccc
+    border-radius: 4px
+    height: -webkit-fill-available
+    width: -webkit-fill-available

@@ -267,10 +267,23 @@ export class SidebarComponent{
   }
 
   imageSelected: boolean = false;
+  imagePreview: string | ArrayBuffer | null = null;
 
   onImageSelected(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.selectedFile = inputElement.files?.item(0) as File | null;
+
+
+    if (this.selectedFile) {
+      // Read the file and create a data URL for preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    } else {
+      this.imagePreview = null;
+    }
   }
 
 

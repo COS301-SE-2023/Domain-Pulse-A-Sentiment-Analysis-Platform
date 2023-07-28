@@ -321,25 +321,32 @@
 
 
       <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">1</p>
-        <div class="flex-column" style="width: 100%">
-          <label for="imageUpload">Upload Image:</label>
+        <div class="flex-column center" style="width: 100%">
+          <!-- <p class="step-heading">Upload Image:</p>
           <input
             type="file"
             id="imageUpload"
             (change)="onImageSelected($event)"
             accept="image/*"
             required
-          />
-        </div>
+          />-->
+          <div class="wrapper">
+            <div class="file-upload">
+              <input type="file" (change)="onImageSelected($event)" accept="image/*" />
+              <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview" class="preview-image" />
+              <img *ngIf="!imagePreview"src="../assets/icons/editdark.svg" class="profile-icon" />
+            </div>
+          </div>
+        </div> 
+        
       </div>
-      <div class="flex-row" style="width: 80%">
+      <!-- <div class="flex-row" style="width: 80%">
         <p class="modal-step-tag">2</p>
         <div class="flex-column" style="width: 100%">
           <p class="step-heading">Change Name</p>
           <input class="default-input" type="text" />
         </div>
-      </div>
+      </div> -->
 
       <div class="bottom-div">
         <button class="new-domain-btn clickable-item" (click)="uploadImage()">Confirm<div [ngClass]="{ 'button-spinner': uploadSpinner }"></div></button>
