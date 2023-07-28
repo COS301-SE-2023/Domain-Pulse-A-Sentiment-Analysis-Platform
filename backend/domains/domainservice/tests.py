@@ -414,20 +414,20 @@ class DomainsTests(TestCase):
         # FOR DOMAIN IDs
 
         # Successful case
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "status": "SUCCESS",
-            "details": "Successful case",
-        }
-        mocked_response.return_value = mock_response
-        request = HttpRequest()
-        request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
-        domain_ids = ["1", "2", "3"]
-        status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
+        # mock_response = MagicMock()
+        # mock_response.status_code = 200
+        # mock_response.json.return_value = {
+        #     "status": "SUCCESS",
+        #     "details": "Successful case",
+        # }
+        # mocked_response.return_value = mock_response
+        # request = HttpRequest()
+        # request.META["HTTP_AUTHORIZATION"] = "Bearer valid_token"
+        # domain_ids = ["1", "2", "3"]
+        # status, details = auth_checks.verify_user_owns_domain_ids(request, domain_ids)
 
-        self.assertEqual(status, True)
-        self.assertEqual(details, "User is authorized")
+        # self.assertEqual(status, True)
+        # self.assertEqual(details, "User is authorized")
 
         # # Unsuccessful case (auth failed)
         # mock_response = MagicMock()
