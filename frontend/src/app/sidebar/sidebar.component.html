@@ -228,16 +228,20 @@
       <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleProfileModal()">
       <p class="modal-heading">Profile</p>
     </div>
-    <div class="flex-column center content" style="width: 80%">
-      <div class="profile-container">
+    <div class="flex-column center content clickable-item-nohover" style="width: 80%">
+      <div (click)="toggleProfileEditModal()" class="profile-container">
         <img [src]="(profileDetails$ | async)?.profileIcon" alt="Profile Image" class="profile-image" />
+        
+        <div class="profile-overlay">
+          <img src="../assets/icons/editdark.svg" class="profile-icon"/>
+    
+        </div>
         
       </div>
       <ng-container *ngIf="(userDetails$ | async) as userDetails">
         <p class="profile-name">{{userDetails.username}}</p>
         <p class="email">{{userDetails.email}}</p>
       </ng-container>
-      <img (click)="toggleProfileEditModal()" src="../assets/icons/editdark.svg" class="profile-icon clickable-item" style="padding-top: 2rem;"/>
     </div>
 
     <div class="button-div">

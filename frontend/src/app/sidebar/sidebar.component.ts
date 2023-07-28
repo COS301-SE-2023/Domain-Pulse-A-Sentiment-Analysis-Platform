@@ -310,7 +310,9 @@ export class SidebarComponent{
   }
 
   changePassword(){
+    console.log('JWT before ', localStorage.getItem("JWT"));
     this.store.dispatch(new ChangePassword(this.oldPassword, this.newPassword))
+    console.log('JWT after', localStorage.getItem("JWT"));
     this.oldPassword=''
     this.newPassword=''
     this.toggleChangePasswordModal()

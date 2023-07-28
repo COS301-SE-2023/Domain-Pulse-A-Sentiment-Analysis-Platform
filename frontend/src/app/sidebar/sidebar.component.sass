@@ -23,7 +23,7 @@
     background-color: white !important
 
 .add-domain-plus
-    background-color:  rgba(0, 0, 0, 0)!important
+    background-color: rgba(0, 0, 0, 0)!important
 
 .icons-container
     position: flex-end
@@ -31,18 +31,11 @@
     gap: 0.5rem
     margin-left: auto
     padding-right: 1rem
-    
-  
-.domain-name 
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
 
-
-
-
-
-
+.domain-name
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
 
 .add-domain-btn
     gap: 2rem
@@ -64,22 +57,16 @@
     justify-content: center
     align-items: center
 
- 
-
-
-.circle-wrapper img 
-  width: 100%
-  height:100%
-  object-fit: cover
+.circle-wrapper img
+    width: 100%
+    height: 100%
+    object-fit: cover
 
 .plus-wrapper
     width: 44px
     height: 44px
     min-width: 44px
     min-height: 44px
-
-
-
 
 // below is where the styles for the modal are
 
@@ -101,15 +88,13 @@
     border: none
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
 
-
 .modal-heading
     font-family: 'Open Sans'
     font-weight: 700
     font-size: 20pt
     color: var(--primary)
 
-
-.heading-container 
+.heading-container
     text-align: left
     width: 80%
     display: flex
@@ -118,10 +103,9 @@
     margin-top: 4%
     margin-left: 10%
 
-
-.back-arrow 
-  width: 25px
-  margin-right: 10px
+.back-arrow
+    width: 25px
+    margin-right: 10px
 
 .modal-step-tag
     font-size: 50px
@@ -144,16 +128,15 @@
     background-image: url("../../assets/stock-bg.png")
     background-repeat: no-repeat
     background-size: cover
-    width:100%
+    width: 100%
 
-.profile-section 
-
+.profile-section
 
 //Profile Modal
 
 .profile-image
-    width: 180px
-    height: 180px
+    width: 100%
+    height: 100%
     border-radius: 50%
     object-fit: cover
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
@@ -171,25 +154,49 @@
     color: var(--text-color)
 
 .profile-icon
-    width:15px
+    width: 15px
 
 .modal-contents
-  display: flex
-  flex-direction: column
-  justify-content: space-between
+    display: flex
+    flex-direction: column
+    justify-content: space-between
 
-  
+.profile-container
+    position: relative
+    width: 15vw
+    height: 15vw
+    margin-bottom: 1rem
+
+.profile-overlay
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--hover-opacity-highlight)
+    display: flex
+    justify-content: center
+    align-items: center
+    opacity: 0
+    transition: opacity 0.3s
+    border-radius: 50%
+
+.profile-container:hover .profile-overlay
+    opacity: 1
+
+.overlay-icon
+    font-size: 36px
 
 .content
-  flex-grow: 1
+    flex-grow: 1
 
 .button-div
-  display: grid
-  grid-template-columns: repeat(2, 1fr)
-  gap: 1rem
-  align-content: center
-  justify-content: center
-  margin-bottom: 5%
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: 1rem
+    align-content: center
+    justify-content: center
+    margin-bottom: 5%
 
 .button
     display: flex
@@ -204,25 +211,17 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
 
 .button:hover
-  background-color: var(--button-highlight)
+    background-color: var(--button-highlight)
 
 .button-text
-  margin-left: 0.5rem
+    margin-left: 0.5rem
 
-
-.button-icon 
+.button-icon
     margin-left: 0.3rem
     margin-right: 0.5rem
     width: 0.8rem
 
 .bottom-div
-  align-content: center
-  justify-content: center
-  margin-bottom: 6%
-
-    
-
-
-
-  
-
+    align-content: center
+    justify-content: center
+    margin-bottom: 6%
