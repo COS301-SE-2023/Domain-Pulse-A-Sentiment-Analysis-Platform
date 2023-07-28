@@ -5,7 +5,7 @@ import {
   AppState,
   DisplayDomain,
   DisplaySource,
-  ProfileDetails,
+  UserDetails,
 } from './app.state';
 import {
   AddNewSource,
@@ -17,8 +17,8 @@ import {
   RefreshSourceData,
   RegisterUser,
   SetDomain,
-  SetProfileDetails,
   SetSource,
+  SetUserDetails,
 } from './app.actions';
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
@@ -81,13 +81,13 @@ describe('AppState', () => {
   });
 
   it('GetDomains should fail on api "failure"', () => {
-    const mockProfile: ProfileDetails = {
+    const mockUser: UserDetails = {
       userId: 1,
       username: 'test',
       email: 'test@thugger.com',
       profileIconUrl: 'test',
     };
-    store.reset({ app: { profileDetails: mockProfile } });
+    store.reset({ app: { userDetails: mockUser } });
     apiSpy.getDomainIDs.and.returnValue(of({ status: 'FAILURE' }));
     spyOn(toastrSpy, 'error').and.callThrough();
 
@@ -97,13 +97,13 @@ describe('AppState', () => {
   });
 
   it('GetDomains should fail on api "success"', () => {
-    const mockProfile: ProfileDetails = {
+    const mockProfile: UserDetails = {
       userId: 1,
       username: 'test',
       email: 'test@thugger.com',
       profileIconUrl: 'test',
     };
-    store.reset({ app: { profileDetails: mockProfile } });
+    store.reset({ app: { userDetails: mockProfile } });
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: ['dskjafl', 'sdjfkl'] })
     );
@@ -157,7 +157,6 @@ describe('AppState', () => {
     ];
 
     const actualDomains = store.selectSnapshot(AppState.domains);
-    console.log('actual domains: ', actualDomains);
     expect(actualDomains).toEqual(expectedDomains);
   });
 
@@ -206,12 +205,14 @@ describe('AppState', () => {
         name: 'test',
         url: 'test',
         selected: true,
+        isRefreshing: false,
       },
       {
         id: '2',
         name: 'test2',
         url: 'test3',
         selected: false,
+        isRefreshing: false,
       },
     ];
     store.reset({
@@ -265,6 +266,7 @@ describe('AppState', () => {
       name: 'test',
       url: 'test',
       selected: true,
+      isRefreshing: false,
     };
     store.reset({ app: { selectedSource: mockSource } });
 
@@ -282,6 +284,8 @@ describe('AppState', () => {
       name: 'test',
       url: 'test',
       selected: true,
+      isRefreshing: false,
+
     };
     store.reset({ app: { selectedSource: mockSource } });
 
@@ -304,6 +308,8 @@ describe('AppState', () => {
       name: 'test',
       url: 'test',
       selected: true,
+      isRefreshing: false,
+
     };
     store.reset({ app: { selectedSource: mockSource } });
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
@@ -321,7 +327,7 @@ describe('AppState', () => {
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
 
     zip(
-      actions$.pipe(ofActionDispatched(SetProfileDetails)),
+      actions$.pipe(ofActionDispatched(SetUserDetails)),
       actions$.pipe(ofActionDispatched(GetDomains))
     ).subscribe((_) => {
       expect(apiSpy.attemptPsswdLogin).toHaveBeenCalled();
@@ -391,12 +397,14 @@ describe('AppState', () => {
         name: 'Primegen 1',
         url: 'youtube-logo.png',
         selected: false,
+        isRefreshing: false,
       },
       {
         id: '64ba5fb1303c5fdb91cc4c5e',
         name: 'Linus 1',
         url: 'youtube-logo.png',
         selected: false,
+        isRefreshing: false,
       },
     ];
 

@@ -148,6 +148,20 @@ export class AppApi {
     return this.http.post(registerUserUrl, body);
   }
 
+  changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    const changePasswordUrl = this.profilesBaseUrl + 'profiles/change_password';
+    const body = {
+      id: userId,
+      oldpassword: oldPassword,
+      newpassword: newPassword,
+    };
+    return this.http.post(changePasswordUrl, body, { withCredentials: true });
+  }
+
   attemptPsswdLogin(username: string, password: string): Observable<any> {
     const attemptPsswdLoginUrl = this.profilesBaseUrl + 'profiles/login_user';
     const body = {
@@ -159,26 +173,6 @@ export class AppApi {
       withCredentials: true,
     });
   }
-
-  /* export interface ProfileDetails {
-  userId: number;
-  username: string;
-  profileIconUrl: string;
-} */
-
-/* 
-  @Action(SetProfileDetails)
-  setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
-    this.appApi.setProfileDetails().subscribe((res: any) => {
-      if (res.status == 'SUCCESS') {
-        
-        ctx.patchState({
-          profileDetails: res.profileDetails,
-        });
-        return true;
-      } else return false;
-    });
-  } */
 
   getProfile(profileID: number): Observable<any> {
     const getProfileUrl = this.profilesBaseUrl + 'profiles/get_profile';
@@ -203,22 +197,15 @@ export class AppApi {
     });
   }
 
-  /* setProfileDetails(): Observable<any> {
-    const setProfileDetailsUrl =
-      this.profilesBaseUrl + 'profiles/get_profile';
-    const profile= this.http.post(setProfileDetailsUrl, {}, { withCredentials: true });
-    if(profile.status)
-  } */
-    
-    
-
-  /* setProfileID(profileID: number): Observable<any> {
-
-    const setProfileIDUrl = this.profilesBaseUrl + 'profiles/set_profile_id';
+  changeMode(profileID: number): Observable<any> {
+    const changeModeUrl = this.profilesBaseUrl + 'profiles/swap_mode';
     const body = {
       id: profileID,
     };
+    // send with credentials enabled
+    return this.http.post(changeModeUrl, body, {
+      withCredentials: true,
+    });
+  }
 
-    return this.http.post(setProfileIDUrl, body, { withCredentials: true });
-  } */
 }

@@ -12,7 +12,7 @@ export class LoadUserDomains {
   static readonly type = '[App] Get Profile ID';
 } */
 
-export class SetProfileDetails {
+export class SetUserDetails {
   static readonly type = '[App] Set Profile Details';
   constructor(public profileId: number) {}
 }
@@ -99,7 +99,22 @@ export class RegisterUser {
   ) {}
 }
 
+export class ChangePassword {
+  static readonly type = '[Auth] Change Password';
+  constructor(public oldPassword: string, public newPassword: string) {}
+}
+
+export class ChangeMode {
+  static readonly type = '[App] Change Mode';
+  constructor() {}
+}
+
 export class ChooseStatistic {
   static readonly type = '[App] Choose Statistic';
   constructor(public statisticIndex: number) {}
+}
+
+export class SetSourceIsLoading {
+  static readonly type = '[Source] Set Loading';
+  constructor(public isLoading: boolean) {}
 }

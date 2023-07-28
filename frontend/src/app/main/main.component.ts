@@ -12,7 +12,8 @@ import {
 import { AppState, DisplayDomain } from '../app.state';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-@Component({
+/* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
+ */@Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.sass'],
@@ -44,6 +45,8 @@ import { Observable } from 'rxjs';
 export class MainComponent {
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+
   sidebarCollapsed = true;
 
   constructor() {}

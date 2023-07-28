@@ -54,6 +54,7 @@ describe('SourceSelectorComponent', () => {
 			name: 'test',
 			url: 'test',
 			selected: true,
+			isRefreshing: false,
 		};
 
 		component.selectSource(dummyDisplaySource);

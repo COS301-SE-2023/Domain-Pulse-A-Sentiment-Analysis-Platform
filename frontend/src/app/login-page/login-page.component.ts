@@ -8,12 +8,26 @@ import { AttempPsswdLogin } from '../app.actions';
   styleUrls: ['./login-page.component.sass'],
 })
 export class LoginPageComponent {
+  isSpinning = false;
   username = '';
   password = '';
 
   constructor(private store: Store) {}
 
   login() {
-    this.store.dispatch(new AttempPsswdLogin(this.username, this.password));
+    this.isSpinning = true;
+  
+    this.store.dispatch(new AttempPsswdLogin(this.username, this.password))
+      .subscribe({
+        next: (res) => {
+          this.isSpinning = false;
+        },
+        error: (error) => {
+          this.isSpinning = false;
+        },
+        complete: () => {
+          this.isSpinning = false;
+        }
+      });
   }
 }

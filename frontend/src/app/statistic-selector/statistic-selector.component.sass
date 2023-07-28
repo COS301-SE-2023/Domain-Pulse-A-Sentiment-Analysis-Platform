@@ -4,10 +4,28 @@
     display: flex
     align-items: center
     background-color: var(--main-div)
-    border-radius: 25px
-    height: 12%
-    padding: 0.3rem 1.3rem
+    border-radius: 25px    
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+    overflow-x: scroll
+    border-right: solid transparent 1rem
+    border-left: solid transparent 1rem
+    border-top: solid transparent 0.5rem
+    border-bottom: solid transparent 0.5rem
+
+    &::-webkit-scrollbar
+        height: 6px
+        width: 0
+
+    &::-webkit-scrollbar-track
+        background-color: transparent
+
+    &::-webkit-scrollbar-thumb
+        background-color: var(--grey-subtle)
+        border-radius: 3px
+
+    &::-webkit-scrollbar-thumb:hover
+        background-color: var(--grey-item)
+    
 
 .statistic-item
     height: 100%
@@ -30,7 +48,6 @@
 .statistic-category-selected
     background-color: var(--highlight)
     border-radius: 20px
-    padding: 0.5rem 1rem
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05)
 
 .icon-div
@@ -39,6 +56,7 @@
 .item-stats
     align-self: center
     gap: 0.2rem
+    text-wrap: nowrap
 
     :nth-child(1)
         font-size: 15pt
@@ -62,15 +80,34 @@
         height: 90%
 
     .statistic-category-selected
-        padding: 0.5rem 0.5rem
+        
 
     .icon-div
         width: 38px
 
     .item-stats
         gap: 0.2rem
+        text-wrap: nowrap
 
         :nth-child(1)
             font-size: 12pt
         :nth-child(2)
             font-size: 15pt
+
+.loading-container 
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  height: 100%
+
+.loading-spinner 
+  height: 100%
+
+.scrollable-content 
+  
+
+
+  
+
+

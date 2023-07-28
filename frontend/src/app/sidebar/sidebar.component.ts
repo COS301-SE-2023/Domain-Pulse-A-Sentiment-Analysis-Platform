@@ -7,13 +7,17 @@ import {
   transition,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
-import { AppState, DisplayDomain, ProfileDetails } from '../app.state';
+import { AppState, DisplayDomain, ProfileDetails, UserDetails } from '../app.state';
 import { Observable } from 'rxjs';
 import {
   AddNewDomain,
   DeleteDomain,
   EditDomain,
   SetDomain,
+  SetUserDetails,
+  SetSourceIsLoading,
+  ChangePassword,
+  ChangeMode,
 } from '../app.actions';
 
 @Component({
@@ -59,7 +63,7 @@ import {
     ]),
   ],
 })
-export class SidebarComponent {
+export class SidebarComponent{
 
   @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
 
@@ -68,8 +72,10 @@ export class SidebarComponent {
   }
 
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
-  @Select(AppState.profileDetails)
-  profileDetails$!: Observable<ProfileDetails | null>;
+  @Select(AppState.userDetails)
+  userDetails$!: Observable<UserDetails | null>;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+
   smallLogoState = 'in';
   showSmallLogo = true;
   fullLogoState = 'out';
@@ -132,13 +138,17 @@ export class SidebarComponent {
   newDomainImageName = '';
   newDomainDescription = '';
 
+  oldPassword=''
+  newPassword=''
+
   showAddDomainModal = false;
   showProfileModal = false;
   showEditDomainModal = false;
   showProfileEditModal = false;
+  showChangePasswordModal = false;
 
   constructor(private store: Store) {}
-
+  
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
       // this.windows[0].scrolling = false;
@@ -176,6 +186,16 @@ export class SidebarComponent {
     } else {
       // this.windows[0].scrolling = true;
       this.showProfileEditModal = false;
+    }
+  }
+
+  toggleChangePasswordModal(): void {
+    if (!this.showChangePasswordModal) {
+      // this.windows[0].scrolling = false;
+      this.showChangePasswordModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showChangePasswordModal = false;
     }
   }
 
@@ -219,23 +239,21 @@ export class SidebarComponent {
   }
 
   selectDomain(domain: DisplayDomain) {
+    this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new SetDomain(domain));
   }
 
-  theme = 0; //0 = light, 1 = dark
 
   toggleTheme() {
-    console.log('toggle theme');
-    if (this.theme == 0) {
-      this.theme = 1;
-      document.body.classList.toggle('light');
-      document.body.classList.toggle('dark');
-    } else {
-      this.theme = 0;
-      //document.body.style.setProperty('--background', '#e8ecfc');
-      document.body.classList.toggle('light');
-      document.body.classList.toggle('dark');
-    }
+    this.store.dispatch(new ChangeMode())
+    document.body.classList.toggle('light');
+    document.body.classList.toggle('dark');
+    /* if(document.body.classList.contains('light')){
+      localStorage.setItem('theme', 'dark');
+    }else{
+      localStorage.setItem('theme', 'light');
+    } */
+
   }
 
   imageSelected: boolean = false;
@@ -249,5 +267,12 @@ export class SidebarComponent {
   uploadImage() {
     // Handle image upload logic here
     // You can access the selected image using this.selectedImage
+  }
+
+  changePassword(){
+    this.store.dispatch(new ChangePassword(this.oldPassword, this.newPassword))
+    this.oldPassword=''
+    this.newPassword=''
+    this.toggleChangePasswordModal()
   }
 }
