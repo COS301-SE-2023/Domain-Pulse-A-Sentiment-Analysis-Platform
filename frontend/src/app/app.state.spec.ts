@@ -11,6 +11,7 @@ import {
   GetSourceDashBoardInfo,
   RefreshSourceData,
   RegisterUser,
+  SetDomain,
   SetProfileDetails,
   SetSource,
 } from './app.actions';
@@ -74,7 +75,43 @@ describe('AppState', () => {
     // check that the userid in local storage is set if the user is indeed authenticated
   });
 
-  it('should select the correct source', () => {
+  it('should select the correct domain on "SetDomain" event', () => {
+    const mockDomains: DisplayDomain[] = [
+      {
+        id: 1,
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: 'test',
+        sourceIds: ['1'],
+        sources: [],
+      },
+      {
+        id: 2,
+        name: 'test2',
+        description: 'test2',
+        selected: false,
+        imageUrl: 'test2',
+        sourceIds: ['4', '5'],
+        sources: [],
+      },
+    ];
+    store.reset({ app: { domains: mockDomains, selectedDomain: mockDomains[0] } });
+
+    store.dispatch(new SetDomain(mockDomains[1]));
+
+    const actualSelectedDomain = store.selectSnapshot(AppState.selectedDomain);
+    expect(actualSelectedDomain).toEqual(mockDomains[1]);
+    const actualDomains = store.selectSnapshot(AppState.domains);
+    if (!actualDomains) {
+      fail();
+      return;
+    }
+    expect(actualDomains[0].selected).toEqual(false);
+    expect(actualDomains[1].selected).toEqual(true);
+  });
+
+  it('should select the correct source on "SetSource" event', () => {
     const mockSources: DisplaySource[] = [
       {
         id: '1',
