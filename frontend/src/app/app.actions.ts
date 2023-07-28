@@ -42,7 +42,7 @@ export class AddNewDomain {
 export class EditDomain {
   static readonly type = '[App] Edit Domain';
   constructor(
-    public domainId: number,
+    public domainId: string,
     public domainName: string,
     public domainImagUrl: string,
     public description: string
@@ -51,7 +51,7 @@ export class EditDomain {
 
 export class DeleteDomain {
   static readonly type = '[App] Delete Domain';
-  constructor(public domainID: number) {}
+  constructor(public domainID: string) {}
 }
 
 export class GetSources {

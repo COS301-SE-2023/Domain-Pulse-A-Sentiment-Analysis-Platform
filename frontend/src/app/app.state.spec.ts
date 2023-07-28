@@ -1,7 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ToastrModule, ToastrService } from 'ngx-toastr'; // Add this import
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
-import { AppState, DisplayDomain, DisplaySource } from './app.state';
+import {
+  AppState,
+  DisplayDomain,
+  DisplaySource,
+  UserDetails,
+} from './app.state';
 import {
   AddNewSource,
   AttempPsswdLogin,
@@ -11,8 +16,9 @@ import {
   GetSourceDashBoardInfo,
   RefreshSourceData,
   RegisterUser,
-  SetUserDetails,
+  SetDomain,
   SetSource,
+  SetUserDetails,
 } from './app.actions';
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
@@ -29,6 +35,7 @@ describe('AppState', () => {
     apiSpy = jasmine.createSpyObj('AppApi', [
       'registerUser',
       'getDomainIDs',
+      'getDomainInfo',
       'checkAuthenticate',
       'attemptPsswdLogin',
       'getProfile',
@@ -64,7 +71,134 @@ describe('AppState', () => {
     // make sure overallSentiment and sampleData is set
   });
 
-  it('should select the correct source', () => {
+  it('Should Set the userID when when the user has been authenticated', () => {
+    // let apiSpy = jasmine.createSpyObj('AppApi', ['checkAuthenticate']);
+    // apiSpy.checkAuthenticate.and.callThrough();
+    // TestBed.inject(AppApi);
+
+    store.dispatch(new CheckAuthenticate());
+    // check that the userid in local storage is set if the user is indeed authenticated
+  });
+
+  it('GetDomains should fail on api "failure"', () => {
+    const mockUser: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'test@thugger.com',
+      profileIconUrl: 'test',
+    };
+    store.reset({ app: { userDetails: mockUser } });
+    apiSpy.getDomainIDs.and.returnValue(of({ status: 'FAILURE' }));
+    spyOn(toastrSpy, 'error').and.callThrough();
+
+    store.dispatch(new GetDomains());
+
+    expect(toastrSpy.error).toHaveBeenCalled();
+  });
+
+  it('GetDomains should fail on api "success"', () => {
+    const mockProfile: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'test@thugger.com',
+      profileIconUrl: 'test',
+    };
+    store.reset({ app: { userDetails: mockProfile } });
+    apiSpy.getDomainIDs.and.returnValue(
+      of({ status: 'SUCCESS', domainIDs: ['dskjafl', 'sdjfkl'] })
+    );
+    apiSpy.getDomainInfo.and.callFake((domainID: string) => {
+      if (domainID === 'dskjafl') {
+        return of({
+          status: 'SUCCESS',
+          domain: {
+            _id: '1',
+            name: 'test',
+            description: 'test',
+            icon: 'test',
+            sources: [],
+          },
+        });
+      } else {
+        return of({
+          status: 'SUCCESS',
+          domain: {
+            _id: '2',
+            name: 'test2',
+            description: 'test2',
+            icon: 'test2',
+            sources: [],
+          },
+        });
+      }
+    });
+
+    store.dispatch(new GetDomains());
+
+    const expectedDomains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: '../assets/test',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'test2',
+        description: 'test2',
+        selected: false,
+        imageUrl: '../assets/test2',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+
+    const actualDomains = store.selectSnapshot(AppState.domains);
+    expect(actualDomains).toEqual(expectedDomains);
+  });
+
+  it('should select the correct domain on "SetDomain" event', () => {
+    const mockDomains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: 'test',
+        sourceIds: ['1'],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'test2',
+        description: 'test2',
+        selected: false,
+        imageUrl: 'test2',
+        sourceIds: ['4', '5'],
+        sources: [],
+      },
+    ];
+    store.reset({
+      app: { domains: mockDomains, selectedDomain: mockDomains[0] },
+    });
+
+    store.dispatch(new SetDomain(mockDomains[1]));
+
+    const actualSelectedDomain = store.selectSnapshot(AppState.selectedDomain);
+    expect(actualSelectedDomain).toEqual(mockDomains[1]);
+    const actualDomains = store.selectSnapshot(AppState.domains);
+    if (!actualDomains) {
+      fail();
+      return;
+    }
+    expect(actualDomains[0].selected).toEqual(false);
+    expect(actualDomains[1].selected).toEqual(true);
+  });
+
+  it('should select the correct source on "SetSource" event', () => {
     const mockSources: DisplaySource[] = [
       {
         id: '1',
@@ -85,31 +219,24 @@ describe('AppState', () => {
       app: { sources: mockSources, selectedSource: mockSources[0] },
     });
 
-    // store.dispatch(new SetSource(mockSources[1]));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'SUCCESS' }));
 
-    // const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
-    // expect(actualSelectedSource).toEqual(mockSources[1]);
-    // const actualSources = store.selectSnapshot(AppState.sources);
-    // if (!actualSources) {
-    //   fail();
-    //   return;
-    // }
-    // expect(actualSources[0].selected).toEqual(false);
-    // expect(actualSources[1].selected).toEqual(true);
-  });
+    store.dispatch(new SetSource(mockSources[1]));
 
-  it('Should Set the userID when when the user has been authenticated', () => {
-    // let apiSpy = jasmine.createSpyObj('AppApi', ['checkAuthenticate']);
-    // apiSpy.checkAuthenticate.and.callThrough();
-    // TestBed.inject(AppApi);
-
-    store.dispatch(new CheckAuthenticate());
-    // check that the userid in local storage is set if the user is indeed authenticated
+    const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
+    expect(actualSelectedSource).toEqual(mockSources[1]);
+    const actualSources = store.selectSnapshot(AppState.sources);
+    if (!actualSources) {
+      fail();
+      return;
+    }
+    expect(actualSources[0].selected).toEqual(false);
+    expect(actualSources[1].selected).toEqual(true);
   });
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
     const mockDomain: DisplayDomain = {
-      id: 1,
+      id: '1',
       name: 'test',
       description: 'test',
       selected: true,
@@ -240,7 +367,62 @@ describe('AppState', () => {
     expect(actual).toEqual(1);
   });
 
-  it('should correctlyi format the response from the server to a DisplaySOurce', () => {
-    expect(true).toBe(true);
+  it('should correctly format the response from the server to a DisplaySOurce', () => {
+    let mockResponseSources: any[] = [
+      {
+        source_id: '64b940ec9bbccdb7731b81f9',
+        source_name: 'Primegen 1',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689878247.0,
+        params: {
+          source_type: 'youtube',
+          video_id: 'WjKQQAFwrR4',
+        },
+      },
+      {
+        source_id: '64ba5fb1303c5fdb91cc4c5e',
+        source_name: 'Linus 1',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689936239.0,
+        params: {
+          source_type: 'youtube',
+          video_id: 'RGZFb2PlPlo',
+        },
+      },
+    ];
+
+    let expected: DisplaySource[] = [
+      {
+        id: '64b940ec9bbccdb7731b81f9',
+        name: 'Primegen 1',
+        url: 'youtube-logo.png',
+        selected: false,
+        isRefreshing: false,
+      },
+      {
+        id: '64ba5fb1303c5fdb91cc4c5e',
+        name: 'Linus 1',
+        url: 'youtube-logo.png',
+        selected: false,
+        isRefreshing: false,
+      },
+    ];
+
+    let actual = AppState.formatResponseSources(mockResponseSources);
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should choose the correct source icon for the platform', () => {
+    expect(AppState.platformToIcon('facebook')).toEqual('facebook-logo.png');
+    expect(AppState.platformToIcon('instagram')).toEqual('instagram-Icon.png');
+    expect(AppState.platformToIcon('reddit')).toEqual('reddit-logo.png');
+    expect(AppState.platformToIcon('tripadvisor')).toEqual(
+      'tripadvisor-logo.png'
+    );
+    expect(AppState.platformToIcon('youtube')).toEqual('youtube-logo.png');
+    expect(AppState.platformToIcon('googlereviews')).toEqual(
+      'google-reviews.png'
+    );
   });
 });

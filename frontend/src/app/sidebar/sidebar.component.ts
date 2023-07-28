@@ -234,7 +234,7 @@ export class SidebarComponent{
     this.toggleEditDomainModal();
   }
 
-  deleteDomain(domainToDeleteId: number) {
+  deleteDomain(domainToDeleteId: string) {
     this.store.dispatch(new DeleteDomain(domainToDeleteId));
   }
 

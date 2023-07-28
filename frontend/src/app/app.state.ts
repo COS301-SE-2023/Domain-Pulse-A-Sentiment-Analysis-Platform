@@ -33,7 +33,7 @@ export interface Source {
   sourceImageUrl: string;
 }
 export interface DisplayDomain {
-  id: number;
+  id: string;
   name: string;
   description: string;
   selected: boolean;
@@ -112,7 +112,6 @@ interface AppStateModel {
   userDetails?: UserDetails;
   sourceIsLoading: boolean;
   profileDetails?: ProfileDetails;
-  
 }
 
 @State<AppStateModel>({
@@ -229,11 +228,11 @@ export class AppState {
         return;
       }
 
-      let domainIDs: number[] = res.domainIDs;
+      let domainIDs: string[] = res.domainIDs;
 
       let firstDomain = true;
 
-      domainIDs.map((domainID: number) => {
+      domainIDs.map((domainID: string) => {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
             this.ngZone.run(() => {
@@ -262,7 +261,7 @@ export class AppState {
             description: domainRes.description,
             imageUrl: '../assets/' + domainRes.icon,
             sourceIds: domainsIDs,
-            sources: this.formatResponseSources(domainRes.sources),
+            sources: AppState.formatResponseSources(domainRes.sources),
             selected: false,
           };
 
@@ -332,7 +331,6 @@ export class AppState {
 
   @Action(SetSource)
   setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
-    this.store.dispatch(new GetSourceDashBoardInfo());
     let sources = ctx.getState().sources;
     if (!sources) return;
 
@@ -340,6 +338,8 @@ export class AppState {
       souce.selected = false;
     }
     state.source.selected = true;
+
+    this.store.dispatch(new GetSourceDashBoardInfo());
 
     ctx.patchState({
       sources: sources,
@@ -351,27 +351,7 @@ export class AppState {
   @Action(AddNewSource)
   addNewSource(ctx: StateContext<AppStateModel>, state: AddNewSource) {
     // replace this with a function
-    let source_image_name = '';
-    switch (state.platform) {
-      case 'facebook':
-        source_image_name = 'facebook-logo.png';
-        break;
-      case 'instagram':
-        source_image_name = 'instagram-Icon.png';
-        break;
-      case 'reddit':
-        source_image_name = 'reddit-logo.png';
-        break;
-      case 'tripadvisor':
-        source_image_name = 'tripadvisor-logo.png';
-        break;
-      case 'youtube':
-        source_image_name = 'youtube-logo.png';
-        break;
-      case 'googlereviews':
-        source_image_name = 'google-reviews.png';
-        break;
-    }
+    let source_image_name = AppState.platformToIcon(state.platform);
 
     let selectedDomain = ctx.getState().selectedDomain;
     if (!selectedDomain) return;
@@ -792,7 +772,7 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
 
   
 
-  private formatResponseSources(responseSources: any[]): DisplaySource[] {
+  static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
     for (let responseSource of responseSources) {
       let displaySource: DisplaySource = {
@@ -805,5 +785,30 @@ attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
       displaySources.push(displaySource);
     }
     return displaySources;
+  }
+
+  static platformToIcon(platform: string): string {
+    let source_image_name = '';
+    switch (platform) {
+      case 'facebook':
+        source_image_name = 'facebook-logo.png';
+        break;
+      case 'instagram':
+        source_image_name = 'instagram-Icon.png';
+        break;
+      case 'reddit':
+        source_image_name = 'reddit-logo.png';
+        break;
+      case 'tripadvisor':
+        source_image_name = 'tripadvisor-logo.png';
+        break;
+      case 'youtube':
+        source_image_name = 'youtube-logo.png';
+        break;
+      case 'googlereviews':
+        source_image_name = 'google-reviews.png';
+        break;
+    }
+    return source_image_name;
   }
 }

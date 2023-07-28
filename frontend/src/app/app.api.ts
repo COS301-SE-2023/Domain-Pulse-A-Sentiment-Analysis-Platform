@@ -24,7 +24,7 @@ export class AppApi {
     );
   }
 
-  getDomainInfo(domainID: number): Observable<any> {
+  getDomainInfo(domainID: string): Observable<any> {
     const getDomainInfoUrl = this.domainBaseUrl + 'domains/get_domain';
     return this.http.post(
       getDomainInfoUrl,
@@ -60,7 +60,7 @@ export class AppApi {
     return this.http.post(editDomainUrl, body, { withCredentials: true });
   }
 
-  removeDomain(domainID: number): Observable<any> {
+  removeDomain(domainID: string): Observable<any> {
     const removeDomainUrl = this.domainBaseUrl + 'domains/delete_domain';
     const body = {
       id: domainID,
@@ -83,7 +83,7 @@ export class AppApi {
   }
 
   addSource(
-    domainID: number,
+    domainID: string,
     sourceName: string,
     sourceImageUrl: string,
     params: any
@@ -174,26 +174,6 @@ export class AppApi {
     });
   }
 
-  /* export interface UserDetails {
-  userId: number;
-  username: string;
-  profileIconUrl: string;
-} */
-
-/* 
-  @Action(SetUserDetails)
-  setUserDetails(ctx: StateContext<AppStateModel>, state: SetUserDetails) {
-    this.appApi.setUserDetails().subscribe((res: any) => {
-      if (res.status == 'SUCCESS') {
-        
-        ctx.patchState({
-          userDetails: res.userDetails,
-        });
-        return true;
-      } else return false;
-    });
-  } */
-
   getProfile(profileID: number): Observable<any> {
     const getProfileUrl = this.profilesBaseUrl + 'profiles/get_profile';
     const body = {
@@ -227,26 +207,5 @@ export class AppApi {
       withCredentials: true,
     });
   }
-  
 
-  
-
-  /* setUserDetails(): Observable<any> {
-    const setUserDetailsUrl =
-      this.profilesBaseUrl + 'profiles/get_profile';
-    const profile= this.http.post(setUserDetailsUrl, {}, { withCredentials: true });
-    if(profile.status)
-  } */
-    
-    
-
-  /* setProfileID(profileID: number): Observable<any> {
-
-    const setProfileIDUrl = this.profilesBaseUrl + 'profiles/set_profile_id';
-    const body = {
-      id: profileID,
-    };
-
-    return this.http.post(setProfileIDUrl, body, { withCredentials: true });
-  } */
 }
