@@ -29,6 +29,7 @@ describe('AppState', () => {
     apiSpy = jasmine.createSpyObj('AppApi', [
       'registerUser',
       'getDomainIDs',
+      'getDomainInfo',
       'checkAuthenticate',
       'attemptPsswdLogin',
       'getProfile',
@@ -233,7 +234,47 @@ describe('AppState', () => {
     expect(actual).toEqual(1);
   });
 
-  it('should correctlyi format the response from the server to a DisplaySOurce', () => {
-    expect(true).toBe(true);
+  it('should correctly format the response from the server to a DisplaySOurce', () => {
+    let mockResponseSources: any[] = [
+      {
+        source_id: '64b940ec9bbccdb7731b81f9',
+        source_name: 'Primegen 1',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689878247.0,
+        params: {
+          source_type: 'youtube',
+          video_id: 'WjKQQAFwrR4',
+        },
+      },
+      {
+        source_id: '64ba5fb1303c5fdb91cc4c5e',
+        source_name: 'Linus 1',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689936239.0,
+        params: {
+          source_type: 'youtube',
+          video_id: 'RGZFb2PlPlo',
+        },
+      },
+    ];
+    
+    let expected: DisplaySource[] = [
+      {
+        id: '64b940ec9bbccdb7731b81f9',
+        name: 'Primegen 1',
+        url: 'youtube-logo.png',
+        selected: false,
+      },
+      {
+        id: '64ba5fb1303c5fdb91cc4c5e',
+        name: 'Linus 1',
+        url: 'youtube-logo.png',
+        selected: false,
+      },
+    ]
+
+    let actual = AppState.formatResponseSources(mockResponseSources);
+
+    expect(actual).toEqual(expected);
   });
 });

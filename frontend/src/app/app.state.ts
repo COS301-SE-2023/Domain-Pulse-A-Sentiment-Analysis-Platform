@@ -224,7 +224,7 @@ export class AppState {
             description: domainRes.description,
             imageUrl: '../assets/' + domainRes.icon,
             sourceIds: domainsIDs,
-            sources: this.formatResponseSources(domainRes.sources),
+            sources: AppState.formatResponseSources(domainRes.sources),
             selected: false,
           };
 
@@ -601,7 +601,7 @@ export class AppState {
     });
   }
 
-  private formatResponseSources(responseSources: any[]): DisplaySource[] {
+    static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
     for (let responseSource of responseSources) {
       let displaySource: DisplaySource = {
