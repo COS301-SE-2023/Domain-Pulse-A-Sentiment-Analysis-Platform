@@ -48,11 +48,12 @@ def summarize_emotions(emotions):
     emotion_list = emotions[0]
     for emotion in emotion_list:
         name = emotion["label"]
-        score = emotion["score"]
-        if len(top_three) < 3:
-            top_three.append({"label": name, "score": score})
-        elif have_better(top_three, score):
-            top_three = replace_worst(top_three, name, score)
+        if name.lower() != "neutral":
+            score = emotion["score"]
+            if len(top_three) < 3:
+                top_three.append({"label": name, "score": score})
+            elif have_better(top_three, score):
+                top_three = replace_worst(top_three, name, score)
 
     totalScore = 0
     for emotion in top_three:
