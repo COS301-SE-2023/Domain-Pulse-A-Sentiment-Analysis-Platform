@@ -272,12 +272,21 @@ export class SidebarComponent{
     this.selectedFile = inputElement.files?.item(0) as File | null;
   }
 
+
+  uploadSpinner: boolean = false;
+
   async uploadImage() {
+    this.uploadSpinner = true;
     if (!this.selectedFile) {
+      this.uploadSpinner = false;
       return;
     }
     const userDetails = this.store.selectSnapshot(AppState.userDetails);
-    if(!userDetails) return;
+    if(!userDetails){
+      this.uploadSpinner = false;
+      return;
+    }
+    
     /* const fileName = this.selectedFile.name; */
     const filename = Math.floor(Math.random() * 100000000).toString().padStart(8, '0'); ;
     this.blobStorageService.uploadImage(environment.SAS, this.selectedFile, filename, () => {
@@ -288,14 +297,12 @@ export class SidebarComponent{
       .dispatch(new ChangeProfileIcon('https://domainpulseblob.blob.core.windows.net/blob/' + filename ))
       .subscribe({
         next: (res) => {
-          if(!this.selectedFile){
-            return;
-          }
+          this.uploadSpinner = false;
           
         },
         error: (error) => {
           
-          /* this.isSpinning = false; */
+          this.uploadSpinner = false;
         },
       });
     

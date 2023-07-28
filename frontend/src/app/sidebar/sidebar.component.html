@@ -338,7 +338,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-domain-btn clickable-item" (click)="uploadImage()">Confirm</button>
+        <button class="new-domain-btn clickable-item" (click)="uploadImage()">Confirm<div [ngClass]="{ 'button-spinner': uploadSpinner }"></div></button>
       </div>
     </div>
     <div class="picture"></div>
