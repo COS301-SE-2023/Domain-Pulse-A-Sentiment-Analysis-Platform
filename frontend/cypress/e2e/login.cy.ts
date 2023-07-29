@@ -30,17 +30,14 @@ describe('Logging In - Basic Auth', function () {
     // the page should be opened and the user should be logged in
   });
 
-  const inDashboard = () => {
-    cy.location('href').should('eq', '/');
-  };
-
   it('redirects to /login', () => {
+    window.localStorage.removeItem('JWT');
     cy.visit('/');
     cy.location('href').should('match', /login$/);
   });
 
   it('be in dashboard', () => {
     cy.visit('/');
-    inDashboard();
+    cy.location('pathname').should('eq', '/');
   });
 });
