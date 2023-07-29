@@ -357,7 +357,7 @@ export class GraphSelectorComponent implements OnInit {
 
     this.chart = new Chart(ctx, currentGraph);
     if (this.chart && this.chart.config.type === 'doughnut') {
-      const offset = 50;
+      const offset = 30;
       this.myChart.nativeElement.style.transform = `translateY(${offset}px)`;
     } else {
       this.myChart.nativeElement.style.transform = `translateY(0px)`;

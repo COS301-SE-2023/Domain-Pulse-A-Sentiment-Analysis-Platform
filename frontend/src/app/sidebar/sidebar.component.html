@@ -46,7 +46,12 @@
       />
       <!-- <img [src]="domain.imageUrl" alt="Source logo" height="44px" /> -->
     </div>
-    <p *ngIf="_expanded">{{ domain.name }}</p>
+    <p
+      style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis"
+      *ngIf="_expanded"
+    >
+      {{ domain.name }}
+    </p>
 
     <div
       class="domain-name"
