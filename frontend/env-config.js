@@ -17,6 +17,7 @@ export const environment = {
     PROFILES_PORT: ${process.env.DJANGO_PROFILES_PORT},
     SOURCECONNECTOR_PORT: ${process.env.DJANGO_SOURCECONNECTOR_PORT},
     WAREHOUSE_PORT: ${process.env.DJANGO_WAREHOUSE_PORT},
+    SAS: '${process.env.AZURE_SAS}',
 };
 `;
 
