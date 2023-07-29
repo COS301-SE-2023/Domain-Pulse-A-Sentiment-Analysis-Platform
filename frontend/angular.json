@@ -86,8 +86,7 @@
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
-          "options": 
-          { 
+          "options": {
             "karmaConfig": "karma.conf.js",
             "polyfills": [
               "zone.js",
@@ -109,12 +108,46 @@
             },
             "scripts": []
           }
+        },
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "domain-pulse:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "domain-pulse:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "domain-pulse:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "domain-pulse:serve:production"
+            }
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@cypress/schematic",
+      "@schematics/angular"
+    ]
   }
-
 }
