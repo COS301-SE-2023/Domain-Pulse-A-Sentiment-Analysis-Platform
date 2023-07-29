@@ -125,6 +125,11 @@ export class SidebarComponent {
   newDomainImageName = '';
   newDomainDescription = '';
 
+  editDomainName = '';
+  editDomainImageName = '';
+  editDomainDescription = '';
+
+
   oldPassword = '';
   newPassword = '';
 
@@ -140,6 +145,7 @@ export class SidebarComponent {
 
   private selectedFile: File | null = null;
   private selectedFileDomain: File | null = null;
+  private selectedFileDomainEdit: File | null = null;
 
   constructor(
     private store: Store,
@@ -159,6 +165,12 @@ export class SidebarComponent {
   toggleEditDomainModal(): void {
     if (!this.showEditDomainModal) {
       // this.windows[0].scrolling = false;
+      const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
+      if (!selectedDomain) return;
+      this.editDomainName = selectedDomain.name;
+      this.editDomainImageName = selectedDomain.imageUrl;
+      this.editDomainDescription = selectedDomain.description;
+      this.selectIconEdit(selectedDomain.imageUrl);
       this.showEditDomainModal = true;
     } else {
       // this.windows[0].scrolling = true;
@@ -255,6 +267,11 @@ export class SidebarComponent {
     this.newDomainImageName = icon;
   }
 
+  selectIconEdit(icon: string) {
+    console.log("domain icon:" + icon)
+    this.editDomainImageName = icon;
+  }
+
   editDomain() {
     const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
     if (!selectedDomain) return;
@@ -263,14 +280,14 @@ export class SidebarComponent {
     this.store.dispatch(
       new EditDomain(
         selectedDomainId,
-        this.newDomainName,
-        this.newDomainImageName,
-        this.newDomainDescription
+        this.editDomainName,
+        this.editDomainImageName,
+        this.editDomainDescription
       )
     );
-    this.newDomainName = '';
-    this.newDomainImageName = '';
-    this.newDomainDescription = '';
+    this.editDomainName = '';
+    this.editDomainImageName = '';
+    this.editDomainDescription = '';
 
     this.toggleEditDomainModal();
   }
@@ -395,6 +412,49 @@ export class SidebarComponent {
     this.blobStorageService.uploadImage(
       environment.SAS,
       this.selectedFileDomain,
+      filename,
+      () => {
+        console.log('Image uploaded successfully.');
+      }
+    );
+
+    return filename;
+  }
+
+  imagePreviewDomainEdit: string | ArrayBuffer | null = null;
+
+  onImageSelectedDomainEdit(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.selectedFileDomainEdit = inputElement.files?.item(0) as File | null;
+
+    if (this.selectedFileDomainEdit) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreviewDomainEdit = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFileDomainEdit);
+    } else {
+      this.imagePreviewDomainEdit = null;
+    }
+  }
+
+  editDomainSpinner: boolean = false;
+
+  uploadImageDomainEdit() {
+    
+    if (!this.selectedFileDomainEdit) {
+      this.editDomainSpinner = false;
+      this.store.dispatch(new ToastError('Please select an image'));
+      return;
+    }
+
+    
+    const filename = Math.floor(Math.random() * 100000000)
+      .toString()
+      .padStart(8, '0');
+    this.blobStorageService.uploadImage(
+      environment.SAS,
+      this.selectedFileDomainEdit,
       filename,
       () => {
         console.log('Image uploaded successfully.');
