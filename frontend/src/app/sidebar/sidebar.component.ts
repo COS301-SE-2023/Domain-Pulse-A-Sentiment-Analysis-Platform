@@ -136,6 +136,8 @@ export class SidebarComponent {
 
   password= '';
 
+  deleteDomainId = '';
+
   showAddDomainModal = false;
   showProfileModal = false;
   showEditDomainModal = false;
@@ -143,6 +145,7 @@ export class SidebarComponent {
   showChangePasswordModal = false;
   showDeleteAccountModal = false;
   showConfirmDeleteAccountModal = false;
+  showConfirmDeleteDomainModal = false;
 
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
   domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
@@ -159,17 +162,14 @@ export class SidebarComponent {
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
-      // this.windows[0].scrolling = false;
       this.showAddDomainModal = true;
     } else {
-      // this.windows[0].scrolling = true;
       this.showAddDomainModal = false;
     }
   }
 
   toggleEditDomainModal(): void {
     if (!this.showEditDomainModal) {
-      // this.windows[0].scrolling = false;
       const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
       if (!selectedDomain) return;
       this.editDomainName = selectedDomain.name;
@@ -178,61 +178,60 @@ export class SidebarComponent {
       this.selectIconEdit(selectedDomain.imageUrl);
       this.showEditDomainModal = true;
     } else {
-      // this.windows[0].scrolling = true;
       this.showEditDomainModal = false;
     }
   }
 
   toggleProfileModal(): void {
     if (!this.showProfileModal) {
-      // this.windows[0].scrolling = false;
       this.showProfileModal = true;
     } else {
-      // this.windows[0].scrolling = true;
       this.showProfileModal = false;
     }
   }
 
   toggleProfileEditModal(): void {
     if (!this.showProfileEditModal) {
-      // this.windows[0].scrolling = false;
       this.showProfileEditModal = true;
-      
     } else {
-      // this.windows[0].scrolling = true;
       this.showProfileEditModal = false;
     }
   }
 
   toggleChangePasswordModal(): void {
     if (!this.showChangePasswordModal) {
-      // this.windows[0].scrolling = false;
       this.showChangePasswordModal = true;
     } else {
-      // this.windows[0].scrolling = true;
       this.showChangePasswordModal = false;
     }
   }
 
   toggleDeleteAccountModal(): void {
     if (!this.showDeleteAccountModal) {
-      // this.windows[0].scrolling = false;
       this.showDeleteAccountModal = true;
     } else {
-      // this.windows[0].scrolling = true;
       this.showDeleteAccountModal = false;
+      this.toggleConfirmDeleteAccountModal();
     }
   }
 
   toggleConfirmDeleteAccountModal(): void {
     if (!this.showConfirmDeleteAccountModal) {
-      // this.windows[0].scrolling = false;
-      
       this.showConfirmDeleteAccountModal = true;
     } else {
-      // this.windows[0].scrolling = true;
-      this.toggleDeleteAccountModal();
       this.showConfirmDeleteAccountModal = false;
+    }
+  }
+
+  toggleConfirmDeleteDomainModal(id?: string): void {
+    if(id){
+      this.deleteDomainId = id;
+    }
+    if (!this.showConfirmDeleteDomainModal) {      
+      this.showConfirmDeleteDomainModal = true;
+    } else {
+      
+      this.showConfirmDeleteDomainModal = false;
     }
   }
 
@@ -329,8 +328,9 @@ export class SidebarComponent {
     this.toggleEditDomainModal();
   }
 
-  deleteDomain(domainToDeleteId: string) {
-    this.store.dispatch(new DeleteDomain(domainToDeleteId));
+  deleteDomain() {
+    this.store.dispatch(new DeleteDomain(this.deleteDomainId));
+    this.toggleConfirmDeleteDomainModal();
   }
 
   selectDomain(domain: DisplayDomain) {
