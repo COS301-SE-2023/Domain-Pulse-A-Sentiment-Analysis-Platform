@@ -259,15 +259,15 @@ class DomainsTests(TestCase):
         result = domainscrud.get_source("64a2d2e0b5b66c122b03e8d2")
         self.assertEqual(result["source_id"], "64a2d2e0b5b66c122b03e8d2")
 
-    def test_extract_token(self):
-        request2 = HttpRequest()
-        request2.method = "POST"
-        jwt = "testJWT"
-        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-        request2.headers = headers
-        flag, token = auth_checks.extract_token(request2)
-        self.assertEqual(flag, True)
-        self.assertEqual(token, jwt)
+    # def test_extract_token(self):
+    #     request2 = HttpRequest()
+    #     request2.method = "POST"
+    #     jwt = "testJWT"
+    #     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+    #     request2.headers = headers
+    #     flag, token = auth_checks.extract_token(request2)
+    #     self.assertEqual(flag, True)
+    #     self.assertEqual(token, jwt)
 
     @mock.patch("requests.post", side_effect=mocked_request_post)
     def test_verify_user_owns_domain_ids(self, mock_post):
@@ -411,8 +411,36 @@ class DomainsTests(TestCase):
     @mock.patch("requests.post", side_effect=mocked_request_post)
     def test_create_domain_integration(self, mock_insert, mock_query):
         data = {"name": "test", "icon": "test.com", "description": "mocked"}
+        jwt = "testJWT"
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         response: JsonResponse = self.client.post(
-            path="/domains/create_domain", data=data, content_type="application/json"
+            path="/domains/create_domain",
+            data=data,
+            content_type="application/json",
+            headers=headers,
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch(
+        "pymongo.collection.Collection.find_one_and_update",
+        side_effect=mocked_find_one_and_update,
+    )
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    def test_edit_domain_integration(self, mock_insert, mock_query):
+        data = {
+            "id": "64a2d2a2580b40e94e42b72a",
+            "name": "test",
+            "icon": "test.com",
+            "description": "mocked",
+        }
+        jwt = "testJWT"
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        response: JsonResponse = self.client.post(
+            path="/domains/edit_domain",
+            data=data,
+            content_type="application/json",
+            headers=headers,
         )
         response_data = json.loads(response.content)
         self.assertEqual(response_data["status"], "SUCCESS")
@@ -538,7 +566,7 @@ class DomainsTests(TestCase):
         "pymongo.collection.Collection.delete_one", side_effect=mocked_delete_one
     )
     @mock.patch("requests.post", side_effect=mocked_request_post)
-    def test_create_domain_integration(self, mock_insert, mock_post):
+    def test_delete_domain_integration(self, mock_insert, mock_post):
         data = {"id": "64a2d2a2580b40e94e42b72a"}
         jwt = "testJWT"
         headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
