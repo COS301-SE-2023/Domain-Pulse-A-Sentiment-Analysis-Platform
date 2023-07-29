@@ -121,29 +121,6 @@ export class SidebarComponent {
     }
   }
 
-  domains = [
-    {
-      name: 'apple',
-      imageUrl: '../assets/apple-1-logo-png-transparent.png',
-      selected: false,
-    },
-    {
-      name: 'Starbucks',
-      imageUrl: '../assets/starbucks-logo-69391AB0A9-seeklogo.com.png',
-      selected: true,
-    },
-    {
-      name: 'Mcdonalds',
-      imageUrl: '../assets/donalds-logo.png',
-      selected: false,
-    },
-    {
-      name: 'Formula 1',
-      imageUrl: '../assets/f1-logo.png',
-      selected: false,
-    },
-  ];
-
   newDomainName = '';
   newDomainImageName = '';
   newDomainDescription = '';
@@ -157,7 +134,12 @@ export class SidebarComponent {
   showProfileEditModal = false;
   showChangePasswordModal = false;
 
+  baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
+  domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
+
+
   private selectedFile: File | null = null;
+  private selectedFileDomain: File | null = null;
 
   constructor(
     private store: Store,
@@ -216,6 +198,19 @@ export class SidebarComponent {
   }
 
   addNewDomain(): void {
+    this.uploadSpinnerDomain = true;
+    if (!this.selectedFileDomain && !this.newDomainImageName) {
+      this.uploadSpinnerDomain = false;
+      this.store.dispatch(new ToastError('Please select a domain icon'));
+      return;
+    }
+
+    if(this.selectedFileDomain){
+      const filenameDomain = this.uploadImageDomain();
+      this.newDomainImageName = this.baseUrl + filenameDomain;
+      console.log("domain icon:" + this.newDomainImageName)
+    }
+
     this.store.dispatch(
       new AddNewDomain(
         this.newDomainName,
@@ -228,6 +223,11 @@ export class SidebarComponent {
     this.newDomainDescription = '';
 
     this.toggleDomainModal();
+  }
+
+  selectIcon(icon: string) {
+    console.log("domain icon:" + icon)
+    this.newDomainImageName = icon;
   }
 
   editDomain() {
@@ -270,7 +270,6 @@ export class SidebarComponent {
     } */
   }
 
-  imageSelected: boolean = false;
   imagePreview: string | ArrayBuffer | null = null;
 
   onImageSelected(event: Event) {
@@ -335,6 +334,49 @@ export class SidebarComponent {
           this.uploadSpinner = false;
         },
       });
+  }
+
+  imagePreviewDomain: string | ArrayBuffer | null = null;
+
+  onImageSelectedDomain(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.selectedFileDomain = inputElement.files?.item(0) as File | null;
+
+    if (this.selectedFileDomain) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreviewDomain = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFileDomain);
+    } else {
+      this.imagePreviewDomain = null;
+    }
+  }
+
+  uploadSpinnerDomain: boolean = false;
+
+  uploadImageDomain() {
+    
+    if (!this.selectedFileDomain) {
+      this.uploadSpinnerDomain = false;
+      this.store.dispatch(new ToastError('Please select an image'));
+      return;
+    }
+
+    
+    const filename = Math.floor(Math.random() * 100000000)
+      .toString()
+      .padStart(8, '0');
+    this.blobStorageService.uploadImage(
+      environment.SAS,
+      this.selectedFileDomain,
+      filename,
+      () => {
+        console.log('Image uploaded successfully.');
+      }
+    );
+
+    return filename;
   }
 
   changePassword() {

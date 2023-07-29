@@ -40,7 +40,7 @@
   >
     <div class="circle-wrapper">
       <img
-        [src]="domain.id == '0' ? '../assets/cat-1.png' : '../assets/cat-2.png'"
+        [src]="domain.imageUrl"
         alt="Source logo"
         height="44px"
       />
@@ -165,13 +165,73 @@
 
         <div class="flex-row" style="width: 80%">
           <p class="modal-step-tag">3</p>
+
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">Select domain icon:</p>
+            <div class="outer-flex-row sources-options">
+              <div
+                class="inner-flex-row"
+                style="overflow-x: auto; display: flex"
+              >
+                <div
+                  class="flex-column center"
+                  style="margin-right: 20px;
+                margin-left: 20px;
+                margin-top: 10px;
+                margin-bottom: 10px;"
+                >
+                  <div class="wrapper-domain">
+                    <div class="file-upload clickable-item" (click)="selectIcon('')">
+                      <input
+                        type="file"
+                        (change)="onImageSelectedDomain($event)"
+                        accept="image/*"
+                        style="height: 100%; width: 100%; border-radius: 50%"
+                      />
+                      <img
+                        *ngIf="imagePreviewDomain"
+                        [src]="imagePreviewDomain"
+                        alt="Preview"
+                        class="preview-image"
+                      />
+                      <img
+                        *ngIf="!imagePreviewDomain"
+                        src="../assets/icons/up-arrow.svg"
+                        class="profile-icon"
+                        style="width:1vw;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  *ngFor="let domain of domainNames"
+                  class="default-icon clickable-item"
+                  (click)="selectIcon(domain)"
+                >
+                  <div
+                    class="circle-wrapper-domain flex-row center"
+                    style="width: 100px; height: 100px"
+                  >
+                    <img
+                      [src]="domain"
+                      [ngClass]="{ selected: newDomainImageName === domain }"
+                      alt="domain"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">3</p>
           <div class="flex-column" style="width: 100%">
             <p class="step-heading">Select Domain image:</p>
             <select class="default-input" [(ngModel)]="newDomainImageName">
               <option value="f1-logo.png">Formula 1</option>
             </select>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="bottom-div">

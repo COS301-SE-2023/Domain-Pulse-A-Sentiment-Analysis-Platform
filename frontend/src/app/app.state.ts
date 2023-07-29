@@ -279,7 +279,7 @@ export class AppState {
             id: domainRes._id,
             name: domainRes.name,
             description: domainRes.description,
-            imageUrl: '../assets/' + domainRes.icon,
+            imageUrl: domainRes.icon,
             sourceIds: domainsIDs,
             sources: AppState.formatResponseSources(domainRes.sources),
             selected: false,
