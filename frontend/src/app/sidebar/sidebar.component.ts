@@ -7,7 +7,13 @@ import {
   transition,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
-import { AppState, DisplayDomain, ProfileDetails, UserDetails } from '../app.state';
+import {
+  AppState,
+  DisplayDomain,
+  ProfileDetails,
+  UserDetails,
+} from '../app.state';
+import { AzureBlobStorageService } from '../azure-blob-storage.service';
 import { Observable } from 'rxjs';
 import {
   AddNewDomain,
@@ -18,7 +24,10 @@ import {
   SetSourceIsLoading,
   ChangePassword,
   ChangeMode,
+  ChangeProfileIcon,
+  ToastError,
 } from '../app.actions';
+import { environment } from '../../environment';
 
 @Component({
   selector: 'dp-sidebar',
@@ -63,8 +72,7 @@ import {
     ]),
   ],
 })
-export class SidebarComponent{
-
+export class SidebarComponent {
   @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
 
   clickSidebar() {
@@ -74,6 +82,8 @@ export class SidebarComponent{
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
   @Select(AppState.userDetails)
   userDetails$!: Observable<UserDetails | null>;
+  @Select(AppState.profileDetails)
+  profileDetails$!: Observable<ProfileDetails | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   smallLogoState = 'in';
@@ -138,8 +148,8 @@ export class SidebarComponent{
   newDomainImageName = '';
   newDomainDescription = '';
 
-  oldPassword=''
-  newPassword=''
+  oldPassword = '';
+  newPassword = '';
 
   showAddDomainModal = false;
   showProfileModal = false;
@@ -147,8 +157,13 @@ export class SidebarComponent{
   showProfileEditModal = false;
   showChangePasswordModal = false;
 
-  constructor(private store: Store) {}
-  
+  private selectedFile: File | null = null;
+
+  constructor(
+    private store: Store,
+    private blobStorageService: AzureBlobStorageService
+  ) {}
+
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
       // this.windows[0].scrolling = false;
@@ -183,6 +198,7 @@ export class SidebarComponent{
     if (!this.showProfileEditModal) {
       // this.windows[0].scrolling = false;
       this.showProfileEditModal = true;
+      
     } else {
       // this.windows[0].scrolling = true;
       this.showProfileEditModal = false;
@@ -243,9 +259,8 @@ export class SidebarComponent{
     this.store.dispatch(new SetDomain(domain));
   }
 
-
   toggleTheme() {
-    this.store.dispatch(new ChangeMode())
+    this.store.dispatch(new ChangeMode());
     document.body.classList.toggle('light');
     document.body.classList.toggle('dark');
     /* if(document.body.classList.contains('light')){
@@ -253,26 +268,79 @@ export class SidebarComponent{
     }else{
       localStorage.setItem('theme', 'light');
     } */
-
   }
 
   imageSelected: boolean = false;
-  selectedImage: File | undefined;
+  imagePreview: string | ArrayBuffer | null = null;
 
-  onImageSelected(event: any) {
-    this.selectedImage = event.target.files[0];
-    this.imageSelected = true;
+  onImageSelected(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.selectedFile = inputElement.files?.item(0) as File | null;
+
+    if (this.selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    } else {
+      this.imagePreview = null;
+    }
   }
 
-  uploadImage() {
-    // Handle image upload logic here
-    // You can access the selected image using this.selectedImage
+  uploadSpinner: boolean = false;
+
+  async uploadImage() {
+    this.uploadSpinner = true;
+    if (!this.selectedFile) {
+      this.uploadSpinner = false;
+      this.store.dispatch(new ToastError('Please select an image'));
+      return;
+    }
+    const userDetails = this.store.selectSnapshot(AppState.userDetails);
+    if (!userDetails) {
+      this.uploadSpinner = false;
+      return;
+    }
+
+    /* const fileName = this.selectedFile.name; */
+    const filename = Math.floor(Math.random() * 100000000)
+      .toString()
+      .padStart(8, '0');
+    this.blobStorageService.uploadImage(
+      environment.SAS,
+      this.selectedFile,
+      filename,
+      () => {
+        console.log('Image uploaded successfully.');
+      }
+    );
+
+    this.store
+      .dispatch(
+        new ChangeProfileIcon(
+          'https://domainpulseblob.blob.core.windows.net/blob/' + filename
+        )
+      )
+      .subscribe({
+        next: (res) => {
+          this.uploadSpinner = false;
+          this.selectedFile = null;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.imagePreview = null;
+          };
+        },
+        error: (error) => {
+          this.uploadSpinner = false;
+        },
+      });
   }
 
-  changePassword(){
-    this.store.dispatch(new ChangePassword(this.oldPassword, this.newPassword))
-    this.oldPassword=''
-    this.newPassword=''
-    this.toggleChangePasswordModal()
+  changePassword() {
+    this.store.dispatch(new ChangePassword(this.oldPassword, this.newPassword));
+    this.oldPassword = '';
+    this.newPassword = '';
+    this.toggleChangePasswordModal();
   }
 }

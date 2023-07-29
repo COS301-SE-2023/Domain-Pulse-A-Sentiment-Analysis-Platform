@@ -246,7 +246,7 @@ export class GraphSelectorComponent implements OnInit {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
-        this.updatedGraphArray = this.assignGraphData(data, this.graphs);
+        this.updatedGraphArray = this.assignGraphData(data.aggregated_metrics, this.graphs);
         setTimeout(() => {
           this.renderGraph();
         }, 300);
@@ -357,7 +357,7 @@ export class GraphSelectorComponent implements OnInit {
 
     this.chart = new Chart(ctx, currentGraph);
     if (this.chart && this.chart.config.type === 'doughnut') {
-      const offset = 50;
+      const offset = 30;
       this.myChart.nativeElement.style.transform = `translateY(${offset}px)`;
     } else {
       this.myChart.nativeElement.style.transform = `translateY(0px)`;

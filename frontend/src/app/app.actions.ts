@@ -128,3 +128,8 @@ export class SetSourceIsLoading {
   static readonly type = '[Source] Set Loading';
   constructor(public isLoading: boolean) {}
 }
+
+export class ChangeProfileIcon{
+  static readonly type = '[Profile] Change Icon';
+  constructor(public profileIcon: string) {}
+}

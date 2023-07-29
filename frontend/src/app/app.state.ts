@@ -23,6 +23,7 @@ import {
   Initialise,
   ToastError,
   ToastSuccess,
+  ChangeProfileIcon,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -510,7 +511,10 @@ export class AppState {
       }
 
       ctx.patchState({
-        overallSentimentScores: res.aggregated_metrics,
+        overallSentimentScores: {
+          aggregated_metrics: res.aggregated_metrics,
+          meta_data: res.meta_data,
+        },
         sampleData: res.individual_metrics,
         sourceIsLoading: false,
       });
@@ -640,12 +644,62 @@ export class AppState {
           this.store.dispatch(
             new ToastSuccess('Your password has been changed')
           );
+          this.router.navigate(['/login']);
         } else {
           this.store.dispatch(
             new ToastError('Your password could not be changed')
           );
         }
       });
+  }
+
+  @Action(ChangeProfileIcon)
+  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+    const profileId = ctx.getState().profileDetails?.profileId;
+
+    if (!profileId) {
+      console.error('Profile ID is not available in the state.');
+      return;
+    }
+
+    const { profileIcon } = state;
+
+    if (profileIcon === undefined) {
+      console.error('profileIcon must be provided.');
+      return;
+    }
+
+    return this.appApi.changeProfileIcon(profileId, profileIcon).pipe(
+      switchMap((res) => {
+        if (res.status === 'SUCCESS') {
+          console.log('profile icon changed');
+          console.log(res.profileIcon);
+          const profileDetails: ProfileDetails = {
+            profileId: res.id,
+            profileIcon: res.profileIcon,
+            mode: res.mode,
+          };
+
+          ctx.patchState({
+            profileDetails: profileDetails,
+          });
+          return this.store.dispatch(
+            new ToastSuccess('Your profile icon has been changed')
+          );
+        } else {
+          return this.store.dispatch(
+            new ToastError('Your profile icon could not be changed')
+          );
+        }
+      }),
+      catchError((error: any) => {
+        console.error(
+          'An error occurred during the profile icon change:',
+          error
+        );
+        return throwError(() => error);
+      })
+    );
   }
 
   @Action(ChooseStatistic)

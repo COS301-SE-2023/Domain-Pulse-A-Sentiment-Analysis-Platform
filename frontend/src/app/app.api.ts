@@ -5,6 +5,7 @@ import { environment } from 'src/environment';
 
 @Injectable()
 export class AppApi {
+
   private engineBaseUrl = `/api/engine/`;
   private profilesBaseUrl = `/api/profiles/`;
   private warehouseBaseUrl = `/api/warehouse/`;
@@ -160,6 +161,16 @@ export class AppApi {
       newpassword: newPassword,
     };
     return this.http.post(changePasswordUrl, body, { withCredentials: true });
+  }
+
+  changeProfileIcon(profileID: number, profilePicture: string): Observable<any> {
+    const changeProfilePictureUrl = this.profilesBaseUrl + 'profiles/edit_profile_picture';
+    const body = {
+      id: profileID,
+      pictureURL: profilePicture,
+    };
+    return this.http.post(changeProfilePictureUrl, body, { withCredentials: true });
+
   }
 
   attemptPsswdLogin(username: string, password: string): Observable<any> {
