@@ -13,6 +13,7 @@ jobs:
         working-directory: ./backend
         run: |
           echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+          cat .env
 
       - name: cache dependencies
         id: npm-cache
