@@ -163,6 +163,15 @@ export class AppApi {
     return this.http.post(changePasswordUrl, body, { withCredentials: true });
   }
 
+  deleteUser(username: string, password: string): Observable<any> {
+    const deleteUserUrl = this.profilesBaseUrl + 'profiles/delete_user';
+    const body = {
+      username: username,
+      password: password,
+    };
+    return this.http.post(deleteUserUrl, body, { withCredentials: true });
+  }
+
   changeProfileIcon(profileID: number, profilePicture: string): Observable<any> {
     const changeProfilePictureUrl = this.profilesBaseUrl + 'profiles/edit_profile_picture';
     const body = {

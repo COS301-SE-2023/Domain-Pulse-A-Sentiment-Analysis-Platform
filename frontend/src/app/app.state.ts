@@ -24,6 +24,7 @@ import {
   ToastError,
   ToastSuccess,
   ChangeProfileIcon,
+  DeleteUser,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -68,6 +69,7 @@ export interface UserDetails {
   profileIconUrl: string;
   oldPassword?: string;
   newPassword?: string;
+  password?: string;
 }
 
 export interface ProfileDetails {
@@ -669,6 +671,36 @@ export class AppState {
         }
       });
   }
+
+  @Action(DeleteUser)
+  deleteUser(ctx: StateContext<AppStateModel>, state: UserDetails) {
+
+    const { password } = state;
+    const username = ctx.getState().userDetails?.username;
+
+    if(!username){
+      console.error('Username is not available in the state.');
+      return;
+    }
+
+    if (password === undefined) {
+      console.error('password must be provided.');
+      return;
+    }
+
+    this.appApi.deleteUser(username, password).subscribe((res) => {
+      if (res.status == 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('Your account has been deleted'));
+        localStorage.removeItem('JWT');
+        this.router.navigate(['/login']);
+      } else {
+        this.store.dispatch(
+          new ToastError('Your account could not be deleted')
+        );
+      }
+    });
+  }
+
 
   @Action(ChangeProfileIcon)
   changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {

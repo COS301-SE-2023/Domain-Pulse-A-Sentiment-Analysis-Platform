@@ -100,6 +100,11 @@ export class AttempPsswdLogin {
   constructor(public username: string, public password: string) {}
 }
 
+export class DeleteUser {
+  static readonly type = '[Auth] Delete User';
+  constructor(public username: string, public password: string) {}
+}
+
 export class RegisterUser {
   static readonly type = '[Auth] Register User';
   constructor(

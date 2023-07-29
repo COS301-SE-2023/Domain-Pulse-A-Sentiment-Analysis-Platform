@@ -18,6 +18,7 @@ import { Observable, catchError, of } from 'rxjs';
 import {
   AddNewDomain,
   DeleteDomain,
+  DeleteUser,
   EditDomain,
   SetDomain,
   SetUserDetails,
@@ -133,11 +134,15 @@ export class SidebarComponent {
   oldPassword = '';
   newPassword = '';
 
+  password= '';
+
   showAddDomainModal = false;
   showProfileModal = false;
   showEditDomainModal = false;
   showProfileEditModal = false;
   showChangePasswordModal = false;
+  showDeleteAccountModal = false;
+  showConfirmDeleteAccountModal = false;
 
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
   domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
@@ -209,6 +214,38 @@ export class SidebarComponent {
     }
   }
 
+  toggleDeleteAccountModal(): void {
+    if (!this.showDeleteAccountModal) {
+      // this.windows[0].scrolling = false;
+      this.showDeleteAccountModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.showDeleteAccountModal = false;
+    }
+  }
+
+  toggleConfirmDeleteAccountModal(): void {
+    if (!this.showConfirmDeleteAccountModal) {
+      // this.windows[0].scrolling = false;
+      
+      this.showConfirmDeleteAccountModal = true;
+    } else {
+      // this.windows[0].scrolling = true;
+      this.toggleDeleteAccountModal();
+      this.showConfirmDeleteAccountModal = false;
+    }
+  }
+
+  /* closeAllModals(): void {
+    this.showAddDomainModal = false;
+    this.showProfileModal = false;
+    this.showEditDomainModal = false;
+    this.showProfileEditModal = false;
+    this.showChangePasswordModal = false;
+    this.showDeleteAccountModal = false;
+    this.showConfirmDeleteAccountModal = false;
+  }
+ */
   addNewDomain(): void {
     this.addDomainSpinner = true;
     let valid = true;
@@ -469,5 +506,19 @@ export class SidebarComponent {
     this.oldPassword = '';
     this.newPassword = '';
     this.toggleChangePasswordModal();
+  }
+
+  deleteAccount(){
+    const userDetails = this.store.selectSnapshot(AppState.userDetails);
+    const username = userDetails?.username;
+
+    console.log(username);
+    console.log(this.password)
+
+    if(!username) return;
+
+    this.store.dispatch(new DeleteUser(username, this.password ));
+    /* this.closeAllModals(); */
+    
   }
 }
