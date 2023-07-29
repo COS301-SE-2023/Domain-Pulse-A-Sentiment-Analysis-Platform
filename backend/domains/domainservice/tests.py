@@ -120,6 +120,24 @@ def mocked_extract_token(dummy):
     return True, "token"
 
 
+def mocked_find_one_and_update(dummy1, dummy2):
+    return {
+        "_id": ObjectId("64a2d2a2580b40e94e42b72a"),
+        "name": "test",
+        "icon": "test.com",
+        "description": "mock data",
+        "sources": [
+            {
+                "source_id": ObjectId("64a2d2e0b5b66c122b03e8d2"),
+                "last_refresh_timestamp": 0,
+                "source_name": "testSource",
+                "source_icon": "testSource.com",
+                "params": {"t": "t"},
+            }
+        ],
+    }
+
+
 class DomainsTests(TestCase):
     @mock.patch(
         "pymongo.collection.Collection.insert_one", side_effect=mocked_insert_one
@@ -131,6 +149,31 @@ class DomainsTests(TestCase):
         self.assertEqual(result["icon"], "test.com")
         self.assertEqual(result["description"], "mock data")
         self.assertEqual(result["sources"], [])
+
+    @mock.patch(
+        "pymongo.collection.Collection.find_one_and_update",
+        side_effect=mocked_find_one_and_update,
+    )
+    def test_edit_domain(self, mock_insert):
+        result = domainscrud.edit_domain(
+            "64a2d2a2580b40e94e42b72a", "test", "test.com", "mock data 2"
+        )
+        self.assertEqual(result["id"], "64a2d2a2580b40e94e42b72a")
+        self.assertEqual(result["name"], "test")
+        self.assertEqual(result["icon"], "test.com")
+        self.assertEqual(result["description"], "mock data 2")
+        self.assertEqual(
+            result["sources"],
+            [
+                {
+                    "source_id": ("64a2d2e0b5b66c122b03e8d2"),
+                    "last_refresh_timestamp": 0,
+                    "source_name": "testSource",
+                    "source_icon": "testSource.com",
+                    "params": {"t": "t"},
+                }
+            ],
+        )
 
     @mock.patch(
         "pymongo.collection.Collection.delete_one", side_effect=mocked_delete_one
