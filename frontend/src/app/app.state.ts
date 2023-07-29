@@ -23,6 +23,7 @@ import {
   Initialise,
   ToastError,
   ToastSuccess,
+  DeleteSource,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -414,10 +415,63 @@ export class AppState {
 
         let lastSource =
           selectedDomain.sources[selectedDomain.sources.length - 1];
-          lastSource.isRefreshing = true;
+        lastSource.isRefreshing = true;
         this.store.dispatch(new SetSource(lastSource));
         this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
       });
+  }
+
+  @Action(DeleteSource)
+  deleteSource(ctx: StateContext<AppStateModel>, state: DeleteSource) {
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    let selectedSource = ctx.getState().selectedSource;
+    if (!selectedSource) return;
+
+    let sourceID = selectedSource.id;
+    let domainID = selectedDomain.id;
+    this.appApi.deleteSource(domainID, sourceID).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your source could not be added'));
+        return;
+      }
+
+      let domainRes = res.confirmation;
+      console.log(domainRes, domainRes.confirmation);
+      let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
+      let selectedDomain: DisplayDomain = {
+        id: domainRes._id,
+        name: domainRes.name,
+        description: domainRes.description,
+        imageUrl: '../assets/' + domainRes.icon,
+        sourceIds: domainsIDs,
+        sources: AppState.formatResponseSources(domainRes.sources),
+        selected: false,
+      };
+
+      let domains = ctx.getState().domains;
+      if (!domains) return;
+
+      for (let domain of domains) {
+        if (domain.id == selectedDomain.id) {
+          domain = selectedDomain;
+          ctx.patchState({
+            domains: domains,
+          });
+          break;
+        }
+      }
+
+      this.store.dispatch(new SetDomain(selectedDomain));
+
+      if (selectedDomain.sources.length === 0) {
+        return;
+      }
+
+      let firstSource = selectedDomain.sources[0];
+      this.store.dispatch(new SetSource(firstSource));
+    });
   }
 
   @Action(RefreshSourceData)

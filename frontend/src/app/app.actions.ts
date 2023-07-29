@@ -87,6 +87,11 @@ export class AddNewSource {
   ) {}
 }
 
+export class DeleteSource {
+  static readonly type = '[App] Delete Source';
+  constructor() {}
+}
+
 export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
 }

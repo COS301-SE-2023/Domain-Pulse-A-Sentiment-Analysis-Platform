@@ -100,6 +100,16 @@ export class AppApi {
     return this.http.post(addSourceUrl, body, { withCredentials: true });
   }
 
+  deleteSource(domainID: string, sourceID: string): Observable<any> {
+    const deleteSourceUrl = this.domainBaseUrl + 'domains/remove_source';
+    const body = {
+      id: domainID,
+      source_id: sourceID,
+    };
+
+    return this.http.post(deleteSourceUrl, body, { withCredentials: true });
+  }
+
   refreshSourceInfo(sourceID: string): Observable<any> {
     const refreshSourceInfoUrl = this.warehouseBaseUrl + 'query/refresh_source/';
     const body = {
