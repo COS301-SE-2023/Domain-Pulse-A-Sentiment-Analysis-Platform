@@ -85,6 +85,33 @@ def create_domain(request: HttpRequest):
 
 
 @csrf_exempt
+def edit_domain(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_domain_ids(
+            original_request=request, domain_id_list=[raw_data["id"]]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+        new_domain = domainscrud.edit_domain(
+            raw_data["id"], raw_data["name"], raw_data["icon"], raw_data["description"]
+        )
+        domainID = new_domain["id"]
+        auth_checks.create_domain_in_profile(request, domainID)
+        return JsonResponse(
+            {
+                "status": "SUCCESS",
+                "new_domain": new_domain,
+            }
+        )
+
+    return JsonResponse({"status": "FAILURE"})
+
+
+@csrf_exempt
 def delete_domain(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)

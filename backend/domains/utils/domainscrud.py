@@ -77,6 +77,33 @@ def create_domain(domain_name, domain_icon, description):
     }
 
 
+def edit_domain(id, domain_name, domain_icon, description):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    ret = collection.find_one_and_update(
+        {"_id": ObjectId(id)},
+        {
+            "$set": {
+                "name": domain_name,
+                "icon": domain_icon,
+                "description": description,
+            }
+        },
+    )
+    client.close()
+    for i in ret["sources"]:
+        i["source_id"] = str(i["source_id"])
+    return {
+        "id": str(ret["_id"]),
+        "name": domain_name,
+        "icon": domain_icon,
+        "description": description,
+        "sources": ret["sources"],
+    }
+
+
 def delete_domain(id):
     client = pymongo.MongoClient(mongo_host, mongo_port)
     db = client[mongo_db]
