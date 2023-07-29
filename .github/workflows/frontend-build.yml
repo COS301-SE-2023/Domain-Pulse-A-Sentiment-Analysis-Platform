@@ -13,7 +13,6 @@ jobs:
         working-directory: ./backend
         run: |
           echo "$PROD_DJANGO_PORTS" > .env
-          cat .env
         env:
           PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
 
@@ -34,8 +33,6 @@ jobs:
         working-directory: ./frontend
         run: |
           npm link @angular/cli
-          node env-config.js
-          cat src/environment.ts
           npm run build:dev
 
       - name: Upload build artifacts
