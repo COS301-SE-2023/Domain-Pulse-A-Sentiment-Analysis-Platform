@@ -10,7 +10,6 @@ app = socketio.WSGIApp(sio, static_files={
 def connect(sid, environ):
     print('connect ', sid)
 
-
 rooms = set()
 
 @sio.event

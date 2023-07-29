@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from processor import processing
 from postprocessor import aggregation
 import json
-
+import socketio
 
 # Create your views here.
 
@@ -46,9 +46,10 @@ def perform_analysis(request: HttpRequest):
 
             room_id = raw_data["room_id"]
 
+            for item, timestamp in zip(new_records, raw_data["data_timestamps"]):
+                new_score = processing.analyse_content(item)
+                new_score["timestamp"] = timestamp
 
-            for item in new_records:
-                new_score = processing.analyse_content(item, room_id)
                 # compute aggregated metrics
                 aggregated_metrics = aggregation.aggregate_sentiment_data(scores)
                 new_data_to_send = { "new_individual_metrics": new_score, "aggregated_metrics": aggregated_metrics, "room_id": room_id }
