@@ -246,6 +246,15 @@ class DomainsTests(TestCase):
     @mock.patch(
         "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
     )
+    def test_edit_source(self, mock_find, mock_update):
+        result = domainscrud.edit_source("64a2d2e0b5b66c122b03e8d2", "test123")
+        self.assertEqual(result["sources"][0]["source_id"], "64a2d2e0b5b66c122b03e8d2")
+        self.assertEqual(result["sources"][0]["source_name"], "test123")
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
     def test_delete_param(self, mock_find, mock_update):
         test_key = "t"
         result = domainscrud.delete_param(
@@ -459,6 +468,27 @@ class DomainsTests(TestCase):
         headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         response: JsonResponse = self.client.post(
             path="/domains/remove_source",
+            data=data,
+            content_type="application/json",
+            headers=headers,
+        )
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch("requests.post", side_effect=mocked_request_post)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_edit_source_integration(self, mock_find, mock_update, mock_post):
+        data = {
+            "source_id": "64a2d2e0b5b66c122b03e8d2",
+            "name": "test123",
+        }
+        jwt = "testJWT"
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        response: JsonResponse = self.client.post(
+            path="/domains/edit_source",
             data=data,
             content_type="application/json",
             headers=headers,

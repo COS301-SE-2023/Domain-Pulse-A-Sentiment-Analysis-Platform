@@ -96,15 +96,36 @@ def edit_domain(request: HttpRequest):
         if not check_passed:
             return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
-        new_domain = domainscrud.edit_domain(
+        domain = domainscrud.edit_domain(
             raw_data["id"], raw_data["name"], raw_data["icon"], raw_data["description"]
         )
-        domainID = new_domain["id"]
-        auth_checks.create_domain_in_profile(request, domainID)
         return JsonResponse(
             {
                 "status": "SUCCESS",
-                "new_domain": new_domain,
+                "domain": domain,
+            }
+        )
+
+    return JsonResponse({"status": "FAILURE"})
+
+
+@csrf_exempt
+def edit_source(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[raw_data["source_id"]]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+        domain = domainscrud.edit_source(raw_data["source_id"], raw_data["name"])
+        return JsonResponse(
+            {
+                "status": "SUCCESS",
+                "domain": domain,
             }
         )
 
