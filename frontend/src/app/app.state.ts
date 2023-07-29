@@ -374,7 +374,7 @@ export class AppState {
 
     let selectedDomain = ctx.getState().selectedDomain;
     if (!selectedDomain) return;
-
+    
     let domainID = selectedDomain.id;
     this.appApi
       .addSource(domainID, state.name, source_image_name, state.params)
