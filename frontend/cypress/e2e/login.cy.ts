@@ -40,4 +40,10 @@ describe('Logging In - Basic Auth', function () {
     cy.visit('/');
     cy.location('pathname').should('eq', '/');
   });
+
+  it('check if the button switches to the register page correctly', () => {
+    window.localStorage.removeItem('JWT');
+    cy.visit('/login');
+    cy.get('[data-cy=switchForNoAcc]').click();
+});
 });
