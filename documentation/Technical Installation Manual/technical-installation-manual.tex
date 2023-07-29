@@ -22,17 +22,34 @@ The installation of these components and the packages used within in them, shall
 If we need to add more details or break it up
 
 \section{Prerequisites}
-The following are prerequisites for the complete installation and set-up of Domain Pulse: Python 3.8, Pipenv, Angular, MongoDB, PostgreSQL.
+The following are prerequisites for the complete installation and set-up of Domain Pulse: Python 3.8, Pipenv, Node.js, Angular, MongoDB, PostgreSQL.
 
 \subsection{Python 3.8}
-On linux (Ubuntu) python 3.8 can be installed using:
+\subsubsection{Linux}
+The following resources commnds be used for installing Python 3.8 on Linux:\\
+sudo apt-get update\\
+sudo add-apt-repository ppa:deadsnakes/ppa -y\\
+sudo apt-get update\\
+sudo apt install python3.8\\ \\
+Ensure that the correct version of python is installed by running the following command:
+python --version
+
+\subsubsection{Windows}
+The following resources may be used for installing Python 3.8 on Windows:
+https://www.python.org/downloads/release/python-380/
 
 \subsection{Pipenv}
-Once python is installed (pip should therefore be working too) use:
+Once python is installed (pip should therefore be working too) enter into the terminal:\\
 pip install pipenv
 
+\subsection{Node.js}
+Node.js is needed for the installation and use of Angular and can be installed
+following the instructions on the following resource:\\
+https://nodejs.dev/en/learn/how-to-install-nodejs/
+
 \subsection{Angular}
-working
+Once Node.js is installed, Angular can be installed by entering the following command into the terminal:\\
+npm install -g @angular/cli
 
 \subsection{MongoDB}
 The following resources may be used for installing MongoDB
