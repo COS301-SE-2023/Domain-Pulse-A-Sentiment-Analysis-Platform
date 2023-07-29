@@ -215,7 +215,7 @@ def refresh_source(request: HttpRequest):
             data_timestamps.append(x["timestamp"])
 
         request_to_engine_body = {}
-        if raw_data["room_id"]:
+        if "room_id" in raw_data:
             request_to_engine_body = {"data": raw_new_data, "data_timestamps": data_timestamps, "room_id": raw_data["room_id"]}
         else:
             request_to_engine_body = {"data": raw_new_data}

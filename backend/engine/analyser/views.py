@@ -40,7 +40,7 @@ def perform_analysis(request: HttpRequest):
 
         scores = []
 
-        if raw_data["room_id"]:
+        if "room_id" in raw_data:
             sio = socketio.Client()
             sio.connect('http://localhost:5000')
 
