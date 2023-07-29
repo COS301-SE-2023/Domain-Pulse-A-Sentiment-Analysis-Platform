@@ -14,7 +14,7 @@ import {
   UserDetails,
 } from '../app.state';
 import { AzureBlobStorageService } from '../azure-blob-storage.service';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import {
   AddNewDomain,
   DeleteDomain,
@@ -198,17 +198,34 @@ export class SidebarComponent {
   }
 
   addNewDomain(): void {
-    this.uploadSpinnerDomain = true;
+    this.addDomainSpinner = true;
+    let valid = true;
+
     if (!this.selectedFileDomain && !this.newDomainImageName) {
-      this.uploadSpinnerDomain = false;
+      this.addDomainSpinner = false;
       this.store.dispatch(new ToastError('Please select a domain icon'));
+      valid = false;
+    }
+
+    if(!this.newDomainName){
+      this.addDomainSpinner = false;
+      this.store.dispatch(new ToastError('Please enter a domain name'));
+      valid = false;
+    }
+
+    if(!this.newDomainDescription){
+      this.addDomainSpinner = false;
+      this.store.dispatch(new ToastError('Please enter a domain description'));
+      valid = false;
+    }
+
+    if(!valid){
       return;
     }
 
     if(this.selectedFileDomain){
       const filenameDomain = this.uploadImageDomain();
       this.newDomainImageName = this.baseUrl + filenameDomain;
-      console.log("domain icon:" + this.newDomainImageName)
     }
 
     this.store.dispatch(
@@ -217,12 +234,20 @@ export class SidebarComponent {
         this.newDomainImageName,
         this.newDomainDescription
       )
-    );
+    ).pipe(
+      catchError((error) => {
+        this.addDomainSpinner = false;
+        return of();
+      })
+    ).subscribe((result) => {
+      this.addDomainSpinner = false;
+      this.toggleDomainModal();
+    });
     this.newDomainName = '';
     this.newDomainImageName = '';
     this.newDomainDescription = '';
 
-    this.toggleDomainModal();
+    
   }
 
   selectIcon(icon: string) {
@@ -353,12 +378,12 @@ export class SidebarComponent {
     }
   }
 
-  uploadSpinnerDomain: boolean = false;
+  addDomainSpinner: boolean = false;
 
   uploadImageDomain() {
     
     if (!this.selectedFileDomain) {
-      this.uploadSpinnerDomain = false;
+      this.addDomainSpinner = false;
       this.store.dispatch(new ToastError('Please select an image'));
       return;
     }

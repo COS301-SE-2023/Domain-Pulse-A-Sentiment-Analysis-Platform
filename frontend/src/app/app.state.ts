@@ -439,15 +439,32 @@ export class AppState {
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
     console.log(state);
 
-    this.appApi
+    return this.appApi
       .addDomain(state.domainName, state.description, state.domainImagUrl)
-      .subscribe((res) => {
-        if (res.status === 'FAILURE') {
-          this.store.dispatch(new ToastError('Your domain could not be added'));
-          return;
-        }
-        this.store.dispatch(new GetDomains());
-      });
+      .pipe(
+        switchMap((res) => {
+          if (res.status === 'FAILURE') {
+            this.store.dispatch(
+              new ToastError('Your domain could not be added')
+            );
+            return of(res);
+          } else {
+            this.store.dispatch(
+              new ToastSuccess('Your domain has been added')
+            );
+            this.store.dispatch(new GetDomains());
+            return of(res);
+          }
+        }),
+        catchError((error: any) => {
+          this.store.dispatch(
+            new ToastError('An error occurred while adding the domain')
+          );
+          return throwError(
+            () => new Error('Error occurred while adding the domain')
+          );
+        })
+      );
   }
 
   @Action(EditDomain)

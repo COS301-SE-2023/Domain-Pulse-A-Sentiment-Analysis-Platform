@@ -159,6 +159,7 @@
               class="default-input"
               type="text"
               [(ngModel)]="newDomainDescription"
+              placeholder=""
             />
           </div>
         </div>
@@ -223,20 +224,11 @@
             </div>
           </div>
         </div>
-        <!-- <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">3</p>
-          <div class="flex-column" style="width: 100%">
-            <p class="step-heading">Select Domain image:</p>
-            <select class="default-input" [(ngModel)]="newDomainImageName">
-              <option value="f1-logo.png">Formula 1</option>
-            </select>
-          </div>
-        </div> -->
       </div>
 
       <div class="bottom-div">
         <button class="new-domain-btn clickable-item" (click)="addNewDomain()">
-          Confirm
+          Confirm<div [ngClass]="{ 'button-spinner': addDomainSpinner }"></div>
         </button>
       </div>
     </div>
