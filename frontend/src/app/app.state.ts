@@ -574,7 +574,7 @@ export class AppState {
         };
 
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
-          if (res.status == 'SUCCESS') {
+          if (res2.status == 'SUCCESS') {
             const userDetails: UserDetails = {
               userId: res.userID,
               username: res2.username,
