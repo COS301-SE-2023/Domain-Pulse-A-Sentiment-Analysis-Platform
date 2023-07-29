@@ -7,7 +7,6 @@ import requests
 from authchecker import auth_checks
 import os
 
-
 # Create your views here.
 
 
@@ -210,10 +209,17 @@ def refresh_source(request: HttpRequest):
 
         # 2.
         raw_new_data = []
+        data_timestamps = []
         for x in new_data:
             raw_new_data.append(x["text"])
+            data_timestamps.append(x["timestamp"])
 
-        request_to_engine_body = {"data": raw_new_data}
+        request_to_engine_body = {}
+        if "room_id" in raw_data:
+            request_to_engine_body = {"data": raw_new_data, "data_timestamps": data_timestamps, "room_id": raw_data["room_id"]}
+        else:
+            request_to_engine_body = {"data": raw_new_data}
+
         # print(request_to_engine_body)
 
         response_from_analyser = requests.post(
