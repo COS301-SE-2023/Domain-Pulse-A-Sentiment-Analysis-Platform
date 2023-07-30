@@ -42,6 +42,7 @@ describe('AppState', () => {
       'getSourceSentimentData',
       'refreshSourceInfo',
       'addSource',
+      'getAggregatedDomainData',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -101,6 +102,7 @@ describe('AppState', () => {
       profileIconUrl: 'test',
     };
     store.reset({ app: { userDetails: mockProfile } });
+    apiSpy.getAggregatedDomainData.and.returnValue(of({ status: 'FAILURE' }));
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: ['dskjafl', 'sdjfkl'] })
     );
