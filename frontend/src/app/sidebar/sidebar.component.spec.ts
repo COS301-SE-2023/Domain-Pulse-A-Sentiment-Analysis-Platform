@@ -192,7 +192,8 @@ describe('SidebarComponent', () => {
     });
 
     const displayId = '1';
-    component.deleteDomain(displayId);
+    component.deleteDomainId = displayId;
+    component.deleteDomain();
   });
 
   it('should fire sideBarClicked event when the sidebar is clicked', () => {
