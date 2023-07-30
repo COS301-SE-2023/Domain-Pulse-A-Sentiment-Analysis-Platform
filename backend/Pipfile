@@ -27,6 +27,8 @@ python-dotenv = "*"
 djangorestframework-simplejwt = "*"
 sshtunnel = "*"
 outscraper = "*"
+python-socketio = "*"
+eventlet = "*"
 
 [dev-packages]
 

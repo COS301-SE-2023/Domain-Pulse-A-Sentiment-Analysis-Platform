@@ -15,10 +15,14 @@ jobs:
       - name: setup .envs
         working-directory: ./backend
         run: |
-          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
-          echo "${{ secrets.POSTGRES_CONFIG }}" > .postgresql.env
+          echo "$PROD_DJANGO_PORTS" > .env
+          echo "$POSTGRES_CONFIG" > .postgresql.env
           mkdir ~/.ssh
-          echo "${{ secrets.POSTGRES_USER_PRIV_KEY }}" >> ~/.ssh/posgresql-user-priv_key
+          echo "$POSTGRES_USER_PRIV_KEY" >> ~/.ssh/posgresql-user-priv_key
+        env:
+          PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
+          POSTGRES_CONFIG: ${{ secrets.POSTGRES_CONFIG }}
+          POSTGRES_USER_PRIV_KEY: ${{ secrets.POSTGRES_USER_PRIV_KEY }}
 
       - name: install pipenv
         working-directory: ./backend

@@ -191,7 +191,53 @@ describe('CommentsViewComponent', () => {
   it('getRatingColor() function should correctly classify the rating', () => {
     expect(component.getRatingColor('70%')).toBe('positive-color');
     expect(component.getRatingColor('40%')).toBe('neutral-color');
-    expect(component.getRatingColor('30%')).toBe('negative-color');
+    expect(component.getRatingColor('30%')).toBe('somewhat-negative-color');
     expect(component.getRatingColor('')).toBe('neutral-color');
   });
+
+  it('getCategoryColor() function should correctly classify the category', () => {
+    expect(component.getCategoryColor('very negative')).toBe('very-negative-color');
+    expect(component.getCategoryColor('somewhat negative')).toBe('somewhat-negative-color');
+    expect(component.getCategoryColor('neutral')).toBe('neutral-color');
+
+  });
+
+  it('getEmotionColor() function should correctly classify the emotion', () => {
+    expect(component.getEmotionColor('anger')).toBe('negative-color');
+    expect(component.getEmotionColor('joy')).toBe('positive-color');
+    expect(component.getEmotionColor('sadness')).toBe('sad-color');
+    expect(component.getEmotionColor('neutral')).toBe('neutral-color');
+  });
+
+  it('getToxicityColor() function should correctly classify the toxicity', () => {
+    expect(component.getToxicityColor('toxic')).toBe('very-negative-color');
+    expect(component.getToxicityColor('non-toxic')).toBe('very-positive-color');
+  });
+
+  it('getRatingClass() function should correctly return the color class based on index and score', () => {
+    expect(component.getRatingClass(0, '70%')).toBe('positive-color');
+    expect(component.getRatingClass(1, 'somewhat negative')).toBe('somewhat-negative-color');
+    expect(component.getRatingClass(2, 'joy')).toBe('positive-color');
+    expect(component.getRatingClass(3, 'toxic')).toBe('very-negative-color');
+  });
+
+  it('should initialize showComment array with false values', () => {
+    component.comments = mockCommentData; 
+    component.initializeShowCommentArray();
+    expect(component.showComment).toEqual([false, false, false, false, false, false, false]);
+  });
+  
+  it('should not initialize showComment array when comments is not defined', () => {
+    component.comments = undefined;
+    component.initializeShowCommentArray();
+    expect(component.showComment).toEqual([]);
+  });
+
+  it('should toggle showComment[index] to true', () => {
+    component.comments = mockCommentData;
+    component.initializeShowCommentArray();
+    component.toggleShowComment(1);
+    expect(component.showComment).toEqual([false, true, false, false, false, false, false]);
+  });
+  
 });

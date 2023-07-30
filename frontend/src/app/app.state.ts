@@ -15,13 +15,19 @@ import {
   ChooseStatistic,
   EditDomain,
   DeleteDomain,
-  SetProfileDetails,
+  SetUserDetails,
   RefreshSourceData,
+  SetSourceIsLoading,
+  ChangePassword,
+  ChangeMode,
   Initialise,
+  ToastError,
+  ToastSuccess,
+  ChangeProfileIcon,
+  DeleteSource,
 } from './app.actions';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { NgZone } from '@angular/core';
+import { catchError, of, switchMap, throwError } from 'rxjs';
 
 export interface Source {
   source_id: string;
@@ -29,7 +35,7 @@ export interface Source {
   sourceImageUrl: string;
 }
 export interface DisplayDomain {
-  id: number;
+  id: string;
   name: string;
   description: string;
   selected: boolean;
@@ -43,6 +49,7 @@ export interface DisplaySource {
   name: string;
   url: string;
   selected: boolean;
+  isRefreshing: boolean;
 }
 
 export interface SentimentScores {
@@ -55,11 +62,24 @@ export interface SentimentScores {
   analysedSum: number;
 }
 
-export interface ProfileDetails {
+export interface UserDetails {
   userId: number;
   username: string;
   email: string;
   profileIconUrl: string;
+  oldPassword?: string;
+  newPassword?: string;
+}
+
+export interface ProfileDetails {
+  profileId: number;
+  mode: boolean;
+  profileIcon: string;
+}
+
+export interface Toast {
+  message: string;
+  timeout: number;
 }
 
 export class Comment {
@@ -85,7 +105,6 @@ export class Comment {
 }
 
 interface AppStateModel {
-  profileDetails?: ProfileDetails;
   authenticated: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
@@ -96,6 +115,11 @@ interface AppStateModel {
   // sampleData?: Comment[];
   sampleData?: any[];
   selectedStatisticIndex: number;
+  userDetails?: UserDetails;
+  sourceIsLoading: boolean;
+  profileDetails?: ProfileDetails;
+  toasterError?: Toast;
+  toasterSuccess?: Toast;
 }
 
 @State<AppStateModel>({
@@ -103,6 +127,7 @@ interface AppStateModel {
   defaults: {
     authenticated: false,
     selectedStatisticIndex: 0,
+    sourceIsLoading: true,
   },
 })
 @Injectable()
@@ -110,9 +135,7 @@ export class AppState {
   constructor(
     private readonly appApi: AppApi,
     private readonly store: Store,
-    private readonly router: Router,
-    private toastr: ToastrService,
-    private ngZone: NgZone
+    private readonly router: Router
   ) {
     // // subscipte to changes to profile details
     let detailsSet = false;
@@ -120,7 +143,7 @@ export class AppState {
       .select((state) => state)
       .subscribe((res) => {
         if (!detailsSet) {
-          if (res.app?.profileDetails) {
+          if (res.app?.userDetails) {
             this.store.dispatch(new GetDomains());
             detailsSet = true;
           }
@@ -170,9 +193,51 @@ export class AppState {
   }
 
   @Selector()
+  static userDetails(state: AppStateModel) {
+    if (state.userDetails) return state.userDetails;
+    return undefined;
+  }
+
+  @Selector()
+  static sourceIsLoading(state: AppStateModel) {
+    return state.sourceIsLoading;
+  }
+
+  @Selector()
   static profileDetails(state: AppStateModel) {
     if (state.profileDetails) return state.profileDetails;
     return undefined;
+  }
+
+  @Selector()
+  static toasterError(state: AppStateModel) {
+    if (state.toasterError) return state.toasterError;
+    return undefined;
+  }
+
+  @Selector()
+  static toasterSuccess(state: AppStateModel) {
+    if (state.toasterSuccess) return state.toasterSuccess;
+    return undefined;
+  }
+
+  @Action(ToastError)
+  toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
+    const toast: Toast = {
+      message: action.message,
+      timeout: action.timeout ? action.timeout : 3000,
+    };
+
+    ctx.patchState({ toasterError: toast });
+  }
+
+  @Action(ToastSuccess)
+  toastSuccess(ctx: StateContext<AppStateModel>, action: ToastSuccess) {
+    const toast: Toast = {
+      message: action.message,
+      timeout: action.timeout ? action.timeout : 3000,
+    };
+    ctx.patchState({ toasterSuccess: toast });
   }
 
   @Action(Initialise)
@@ -182,34 +247,26 @@ export class AppState {
 
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
-    const profileDetails = ctx.getState().profileDetails;
-    if (!profileDetails) return;
+    const userDetails = ctx.getState().userDetails;
+    if (!userDetails) return;
 
-    this.appApi.getDomainIDs(profileDetails.userId).subscribe((res: any) => {
+    this.appApi.getDomainIDs(userDetails.userId).subscribe((res: any) => {
       if (res.status === 'FAILURE') {
-        this.toastr.error('Your domains could not be retrieved', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
-        });
+        this.store.dispatch(
+          new ToastError('Your domains could not be retrieved')
+        );
         return;
       }
 
-      let domainIDs: number[] = res.domainIDs;
+      let domainIDs: string[] = res.domainIDs;
 
       let firstDomain = true;
 
-      domainIDs.map((domainID: number) => {
+      domainIDs.map((domainID: string) => {
         this.appApi.getDomainInfo(domainID).subscribe((res: any) => {
           if (res.status === 'FAILURE') {
-            this.toastr.error(
-              'The info for one of your domains could not be retrieved',
-              '',
-              {
-                timeOut: 3000,
-                positionClass: 'toast-bottom-center',
-                toastClass: 'custom-toast error ngx-toastr',
-              }
+            this.store.dispatch(
+              new ToastError('Your domains could not be retrieved')
             );
             return;
           }
@@ -224,7 +281,7 @@ export class AppState {
             description: domainRes.description,
             imageUrl: '../assets/' + domainRes.icon,
             sourceIds: domainsIDs,
-            sources: this.formatResponseSources(domainRes.sources),
+            sources: AppState.formatResponseSources(domainRes.sources),
             selected: false,
           };
 
@@ -251,6 +308,9 @@ export class AppState {
             }
           }
 
+          /* ctx.patchState({
+            sourceIsLoading: false,
+          }); */
           console.log(ctx.getState().domains);
         });
       });
@@ -291,7 +351,6 @@ export class AppState {
 
   @Action(SetSource)
   setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
-    this.store.dispatch(new GetSourceDashBoardInfo());
     let sources = ctx.getState().sources;
     if (!sources) return;
 
@@ -300,52 +359,120 @@ export class AppState {
     }
     state.source.selected = true;
 
+    this.store.dispatch(new GetSourceDashBoardInfo());
+
     ctx.patchState({
       sources: sources,
       selectedSource: state.source,
+      /*       sourceIsLoading: false, */
     });
   }
 
   @Action(AddNewSource)
   addNewSource(ctx: StateContext<AppStateModel>, state: AddNewSource) {
     // replace this with a function
-    let source_image_name = '';
-    switch (state.platform) {
-      case 'facebook':
-        source_image_name = 'facebook-logo.png';
-        break;
-      case 'instagram':
-        source_image_name = 'instagram-Icon.png';
-        break;
-      case 'reddit':
-        source_image_name = 'reddit-logo.png';
-        break;
-      case 'tripadvisor':
-        source_image_name = 'tripadvisor-logo.png';
-        break;
-      case 'youtube':
-        source_image_name = 'youtube-logo.png';
-        break;
-      case 'googlereviews':
-        source_image_name = 'google-reviews.png';
-        break;
-    }
+    let source_image_name = AppState.platformToIcon(state.platform);
 
     let selectedDomain = ctx.getState().selectedDomain;
     if (!selectedDomain) return;
-
+    
     let domainID = selectedDomain.id;
     this.appApi
       .addSource(domainID, state.name, source_image_name, state.params)
       .subscribe((res) => {
-        // Not sure as to whether i should just reget all the data or just use the response
-        this.store.dispatch(new GetDomains());
-
-        if (res.status === 'SUCCESS') {
-          // refresh for the source that was just added
-          this.store.dispatch(new RefreshSourceData(res.source_id));
+        if (res.status === 'FAILURE') {
+          this.store.dispatch(new ToastError('Your source could not be added'));
+          return;
         }
+
+        let domainRes = res.domain;
+        let domainsIDs = domainRes.sources.map(
+          (source: any) => source.source_id
+        );
+        let selectedDomain: DisplayDomain = {
+          id: domainRes._id,
+          name: domainRes.name,
+          description: domainRes.description,
+          imageUrl: '../assets/' + domainRes.icon,
+          sourceIds: domainsIDs,
+          sources: AppState.formatResponseSources(domainRes.sources),
+          selected: false,
+        };
+
+        let domains = ctx.getState().domains;
+        if (!domains) return;
+
+        for (let domain of domains) {
+          if (domain.id == selectedDomain.id) {
+            domain = selectedDomain;
+            ctx.patchState({
+              domains: domains,
+            });
+            break;
+          }
+        }
+
+        this.store.dispatch(new SetDomain(selectedDomain));
+
+        let lastSource =
+          selectedDomain.sources[selectedDomain.sources.length - 1];
+        lastSource.isRefreshing = true;
+        this.store.dispatch(new SetSource(lastSource));
+        this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
       });
+  }
+
+  @Action(DeleteSource)
+  deleteSource(ctx: StateContext<AppStateModel>, state: DeleteSource) {
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    let selectedSource = ctx.getState().selectedSource;
+    if (!selectedSource) return;
+
+    let sourceID = selectedSource.id;
+    let domainID = selectedDomain.id;
+    this.appApi.deleteSource(domainID, sourceID).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your source could not be added'));
+        return;
+      }
+
+      let domainRes = res.confirmation;
+      console.log(domainRes, domainRes.confirmation);
+      let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
+      let selectedDomain: DisplayDomain = {
+        id: domainRes._id,
+        name: domainRes.name,
+        description: domainRes.description,
+        imageUrl: '../assets/' + domainRes.icon,
+        sourceIds: domainsIDs,
+        sources: AppState.formatResponseSources(domainRes.sources),
+        selected: false,
+      };
+
+      let domains = ctx.getState().domains;
+      if (!domains) return;
+
+      for (let domain of domains) {
+        if (domain.id == selectedDomain.id) {
+          domain = selectedDomain;
+          ctx.patchState({
+            domains: domains,
+          });
+          break;
+        }
+      }
+
+      this.store.dispatch(new SetDomain(selectedDomain));
+
+      if (selectedDomain.sources.length === 0) {
+        return;
+      }
+
+      let firstSource = selectedDomain.sources[0];
+      this.store.dispatch(new SetSource(firstSource));
+    });
   }
 
   @Action(RefreshSourceData)
@@ -353,25 +480,43 @@ export class AppState {
     ctx: StateContext<AppStateModel>,
     state: RefreshSourceData
   ) {
+    let selectedSource = ctx.getState().selectedSource;
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
     } else {
-      let selectedSource = ctx.getState().selectedSource;
       if (!selectedSource) return;
       sourceID = selectedSource.id;
+
+      selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
     }
 
+    console.log('refreshing with sourceID' + sourceID);
     this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.toastr.error('Source data could not be refreshed', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
-        });
+        this.store.dispatch(
+          new ToastError('Source data could not be refreshed')
+        );
+        if (selectedSource) {
+          selectedSource.isRefreshing = false;
+          ctx.patchState({
+            selectedSource,
+          });
+        }
+
         return;
       }
       this.store.dispatch(new GetSourceDashBoardInfo());
+
+      if (selectedSource) {
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+      }
     });
   }
 
@@ -383,11 +528,7 @@ export class AppState {
       .addDomain(state.domainName, state.description, state.domainImagUrl)
       .subscribe((res) => {
         if (res.status === 'FAILURE') {
-          this.toastr.error('Your domain could not be added', '', {
-            timeOut: 3000,
-            positionClass: 'toast-bottom-center',
-            toastClass: 'custom-toast error ngx-toastr',
-          });
+          this.store.dispatch(new ToastError('Your domain could not be added'));
           return;
         }
         this.store.dispatch(new GetDomains());
@@ -437,35 +578,6 @@ export class AppState {
 
       this.store.dispatch(new GetDomains());
     });
-
-    // let domains = ctx.getState().domains;
-    // if (!domains) return;
-
-    // for (let domain of domains) {
-    //   if (domain.id == state.domainID) {
-    //     let selectedDomain = ctx.getState().selectedDomain;
-    //     if (selectedDomain && selectedDomain.id == state.domainID) {
-    //       // switch to the next domain
-    //       if (domains.length > 1) {
-    //         let nextDomain = domains[0];
-    //         if (nextDomain.id == state.domainID) {
-    //           nextDomain = domains[1];
-    //         }
-
-    //         this.store.dispatch(new SetDomain(nextDomain));
-    //       }
-    //     }
-
-    //     // remove domain from domains
-    //     domains.splice(domains.indexOf(domain), 1);
-
-    //     ctx.patchState({
-    //       domains: domains,
-    //     });
-
-    //     break;
-    //   }
-    // }
   }
 
   @Action(GetSourceDashBoardInfo)
@@ -479,17 +591,17 @@ export class AppState {
 
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.toastr.error('Sentiment data could not be retrieved', '', {
-          timeOut: 3000,
-          positionClass: 'toast-bottom-center',
-          toastClass: 'custom-toast error ngx-toastr',
-        });
+        this.store.dispatch(new ToastError('Source data could not be loaded'));
         return;
       }
 
       ctx.patchState({
-        overallSentimentScores: res.aggregated_metrics,
+        overallSentimentScores: {
+          aggregated_metrics: res.aggregated_metrics,
+          meta_data: res.meta_data,
+        },
         sampleData: res.individual_metrics,
+        sourceIsLoading: false,
       });
     });
   }
@@ -504,66 +616,60 @@ export class AppState {
         ctx.patchState({
           authenticated: true,
         });
-        this.store.dispatch(new SetProfileDetails(userID));
+        this.store.dispatch(new SetUserDetails(userID));
       }
     });
   }
+
+  // ...
 
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
     console.log('attempting password login');
 
-    this.appApi
-      .attemptPsswdLogin(state.username, state.password)
-      .subscribe((res) => {
-        if (res.status == 'SUCCESS') {
+    return this.appApi.attemptPsswdLogin(state.username, state.password).pipe(
+      switchMap((res) => {
+        if (res.status === 'SUCCESS') {
           // set jwt in local storage
           localStorage.setItem('JWT', res.JWT);
 
-          this.store.dispatch(new SetProfileDetails(res.id));
+          this.store.dispatch(new SetUserDetails(res.id));
           this.store.dispatch(new GetDomains());
           this.router.navigate(['']);
+          return of(res);
         } else {
-          this.ngZone.run(() => {
-            this.toastr.error('Login failed', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast error ngx-toastr',
-            });
-          });
+          this.store.dispatch(new ToastError('Login failed'));
+          return throwError(() => new Error('Login failed'));
         }
-      });
+      }),
+      catchError((error: any) => {
+        return of(error);
+      })
+    );
   }
 
-  /* @Action(GetProfileID)
-  getProfileID(ctx: StateContext<AppStateModel>) {
-    this.appApi.getProfileID().subscribe((res: any) => {
-      if (res.status == 'SUCCESS') {
-        ctx.patchState({
-          profileId: res.id,
-        });
-        return true;
-      } else return false;
-    });
-  } */
-
-  @Action(SetProfileDetails)
-  setProfileDetails(
-    ctx: StateContext<AppStateModel>,
-    state: SetProfileDetails
-  ) {
+  @Action(SetUserDetails)
+  setUserDetails(ctx: StateContext<AppStateModel>, state: SetUserDetails) {
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
+        const profileDetails: ProfileDetails = {
+          profileId: res.id,
+          profileIcon: res.profileIcon,
+          mode: res.mode,
+        };
+
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
-          if (res.status == 'SUCCESS') {
-            const profileDetails: ProfileDetails = {
+          if (res2.status == 'SUCCESS') {
+            const userDetails: UserDetails = {
               userId: res.userID,
               username: res2.username,
               email: res2.email,
               profileIconUrl: res.profileIcon,
+              oldPassword: res2.password,
             };
 
             ctx.patchState({
+              userDetails: userDetails,
               profileDetails: profileDetails,
             });
 
@@ -576,22 +682,109 @@ export class AppState {
 
   @Action(RegisterUser)
   registerUser(ctx: StateContext<AppStateModel>, state: RegisterUser) {
-    this.appApi
+    return this.appApi
       .registerUser(state.username, state.password, state.email)
+      .pipe(
+        switchMap((res) => {
+          if (res.status === 'SUCCESS') {
+            localStorage.setItem('JWT', res.JWT);
+            /* this.router.navigate(['']); */
+            console.log('register success');
+            return of();
+          } else {
+            return throwError(() => new Error());
+          }
+        }),
+        catchError((error: any) => {
+          this.store.dispatch(
+            new ToastError('Your account could not be registered')
+          );
+          return of(error);
+        })
+      );
+  }
+
+  @Action(ChangePassword)
+  changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {
+    //check UserDetails
+
+    const userId = ctx.getState().userDetails?.userId;
+
+    if (!userId) {
+      console.error('User ID is not available in the state.');
+      return;
+    }
+
+    const { oldPassword, newPassword } = state;
+
+    if (oldPassword === undefined || newPassword === undefined) {
+      console.error('oldPassword and newPassword must be provided.');
+      return;
+    }
+
+    this.appApi
+      .changePassword(userId, oldPassword, newPassword)
       .subscribe((res) => {
         if (res.status == 'SUCCESS') {
-          localStorage.setItem('JWT', res.JWT);
-          this.router.navigate(['']);
+          this.store.dispatch(
+            new ToastSuccess('Your password has been changed')
+          );
+          this.router.navigate(['/login']);
         } else {
-          this.ngZone.run(() => {
-            this.toastr.error('Your account could not be registered', '', {
-              timeOut: 3000,
-              positionClass: 'toast-bottom-center',
-              toastClass: 'custom-toast error ngx-toastr',
-            });
-          });
+          this.store.dispatch(
+            new ToastError('Your password could not be changed')
+          );
         }
       });
+  }
+
+  @Action(ChangeProfileIcon)
+  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+    const profileId = ctx.getState().profileDetails?.profileId;
+
+    if (!profileId) {
+      console.error('Profile ID is not available in the state.');
+      return;
+    }
+
+    const { profileIcon } = state;
+
+    if (profileIcon === undefined) {
+      console.error('profileIcon must be provided.');
+      return;
+    }
+
+    return this.appApi.changeProfileIcon(profileId, profileIcon).pipe(
+      switchMap((res) => {
+        if (res.status === 'SUCCESS') {
+          console.log('profile icon changed');
+          console.log(res.profileIcon);
+          const profileDetails: ProfileDetails = {
+            profileId: res.id,
+            profileIcon: res.profileIcon,
+            mode: res.mode,
+          };
+
+          ctx.patchState({
+            profileDetails: profileDetails,
+          });
+          return this.store.dispatch(
+            new ToastSuccess('Your profile icon has been changed')
+          );
+        } else {
+          return this.store.dispatch(
+            new ToastError('Your profile icon could not be changed')
+          );
+        }
+      }),
+      catchError((error: any) => {
+        console.error(
+          'An error occurred during the profile icon change:',
+          error
+        );
+        return throwError(() => error);
+      })
+    );
   }
 
   @Action(ChooseStatistic)
@@ -601,7 +794,47 @@ export class AppState {
     });
   }
 
-  private formatResponseSources(responseSources: any[]): DisplaySource[] {
+  @Action(SetSourceIsLoading)
+  setSourceIsLoading(
+    ctx: StateContext<AppStateModel>,
+    action: SetSourceIsLoading
+  ) {
+    const state = ctx.getState();
+    ctx.setState({
+      ...state,
+      sourceIsLoading: true,
+    });
+  }
+
+  @Action(ChangeMode)
+  changeMode(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+    const profileId = ctx.getState().profileDetails?.profileId;
+
+    if (!profileId) {
+      this.store.dispatch(new ToastError('Your theme could not be changed'));
+      return;
+    }
+
+    this.appApi.changeMode(profileId).subscribe((res) => {
+      if (res.status == 'SUCCESS') {
+        const profileDetails: ProfileDetails = {
+          profileId: res.id,
+          profileIcon: res.profileIcon,
+          mode: res.mode,
+        };
+
+        ctx.patchState({
+          profileDetails: profileDetails,
+        });
+
+        this.store.dispatch(new ToastSuccess('Your theme has been updated'));
+      } else {
+        this.store.dispatch(new ToastError('Your theme could not be changed'));
+      }
+    });
+  }
+
+  static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
     for (let responseSource of responseSources) {
       let displaySource: DisplaySource = {
@@ -609,9 +842,35 @@ export class AppState {
         name: responseSource.source_name,
         url: responseSource.source_icon,
         selected: false,
+        isRefreshing: false,
       };
       displaySources.push(displaySource);
     }
     return displaySources;
+  }
+
+  static platformToIcon(platform: string): string {
+    let source_image_name = '';
+    switch (platform) {
+      case 'facebook':
+        source_image_name = 'facebook-logo.png';
+        break;
+      case 'instagram':
+        source_image_name = 'instagram-Icon.png';
+        break;
+      case 'reddit':
+        source_image_name = 'reddit-logo.png';
+        break;
+      case 'tripadvisor':
+        source_image_name = 'tripadvisor-logo.png';
+        break;
+      case 'youtube':
+        source_image_name = 'youtube-logo.png';
+        break;
+      case 'googlereviews':
+        source_image_name = 'google-reviews.png';
+        break;
+    }
+    return source_image_name;
   }
 }

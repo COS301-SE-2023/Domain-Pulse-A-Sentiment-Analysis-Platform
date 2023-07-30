@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environment';
 
 @Injectable()
 export class AppApi {
@@ -24,7 +23,7 @@ export class AppApi {
     );
   }
 
-  getDomainInfo(domainID: number): Observable<any> {
+  getDomainInfo(domainID: string): Observable<any> {
     const getDomainInfoUrl = this.domainBaseUrl + 'domains/get_domain';
     return this.http.post(
       getDomainInfoUrl,
@@ -60,7 +59,7 @@ export class AppApi {
     return this.http.post(editDomainUrl, body, { withCredentials: true });
   }
 
-  removeDomain(domainID: number): Observable<any> {
+  removeDomain(domainID: string): Observable<any> {
     const removeDomainUrl = this.domainBaseUrl + 'domains/delete_domain';
     const body = {
       id: domainID,
@@ -83,7 +82,7 @@ export class AppApi {
   }
 
   addSource(
-    domainID: number,
+    domainID: string,
     sourceName: string,
     sourceImageUrl: string,
     params: any
@@ -98,6 +97,16 @@ export class AppApi {
     }
 
     return this.http.post(addSourceUrl, body, { withCredentials: true });
+  }
+
+  deleteSource(domainID: string, sourceID: string): Observable<any> {
+    const deleteSourceUrl = this.domainBaseUrl + 'domains/remove_source';
+    const body = {
+      id: domainID,
+      source_id: sourceID,
+    };
+
+    return this.http.post(deleteSourceUrl, body, { withCredentials: true });
   }
 
   refreshSourceInfo(sourceID: string): Observable<any> {
@@ -148,6 +157,30 @@ export class AppApi {
     return this.http.post(registerUserUrl, body);
   }
 
+  changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    const changePasswordUrl = this.profilesBaseUrl + 'profiles/change_password';
+    const body = {
+      id: userId,
+      oldpassword: oldPassword,
+      newpassword: newPassword,
+    };
+    return this.http.post(changePasswordUrl, body, { withCredentials: true });
+  }
+
+  changeProfileIcon(profileID: number, profilePicture: string): Observable<any> {
+    const changeProfilePictureUrl = this.profilesBaseUrl + 'profiles/edit_profile_picture';
+    const body = {
+      id: profileID,
+      pictureURL: profilePicture,
+    };
+    return this.http.post(changeProfilePictureUrl, body, { withCredentials: true });
+
+  }
+
   attemptPsswdLogin(username: string, password: string): Observable<any> {
     const attemptPsswdLoginUrl = this.profilesBaseUrl + 'profiles/login_user';
     const body = {
@@ -159,26 +192,6 @@ export class AppApi {
       withCredentials: true,
     });
   }
-
-  /* export interface ProfileDetails {
-  userId: number;
-  username: string;
-  profileIconUrl: string;
-} */
-
-/* 
-  @Action(SetProfileDetails)
-  setProfileDetails(ctx: StateContext<AppStateModel>, state: SetProfileDetails) {
-    this.appApi.setProfileDetails().subscribe((res: any) => {
-      if (res.status == 'SUCCESS') {
-        
-        ctx.patchState({
-          profileDetails: res.profileDetails,
-        });
-        return true;
-      } else return false;
-    });
-  } */
 
   getProfile(profileID: number): Observable<any> {
     const getProfileUrl = this.profilesBaseUrl + 'profiles/get_profile';
@@ -203,22 +216,15 @@ export class AppApi {
     });
   }
 
-  /* setProfileDetails(): Observable<any> {
-    const setProfileDetailsUrl =
-      this.profilesBaseUrl + 'profiles/get_profile';
-    const profile= this.http.post(setProfileDetailsUrl, {}, { withCredentials: true });
-    if(profile.status)
-  } */
-    
-    
-
-  /* setProfileID(profileID: number): Observable<any> {
-
-    const setProfileIDUrl = this.profilesBaseUrl + 'profiles/set_profile_id';
+  changeMode(profileID: number): Observable<any> {
+    const changeModeUrl = this.profilesBaseUrl + 'profiles/swap_mode';
     const body = {
       id: profileID,
     };
+    // send with credentials enabled
+    return this.http.post(changeModeUrl, body, {
+      withCredentials: true,
+    });
+  }
 
-    return this.http.post(setProfileIDUrl, body, { withCredentials: true });
-  } */
 }

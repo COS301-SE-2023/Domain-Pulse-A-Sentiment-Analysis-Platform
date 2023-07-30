@@ -1,4 +1,14 @@
-import { DisplayDomain, DisplaySource } from './app.state';
+import { DisplayDomain, DisplaySource, Toast } from './app.state';
+
+export class ToastError {
+  static readonly type = '[App] Toast Error';
+  constructor(public message: string, public timeout?: number) {}
+}
+
+export class ToastSuccess {
+  static readonly type = '[App] Toast Success';
+  constructor(public message: string, public timeout?: number) {}
+}
 
 export class Initialise {
   static readonly type = '[App] Initialise';
@@ -12,7 +22,7 @@ export class LoadUserDomains {
   static readonly type = '[App] Get Profile ID';
 } */
 
-export class SetProfileDetails {
+export class SetUserDetails {
   static readonly type = '[App] Set Profile Details';
   constructor(public profileId: number) {}
 }
@@ -42,7 +52,7 @@ export class AddNewDomain {
 export class EditDomain {
   static readonly type = '[App] Edit Domain';
   constructor(
-    public domainId: number,
+    public domainId: string,
     public domainName: string,
     public domainImagUrl: string,
     public description: string
@@ -51,7 +61,7 @@ export class EditDomain {
 
 export class DeleteDomain {
   static readonly type = '[App] Delete Domain';
-  constructor(public domainID: number) {}
+  constructor(public domainID: string) {}
 }
 
 export class GetSources {
@@ -77,6 +87,11 @@ export class AddNewSource {
   ) {}
 }
 
+export class DeleteSource {
+  static readonly type = '[App] Delete Source';
+  constructor() {}
+}
+
 export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
 }
@@ -99,7 +114,27 @@ export class RegisterUser {
   ) {}
 }
 
+export class ChangePassword {
+  static readonly type = '[Auth] Change Password';
+  constructor(public oldPassword: string, public newPassword: string) {}
+}
+
+export class ChangeMode {
+  static readonly type = '[App] Change Mode';
+  constructor() {}
+}
+
 export class ChooseStatistic {
   static readonly type = '[App] Choose Statistic';
   constructor(public statisticIndex: number) {}
+}
+
+export class SetSourceIsLoading {
+  static readonly type = '[Source] Set Loading';
+  constructor(public isLoading: boolean) {}
+}
+
+export class ChangeProfileIcon{
+  static readonly type = '[Profile] Change Icon';
+  constructor(public profileIcon: string) {}
 }

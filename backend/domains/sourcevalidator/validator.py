@@ -101,7 +101,7 @@ def validate_google_reviews(maps_url):
             language=LANG,
             region=COUNTRY,
         )
-        print(results)
+        # print(results)
 
         if results[0]["place_id"] == "__NO_PLACE_FOUND__":
             return False

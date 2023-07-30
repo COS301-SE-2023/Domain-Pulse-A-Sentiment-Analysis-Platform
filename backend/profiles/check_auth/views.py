@@ -9,49 +9,61 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
+
 # Create your views here.
 @csrf_exempt
 def check_source_ids(request):
     if request.method == "POST":
-        flag,token=extract_token(request)
-        user=get_user_from_token(token)
+        flag, token = extract_token(request)
+        user = get_user_from_token(token)
         if user == None:
-            return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identtfy"})
+            return JsonResponse(
+                {"status": "FAILURE", "details": "Could not verify the user's identtfy"}
+            )
 
-        userID =user.id
-        
+        userID = user.id
 
-        sources=(profilescrud.get_sources_for_user_internal(userID))["source_ids"]
-        
+        sources = (profilescrud.get_sources_for_user_internal(userID))["source_ids"]
+
         raw_data = json.loads(request.body)
         source_ids = list(raw_data["source_ids"])
         for i in source_ids:
             if i not in sources:
-                return JsonResponse({"status":"FAILURE", "details":"Non Matching Source IDs"})
-        return JsonResponse({"status":"SUCCESS", "details":"Valid access"})
-    return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
+                return JsonResponse(
+                    {"status": "FAILURE", "details": "Non Matching Source IDs"}
+                )
+        return JsonResponse({"status": "SUCCESS", "details": "Valid access"})
+    return JsonResponse(
+        {"status": "FAILURE", "details": "Invalid request to Profiles service"}
+    )
 
 
 @csrf_exempt
 def check_domain_ids(request):
     if request.method == "POST":
-        flag,token=extract_token(request)
+        flag, token = extract_token(request)
 
-        user=get_user_from_token(token)
+        user = get_user_from_token(token)
         if user == None:
-            return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identtfy"})
+            return JsonResponse(
+                {"status": "FAILURE", "details": "Could not verify the user's identtfy"}
+            )
 
-        userID =user.id
+        userID = user.id
 
-        domains=(profilescrud.get_domains_for_user_internal(userID))["domainIDs"]
-        
+        domains = (profilescrud.get_domains_for_user_internal(userID))["domainIDs"]
+
         raw_data = json.loads(request.body)
         domain_ids = list(raw_data["domain_ids"])
         for i in domain_ids:
             if i not in domains:
-                return JsonResponse({"status":"FAILURE", "details":"Non Matching Domain IDs"})
-        return JsonResponse({"status":"SUCCESS", "details":"Valid access"})
-    return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
+                return JsonResponse(
+                    {"status": "FAILURE", "details": "Non Matching Domain IDs"}
+                )
+        return JsonResponse({"status": "SUCCESS", "details": "Valid access"})
+    return JsonResponse(
+        {"status": "FAILURE", "details": "Invalid request to Profiles service"}
+    )
 
 
 def get_user_from_token(jwt_token):
@@ -63,6 +75,7 @@ def get_user_from_token(jwt_token):
     except Exception as e:
         # Handle invalid token or other exceptions
         return None
+
 
 def extract_token(original_request: HttpRequest):
     auth_header = original_request.headers.get("Authorization")
@@ -78,9 +91,10 @@ def extract_token(original_request: HttpRequest):
 
     return (True, token)
 
+
 def validate_token(request):
     try:
-        flag,token=extract_token(request)
+        flag, token = extract_token(request)
         if not flag:
             return {"status": "FAILURE", "details": token}
         else:
@@ -92,108 +106,158 @@ def validate_token(request):
 
 @csrf_exempt
 def check_source_ids_and_remove_source(request):
-    if request.META.get('REMOTE_ADDR')== "127.0.0.1":
+    if get_address(request) == "127.0.0.1":
         if request.method == "POST":
-                flag,token=extract_token(request)
-                user=get_user_from_token(token)
-                if user == None:
-                    return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identity"})
+            flag, token = extract_token(request)
+            user = get_user_from_token(token)
+            if user == None:
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "Could not verify the user's identity",
+                    }
+                )
 
-                userID =user.id
-                
+            userID = user.id
 
-                sources=(profilescrud.get_sources_for_user_internal(userID))["source_ids"]
-                
-                raw_data = json.loads(request.body)
-                source_ids = list(raw_data["source_ids"])
-                for i in source_ids:
-                    if i not in sources:
-                        return JsonResponse({"status":"FAILURE", "details":"Non Matching Source IDs"})
-                new_data=raw_data["item"]
-                response=profilescrud.remove_source_from_domain(userID,new_data["id"],new_data["source_id"])
-                if response["status"]=="SUCCESS":
-                    return JsonResponse({"status":"SUCCESS", "details":"Valid access"})
-                else:
-                    return JsonResponse({"status":"FAILURE", "details":"Failed to delete source from profile"})
-        return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
+            sources = (profilescrud.get_sources_for_user_internal(userID))["source_ids"]
+
+            raw_data = json.loads(request.body)
+            source_ids = list(raw_data["source_ids"])
+            for i in source_ids:
+                if i not in sources:
+                    return JsonResponse(
+                        {"status": "FAILURE", "details": "Non Matching Source IDs"}
+                    )
+            new_data = raw_data["item"]
+            response = profilescrud.remove_source_from_domain(
+                userID, new_data["id"], new_data["source_id"]
+            )
+            if response["status"] == "SUCCESS":
+                return JsonResponse({"status": "SUCCESS", "details": "Valid access"})
+            else:
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "Failed to delete source from profile",
+                    }
+                )
+        return JsonResponse(
+            {"status": "FAILURE", "details": "Invalid request to Profiles service"}
+        )
     else:
-        return JsonResponse({"status": "FAILURE", "details":"Foreign Request"})
+        return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+
 
 @csrf_exempt
 def add_domain(request):
-    if request.META.get('REMOTE_ADDR')== "127.0.0.1":
-
+    if get_address(request) == "127.0.0.1":
         if request.method == "POST":
-            flag,token=extract_token(request)
+            flag, token = extract_token(request)
 
-            user=get_user_from_token(token)
+            user = get_user_from_token(token)
             if user == None:
-                return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identity"})
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "Could not verify the user's identity",
+                    }
+                )
 
-            userID =user.id
+            userID = user.id
 
             raw_data = json.loads(request.body)
-            response=profilescrud.add_domain_to_profile(userID,raw_data["id"])
-            if response["status"]=="SUCCESS":
-                return JsonResponse({"status":"SUCCESS", "details":"Valid access"})
+            response = profilescrud.add_domain_to_profile(userID, raw_data["id"])
+            if response["status"] == "SUCCESS":
+                return JsonResponse({"status": "SUCCESS", "details": "Valid access"})
             else:
-                return JsonResponse({"status":"FAILURE", "details":"Failed to add domain to profile"})
-        return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
+                return JsonResponse(
+                    {"status": "FAILURE", "details": "Failed to add domain to profile"}
+                )
+        return JsonResponse(
+            {"status": "FAILURE", "details": "Invalid request to Profiles service"}
+        )
     else:
-        return JsonResponse({"status": "FAILURE", "details":"Foreign Request"})
-    
+        return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+
+
 @csrf_exempt
 def add_source(request):
-    if request.META.get('REMOTE_ADDR')== "127.0.0.1":
-
+    if get_address(request) == "127.0.0.1":
         if request.method == "POST":
-            flag,token=extract_token(request)
+            flag, token = extract_token(request)
 
-            user=get_user_from_token(token)
+            user = get_user_from_token(token)
             if user == None:
-                return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identity"})
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "Could not verify the user's identity",
+                    }
+                )
 
-            userID =user.id
+            userID = user.id
 
             raw_data = json.loads(request.body)
-            response=profilescrud.add_source_to_domain(userID,raw_data["domain_id"],raw_data["source_id"])
-            if response["status"]=="SUCCESS":
-                return JsonResponse({"status":"SUCCESS", "details":"Valid access"})
+            response = profilescrud.add_source_to_domain(
+                userID, raw_data["domain_id"], raw_data["source_id"]
+            )
+            if response["status"] == "SUCCESS":
+                return JsonResponse({"status": "SUCCESS", "details": "Valid access"})
             else:
-                return JsonResponse({"status":"FAILURE", "details":"Failed to add source to profile"})
-        return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
+                return JsonResponse(
+                    {"status": "FAILURE", "details": "Failed to add source to profile"}
+                )
+        return JsonResponse(
+            {"status": "FAILURE", "details": "Invalid request to Profiles service"}
+        )
     else:
-        return JsonResponse({"status": "FAILURE", "details":"Foreign Request"})    
+        return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+
 
 @csrf_exempt
 def check_domain_ids_and_remove_domain(request):
-    if request.META.get('REMOTE_ADDR')== "127.0.0.1":
+    if get_address(request) == "127.0.0.1":
         if request.method == "POST":
-                flag,token=extract_token(request)
-                user=get_user_from_token(token)
-                if user == None:
-                    return JsonResponse({"status": "FAILURE", "details" :"Could not verify the user's identity"})
+            flag, token = extract_token(request)
+            user = get_user_from_token(token)
+            if user == None:
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "Could not verify the user's identity",
+                    }
+                )
 
-                userID =user.id
-                
+            userID = user.id
 
-                domains=(profilescrud.get_domains_for_user_internal(userID))["domainIDs"]
-                
-                raw_data = json.loads(request.body)
-                domain_ids = list(raw_data["domain_ids"])
-                for i in domain_ids:
-                    if i not in domains:
-                        return JsonResponse({"status":"FAILURE", "details":"Non Matching Domain IDs"})
-                new_data=raw_data["item"]
-                response=profilescrud.remove_domain_from_profile(userID,new_data["id"])
-                if response["status"]=="SUCCESS":
-                    return JsonResponse({"status":"SUCCESS", "details":"Valid access"})
-                else:
-                    return JsonResponse({"status":"FAILURE", "details":"Failed to delete domain from profile"})
-        return JsonResponse({"status": "FAILURE", "details":"Invalid request to Profiles service"})
+            domains = (profilescrud.get_domains_for_user_internal(userID))["domainIDs"]
+
+            raw_data = json.loads(request.body)
+            domain_ids = list(raw_data["domain_ids"])
+            for i in domain_ids:
+                if i not in domains:
+                    return JsonResponse(
+                        {"status": "FAILURE", "details": "Non Matching Domain IDs"}
+                    )
+            new_data = raw_data["item"]
+            response = profilescrud.remove_domain_from_profile(userID, new_data["id"])
+            if response["status"] == "SUCCESS":
+                return JsonResponse({"status": "SUCCESS", "details": "Valid access"})
+            else:
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "Failed to delete domain from profile",
+                    }
+                )
+        return JsonResponse(
+            {"status": "FAILURE", "details": "Invalid request to Profiles service"}
+        )
     else:
-        return JsonResponse({"status": "FAILURE", "details":"Foreign Request"})
-    
+        return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+
+
 @csrf_exempt
 def check_logged_in(request):
     if request.method == "POST":
@@ -206,4 +270,6 @@ def check_logged_in(request):
         else:
             return JsonResponse({"status": "FAILURE"})
 
-        
+
+def get_address(request):
+    return request.META.get("REMOTE_ADDR")

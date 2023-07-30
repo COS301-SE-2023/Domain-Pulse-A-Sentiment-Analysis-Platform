@@ -43,7 +43,7 @@
     >
       <div class="flex-column" style="width: 100%">
         <div>
-          <button (click)="login()" class="button clickable-item">Log In</button>
+          <button (click)="login()" class="button clickable-item">Log In <div [ngClass]="{ 'button-spinner': isSpinning }"></div></button>
         </div>
         <div class="alternative-option">
           <p class="clickable-item"  routerLink="/register">Don't have an account?</p>

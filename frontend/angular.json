@@ -68,6 +68,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "src/proxy.config.json",
+          },
           "configurations": {
             "production": {
               "browserTarget": "domain-pulse:build:production"
@@ -86,8 +89,7 @@
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
-          "options": 
-          { 
+          "options": {
             "karmaConfig": "karma.conf.js",
             "polyfills": [
               "zone.js",
@@ -116,5 +118,4 @@
   "cli": {
     "analytics": false
   }
-
 }

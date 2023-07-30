@@ -1,28 +1,36 @@
-<div
-  class="flex-row"
-  style="width: 97%; height: 90%; justify-content: space-between"
->
-  <div class="flex-row center" style="width: 2%">
-    <img
-      width="100%"
-      src="../../assets/icons/arrowBlockLeft.svg"
-      alt="Arrow block left"
-      (click)="switchToPreviousGraph()"
-      class = "clickable-item"
-    />
+<ng-container *ngIf="(sourceIsLoading$ | async) === true; else loadingContent">
+  <div class="loading-container">
+    <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
   </div>
+</ng-container>
 
-  <div id="chartContainer" #chartContainer class="chart-container">
-    <canvas #myChart></canvas>
-  </div>
+<ng-template #loadingContent>
+  <div
+    class="flex-row"
+    style="width: 97%; height: 90%; justify-content: space-between"
+  >
+    <div class="flex-row center" style="width: 2%">
+      <img
+        width="100%"
+        src="../../assets/icons/arrowBlockLeft.svg"
+        alt="Arrow block left"
+        (click)="switchToPreviousGraph()"
+        class="clickable-item"
+      />
+    </div>
 
-  <div class="flex-row center" style="width: 2%">
-    <img
-      width="100%"
-      src="../../assets/icons/arrowBlockRight.svg"
-      alt="Arrow block right"
-      (click)="switchToNextGraph()"
-      class = "clickable-item"
-    />
+    <div id="chartContainer" #chartContainer class="chart-container">
+      <canvas #myChart></canvas>
+    </div>
+
+    <div class="flex-row center" style="width: 2%">
+      <img
+        width="100%"
+        src="../../assets/icons/arrowBlockRight.svg"
+        alt="Arrow block right"
+        (click)="switchToNextGraph()"
+        class="clickable-item"
+      />
+    </div>
   </div>
-</div>
+</ng-template>
