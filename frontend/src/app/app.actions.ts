@@ -87,6 +87,13 @@ export class AddNewSource {
   ) {}
 }
 
+export class EditSource {
+  static readonly type = '[App] Edit Source';
+  constructor(
+    public name: string,
+  ) {}
+}
+
 export class DeleteSource {
   static readonly type = '[App] Delete Source';
   constructor() {}

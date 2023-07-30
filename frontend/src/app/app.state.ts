@@ -27,6 +27,7 @@ import {
   DeleteSource,
   DeleteUser,
   Logout,
+  EditSource,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -426,6 +427,73 @@ export class AppState {
         this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
       });
   }
+
+ /*  @Action(EditSource)
+  editSource(ctx: StateContext<AppStateModel>, state: EditSource) {
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    let selectedSource = ctx.getState().selectedSource;
+    if (!selectedSource) return;
+
+    let sourceID = selectedSource.id;
+
+    this.appApi.editSource(sourceID, state.name).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your source could not be edited'));
+        return;
+      }else if(res.status === 'SUCCESS'){
+        this.store.dispatch(new ToastSuccess('Your source has been edited'));
+        if(!selectedSource) return;
+
+        let updatedSelectedSource: DisplaySource = {
+          id: selectedSource.id,
+          name: state.name,
+          url: selectedSource.url,
+          selected: selectedSource.selected,
+          params: selectedSource.params,
+          isRefreshing: selectedSource.isRefreshing,
+        };
+        ctx.patchState({ selectedSource: updatedSelectedSource });
+      }
+
+    });
+
+
+
+  } */
+
+  @Action(EditSource)
+  editSource(ctx: StateContext<AppStateModel>, state: EditSource) {
+    const currentState = ctx.getState();
+    const sources = currentState.sources || [];
+    const selectedSource = currentState.selectedSource;
+
+    if (!selectedSource) {
+      this.store.dispatch(new ToastError('No selected source to edit'));
+      return;
+    }
+
+    const sourceID = selectedSource.id;
+    this.appApi.editSource(sourceID, state.name).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your source could not be edited'));
+        return;
+      } else if (res.status === 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('Your source has been edited'));
+
+        const updatedSources = sources.map((source) => {
+          if (source.id === sourceID) {
+            return { ...source, name: state.name };
+          }
+          return source;
+        });
+
+        ctx.patchState({ sources: updatedSources });
+      }
+    });
+  }
+
 
   @Action(DeleteSource)
   deleteSource(ctx: StateContext<AppStateModel>, state: DeleteSource) {

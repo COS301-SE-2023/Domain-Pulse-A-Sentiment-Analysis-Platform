@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, RefreshSourceData, SetSource, SetSourceIsLoading } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetSource, SetSourceIsLoading } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -81,10 +81,12 @@ export class SourceSelectorComponent {
   }
 
   editSource(){
-    if(this.editSourceUrl != this.store.selectSnapshot(AppState.selectedSource)?.url){
+
+    const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
+    if(this.editSourceUrl != selectedSource?.params){
       this.newSourceName = this.editSourceName;
       this.newSourceUrl = this.editSourceUrl;
-      this.newSourcePlatform = this.store.selectSnapshot(AppState.selectedSource)?.url || '';
+      this.newSourcePlatform = selectedSource?.url || '';
 
       if(this.newSourcePlatform.includes('youtube')){
         this.newSourcePlatform = 'youtube';
@@ -100,8 +102,8 @@ export class SourceSelectorComponent {
       this.addNewSource();
       return;
     }
-    else if(this.editSourceName != this.store.selectSnapshot(AppState.selectedSource)?.name){
-      //edit only source name
+    else if(this.editSourceName != selectedSource?.name){
+      this.store.dispatch(new EditSource(this.editSourceName));
       return;
     }
   }
