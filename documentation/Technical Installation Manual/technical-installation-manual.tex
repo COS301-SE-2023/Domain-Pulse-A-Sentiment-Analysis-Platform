@@ -36,11 +36,13 @@ application available at: www.domainpulse.app
 
 \subsection{Hosted Web App Approach - Recommended}
 In order to interact with the web app hosted at www.domainpulse.app, no configuration or installation is required. The only
-prerequisites are: a modern web browser (Brave, Firefox, or Google Chrome recommended) and a stable Internet connection.
+prerequisites are: a modern web browser (Brave, Firefox, or Google Chrome recommended) and a stable Internet connection. This is the
+intended and preferred approach of using the application.
 
 
 \subsection{Overview of local installation process}
-The process of installing the application locally consists of the following stages, each of which is to be described in detail later in the manual:
+The process of installing the application locally consists of the following stages, each of which is to be described in detail later in the manual.
+To reiterate, this is not the recommended approach as there is a substantial number of prerequisites to install and configure.
 \begin{itemize}
     \item Installation and acquisition of prerequisites
     \item Downloading and configuring application
@@ -212,18 +214,50 @@ Domain Pulse is a web application deployed to a private virtual machine provded 
 configuration of the application is set to interact with this server via SSH. For security reasons, this guide details how to configure
 the application for local deployment only, and no SSH or API credential will be provided.
 
-\subsubsection{Setting up enviroment variables}
-To establish connections to local database, you will need to create an environment variable file called \code{.postgresql.env} (in the root of the project directory). The file
-needs to have the following contents: \\
-Similarly, you will need to create a file named \code{.env} which will contain a number of other details: \\
-
-
 \subsubsection{Acquiring API Keys}
-In order for the project to successfully interact with the necessary external services, one needs to acquire API keys for the following services:
+In order for the project to successfully interact with the necessary external services, one needs to acquire API keys for the following services.
+Note that each service may require some setup of its own.
 \begin{itemize}
     \item Outscraper: https://outscraper.com/
     \item Youtube Data API v3: https://blog.hubspot.com/website/how-to-get-youtube-api-key
+    \item Azure Blob Storage: https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal
 \end{itemize}
+
+
+\subsubsection{Setting up enviroment variables}
+To establish connections to local database, you will need to create an environment variable file called \code{.postgresql.env} (in the root of the project directory). The file
+needs to have the following contents:
+\begin{lstlisting}[basicstyle=\ttfamily]
+    USE_TUNNEL=False
+    SQL_DATABASE_HOST=localhost
+    SQL_DATABASE_NAME=[Your PostgreSQL database name]
+    SQL_DATABASE_USER=[Your PostgreSQL server username]
+    SQL_DATABASE_PASS=[Your PostgreSQL server password]
+    SQL_DATABASE_PORT=[The port on which your PostgreSQL server is running]
+    MONGO_HOST=localhost
+    MONGO_PORT=[The port on which your MongoDB server is running]
+    MONGO_DB_NAME=[Your MongoDB database name]
+\end{lstlisting}
+
+Similarly, you will need to create a file named \code{.env} which will contain a number of other details. These include some details
+regarding service ports and external service API keys.
+\begin{lstlisting}[basicstyle=\ttfamily]
+    ENVIRONMENT=local
+    DJANGO_DOMAINS_PORT=8000
+    DJANGO_ENGINE_PORT=8001
+    DJANGO_PROFILES_PORT=8002
+    DJANGO_SOURCECONNECTOR_PORT=8003
+    DJANGO_WAREHOUSE_PORT=8004
+    MONGO_PORT = [The port on which your MongoDB server is running]
+    OUTSCRAPER_API_KEY = [The API key obtained from Outscraper]
+    TRIPADVISOR_API_KEY = [The API key obtained from Outscraper]
+    GOOGLE_REVIEWS_API_KEY = [The API key obtained from Outscraper]
+    TRUSTPILOT_API_KEY = [The API key obtained from Outscraper]
+    YOUTUBE_API_KEY = [The Youtube Data API v3 key obtained]
+    SECRET_KEY = [Private key string to be used for encryption]
+    AZURE_SAS = [API key associated with Azure Blob Storage container]
+\end{lstlisting}
+
 
 
 \section{Deployment and Running}
