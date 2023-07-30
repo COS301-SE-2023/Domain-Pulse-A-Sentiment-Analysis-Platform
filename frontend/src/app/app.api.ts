@@ -149,6 +149,11 @@ export class AppApi {
     return this.http.post(checkAuthenticateUrl, {}, { withCredentials: true });
   }
 
+  logOut(): Observable<any> {
+    const logOutUrl = this.profilesBaseUrl + 'profiles/logout_user';
+    return this.http.post(logOutUrl, {}, { withCredentials: true });
+  }
+
   registerUser(
     username: string,
     email: string,

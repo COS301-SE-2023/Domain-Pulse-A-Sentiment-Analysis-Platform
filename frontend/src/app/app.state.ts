@@ -26,6 +26,7 @@ import {
   ChangeProfileIcon,
   DeleteSource,
   DeleteUser,
+  Logout,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -752,7 +753,6 @@ export class AppState {
         switchMap((res) => {
           if (res.status === 'SUCCESS') {
             localStorage.setItem('JWT', res.JWT);
-            /* this.router.navigate(['']); */
             console.log('register success');
             return of();
           } else {
@@ -767,6 +767,34 @@ export class AppState {
         })
       );
   }
+
+  @Action(Logout)
+  logout(ctx: StateContext<AppStateModel>) {
+
+    return this.appApi
+      .logOut()
+      .pipe(
+        switchMap((res) => {
+          if (res.status === 'SUCCESS') {
+            this.store.dispatch(new ToastSuccess('You have been logged out'));
+            localStorage.removeItem('JWT');
+            this.router.navigate(['/login'])
+
+            return of();
+          } else {
+            return throwError(() => new Error());
+          }
+        }),
+        catchError((error: any) => {
+          this.store.dispatch(
+            new ToastError('You could not be logged out')
+          );
+          return of(error);
+        })
+      );
+  }
+
+
 
   @Action(ChangePassword)
   changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {

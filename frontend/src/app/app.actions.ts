@@ -119,6 +119,11 @@ export class RegisterUser {
   ) {}
 }
 
+export class Logout {
+  static readonly type = '[Auth] Logout';
+  constructor() {}
+}
+
 export class ChangePassword {
   static readonly type = '[Auth] Change Password';
   constructor(public oldPassword: string, public newPassword: string) {}

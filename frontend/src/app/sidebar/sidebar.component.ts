@@ -27,6 +27,7 @@ import {
   ChangeMode,
   ChangeProfileIcon,
   ToastError,
+  Logout,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -537,5 +538,9 @@ export class SidebarComponent {
     this.store.dispatch(new DeleteUser(username, this.password ));
     /* this.closeAllModals(); */
     
+  }
+
+  logOut(){
+    this.store.dispatch(new Logout());
   }
 }
