@@ -3,20 +3,26 @@
 \usepackage[utf8]{inputenc} 
 \usepackage{graphicx}
 
-% Document information
+
 \title{Technical Installation Manual}
 \author{Ctrl Alt Defeat}
-\date{\today} % Use a specific date or leave it empty for the current date
+\date{\today} 
 \begin{document}
-\maketitle % Generates the title based on the information above
+\maketitle
 
 
 \section{Introduction}
-The following is a technical installation manual for the project Domain Pulse, a system designed to aggregate and
-process data for given domains (businesses, products, etc…),
-over given sources (Google reviews, TripAdvisor and others) and provide the user,
-peoples sentiment towards their domain. The system uses a Django backend, Angular frontend and PostgreSQL and MongoDB databases.
-The installation of these components and the packages used within in them, shall be explained within this manual.
+The following is a Technical Installation Manual for COS301 capstone project, Domain Pulse - A Sentiment Analysis Platform. Domain Pulse is
+a system designed to fetch, analyse, aggregate, and present results of sentiment analysis on publically available data pertaining to
+businesses, products, places, and more! Sources of data include (but are not limited to) Google reviews, TripAdvisor and Youtube.
+
+This installation guide details how to setup and install the system locally. The system uses a Django backend (consisting of 5 independently deployable projects),
+an Angular frontend as well as PostgreSQL and MongoDB databases. The installation of these components and the packages used within in
+them, shall be explained within this manual.
+
+Please note that the production application is a web application that is deployed to a private virtual machine acting as a web server. For
+security purposes, this guide will not provide details or keys for connecting to the deployment server - instead this details local installation
+of the application.
 
 \subsection{Some subsection}
 If we need to add more details or break it up
