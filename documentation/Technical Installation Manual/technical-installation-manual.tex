@@ -31,6 +31,9 @@ Please note that the production application is a web application that is deploye
 security purposes, this guide will not provide details or keys for connecting to the deployment server - instead this details local installation
 of the application.
 
+Once again, this is not the recommended approach for using the application. Instead, is it recommended that one interacts with the hosted web
+application available at: www.domainpulse.app
+
 \subsection{Overview of installation process}
 The process of installing the application consists of the following stages, each of which is to be described in detail later in the manual:
 \begin{itemize}
@@ -65,7 +68,7 @@ Any modern web browser should support the appropriate rendering of the applicati
 
 \subsection{Python 3.8}
 \subsubsection{Linux}
-The following resources commnds be used for installing Python 3.8 on Linux:\\
+The following resources commands be used for installing Python 3.8 on Linux:\\
 \code{sudo apt-get update}\\
 \code{sudo add-apt-repository ppa:deadsnakes/ppa -y}\\
 \code{sudo apt-get update}\\
@@ -164,10 +167,19 @@ configuration of the application is set to interact with this server via SSH. Fo
 the application for local deployment only, and no SSH or API credential will be provided.
 
 \subsubsection{Setting up enviroment variables}
+To establish connections to local database, you will need to create an environment variable file called \code{.postgresql.env} (in the root of the project directory). The file
+needs to have the following contents: \\
+Similarly, you will need to create a file named \code{.env} which will contain a number of other details: \\
 
+
+\subsubsection{Acquiring API Keys}
+In order for the project to successfully interact with the necessary external services, one needs to acquire API keys for the following services:
+\begin{itemize}
+    \item Outscraper: https://outscraper.com/
+    \item Youtube Data API v3: https://blog.hubspot.com/website/how-to-get-youtube-api-key
+\end{itemize}
 
 Installation - this describes how the installation of your system would work
-
 My understanding is this would be like actually getting the code onto your machine and how to install the prerequisites once you have the code
 Luckily we've got stuff like pipenv install to just get all the python packages
 
