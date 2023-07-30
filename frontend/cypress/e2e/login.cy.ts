@@ -34,23 +34,21 @@ describe('Logging In - Basic Auth', function () {
 
   it('be in dashboard', () => {
     cy.visit('/');
-    cy.wait(1000);
+    cy.wait(500);
     cy.location('pathname').should('eq', '/');
   });
 
   it('check if the button switches to the register page correctly', () => {
     window.localStorage.removeItem('JWT');
     cy.visit('/login');
-    // cy.get('[data-cy=switchForNoAcc]').click();
-    cy.contains('Don\'t have an account?').click();
+    cy.get('[data-cy=switchForNoAcc]').click();
     cy.location('pathname').should('eq', '/register');
   });
 
   it('switched to login if one has registered', () => {
     window.localStorage.removeItem('JWT');
     cy.visit('/register');
-    // cy.get('[data-cy=switchForAcc]').click();
-    cy.contains('Already have an account?').click();
+    cy.get('[data-cy=switchForAcc]').click();
     cy.location('pathname').should('eq', '/login');
   });
 });
