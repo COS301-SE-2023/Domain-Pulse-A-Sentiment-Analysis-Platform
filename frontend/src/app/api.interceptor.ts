@@ -62,10 +62,7 @@ export class ApiInterceptor implements HttpInterceptor {
       if (jwt) {
         const modifiedReq = req.clone({
           url: apiUrl + '/' + urlParts.join('/'),
-          headers: req.headers.set(
-            'authorization',
-            'Bearer ' + jwt
-          ),
+          headers: req.headers.set('authorization', 'Bearer ' + jwt),
         });
         return next.handle(modifiedReq);
       }
@@ -78,10 +75,7 @@ export class ApiInterceptor implements HttpInterceptor {
       if (jwt) {
         const modifiedReq = req.clone({
           url: apiUrl + req.url,
-          headers: req.headers.set(
-            'authorization',
-            'Bearer ' + jwt
-          ),
+          headers: req.headers.set('authorization', 'Bearer ' + jwt),
         });
         return next.handle(modifiedReq);
       }
