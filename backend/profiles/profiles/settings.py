@@ -34,6 +34,7 @@ RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
     "localhost",
     "154.73.32.89",
     ".domain-pulse.co.za",
