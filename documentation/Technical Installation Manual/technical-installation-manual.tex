@@ -32,7 +32,7 @@ security purposes, this guide will not provide details or keys for connecting to
 of the application.
 
 Once again, this is not the recommended approach for using the application. Instead, is it recommended that one interacts with the hosted web
-application available at: www.domainpulse.app
+application available at: \code{www.domainpulse.app}
 
 \subsection{Hosted Web App Approach - Recommended}
 In order to interact with the web app hosted at www.domainpulse.app, no configuration or installation is required. The only
@@ -41,10 +41,11 @@ intended and preferred approach of using the application.
 
 
 \subsection{Overview of local installation process}
-The process of installing the application locally consists of the following stages, each of which is to be described in detail later in the manual.
 To reiterate, this is not the recommended approach as there is a substantial number of prerequisites to install and configure.
+The process of installing the application locally consists of the following stages, each of which is to be described in detail
+later in the manual:
 \begin{itemize}
-    \item Installation and acquisition of prerequisites
+    \item Installation and acquisition of prerequisitesW
     \item Downloading and configuring application
     \item Installing project specific dependencies
     \item Running the application
@@ -126,39 +127,12 @@ Note: Ensure that the PostgreSQL bin directory is added to the PATH environment 
 \begin{itemize}
     \item Log in to psql CLI using \code{psql -U postgres}
     \item Create the database using \code{CREATE DATABASE profiles;}
-\end{itemize}\section{Deployment and Running}
-Once all previous steps have been followed and completed, and PostgreSQL and MongoDB are running, the application may be run locally. To do so,
-the depolyment of the backend and frontend is done separately.
-\subsection{Backend}
-In terminal, navigate to the 'backend' directory. To deploy the backend, issue the following commands:\\ \code{pipenv shell}
-\\Next: \code{cd scripts}\\
-Finally: \code{./run-projects.sh}\\
-
-\subsection{Frontend}
-In terminal, navigate to the 'frontend' directory. To deploy the frontend, issue the following commands:\\
+\end{itemize}
 
 
 
 \section{Prerequisites - Hardware}
-The following are the minimum recommended specifications\subsection{PostgreSQL 12}
-The following resource can be used for installing PostgreSQL 12
-\begin{itemize}
-    \item https://www.postgresql.org/download/
-\end{itemize}
-Important note: Ensure that, regardless of what installer is used, PostgreSQL 12 specifically is installed.\\
-Once installed, the following needs to be completed to ensure that the database is ready for use:
-\subsubsection*{Linux}
-\begin{itemize}
-    \item Log in to psql CLI using \code{sudo -u postgres psql}
-    \item Create the database using \code{CREATE DATABASE profiles;}
-\end{itemize}
-
-\subsubsection*{Windows}
-Note: Ensure that the PostgreSQL bin directory is added to the PATH environment variable.\\
-\begin{itemize}
-    \item Log in to psql CLI using \code{psql -U postgres}
-    \item Create the database using \code{CREATE DATABASE profiles;}
-\end{itemize} required to install and run Domain Pulse locally
+The following are the minimum recommended specifications required to install and run Domain Pulse locally.
 \begin{itemize}
     \item CPU: Intel i5 11th Gen or Ryzen equivalent recommended
     \item RAM: 8GB minimum, 16GB recommended
@@ -172,8 +146,6 @@ Note: Ensure that the PostgreSQL bin directory is added to the PATH environment 
 The repo may be cloned locally from Github using the following command: \\
 \code{git clone https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform.git}
 
-
-\subsection{Configuring the application}
 
 
 \subsection{Installing dependencies}
