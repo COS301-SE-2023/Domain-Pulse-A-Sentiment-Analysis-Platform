@@ -2,6 +2,7 @@
   class="flex-column center"
   style="gap: 1rem; height: 98%"
   (click)="clickSidebar(); $event.stopPropagation()"
+  data-cy="sidebar"
 >
   <!-- [@logoSwitch]="logoState" -->
   <div class="flex-column center" style="height: 86px">
@@ -37,6 +38,7 @@
       width: _expanded ? '90%' : 'fit-content',
       color: domain.selected ? 'black' : 'white'
     }"
+    data-cy="domain"
   >
     <div class="circle-wrapper">
       <img
