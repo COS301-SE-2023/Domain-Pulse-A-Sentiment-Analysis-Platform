@@ -97,9 +97,9 @@ describe('SidebarComponent', () => {
 
   it('should fire an "EditDomain" action', (done: DoneFn) => {
     // mock out teh selectSnapshot
-    component.newDomainName = 'New Domain Name';
-    component.newDomainImageName = 'New Domain Image Name';
-    component.newDomainDescription = 'New Domain Description';
+    component.editDomainName = 'New Domain Name';
+    component.editDomainImageName = 'image';
+    component.editDomainDescription = 'New Domain Description';
 
     actions$.pipe(ofActionDispatched(EditDomain)).subscribe(() => {
       // expect the clearing of the set variables
@@ -109,7 +109,7 @@ describe('SidebarComponent', () => {
         expect(component.newDomainDescription).toBe('');
 
         done();
-      }, 300);
+      }, 500);
     });
 
     const dummyDisplayDomain: DisplayDomain = {

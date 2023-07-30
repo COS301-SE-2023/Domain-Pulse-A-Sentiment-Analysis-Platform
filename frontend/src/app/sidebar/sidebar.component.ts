@@ -170,13 +170,14 @@ export class SidebarComponent {
 
   toggleEditDomainModal(): void {
     if (!this.showEditDomainModal) {
+      this.showEditDomainModal = true;
       const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
       if (!selectedDomain) return;
       this.editDomainName = selectedDomain.name;
       this.editDomainImageName = selectedDomain.imageUrl;
       this.editDomainDescription = selectedDomain.description;
       this.selectIconEdit(selectedDomain.imageUrl);
-      this.showEditDomainModal = true;
+      
     } else {
       this.showEditDomainModal = false;
     }
