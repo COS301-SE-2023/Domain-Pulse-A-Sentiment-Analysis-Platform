@@ -69,7 +69,7 @@ Ideally, this system will be useful to a fair number of people, who will in turn
 \newpage
 \section{Architectural Design and Patterns}
 \subsection{Diagram}
-\includegraphics[width=1\textwidth]{Demo2Architecture.jpg}
+\includegraphics[width=1\textwidth]{Demo3Architecture.jpg}
 Please see a description of the employed architectural patterns and tactics below.
 
 
@@ -84,6 +84,7 @@ The overarching software architecture is that of a Service-Oriented Architecture
     \item Scalability: The use of a Service-Oriented Architecture promotes scalability of the application by distributing the computational responsibilities across different deployed units (tactic: distributed processing) - thus helping reduce bottleneck.
     \item Performance: The separation of services allows services that require higher computationally expense to be scalled vertically or horizontally (tactic). Furthermore distributed processing of tasks ultimately improves performance.
     \item Modifiability: A SOA takes seperation of concerns (tactic) to an extreme, and allow for individual services to be modified totally independently of one another.
+    \item Security: Structuring the application as five independently deployable unit allows for the isolation of components, such that if an attacker compromises a single service, they do not necessarily compromise any of the other services. This isolation helps contain security breaches.
 \end{itemize}
 \subsection{Multitier/Layered Pattern}
 \subsubsection{Description}
@@ -121,7 +122,7 @@ As part of the Data layer of the application (see Multitier/Layered Pattern) we 
 Note that no pattern directly addresses the quality requirement of security. This is because this quality requirement is addressed by the choice of technology (detailed below). Furthermore, the important quality requirement of Usability is only directly addressed via one pattern above - please note however that this is not an oversight. Instead, Usability is so core to our application that it is mainly ingrained into the business logic and technology choices of the system.
 \subsubsection{Security}
 \begin{itemize}
-    \item Authentication is token based (tactic). JWT tokens will be used to authenticate a user across multiple deployed and independent services.
+    \item Authentication is token based (tactic). JWT tokens will be used to authenticate a user across multiple deployed and independent services. These tokens will be verified and managed by a central authentication service (Profiles) - this enables consistent token verification and potentially token blacklisting.
     \item Backend technology choice of Django (discussed below) is designed with security in mind, employing various mechanisms to combat common security vulnerabilities
 \end{itemize}
 \subsubsection{Usability}
