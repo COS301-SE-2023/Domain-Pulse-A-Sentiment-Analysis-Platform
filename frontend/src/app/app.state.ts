@@ -51,6 +51,7 @@ export interface DisplaySource {
   id: string;
   name: string;
   url: string;
+  params: any;
   selected: boolean;
   isRefreshing: boolean;
 }
@@ -397,7 +398,7 @@ export class AppState {
           id: domainRes._id,
           name: domainRes.name,
           description: domainRes.description,
-          imageUrl: '../assets/' + domainRes.icon,
+          imageUrl: domainRes.icon,
           sourceIds: domainsIDs,
           sources: AppState.formatResponseSources(domainRes.sources),
           selected: false,
@@ -443,13 +444,14 @@ export class AppState {
       }
 
       let domainRes = res.confirmation;
+      console.log("logging domain res")
       console.log(domainRes, domainRes.confirmation);
       let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
       let selectedDomain: DisplayDomain = {
         id: domainRes._id,
         name: domainRes.name,
         description: domainRes.description,
-        imageUrl: '../assets/' + domainRes.icon,
+        imageUrl: domainRes.icon,
         sourceIds: domainsIDs,
         sources: AppState.formatResponseSources(domainRes.sources),
         selected: false,
@@ -957,10 +959,22 @@ export class AppState {
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
     for (let responseSource of responseSources) {
+      let sourceUrl = '';
+      if(responseSource.params.video_id){
+        sourceUrl = responseSource.params.video_id;
+      }
+      else if(responseSource.params.maps_url){
+        sourceUrl = responseSource.params.maps_ur;
+      }
+      else if(responseSource.params.tripadvisor_url){
+        sourceUrl = responseSource.params.tripadvisor_url;
+      }
+
       let displaySource: DisplaySource = {
         id: responseSource.source_id,
         name: responseSource.source_name,
         url: responseSource.source_icon,
+        params: sourceUrl,
         selected: false,
         isRefreshing: false,
       };

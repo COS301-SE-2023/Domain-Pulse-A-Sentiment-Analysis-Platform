@@ -21,6 +21,9 @@ export class SourceSelectorComponent {
   newSourcePlatform = '';
   newSourceUrl = '';
 
+  editSourceName = '';
+  editSourceUrl = '';
+
   constructor(private store: Store) {}
 
   selectSource(source: DisplaySource) {
@@ -32,6 +35,7 @@ export class SourceSelectorComponent {
     var params = this.determineSourceParams();
     console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
+    console.log('url: ' + this.newSourceName);
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     );
@@ -53,7 +57,14 @@ export class SourceSelectorComponent {
           tripadvisor_url: this.newSourceUrl,
         }
       case 'youtube':
+
         const url = this.newSourceUrl;
+        if (!url.includes('youtube')) {
+          return {
+            source_type: 'youtube',
+            video_id: url,
+          };
+        }
         console.log('url: ' + url);
         const regExp =
           /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -69,6 +80,32 @@ export class SourceSelectorComponent {
     return null;
   }
 
+  editSource(){
+    if(this.editSourceUrl != this.store.selectSnapshot(AppState.selectedSource)?.url){
+      this.newSourceName = this.editSourceName;
+      this.newSourceUrl = this.editSourceUrl;
+      this.newSourcePlatform = this.store.selectSnapshot(AppState.selectedSource)?.url || '';
+
+      if(this.newSourcePlatform.includes('youtube')){
+        this.newSourcePlatform = 'youtube';
+      }
+      else if(this.newSourcePlatform.includes('tripadvisor')){
+        this.newSourcePlatform = 'tripadvisor';
+      }
+      else if(this.newSourcePlatform.includes('google')){
+        this.newSourcePlatform = 'googlereviews';
+      }
+
+      this.deleteSource();
+      this.addNewSource();
+      return;
+    }
+    else if(this.editSourceName != this.store.selectSnapshot(AppState.selectedSource)?.name){
+      //edit only source name
+      return;
+    }
+  }
+
   refreshSource() {
     this.store.dispatch(new RefreshSourceData());
   }
@@ -81,10 +118,6 @@ export class SourceSelectorComponent {
     this.newSourcePlatform = platform;
   }
 
-  editSource() {
-    this.toggleEditSourceModal();
-  }
-
   toggleAddSourcesModal() {
     if (!this.showAddSourcesModal) {
       this.showAddSourcesModal = true;
@@ -95,6 +128,8 @@ export class SourceSelectorComponent {
 
   toggleEditSourceModal() {
     if (!this.showEditSourceModal) {
+      this.editSourceName = this.store.selectSnapshot(AppState.selectedSource)?.name || '';
+      this.editSourceUrl = this.store.selectSnapshot(AppState.selectedSource)?.params || '';
       this.showEditSourceModal = true;
     } else {
       this.showEditSourceModal = false;

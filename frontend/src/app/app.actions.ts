@@ -83,7 +83,7 @@ export class AddNewSource {
   constructor(
     public name: string,
     public platform: string,
-    public params: any
+    public params: any,
   ) {}
 }
 

@@ -149,55 +149,36 @@
   <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
     <div class="heading-container">
       <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleEditSourceModal()">
-      <p class="modal-heading">Edit a Source</p>
+      <p class="modal-heading">Add a Source</p>
     </div>
-    <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">1</p>
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source Name:</p>
-          <input class="default-input" [(ngModel)]="newSourceName" type="text" />
+      <div class="flex-column center content" style="width: 80%; gap: 0.5rem">
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">1</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">Source Name:</p>
+            <input
+              class="default-input"
+              [(ngModel)]="editSourceName"
+              type="text"
+            />
+          </div>
         </div>
-      </div>
-
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">2</p>
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source Type:</p>
-          <select
-            [(ngModel)]="newSourcePlatform"
-            style="
-              border: solid rgb(133, 133, 133) 2px;
-              height: 30px;
-              border-radius: 10px;
-            "
-          >
-            <option value="facebook">facebook</option>
-            <option value="instagram">instagram</option>
-            <option value="reddit">reddit</option>
-          </select>
-        </div>
-      </div>
-
+        
       <div class="flex-row" style="width: 80%">
         <p class="modal-step-tag">3</p>
         <div class="flex-column" style="width: 100%">
           <p class="step-heading">Source url:</p>
-          <input class="default-input" type="text" />
+          <input class="default-input" [(ngModel)]="editSourceUrl" type="text" />
         </div>
       </div>
+
+      <div class="bottom-div">
+        <button class="new-source-btn clickable-item" (click)="editSource()">Confirm</button>
+      </div>
     </div>
-
-    <div class="bottom-div">
-
-      <button class="new-source-btn clickable-item" (click)="editSource()">Confirm</button>
-
-    </div>
-
-
-
-
+    
   </div>
+
   <div
     class="picture"
   ></div>
