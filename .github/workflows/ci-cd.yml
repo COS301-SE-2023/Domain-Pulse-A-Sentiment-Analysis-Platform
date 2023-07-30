@@ -44,7 +44,6 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
       - name: setup .envs
-        working-directory: ./backend
         run: |
           echo "$PROD_DJANGO_PORTS" > .env
           echo "$POSTGRES_CONFIG" > .postgresql.env
@@ -71,8 +70,8 @@ jobs:
 
       - name: copy .env files
         run: |
-          scp backend/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/backend
-          scp backend/.postgresql.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/backend
+          scp .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/backend
+          scp .postgresql.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/backend
 
       - name: copy build artifacts
         run: scp -r frontend-build/domain-pulse ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/frontend/dist
