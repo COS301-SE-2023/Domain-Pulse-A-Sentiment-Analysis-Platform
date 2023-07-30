@@ -48,8 +48,18 @@ def month_name_to_number(month_name: str):
 def get_timestamp_from_date(date_str: str):
     num_spaces = date_str.count(" ")
 
-    if num_spaces > 1:
+    if num_spaces > 1 and "," not in date_str:
         day, month_name, year = date_str.split(" ")
+        day = int(day)
+        month = month_long_name_to_number(month_name)
+        year = int(year)
+
+        return datetime(year, month, day, 0, 0, 0).timestamp()
+
+    if "," in date_str:
+        month_name, day_with_comma, year = date_str.split(" ")
+        day = day_with_comma[:-1]
+
         day = int(day)
         month = month_long_name_to_number(month_name)
         year = int(year)
