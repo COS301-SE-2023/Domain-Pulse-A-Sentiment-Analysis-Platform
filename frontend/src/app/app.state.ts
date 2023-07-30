@@ -285,7 +285,6 @@ export class AppState {
             return;
           }
 
-
           let domainRes = res.domain;
 
           let domainsIDs = domainRes.sources.map(
@@ -342,8 +341,6 @@ export class AppState {
     }
     state.domain.selected = true;
 
-    
-
     ctx.patchState({
       domains: domains,
       selectedDomain: state.domain,
@@ -351,29 +348,24 @@ export class AppState {
 
     localStorage.setItem('selectedDomain', state.domain.id);
 
-    
-
-    
     let sources = state.domain.sources;
     ctx.patchState({
       sources: sources,
     });
 
     const selectedSourceId = localStorage.getItem(state.domain.id);
-    if(selectedSourceId == "") {
+    if (selectedSourceId == '') {
       this.store.dispatch(new SetSource(null));
+    } else {
+      const selectedSource = sources.find(
+        (source) => source.id === selectedSourceId
+      );
 
+      // If the selectedSource is found, set it to local storage
+      if (selectedSource) {
+        this.store.dispatch(new SetSource(selectedSource));
+      }
     }
-    else{
-      const selectedSource = sources.find((source) => source.id === selectedSourceId);
-
-    // If the selectedSource is found, set it to local storage
-    if (selectedSource) {
-      this.store.dispatch(new SetSource(selectedSource));
-    }
-    }
-
-    
 
     /* let found = false;
 
@@ -393,43 +385,27 @@ export class AppState {
 
   @Action(SetSource)
   setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
-    if (!state.source) {
+    const sources = ctx.getState().sources;
+    if (!sources) return;
 
-      const selectedDomain = localStorage.getItem('selectedDomain');
-      if (!selectedDomain) return;
-      localStorage.setItem(selectedDomain, "");
+    for (const source of sources) {
+      source.selected = false;
+    }
+
+    if (!state.source) {
       ctx.patchState({
         allSourcesSelected: true,
-      });
-
-      let sources = ctx.getState().sources;
-      if (!sources) return;
-
-      for (let source of sources) {
-        source.selected = false;
-      }
-
-      ctx.patchState({
         selectedSource: undefined,
       });
-
       this.store.dispatch(new GetSourceDashBoardInfo());
 
       return;
     }
-    if(!state.source) return;
 
     const selectedDomain = localStorage.getItem('selectedDomain');
     if (!selectedDomain) return;
+
     localStorage.setItem(selectedDomain, state.source.id);
-
-    
-    let sources = ctx.getState().sources;
-    if (!sources) return;
-
-    for (let source of sources) {
-      source.selected = false;
-    }
     state.source.selected = true;
 
     this.store.dispatch(new GetSourceDashBoardInfo());
@@ -437,7 +413,7 @@ export class AppState {
     ctx.patchState({
       sources: sources,
       selectedSource: state.source,
-      /*       sourceIsLoading: false, */
+      allSourcesSelected: false,
     });
   }
 
