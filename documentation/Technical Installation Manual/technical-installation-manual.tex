@@ -109,6 +109,35 @@ The following are the minimum recommended specifications required to install and
 
 
 \section{Installation}
+
+\subsection{Cloning the repo}
+The repo may be cloned locally from Github using the following command: git clone https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform.git
+
+\subsection{Installing dependencies}
+\subsubsection{Backend}
+In terminal, navigate to the 'backend' directory. To install all necessary dependencies at the appropriate versions, issue the following
+command: pipenv install. This will install all the necessary dependencies into a local virtual environment.
+
+Note: Some of the dependencies are fairly sizable. Depending on Internet speeds, this process may take a few minutes.
+
+The full list of dependencies that will be installed can be found in the the file backend/Pipfile. Furthemore, to see the specific versions you may issue the CLI command 'pipenv graph'. The dependencies are as follows:
+\begin{itemize}
+    \item coverage==7.2.6
+    \item django-cors-headers==4.2.0
+    \item djangorestframework-simplejwt==5.2.2
+    \item mock==5.1.0
+    \item nltk==3.8.1
+    \item psycopg2-binary==2.9.6
+    \item pymongo==4.4.0
+    \item python-dotenv==1.0.0
+    \item transformers==4.30.2
+    \item vaderSentiment==3.3.2
+\end{itemize}
+Note that each dependencies may have its own sub-dependencies. These too will be installed via 'pipenv install'.
+
+\subsubsection{Frontend}
+
+
 Installation - this describes how the installation of your system would work
 
 My understanding is this would be like actually getting the code onto your machine and how to install the prerequisites once you have the code
