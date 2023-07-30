@@ -489,10 +489,14 @@ export class AppState {
           return source;
         });
 
-        ctx.patchState({ sources: updatedSources });
+        ctx.patchState({
+          sources: updatedSources,
+          selectedSource: { ...selectedSource, name: state.name }
+        });
       }
     });
   }
+
 
 
   @Action(DeleteSource)

@@ -41,7 +41,7 @@ export class SourceSelectorComponent {
     );
     this.newSourceName = '';
 
-    this.toggleAddSourcesModal();
+    this.showAddSourcesModal = false;
   }
 
   determineSourceParams(): any | null {
@@ -100,10 +100,12 @@ export class SourceSelectorComponent {
 
       this.deleteSource();
       this.addNewSource();
+      this.toggleEditSourceModal();
       return;
     }
     else if(this.editSourceName != selectedSource?.name){
       this.store.dispatch(new EditSource(this.editSourceName));
+      this.toggleEditSourceModal();
       return;
     }
   }
