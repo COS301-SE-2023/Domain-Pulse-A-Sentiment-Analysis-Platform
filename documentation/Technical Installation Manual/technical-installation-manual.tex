@@ -24,11 +24,29 @@ Please note that the production application is a web application that is deploye
 security purposes, this guide will not provide details or keys for connecting to the deployment server - instead this details local installation
 of the application.
 
-\subsection{Some subsection}
-If we need to add more details or break it up
+\subsection{Overview of installation process}
+The process of installing the application consists of the following stages, each of which is to be described in detail later in the manual:
+\begin{itemize}
+    \item Installation and acquisition of prerequisites
+    \item Downloading and configuring application
+    \item Installing project specific dependencies
+    \item Running the application
+\end{itemize}
 
-\section{Prerequisites}
-The following are prerequisites for the complete installation and set-up of Domain Pulse: Python 3.8, Pipenv, Node.js, Angular, MongoDB, PostgreSQL.
+\section{Prerequisites - General Software}
+The following software are prerequisites for the complete installation and set-up of Domain Pulse: Python 3.8, Pipenv (any 2022 or post 2022 version), Node.js (v18 later), Angular (v14), MongoDB (Community Edition, v6 or later), PostgreSQL 12.
+Of course an operating system of either Linux (Ubuntu) or Windows is required.
+
+Note: The installation of the project specific dependencies and packages is detailed later in the manual.
+
+\subsection{Operating System}
+The system may be installed locally on either a Windows or Linux (Ubuntu) operating system. The following versions are most suitable
+\begin{itemize}
+    \item Linux (Ubuntu): v22 or later
+    \item Windows: v10 or later
+\end{itemize}
+Note that earlier or different versions of these operating systems may successfully install and run the application, however the provided
+versions are deemed to be most suitable and confirmed to work.
 
 \subsection{Python 3.8}
 \subsubsection{Linux}
@@ -44,20 +62,20 @@ python --version
 The following resources may be used for installing Python 3.8 on Windows:
 https://www.python.org/downloads/release/python-380/
 
-\subsection{Pipenv}
-Once python is installed (pip should therefore be working too) enter into the terminal:\\
+\subsection{Pipenv (any 2022 or post 2022 version)}
+Once Python is installed, pip will be installed along with in. To install pipenv, enter into the terminal:\\
 pip install pipenv
 
-\subsection{Node.js}
+\subsection{Node.js v18 or later}
 Node.js is needed for the installation and use of Angular and can be installed
 following the instructions on the following resource:\\
 https://nodejs.dev/en/learn/how-to-install-nodejs/
 
-\subsection{Angular}
+\subsection{Angular v14}
 Once Node.js is installed, Angular can be installed by entering the following command into the terminal:\\
 npm install -g @angular/cli
 
-\subsection{MongoDB}
+\subsection{MongoDB (Community Edition v6 or later)}
 The following resources may be used for installing MongoDB
 \begin{itemize}
     \item Windows: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/
@@ -70,7 +88,16 @@ The following resource can be used for installing PostgreSQL 12
 \begin{itemize}
     \item https://www.postgresql.org/download/
 \end{itemize}
-Ensure that, regardless of what installer is used, PostgreSQL 12 specifically is installed.
+Important note: Ensure that, regardless of what installer is used, PostgreSQL 12 specifically is installed.
+
+
+\section{Prerequisites - Hardware}
+The following are the minimum specifications required to install and run Domain Pulse locally
+\begin{itemize}
+    \item CPU:
+    \item RAM:
+    \item Storage:
+\end{itemize}
 
 
 \section{Installation}
