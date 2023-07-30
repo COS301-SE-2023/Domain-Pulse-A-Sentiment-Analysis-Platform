@@ -28,16 +28,17 @@ an Angular frontend as well as PostgreSQL and MongoDB databases. The installatio
 them, shall be explained within this manual.
 
 Please note that the production application is a web application that is deployed to a private virtual machine acting as a web server. For
-security purposes, this guide will not provide details or keys for connecting to the deployment server - instead this details local installation
+security purposes, this guide will not provide details or keys for connecting to the deployment server - instead this guide details local installation
 of the application.
 
 Once again, this is not the recommended approach for using the application. Instead, is it recommended that one interacts with the hosted web
 application available at: \code{www.domainpulse.app}
 
-\subsection{Hosted Web App Approach - Recommended}
+\subsection{Recommended - Using the Domain Pulse web app}
 In order to interact with the web app hosted at www.domainpulse.app, no configuration or installation is required. The only
 prerequisites are: a modern web browser (Brave, Firefox, or Google Chrome recommended) and a stable Internet connection. This is the
-intended and preferred approach of using the application.
+intended and preferred approach for using the application. Simply use your browser to navigate to www.domainpulse.app, and make use of
+our User Manual (link provided at end of document) to familiarise yourself with the application.
 
 
 \subsection{Overview of local installation process}
@@ -50,6 +51,7 @@ later in the manual:
     \item Installing project specific dependencies
     \item Running the application
 \end{itemize}
+Consequently, the remainder of this manual details the local installation process for Domain Pulse.
 
 \section{Prerequisites - General Software}
 The following software are prerequisites for the complete installation and set-up of Domain Pulse: Python 3.8, Pipenv (any 2022 or post 2022 version), Node.js (v18 later), Angular (v14), MongoDB (Community Edition, v6 or later), PostgreSQL 12.
@@ -242,5 +244,15 @@ Finally: \code{./run-projects.sh}\\
 
 \subsection{Frontend}
 In terminal, navigate to the 'frontend' directory. To deploy the frontend, issue the following commands:\\
+\code{npm run start}\\
+The web app will be deployed locally to localhost:4200
+
+\subsection{Using the app}
+Using your chosen web browser, enter localhost:4200 into the browser. Welcome to Domain Pulse! Now that you've got our application
+up and running locally, feel free to consult our User Manual to familiarise yourself with the application.
+
+\section{Link to User Manual}
+The Domain Pulse User Manual can be found at:
+
 
 \end{document}
