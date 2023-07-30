@@ -128,7 +128,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-source-btn clickable-item" (click)="addNewSource()">Confirm</button>
+        <button class="new-source-btn clickable-item" (click)="addNewSource()" data-cy="Confirm">Confirm</button>
       </div>
     </div>
     
@@ -145,12 +145,13 @@
 <dp-modal-container
 [modalDisplay]="showEditSourceModal"
 (close)="toggleEditSourceModal()"
+data-cy="editSourceModal"
 >
 
 <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
   <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
     <div class="heading-container">
-      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleEditSourceModal()">
+      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleEditSourceModal()" data-cy="editSourceModal2">
       <p class="modal-heading">Edit a Source</p>
     </div>
     <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
@@ -192,7 +193,7 @@
 
     <div class="bottom-div">
 
-      <button class="new-source-btn clickable-item" (click)="editSource()">Confirm</button>
+      <button class="new-source-btn clickable-item" (click)="editSource()" data-cy="confirmEditSource">Confirm</button>
 
     </div>
 
