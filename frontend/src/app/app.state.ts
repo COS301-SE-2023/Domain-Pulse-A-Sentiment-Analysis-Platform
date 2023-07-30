@@ -1126,7 +1126,7 @@ export class AppState {
         name: responseSource.source_name,
         url: responseSource.source_icon,
         params: sourceUrl,
-        selected: responseSource.selected,
+        selected: false,
         isRefreshing: false,
       };
       displaySources.push(displaySource);
