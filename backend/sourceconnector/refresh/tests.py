@@ -105,6 +105,8 @@ class TestingRefreshHandler(TestCase):
             "25 October 2023",
             "12 November 2023",
             "31 December 2023",
+            "December 31, 2023",
+            "February 6, 2023",
         ]
 
         self.assertEqual(
@@ -154,6 +156,14 @@ class TestingRefreshHandler(TestCase):
         self.assertEqual(
             tripadvisor_connector.get_timestamp_from_date(test_cases[11]),
             datetime(2023, 12, 31, 0, 0, 0).timestamp(),
+        )
+        self.assertEqual(
+            tripadvisor_connector.get_timestamp_from_date(test_cases[12]),
+            datetime(2023, 11, 12, 0, 0, 0).timestamp(),
+        )
+        self.assertEqual(
+            tripadvisor_connector.get_timestamp_from_date(test_cases[13]),
+            datetime(2023, 2, 6, 0, 0, 0).timestamp(),
         )
 
     def test_handle_request_youtube(self):
