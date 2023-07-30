@@ -17,6 +17,7 @@ export class SourceSelectorComponent {
   
   showAddSourcesModal = false;
   showEditSourceModal = false;
+  showConfirmDeleteSourceModal = false;
   newSourceName = '';
   newSourcePlatform = '';
   newSourceUrl = '';
@@ -116,6 +117,7 @@ export class SourceSelectorComponent {
 
   deleteSource() {
     this.store.dispatch(new DeleteSource());
+    this.showConfirmDeleteSourceModal = false;
   }
 
   selectPlatform(platform: string) {
@@ -137,6 +139,14 @@ export class SourceSelectorComponent {
       this.showEditSourceModal = true;
     } else {
       this.showEditSourceModal = false;
+    }
+  }
+
+  toggleConfirmDeleteSourceModal() {
+    if (!this.showConfirmDeleteSourceModal) {
+      this.showConfirmDeleteSourceModal = true;
+    } else {
+      this.showConfirmDeleteSourceModal = false;
     }
   }
 }
