@@ -2,11 +2,16 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc} 
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
 
 
 \title{Technical Installation Manual}
 \author{Ctrl Alt Defeat}
 \date{\today} 
+
 \begin{document}
 \maketitle
 
@@ -61,12 +66,12 @@ Any modern web browser should support the appropriate rendering of the applicati
 \subsection{Python 3.8}
 \subsubsection{Linux}
 The following resources commnds be used for installing Python 3.8 on Linux:\\
-sudo apt-get update\\
-sudo add-apt-repository ppa:deadsnakes/ppa -y\\
-sudo apt-get update\\
-sudo apt install python3.8\\ \\
+\code{sudo apt-get update}\\
+\code{sudo add-apt-repository ppa:deadsnakes/ppa -y}\\
+\code{sudo apt-get update}\\
+\code{sudo apt install python3.8}\\ \\
 Ensure that the correct version of python is installed by running the following command:
-python --version
+\code{python --version}
 
 \subsubsection{Windows}
 The following resources may be used for installing Python 3.8 on Windows:
@@ -74,7 +79,7 @@ https://www.python.org/downloads/release/python-380/
 
 \subsection{Pipenv (any 2022 or post 2022 version)}
 Once Python is installed, pip will be installed along with in. To install pipenv, enter into the terminal:\\
-pip install pipenv
+\code{pip install pipenv}
 
 \subsection{Node.js v18 or later}
 Node.js is needed for the installation and use of Angular and can be installed
@@ -83,7 +88,7 @@ https://nodejs.dev/en/learn/how-to-install-nodejs/
 
 \subsection{Angular v14}
 Once Node.js is installed, Angular can be installed by entering the following command into the terminal:\\
-npm install -g @angular/cli
+\code{npm install -g @angular/cli}
 
 \subsection{MongoDB (Community Edition v6 or later)}
 The following resources may be used for installing MongoDB
@@ -113,7 +118,8 @@ The following are the minimum recommended specifications required to install and
 \section{Installation}
 
 \subsection{Cloning the repo}
-The repo may be cloned locally from Github using the following command: git clone https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform.git
+The repo may be cloned locally from Github using the following command: \\
+\code{git clone https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform.git}
 
 
 \subsection{Configuring the application}
@@ -122,11 +128,15 @@ The repo may be cloned locally from Github using the following command: git clon
 \subsection{Installing dependencies}
 \subsubsection{Backend}
 In terminal, navigate to the 'backend' directory. To install all necessary dependencies at the appropriate versions, issue the following
-command: pipenv install. This will install all the necessary dependencies into a local virtual environment.
+command: \\
+\code{pipenv install}\\
+This will install all the necessary dependencies into a local virtual environment.
 
 Note: Some of the dependencies are fairly sizable. Depending on Internet speeds, this process may take a few minutes.
 
-The full list of dependencies that will be installed can be found in the the file backend/Pipfile. Furthemore, to see the specific versions you may issue the CLI command 'pipenv graph'. The dependencies are as follows:
+The full list of dependencies that will be installed can be found in the the file backend/Pipfile. Furthemore, to see the specific versions you may issue the CLI command:\\
+\code{pipenv graph} \\
+The dependencies are as follows:
 \begin{itemize}
     \item coverage==7.2.6
     \item django-cors-headers==4.2.0
@@ -139,9 +149,21 @@ The full list of dependencies that will be installed can be found in the the fil
     \item transformers==4.30.2
     \item vaderSentiment==3.3.2
 \end{itemize}
-Note that each dependencies may have its own sub-dependencies. These too will be installed via 'pipenv install'.
+Note that each dependencies may have its own sub-dependencies. These too will be installed via \code{pipenv install}
 
 \subsubsection{Frontend}
+To install the dependencies required for the frontend, navigate to th 'frontend' directory and issue the following command to install
+all the necessary dependencies at the correct version: \\
+\code{npm ci}\\
+A list of the dependencies that will be installed (along with their appropriate versions) can be found in the file \code{package.json}
+
+
+\subsection{Configuring the application for local deployment}
+Domain Pulse is a web application deployed to a private virtual machine provded by our industry client. Consequently, the default
+configuration of the application is set to interact with this server via SSH. For security reasons, this guide details how to configure
+the application for local deployment only, and no SSH or API credential will be provided.
+
+\subsubsection{Setting up enviroment variables}
 
 
 Installation - this describes how the installation of your system would work
