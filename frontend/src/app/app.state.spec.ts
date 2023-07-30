@@ -12,6 +12,8 @@ import {
   AttempPsswdLogin,
   CheckAuthenticate,
   ChooseStatistic,
+  DeleteSource,
+  EditSource,
   GetDomains,
   GetSourceDashBoardInfo,
   RefreshSourceData,
@@ -43,6 +45,8 @@ describe('AppState', () => {
       'refreshSourceInfo',
       'addSource',
       'getAggregatedDomainData',
+      'editSource',
+      'deleteSource',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -158,6 +162,35 @@ describe('AppState', () => {
     const actualDomains = store.selectSnapshot(AppState.domains);
     expect(actualDomains).toEqual(expectedDomains);
   });
+
+  it('should dispatch ToastError when no selected source to edit', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      done();
+    });
+
+    store.dispatch(new EditSource('New Source Name'));
+  });
+
+  it('should dispatch ToastError when editSource API call fails', (done: DoneFn) => {
+    apiSpy.editSource.and.returnValue(of({ status: 'FAILURE' }));
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      done();
+    });
+
+    const dummySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    
+    store.reset({ app: { sources: [dummySource], selectedSource: dummySource } });
+    store.dispatch(new EditSource('New Source Name'));
+  });
+
 
   it('should select the correct domain on "SetDomain" event', () => {
     const mockDomains: DisplayDomain[] = [

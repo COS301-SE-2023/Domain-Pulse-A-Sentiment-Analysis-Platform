@@ -89,27 +89,6 @@ export interface Toast {
   timeout: number;
 }
 
-export class Comment {
-  comment: string;
-  commentSentiment: SentimentScores;
-  colorClass: string;
-
-  constructor(comment: string, commentSentiment: SentimentScores) {
-    this.comment = comment;
-    this.commentSentiment = commentSentiment;
-
-    if (commentSentiment.overallScore >= 70) {
-      this.colorClass = 'positive-color';
-    } else if (
-      commentSentiment.overallScore >= 40 &&
-      commentSentiment.overallScore < 70
-    ) {
-      this.colorClass = 'neutral-color';
-    } else {
-      this.colorClass = 'negative-color';
-    }
-  }
-}
 
 interface AppStateModel {
   authenticated: boolean;
