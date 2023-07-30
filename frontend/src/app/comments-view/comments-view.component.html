@@ -24,7 +24,7 @@
 
         <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
           <p class="comment-text">{{ comment.comment }}</p>
-          <p (click)="toggleShowComment(i)" class="warning-text comment-text" data-cy="showComment1">
+          <p (click)="toggleShowComment(i)" class="warning-text comment-text" data-cy="hideComment">
             Hide Comment
           </p>
         </ng-container>
@@ -32,7 +32,7 @@
           <div class="blur-text">
             <p>{{ comment.comment }}</p>
           </div>
-          <p (click)="toggleShowComment(i)" class="warning-text comment-text" data-cy="showComment2">
+          <p (click)="toggleShowComment(i)" class="warning-text comment-text" data-cy="toxicComment">
             Click to view toxic comment
           </p>
         </ng-container>
