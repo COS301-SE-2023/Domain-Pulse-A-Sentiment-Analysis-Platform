@@ -65,12 +65,14 @@
         src="../assets/icons/pen-solid.svg"
         height="15px"
         class="clickable-item"
+        data-cy="editDomainModalToggle"
       />
       <img
         src="../assets/icons/grey-trash.svg"
         height="15px"
         (click)="deleteDomain(domain.id); $event.stopPropagation()"
         class="clickable-item"
+        data-cy="deleteDomain"
       />
     </div>
   </div>
@@ -84,6 +86,7 @@
       padding: expanded ? '0 0rem' : '0px',
       width: _expanded ? '90%' : 'fit-content'
     }"
+    data-cy="addDomainModalToggle"
   >
     <div class="plus-wrapper flex-row center">
       <img src="../assets/icons/white-plus.svg" height="20px" />
