@@ -201,14 +201,14 @@ describe('AppState', () => {
         id: '1',
         name: 'test',
         url: 'test',
-        selected: true,
+        params: 'test',        selected: true,
         isRefreshing: false,
       },
       {
         id: '2',
         name: 'test2',
         url: 'test3',
-        selected: false,
+        params: 'test',        selected: false,
         isRefreshing: false,
       },
     ];
@@ -305,6 +305,7 @@ describe('AppState', () => {
       id: '1',
       name: 'test',
       url: 'test',
+      params: 'test',
       selected: true,
       isRefreshing: false,
     };
@@ -320,6 +321,7 @@ describe('AppState', () => {
       id: '1',
       name: 'test',
       url: 'test',
+      params: 'test',
       selected: true,
       isRefreshing: false,
     };
@@ -347,6 +349,7 @@ describe('AppState', () => {
       id: '1',
       name: 'test',
       url: 'test',
+      params: 'test',
       selected: true,
       isRefreshing: false,
     };
@@ -441,6 +444,7 @@ describe('AppState', () => {
         id: '64b940ec9bbccdb7731b81f9',
         name: 'Primegen 1',
         url: 'youtube-logo.png',
+        params: 'WjKQQAFwrR4',
         selected: false,
         isRefreshing: false,
       },
@@ -448,6 +452,7 @@ describe('AppState', () => {
         id: '64ba5fb1303c5fdb91cc4c5e',
         name: 'Linus 1',
         url: 'youtube-logo.png',
+        params: 'RGZFb2PlPlo',
         selected: false,
         isRefreshing: false,
       },

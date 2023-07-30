@@ -53,6 +53,7 @@ describe('SourceSelectorComponent', () => {
 			id: '1',
 			name: 'test',
 			url: 'test',
+			params: 'test',
 			selected: true,
 			isRefreshing: false,
 		};
