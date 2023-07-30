@@ -6,41 +6,25 @@ describe('Logging In - Basic Auth', function () {
   const password = '123456';
   let JWT: string = '';
 
-  before(() => {
-    // cy.request('POST', '/api/profiles/profiles/login_user', {
-    //   username: username,
-    //   password: password,
-    // })
-    //   .its('body')
-    //   .then((res) => {
-    //     JWT = res.JWT;
-    //   });
-    cy.request(
-      'POST',
-      'http://dev.dp.cos301.thuthuka.me/api/profiles/profiles/login_user',
-      {
-        username: username,
-        password: password,
-      }
-    )
+  // but set the user before visiting the page
+  // so the app thinks it is already authenticated
+  beforeEach(function setUser() {
+    cy.request('POST', '/api/profiles/profiles/login_user', {
+      username: username,
+      password: password,
+    })
       .its('body')
       .then((res) => {
         JWT = res.JWT;
+        cy.visit('/', {
+          onBeforeLoad(win) {
+            // and before the page finishes loading
+            // set the user object in local storage
+            win.localStorage.setItem('JWT', JWT);
+          },
+        });
       });
   });
-
-  // // but set the user before visiting the page
-  // // so the app thinks it is already authenticated
-  // beforeEach(function setUser() {
-  //   cy.visit('/', {
-  //     onBeforeLoad(win) {
-  //       // and before the page finishes loading
-  //       // set the user object in local storage
-  //       win.localStorage.setItem('JWT', JWT);
-  //     },
-  //   });
-  //   // the page should be opened and the user should be logged in
-  // });
 
   it('redirects to /login', () => {
     window.localStorage.removeItem('JWT');
