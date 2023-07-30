@@ -26,7 +26,30 @@ describe('Dashboard', function () {
       });
   });
 
-  it('should open the profile toggle and toggle theme and toggle theme', () => {
+  it('add and delete domain', () => {
+    cy.wait(2000);
+
+    cy.get('[data-cy=addDomainModalToggle]').click();
+
+    cy.get('[data-cy=newDomainNameInput]').type('test domain');
+    cy.get('[data-cy=newDomainDescriptionInput]').type('test description');
+
+    cy.get('[data-cy=addNewDomainBtn]').click();
+
+    cy.wait(2000);
+
+    // deleting domain part
+    cy.get('[data-cy=sidebar]').click();
+    cy.contains('test domain').should('exist');
+    cy.contains('test domain').click();
+    cy.contains('test domain').parent().find('[data-cy=deleteDomain]').click();
+
+    cy.wait(2000);
+    cy.get('[data-cy=sidebar]').click();
+    cy.contains('test domain').should('not.exist');
+  });
+
+  it('should open the profile toggle and toggle theme', () => {
     cy.wait(2000);
     cy.get('[data-cy=profileModalToggle]').click();
     cy.contains('thugger').should('exist');
