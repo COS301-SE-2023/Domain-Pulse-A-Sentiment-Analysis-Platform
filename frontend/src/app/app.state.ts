@@ -28,6 +28,7 @@ import {
   DeleteUser,
   Logout,
   EditSource,
+  SetAllSourcesSelected,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -126,6 +127,7 @@ interface AppStateModel {
   profileDetails?: ProfileDetails;
   toasterError?: Toast;
   toasterSuccess?: Toast;
+  allSourcesSelected: boolean;
 }
 
 @State<AppStateModel>({
@@ -134,6 +136,7 @@ interface AppStateModel {
     authenticated: false,
     selectedStatisticIndex: 0,
     sourceIsLoading: true,
+    allSourcesSelected: true,
   },
 })
 @Injectable()
@@ -227,6 +230,11 @@ export class AppState {
     return undefined;
   }
 
+  @Selector()
+  static allSourcesSelected(state: AppStateModel) {
+    return state.allSourcesSelected;
+  }
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -277,7 +285,9 @@ export class AppState {
             return;
           }
 
+
           let domainRes = res.domain;
+
           let domainsIDs = domainRes.sources.map(
             (source: any) => source.source_id
           );
@@ -314,9 +324,8 @@ export class AppState {
             }
           }
 
-          /* ctx.patchState({
-            sourceIsLoading: false,
-          }); */
+          this.store.dispatch(new SetSource(null));
+
           console.log(ctx.getState().domains);
         });
       });
@@ -332,36 +341,94 @@ export class AppState {
       domain.selected = false;
     }
     state.domain.selected = true;
+
+    
+
     ctx.patchState({
       domains: domains,
       selectedDomain: state.domain,
     });
 
+    localStorage.setItem('selectedDomain', state.domain.id);
+
+    
+
+    
     let sources = state.domain.sources;
     ctx.patchState({
       sources: sources,
     });
 
-    let firstSource = true;
+    const selectedSourceId = localStorage.getItem(state.domain.id);
+    if(selectedSourceId == "") {
+      this.store.dispatch(new SetSource(null));
+
+    }
+    else{
+      const selectedSource = sources.find((source) => source.id === selectedSourceId);
+
+    // If the selectedSource is found, set it to local storage
+    if (selectedSource) {
+      this.store.dispatch(new SetSource(selectedSource));
+    }
+    }
+
+    
+
+    /* let found = false;
 
     for (let source of sources) {
-      if (firstSource) {
+      if (source.selected) {
         this.store.dispatch(new SetSource(source));
-        firstSource = false;
         break;
       }
     }
+
+    if (!found) {
+      this.store.dispatch(new SetSource(null));
+    } */
 
     this.store.dispatch(new GetSources());
   }
 
   @Action(SetSource)
   setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
+    if (!state.source) {
+
+      const selectedDomain = localStorage.getItem('selectedDomain');
+      if (!selectedDomain) return;
+      localStorage.setItem(selectedDomain, "");
+      ctx.patchState({
+        allSourcesSelected: true,
+      });
+
+      let sources = ctx.getState().sources;
+      if (!sources) return;
+
+      for (let source of sources) {
+        source.selected = false;
+      }
+
+      ctx.patchState({
+        selectedSource: undefined,
+      });
+
+      this.store.dispatch(new GetSourceDashBoardInfo());
+
+      return;
+    }
+    if(!state.source) return;
+
+    const selectedDomain = localStorage.getItem('selectedDomain');
+    if (!selectedDomain) return;
+    localStorage.setItem(selectedDomain, state.source.id);
+
+    
     let sources = ctx.getState().sources;
     if (!sources) return;
 
-    for (let souce of sources) {
-      souce.selected = false;
+    for (let source of sources) {
+      source.selected = false;
     }
     state.source.selected = true;
 
@@ -428,7 +495,7 @@ export class AppState {
       });
   }
 
- /*  @Action(EditSource)
+  /*  @Action(EditSource)
   editSource(ctx: StateContext<AppStateModel>, state: EditSource) {
     let selectedDomain = ctx.getState().selectedDomain;
     if (!selectedDomain) return;
@@ -491,13 +558,11 @@ export class AppState {
 
         ctx.patchState({
           sources: updatedSources,
-          selectedSource: { ...selectedSource, name: state.name }
+          selectedSource: { ...selectedSource, name: state.name },
         });
       }
     });
   }
-
-
 
   @Action(DeleteSource)
   deleteSource(ctx: StateContext<AppStateModel>, state: DeleteSource) {
@@ -516,8 +581,6 @@ export class AppState {
       }
 
       let domainRes = res.confirmation;
-      console.log("logging domain res")
-      console.log(domainRes, domainRes.confirmation);
       let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
       let selectedDomain: DisplayDomain = {
         id: domainRes._id,
@@ -723,7 +786,21 @@ export class AppState {
   getSourceDashBoardInfo(ctx: StateContext<AppStateModel>) {
     let selectedSource = ctx.getState().selectedSource;
     if (!selectedSource) {
-      console.log('no source selected to get dashboard info for');
+      let selectedDomain = ctx.getState().selectedDomain;
+      if (!selectedDomain) return;
+      const sourceIds = selectedDomain.sourceIds;
+      this.appApi.getAggregatedDomainData(sourceIds).subscribe((res) => {
+        if (res.status == 'SUCCESS') {
+          ctx.patchState({
+            overallSentimentScores: {
+              aggregated_metrics: res.aggregated_metrics,
+              meta_data: res.meta_data,
+            },
+            sampleData: res.individual_metrics,
+            sourceIsLoading: false,
+          });
+        }
+      });
       return;
     }
     let selectedSourceID = selectedSource.id;
@@ -844,31 +921,24 @@ export class AppState {
 
   @Action(Logout)
   logout(ctx: StateContext<AppStateModel>) {
+    return this.appApi.logOut().pipe(
+      switchMap((res) => {
+        if (res.status === 'SUCCESS') {
+          this.store.dispatch(new ToastSuccess('You have been logged out'));
+          localStorage.removeItem('JWT');
+          this.router.navigate(['/login']);
 
-    return this.appApi
-      .logOut()
-      .pipe(
-        switchMap((res) => {
-          if (res.status === 'SUCCESS') {
-            this.store.dispatch(new ToastSuccess('You have been logged out'));
-            localStorage.removeItem('JWT');
-            this.router.navigate(['/login'])
-
-            return of();
-          } else {
-            return throwError(() => new Error());
-          }
-        }),
-        catchError((error: any) => {
-          this.store.dispatch(
-            new ToastError('You could not be logged out')
-          );
-          return of(error);
-        })
-      );
+          return of();
+        } else {
+          return throwError(() => new Error());
+        }
+      }),
+      catchError((error: any) => {
+        this.store.dispatch(new ToastError('You could not be logged out'));
+        return of(error);
+      })
+    );
   }
-
-
 
   @Action(ChangePassword)
   changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {
@@ -1000,6 +1070,14 @@ export class AppState {
     });
   }
 
+  @Action(SetAllSourcesSelected)
+  setAllSourcesSelected(
+    ctx: StateContext<AppStateModel>,
+    { selected }: SetAllSourcesSelected
+  ) {
+    ctx.patchState({ allSourcesSelected: selected });
+  }
+
   @Action(ChangeMode)
   changeMode(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
     const profileId = ctx.getState().profileDetails?.profileId;
@@ -1030,28 +1108,31 @@ export class AppState {
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
+
     for (let responseSource of responseSources) {
       let sourceUrl = '';
-      if(responseSource.params.video_id){
+      if (responseSource.params.video_id) {
         sourceUrl = responseSource.params.video_id;
-      }
-      else if(responseSource.params.maps_url){
+      } else if (responseSource.params.maps_url) {
         sourceUrl = responseSource.params.maps_ur;
-      }
-      else if(responseSource.params.tripadvisor_url){
+      } else if (responseSource.params.tripadvisor_url) {
         sourceUrl = responseSource.params.tripadvisor_url;
       }
+
+      console.log(responseSource);
 
       let displaySource: DisplaySource = {
         id: responseSource.source_id,
         name: responseSource.source_name,
         url: responseSource.source_icon,
         params: sourceUrl,
-        selected: false,
+        selected: responseSource.selected,
         isRefreshing: false,
       };
       displaySources.push(displaySource);
     }
+    console.log('returning display sources');
+    console.log(displaySources);
     return displaySources;
   }
 

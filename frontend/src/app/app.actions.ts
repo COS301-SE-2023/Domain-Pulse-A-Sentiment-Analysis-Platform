@@ -75,7 +75,12 @@ export class RefreshSourceData {
 
 export class SetSource {
   static readonly type = '[App] Set Source';
-  constructor(public source: DisplaySource) {}
+  constructor(public source: DisplaySource | null) {}
+}
+
+export class SetAllSourcesSelected{
+  static readonly type = '[App] Set All Sources Selected';
+  constructor(public selected: boolean) {}
 }
 
 export class AddNewSource {

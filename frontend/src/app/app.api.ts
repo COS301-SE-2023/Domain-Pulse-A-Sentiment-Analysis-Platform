@@ -34,6 +34,18 @@ export class AppApi {
     );
   }
 
+  getAggregatedDomainData(sourceIds: string[]): Observable<any> {
+    const getAggregatedDomainDataUrl =
+      this.warehouseBaseUrl + 'query/get_domain_dashboard/';
+    const body = {
+      source_ids: sourceIds,
+    };
+    return this.http.post(getAggregatedDomainDataUrl, body, {
+      withCredentials: true,
+    });
+  }
+
+
   addDomain(
     domainName: string,
     domainDescrption: string,

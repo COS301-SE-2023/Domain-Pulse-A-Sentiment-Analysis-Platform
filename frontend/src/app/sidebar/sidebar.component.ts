@@ -28,6 +28,7 @@ import {
   ChangeProfileIcon,
   ToastError,
   Logout,
+  SetAllSourcesSelected,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -352,6 +353,7 @@ export class SidebarComponent {
   }
 
   selectDomain(domain: DisplayDomain) {
+    this.store.dispatch(new SetAllSourcesSelected(false));
     this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new SetDomain(domain));
   }
