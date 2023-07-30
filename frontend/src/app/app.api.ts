@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environment';
 
 @Injectable()
 export class AppApi {
-
   private engineBaseUrl = `/api/engine/`;
   private profilesBaseUrl = `/api/profiles/`;
   private warehouseBaseUrl = `/api/warehouse/`;
