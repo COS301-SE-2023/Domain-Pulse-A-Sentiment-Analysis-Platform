@@ -87,6 +87,11 @@ export class AddNewSource {
   ) {}
 }
 
+export class DeleteSource {
+  static readonly type = '[App] Delete Source';
+  constructor() {}
+}
+
 export class CheckAuthenticate {
   static readonly type = '[App] Check Authenticate';
 }
@@ -127,4 +132,9 @@ export class ChooseStatistic {
 export class SetSourceIsLoading {
   static readonly type = '[Source] Set Loading';
   constructor(public isLoading: boolean) {}
+}
+
+export class ChangeProfileIcon{
+  static readonly type = '[Profile] Change Icon';
+  constructor(public profileIcon: string) {}
 }

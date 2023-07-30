@@ -1,0 +1,38 @@
+{
+    "/api/domains/": {
+        "target": "http://127.0.0.1:8000",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/domains": ""
+        }
+    },
+    "/api/engine/": {
+        "target": "http://127.0.0.1:8001",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/engine": ""
+        }
+    },
+    "/api/profiles/": {
+        "target": "http://127.0.0.1:8002/",
+        "secure": false,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/api/profiles": ""
+        }
+    },
+    "/api/sourceconector/": {
+        "target": "http://127.0.0.1:8003",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/sourceconector": ""
+        }
+    },
+    "/api/warehouse/": {
+        "target": "http://127.0.0.1:8004",
+        "secure": false,
+        "pathRewrite": {
+            "^/api/warehouse": ""
+        }
+    }
+}

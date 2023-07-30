@@ -28,6 +28,30 @@ def get_source(source_id):
     return final_source
 
 
+def edit_source(source_id, name):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    query = {"sources.source_id": ObjectId(source_id)}
+    result = collection.find_one(query)
+
+    for source in result["sources"]:
+        if source["source_id"] == ObjectId(source_id):
+            source["source_name"] = name
+            break
+    collection.update_one(
+        {"_id": result["_id"]}, {"$set": {"sources": result["sources"]}}
+    )
+    result["_id"] = str(result["_id"])
+    for i in result["sources"]:
+        i["source_id"] = str(i["source_id"])
+
+    client.close()
+
+    return result
+
+
 def update_last_refresh(source_id, new_last_refresh):
     client = pymongo.MongoClient(mongo_host, mongo_port)
     db = client[mongo_db]
@@ -74,6 +98,33 @@ def create_domain(domain_name, domain_icon, description):
         "icon": domain_icon,
         "description": description,
         "sources": [],
+    }
+
+
+def edit_domain(id, domain_name, domain_icon, description):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    ret = collection.find_one_and_update(
+        {"_id": ObjectId(id)},
+        {
+            "$set": {
+                "name": domain_name,
+                "icon": domain_icon,
+                "description": description,
+            }
+        },
+    )
+    client.close()
+    for i in ret["sources"]:
+        i["source_id"] = str(i["source_id"])
+    return {
+        "id": str(ret["_id"]),
+        "name": domain_name,
+        "icon": domain_icon,
+        "description": description,
+        "sources": ret["sources"],
     }
 
 

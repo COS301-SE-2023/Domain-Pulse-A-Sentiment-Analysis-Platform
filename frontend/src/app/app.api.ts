@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environment';
 
 @Injectable()
 export class AppApi {
@@ -100,6 +99,16 @@ export class AppApi {
     return this.http.post(addSourceUrl, body, { withCredentials: true });
   }
 
+  deleteSource(domainID: string, sourceID: string): Observable<any> {
+    const deleteSourceUrl = this.domainBaseUrl + 'domains/remove_source';
+    const body = {
+      id: domainID,
+      source_id: sourceID,
+    };
+
+    return this.http.post(deleteSourceUrl, body, { withCredentials: true });
+  }
+
   refreshSourceInfo(sourceID: string): Observable<any> {
     const refreshSourceInfoUrl = this.warehouseBaseUrl + 'query/refresh_source/';
     const body = {
@@ -160,6 +169,16 @@ export class AppApi {
       newpassword: newPassword,
     };
     return this.http.post(changePasswordUrl, body, { withCredentials: true });
+  }
+
+  changeProfileIcon(profileID: number, profilePicture: string): Observable<any> {
+    const changeProfilePictureUrl = this.profilesBaseUrl + 'profiles/edit_profile_picture';
+    const body = {
+      id: profileID,
+      pictureURL: profilePicture,
+    };
+    return this.http.post(changeProfilePictureUrl, body, { withCredentials: true });
+
   }
 
   attemptPsswdLogin(username: string, password: string): Observable<any> {

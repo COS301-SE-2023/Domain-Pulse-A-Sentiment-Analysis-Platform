@@ -23,6 +23,8 @@ import {
   Initialise,
   ToastError,
   ToastSuccess,
+  ChangeProfileIcon,
+  DeleteSource,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -198,8 +200,7 @@ export class AppState {
 
   @Selector()
   static sourceIsLoading(state: AppStateModel) {
-    if (state.sourceIsLoading) return state.sourceIsLoading;
-    return false;
+    return state.sourceIsLoading;
   }
 
   @Selector()
@@ -374,19 +375,104 @@ export class AppState {
 
     let selectedDomain = ctx.getState().selectedDomain;
     if (!selectedDomain) return;
-
+    
     let domainID = selectedDomain.id;
     this.appApi
       .addSource(domainID, state.name, source_image_name, state.params)
       .subscribe((res) => {
-        // Not sure as to whether i should just reget all the data or just use the response
-        this.store.dispatch(new GetDomains());
-
-        if (res.status === 'SUCCESS') {
-          // refresh for the source that was just added
-          this.store.dispatch(new RefreshSourceData(res.source_id));
+        if (res.status === 'FAILURE') {
+          this.store.dispatch(new ToastError('Your source could not be added'));
+          return;
         }
+
+        let domainRes = res.domain;
+        let domainsIDs = domainRes.sources.map(
+          (source: any) => source.source_id
+        );
+        let selectedDomain: DisplayDomain = {
+          id: domainRes._id,
+          name: domainRes.name,
+          description: domainRes.description,
+          imageUrl: '../assets/' + domainRes.icon,
+          sourceIds: domainsIDs,
+          sources: AppState.formatResponseSources(domainRes.sources),
+          selected: false,
+        };
+
+        let domains = ctx.getState().domains;
+        if (!domains) return;
+
+        for (let domain of domains) {
+          if (domain.id == selectedDomain.id) {
+            domain = selectedDomain;
+            ctx.patchState({
+              domains: domains,
+            });
+            break;
+          }
+        }
+
+        this.store.dispatch(new SetDomain(selectedDomain));
+
+        let lastSource =
+          selectedDomain.sources[selectedDomain.sources.length - 1];
+        lastSource.isRefreshing = true;
+        this.store.dispatch(new SetSource(lastSource));
+        this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
       });
+  }
+
+  @Action(DeleteSource)
+  deleteSource(ctx: StateContext<AppStateModel>, state: DeleteSource) {
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    let selectedSource = ctx.getState().selectedSource;
+    if (!selectedSource) return;
+
+    let sourceID = selectedSource.id;
+    let domainID = selectedDomain.id;
+    this.appApi.deleteSource(domainID, sourceID).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your source could not be added'));
+        return;
+      }
+
+      let domainRes = res.confirmation;
+      console.log(domainRes, domainRes.confirmation);
+      let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
+      let selectedDomain: DisplayDomain = {
+        id: domainRes._id,
+        name: domainRes.name,
+        description: domainRes.description,
+        imageUrl: '../assets/' + domainRes.icon,
+        sourceIds: domainsIDs,
+        sources: AppState.formatResponseSources(domainRes.sources),
+        selected: false,
+      };
+
+      let domains = ctx.getState().domains;
+      if (!domains) return;
+
+      for (let domain of domains) {
+        if (domain.id == selectedDomain.id) {
+          domain = selectedDomain;
+          ctx.patchState({
+            domains: domains,
+          });
+          break;
+        }
+      }
+
+      this.store.dispatch(new SetDomain(selectedDomain));
+
+      if (selectedDomain.sources.length === 0) {
+        return;
+      }
+
+      let firstSource = selectedDomain.sources[0];
+      this.store.dispatch(new SetSource(firstSource));
+    });
   }
 
   @Action(RefreshSourceData)
@@ -510,7 +596,10 @@ export class AppState {
       }
 
       ctx.patchState({
-        overallSentimentScores: res.aggregated_metrics,
+        overallSentimentScores: {
+          aggregated_metrics: res.aggregated_metrics,
+          meta_data: res.meta_data,
+        },
         sampleData: res.individual_metrics,
         sourceIsLoading: false,
       });
@@ -570,7 +659,7 @@ export class AppState {
         };
 
         this.appApi.getUserByID(res.userID).subscribe((res2: any) => {
-          if (res.status == 'SUCCESS') {
+          if (res2.status == 'SUCCESS') {
             const userDetails: UserDetails = {
               userId: res.userID,
               username: res2.username,
@@ -640,12 +729,62 @@ export class AppState {
           this.store.dispatch(
             new ToastSuccess('Your password has been changed')
           );
+          this.router.navigate(['/login']);
         } else {
           this.store.dispatch(
             new ToastError('Your password could not be changed')
           );
         }
       });
+  }
+
+  @Action(ChangeProfileIcon)
+  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+    const profileId = ctx.getState().profileDetails?.profileId;
+
+    if (!profileId) {
+      console.error('Profile ID is not available in the state.');
+      return;
+    }
+
+    const { profileIcon } = state;
+
+    if (profileIcon === undefined) {
+      console.error('profileIcon must be provided.');
+      return;
+    }
+
+    return this.appApi.changeProfileIcon(profileId, profileIcon).pipe(
+      switchMap((res) => {
+        if (res.status === 'SUCCESS') {
+          console.log('profile icon changed');
+          console.log(res.profileIcon);
+          const profileDetails: ProfileDetails = {
+            profileId: res.id,
+            profileIcon: res.profileIcon,
+            mode: res.mode,
+          };
+
+          ctx.patchState({
+            profileDetails: profileDetails,
+          });
+          return this.store.dispatch(
+            new ToastSuccess('Your profile icon has been changed')
+          );
+        } else {
+          return this.store.dispatch(
+            new ToastError('Your profile icon could not be changed')
+          );
+        }
+      }),
+      catchError((error: any) => {
+        console.error(
+          'An error occurred during the profile icon change:',
+          error
+        );
+        return throwError(() => error);
+      })
+    );
   }
 
   @Action(ChooseStatistic)

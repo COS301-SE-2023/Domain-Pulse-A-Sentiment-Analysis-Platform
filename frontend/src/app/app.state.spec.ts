@@ -50,10 +50,7 @@ describe('AppState', () => {
     apiSpy.getProfile.and.returnValue(of({ status: 'FAILURE' })); // CHANGE TO SUCCESS AND RETURN MOCK USER
 
     await TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        NgxsModule.forRoot([AppState]),
-      ],
+      imports: [BrowserAnimationsModule, NgxsModule.forRoot([AppState])],
       providers: [{ provide: AppApi, useValue: apiSpy }],
     }).compileComponents();
 
@@ -241,14 +238,52 @@ describe('AppState', () => {
       description: 'test',
       selected: true,
       imageUrl: 'test',
-      sourceIds: ['1'],
+      sourceIds: [],
       sources: [],
     };
-    store.reset({ app: { selectedDomain: mockDomain } });
-    apiSpy.addSource.and.returnValue(of({ status: 'SUCCESS' }));
+
+    const mockSuccessfullResponse: any = {
+      status: 'SUCCESS',
+      domain: {
+        _id: '64c4dd5e9194ca8be06ba96c',
+        name: 'Tutman',
+        icon: 'f1-logo.png',
+        description: 'None',
+        sources: [
+          {
+            source_id: '2',
+            source_name: 'Fresh boat',
+            source_icon: 'youtube-logo.png',
+            last_refresh_timestamp: 1690624522.0,
+            params: {
+              source_type: 'youtube',
+              video_id: 'eYDKY6jUa4Q',
+            },
+          },
+        ],
+        new_source_id: '2',
+      },
+    };
+
+    store.reset({ app: { selectedDomain: mockDomain, domains: [mockDomain] } });
+    apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
 
     actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
-      expect(true).toBe(true);
+      const actualSources = store.selectSnapshot(AppState.sources);
+      if (!actualSources) {
+        fail();
+        return;
+      }
+      expect(actualSources.length).toEqual(1);
+
+      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+      if (!actaulSelectredomain) {
+        fail();
+        return;
+      }
+      expect(actaulSelectredomain.sourceIds.length).toEqual(1);
       done();
     });
 
@@ -287,7 +322,6 @@ describe('AppState', () => {
       url: 'test',
       selected: true,
       isRefreshing: false,
-
     };
     store.reset({ app: { selectedSource: mockSource } });
 
@@ -315,7 +349,6 @@ describe('AppState', () => {
       url: 'test',
       selected: true,
       isRefreshing: false,
-
     };
     store.reset({ app: { selectedSource: mockSource } });
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
@@ -351,7 +384,9 @@ describe('AppState', () => {
   });
 
   it('React correctly to successful registering, and JWT set', () => {
-    apiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS', JWT: 'testJWT' }));
+    apiSpy.registerUser.and.returnValue(
+      of({ status: 'SUCCESS', JWT: 'testJWT' })
+    );
 
     store.dispatch(new RegisterUser('test', 'test', 'test@test.com'));
     expect(apiSpy.registerUser).toHaveBeenCalled();

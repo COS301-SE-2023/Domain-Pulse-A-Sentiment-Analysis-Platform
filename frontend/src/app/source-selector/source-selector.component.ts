@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, RefreshSourceData, SetSource, SetSourceIsLoading } from '../app.actions';
+import { AddNewSource, DeleteSource, RefreshSourceData, SetSource, SetSourceIsLoading } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -71,6 +71,10 @@ export class SourceSelectorComponent {
 
   refreshSource() {
     this.store.dispatch(new RefreshSourceData());
+  }
+
+  deleteSource() {
+    this.store.dispatch(new DeleteSource());
   }
 
   selectPlatform(platform: string) {
