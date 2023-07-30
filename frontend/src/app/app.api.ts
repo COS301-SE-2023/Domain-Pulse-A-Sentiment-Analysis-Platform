@@ -50,14 +50,18 @@ export class AppApi {
   }
 
   editDomain(
-    domainID: number,
+    domainID: string,
     domainName: string,
-    domainDescrption: string,
-    domainImageUrl: string
+    domainImageUrl: string,
+    domainDescrption: string,    
   ): Observable<any> {
     const editDomainUrl = this.domainBaseUrl + 'domains/edit_domain';
-    const body = {};
-    alert('FIND THE CORRECT BODY FOR THIS CODE');
+    const body = {
+      id: domainID,
+      name: domainName,
+      icon: domainImageUrl,
+      description: domainDescrption,      
+    };
     return this.http.post(editDomainUrl, body, { withCredentials: true });
   }
 

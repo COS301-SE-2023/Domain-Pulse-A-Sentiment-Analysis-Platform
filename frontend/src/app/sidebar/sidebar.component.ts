@@ -309,9 +309,15 @@ export class SidebarComponent {
   }
 
   editDomain() {
+    this.editDomainSpinner = true;
     const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
     if (!selectedDomain) return;
     const selectedDomainId = selectedDomain.id;
+
+    if(this.selectedFileDomainEdit){
+      const filenameDomain = this.uploadImageDomainEdit();
+      this.editDomainImageName = this.baseUrl + filenameDomain;
+    }
 
     this.store.dispatch(
       new EditDomain(
@@ -320,12 +326,22 @@ export class SidebarComponent {
         this.editDomainImageName,
         this.editDomainDescription
       )
-    );
+    ).pipe(
+      catchError((error) => {
+        this.editDomainSpinner = false;
+        return of();
+      })
+    ).subscribe((result) => {
+      this.editDomainSpinner = false;
+      this.toggleEditDomainModal();
+    });
+
+    
+    
     this.editDomainName = '';
     this.editDomainImageName = '';
     this.editDomainDescription = '';
 
-    this.toggleEditDomainModal();
   }
 
   deleteDomain() {

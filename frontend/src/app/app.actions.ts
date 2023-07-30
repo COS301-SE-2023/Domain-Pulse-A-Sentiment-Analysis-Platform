@@ -54,7 +54,7 @@ export class EditDomain {
   constructor(
     public domainId: string,
     public domainName: string,
-    public domainImagUrl: string,
+    public domainImageUrl: string,
     public description: string
   ) {}
 }

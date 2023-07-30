@@ -29,6 +29,7 @@ import {
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
+import { patch } from '@ngxs/store/operators';
 
 export interface Source {
   source_id: string;
@@ -377,7 +378,7 @@ export class AppState {
 
     let selectedDomain = ctx.getState().selectedDomain;
     if (!selectedDomain) return;
-    
+
     let domainID = selectedDomain.id;
     this.appApi
       .addSource(domainID, state.name, source_image_name, state.params)
@@ -536,9 +537,7 @@ export class AppState {
             );
             return of(res);
           } else {
-            this.store.dispatch(
-              new ToastSuccess('Your domain has been added')
-            );
+            this.store.dispatch(new ToastSuccess('Your domain has been added'));
             this.store.dispatch(new GetDomains());
             return of(res);
           }
@@ -556,34 +555,80 @@ export class AppState {
 
   @Action(EditDomain)
   editDomain(ctx: StateContext<AppStateModel>, state: EditDomain) {
-    // console.log(state);
-    console.log('siffies');
+    return this.appApi
+      .editDomain(
+        state.domainId,
+        state.domainName,
+        state.domainImageUrl,
+        state.description
+      )
+      .pipe(
+        switchMap((res) => {
+          if (res.status === 'SUCCESS') {
+            this.store.dispatch(
+              new ToastSuccess('Your domain has been updated')
+            );
+            this.store.dispatch(new GetDomains());
 
-    // call edit domain api
+            /* const currentState = ctx.getState();
+            console.log(state.domainId);
+            console.log(currentState.domains?.at(0));
+            const existingDomain = currentState.domains?.find(
+              (domain) => domain.id == res.id
+            );
 
-    // hard coded for now
-    // let selectedDomain = ctx.getState().selectedDomain;
-    // if (!selectedDomain) return;
+            const domains = currentState.domains;
 
-    // selectedDomain.name = state.domainName;
-    // selectedDomain.description = state.description;
-    // // selectedDomain.imageUrl = state.domainImagUrl;
+            if (domains) {
+              let index = 0;
 
-    // ctx.patchState({
-    //   selectedDomain: selectedDomain,
-    // });
+              while (index < domains.length) {
+                const currentDomain = domains[index];
+                if(currentState.domains?.at(index)?.id == state.domainId){
+                  console.log('found');
+                 
+                  
+                  domains[index] = res.domain;
+                  console.log(domains[index]);
+                  console.log(res.domain);
+                  console.log(res);
+                }
 
-    // let domains = ctx.getState().domains;
-    // if (!domains) return;
+                index++;
+              }
+            }
+ */
 
-    // for (let domain of domains) {
-    //   if (domain.id == selectedDomain.id) {
-    //     domain.name = state.domainName;
-    //     domain.description = state.description;
-    //     // domain.imageUrl = state.domainImagUrl;
-    //     break;
-    //   }
-    // }
+            /*  if (!existingDomain) {
+              return throwError(() => new Error('Domain not found'));
+            }
+
+            const updatedDomain: DisplayDomain = {
+              ...existingDomain, 
+              name: res.name,
+              description: res.description,
+              imageUrl: res.icon,
+              selected: true, // You need to set this value appropriately
+            };
+
+            const updatedDomains = currentState.domains?.map((domain) =>
+              domain.id === res.id ? updatedDomain : domain
+            );
+
+            return ctx.dispatch(patch({ domains: updatedDomains }));
+ */
+            return of(res);
+          } else {
+            this.store.dispatch(
+              new ToastError('Your domain could not be updated')
+            );
+            return throwError(() => new Error('edit domain failed'));
+          }
+        }),
+        catchError((error: any) => {
+          return of(error);
+        })
+      );
   }
 
   @Action(DeleteDomain)
@@ -759,11 +804,10 @@ export class AppState {
 
   @Action(DeleteUser)
   deleteUser(ctx: StateContext<AppStateModel>, state: UserDetails) {
-
     const { password } = state;
     const username = ctx.getState().userDetails?.username;
 
-    if(!username){
+    if (!username) {
       console.error('Username is not available in the state.');
       return;
     }
@@ -785,7 +829,6 @@ export class AppState {
       }
     });
   }
-
 
   @Action(ChangeProfileIcon)
   changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
