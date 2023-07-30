@@ -105,16 +105,23 @@ WSGI_APPLICATION = "profiles.wsgi.application"
 
 from sshtunnel import SSHTunnelForwarder
 
-# setup ssh tunnel
-ssh_tunnel = SSHTunnelForwarder(
-    os.getenv("DB_TUNNEL_HOST"),
-    ssh_username=os.getenv("DB_TUNNEL_USERNAME"),
-    ssh_pkey=os.getenv("DB_TUNNEL_PRIVATE_KEY"),
-    remote_bind_address=("127.0.0.1", int(os.getenv("SQL_DATABASE_PORT"))),
-)
+local_port_to_connect_to = -1
+if os.getenv("USE_TUNNEL") != "False":
 
-ssh_tunnel.start()
-print("SSH tunnel started")
+    # setup ssh tunnel
+    ssh_tunnel = SSHTunnelForwarder(
+        os.getenv("DB_TUNNEL_HOST"),
+        ssh_username=os.getenv("DB_TUNNEL_USERNAME"),
+        ssh_pkey=os.getenv("DB_TUNNEL_PRIVATE_KEY"),
+        remote_bind_address=("127.0.0.1", int(os.getenv("SQL_DATABASE_PORT"))),
+    )
+
+    ssh_tunnel.start()
+    print("SSH tunnel started")
+
+    local_port_to_connect_to = ssh_tunnel.local_bind_port
+else:
+    local_port_to_connect_to = int(os.getenv("SQL_DATABASE_PORT"))
 
 DATABASES = {
     # "default": {
@@ -128,7 +135,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": os.getenv("SQL_DATABASE_HOST"),
-        "PORT": ssh_tunnel.local_bind_port,
+        "PORT": local_port_to_connect_to,
         "NAME": os.getenv("SQL_DATABASE_NAME"),
         "USER": os.getenv("SQL_DATABASE_USER"),
         "PASSWORD": os.getenv("SQL_DATABASE_PASS"),
