@@ -103,7 +103,7 @@ The use of Angular as a frontend technology (discussed below) inheritedly makes 
 \end{itemize}
 \subsection{Pipe-and-Filter Pattern}
 \subsubsection{Description}
-The pipe-and-filter architectural pattern is a means to conceptually reason about the sentiment analysis pipeline. The pipeline is as follows: 1. Data is pulled from an external API 2. The data moves through the Query Engine and is formatted and pushed further along the conceptual pipeline 3. As part of the Analyser, the data is preprocessed using NTK 4. As part of thr Analyser, the data is subject to a number of sentiment analysis models to produce metrics 5. As part of the Aggregator, the data is combined in a meaningful and aggregated manner 6. The next step conceptually is that this fully transformed data is returned to the user on the frontend and presented visually
+The pipe-and-filter architectural pattern is a means to conceptually reason about the sentiment analysis pipeline. The pipeline is as follows: 1. Data is pulled from an external API 2. The data moves through the Query Engine and is formatted and pushed further along the conceptual pipeline 3. The source and/or domain queried is validated as belonging to the user 4. As part of the Analyser, the data is preprocessed using NTK 5. As part of thr Analyser, the data is subject to a number of sentiment analysis models to produce metrics 6. As part of the Aggregator, the data is combined in a meaningful and aggregated manner 7. The next step conceptually is that this fully transformed data is returned to the user on the frontend and presented visually
 \subsubsection{Quality Requirements Addressed}
 \begin{itemize}
     \item Performance: The use of this conceptual pipeline structure is conducive to parallel processing, an architectural tactic (since this pipeline spans across three different deployable units) improving the time taken for data to be analysed overall on average
@@ -128,7 +128,7 @@ Note that no pattern directly addresses the quality requirement of security. Thi
 \subsubsection{Usability}
 \begin{itemize}
     \item Attention to detail and smooth-ness when designing the UI
-    \item Sentiment anayss model outputs are appropriately transformed on the backend such that they are easy to interpret and visualise.
+    \item Sentiment analysis model outputs are appropriately transformed on the backend such that they are easy to interpret and visualise.
 \end{itemize}
 
 
@@ -274,6 +274,15 @@ The reason we have chosen these 2 types of databases is because of the following
 \begin{itemize}
     \item PostgreSQL database is a great choice for service oriented architecture because of its flexibility and extensibility , postgres is highly flexible and extensible DBMS , supports a wide range od data types and the flexibility allows for models and storage of diverse data formats making it great for all different needs of an SOA.
     \item A PostgreSQL has good scalability and performance and postgre is known for its capabilities in these areas , it can handle high transaction loads and large datasets with proper configuration and optimization , because our project has 3 databases postgre will be great when needing to minimize time spent interacting with the databases as it also has functionality for query optimization and parallel execution.
+\end{itemize}
+\subsubsection{File Uploading and Storage}
+This is a Azure cloud based file storage solution. It is responsible for storing image uploads from users and providing the URLs for the application to access the images.
+\begin{itemize}
+    \item Since the files to be stored are not particularly large, and since the files are not particularly important (ie: they are not critical to the functioning of the application), a cloud storage solution is a suitable choice.
+\end{itemize}
+The reason we have chosen this types of cloud storage:
+\begin{itemize}
+    \item Azure's cloud storage is simple and quick to set up, and allows for easy integration with our frontend techinology (Angular/Typescript).
 \end{itemize}
 \subsection{Alternatives for database technology}
 \begin{itemize}
