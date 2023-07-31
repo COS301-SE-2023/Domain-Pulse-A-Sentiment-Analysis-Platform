@@ -41,11 +41,11 @@
       (click)="toggleAddSourcesModal()"
       class="flex-column center clickable-item"
       style="cursor: pointer"
+      data-cy="addSource"
     >
       <img
         src="../assets/icons/add-blue.svg"
         style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem"
-        data-cy="addSource"
       />
       <!-- <p>Add a Source</p> -->
     </div>
@@ -74,7 +74,7 @@
       <div
         class="button clickable-item"
         (click)="toggleConfirmDeleteSourceModal()"
-        data-cy="delete"
+        data-cy="deleteSourceModal"
       >
         <img
           class="button-icon"
@@ -121,6 +121,7 @@
               class="default-input"
               [(ngModel)]="newSourceName"
               type="text"
+              data-cy="newSourceNameInp"
             />
           </div>
         </div>
@@ -187,6 +188,7 @@
               class="default-input"
               [(ngModel)]="newSourceUrl"
               type="text"
+              data-cy="newSourceUrlInp"
             />
           </div>
         </div>
@@ -195,7 +197,7 @@
           <button
             class="new-source-btn clickable-item"
             (click)="addNewSource()"
-            data-cy="Confirm"
+            data-cy="confirmAddSource"
           >
             Confirm
           </button>
@@ -283,6 +285,7 @@
           <div
             class="confirm-button clickable-item green center"
             (click)="deleteSource()"
+            data-cy="confirmDeleteSource"
           >
             <img
               class="button-icon-confirm"
@@ -294,6 +297,7 @@
           <div
             class="confirm-button clickable-item red center"
             (click)="toggleConfirmDeleteSourceModal()"
+            data-cy="cancelDeleteSource"
           >
             <img
               class="button-icon-confirm"

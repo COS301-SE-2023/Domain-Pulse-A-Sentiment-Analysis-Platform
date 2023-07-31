@@ -69,7 +69,7 @@ Ideally, this system will be useful to a fair number of people, who will in turn
 \newpage
 \section{Architectural Design and Patterns}
 \subsection{Diagram}
-\includegraphics[width=1\textwidth]{Demo2Architecture.jpg}
+\includegraphics[width=1\textwidth]{Demo3Architecture.jpg}
 Please see a description of the employed architectural patterns and tactics below.
 
 
@@ -84,6 +84,7 @@ The overarching software architecture is that of a Service-Oriented Architecture
     \item Scalability: The use of a Service-Oriented Architecture promotes scalability of the application by distributing the computational responsibilities across different deployed units (tactic: distributed processing) - thus helping reduce bottleneck.
     \item Performance: The separation of services allows services that require higher computationally expense to be scalled vertically or horizontally (tactic). Furthermore distributed processing of tasks ultimately improves performance.
     \item Modifiability: A SOA takes seperation of concerns (tactic) to an extreme, and allow for individual services to be modified totally independently of one another.
+    \item Security: Structuring the application as five independently deployable unit allows for the isolation of components, such that if an attacker compromises a single service, they do not necessarily compromise any of the other services. This isolation helps contain security breaches.
 \end{itemize}
 \subsection{Multitier/Layered Pattern}
 \subsubsection{Description}
@@ -102,7 +103,7 @@ The use of Angular as a frontend technology (discussed below) inheritedly makes 
 \end{itemize}
 \subsection{Pipe-and-Filter Pattern}
 \subsubsection{Description}
-The pipe-and-filter architectural pattern is a means to conceptually reason about the sentiment analysis pipeline. The pipeline is as follows: 1. Data is pulled from an external API 2. The data moves through the Query Engine and is formatted and pushed further along the conceptual pipeline 3. As part of the Analyser, the data is preprocessed using NTK 4. As part of thr Analyser, the data is subject to a number of sentiment analysis models to produce metrics 5. As part of the Aggregator, the data is combined in a meaningful and aggregated manner 6. The next step conceptually is that this fully transformed data is returned to the user on the frontend and presented visually
+The pipe-and-filter architectural pattern is a means to conceptually reason about the sentiment analysis pipeline. The pipeline is as follows: 1. Data is pulled from an external API 2. The data moves through the Query Engine and is formatted and pushed further along the conceptual pipeline 3. The source and/or domain queried is validated as belonging to the user 4. As part of the Analyser, the data is preprocessed using NTK 5. As part of thr Analyser, the data is subject to a number of sentiment analysis models to produce metrics 6. As part of the Aggregator, the data is combined in a meaningful and aggregated manner 7. The next step conceptually is that this fully transformed data is returned to the user on the frontend and presented visually
 \subsubsection{Quality Requirements Addressed}
 \begin{itemize}
     \item Performance: The use of this conceptual pipeline structure is conducive to parallel processing, an architectural tactic (since this pipeline spans across three different deployable units) improving the time taken for data to be analysed overall on average
@@ -121,13 +122,13 @@ As part of the Data layer of the application (see Multitier/Layered Pattern) we 
 Note that no pattern directly addresses the quality requirement of security. This is because this quality requirement is addressed by the choice of technology (detailed below). Furthermore, the important quality requirement of Usability is only directly addressed via one pattern above - please note however that this is not an oversight. Instead, Usability is so core to our application that it is mainly ingrained into the business logic and technology choices of the system.
 \subsubsection{Security}
 \begin{itemize}
-    \item Authentication is token based (tactic). JWT tokens will be used to authenticate a user across multiple deployed and independent services.
+    \item Authentication is token based (tactic). JWT tokens will be used to authenticate a user across multiple deployed and independent services. These tokens will be verified and managed by a central authentication service (Profiles) - this enables consistent token verification and potentially token blacklisting.
     \item Backend technology choice of Django (discussed below) is designed with security in mind, employing various mechanisms to combat common security vulnerabilities
 \end{itemize}
 \subsubsection{Usability}
 \begin{itemize}
     \item Attention to detail and smooth-ness when designing the UI
-    \item Sentiment anayss model outputs are appropriately transformed on the backend such that they are easy to interpret and visualise.
+    \item Sentiment analysis model outputs are appropriately transformed on the backend such that they are easy to interpret and visualise.
 \end{itemize}
 
 
@@ -273,6 +274,15 @@ The reason we have chosen these 2 types of databases is because of the following
 \begin{itemize}
     \item PostgreSQL database is a great choice for service oriented architecture because of its flexibility and extensibility , postgres is highly flexible and extensible DBMS , supports a wide range od data types and the flexibility allows for models and storage of diverse data formats making it great for all different needs of an SOA.
     \item A PostgreSQL has good scalability and performance and postgre is known for its capabilities in these areas , it can handle high transaction loads and large datasets with proper configuration and optimization , because our project has 3 databases postgre will be great when needing to minimize time spent interacting with the databases as it also has functionality for query optimization and parallel execution.
+\end{itemize}
+\subsubsection{File Uploading and Storage}
+This is a Azure cloud based file storage solution. It is responsible for storing image uploads from users and providing the URLs for the application to access the images.
+\begin{itemize}
+    \item Since the files to be stored are not particularly large, and since the files are not particularly important (ie: they are not critical to the functioning of the application), a cloud storage solution is a suitable choice.
+\end{itemize}
+The reason we have chosen this types of cloud storage:
+\begin{itemize}
+    \item Azure's cloud storage is simple and quick to set up, and allows for easy integration with our frontend techinology (Angular/Typescript).
 \end{itemize}
 \subsection{Alternatives for database technology}
 \begin{itemize}
