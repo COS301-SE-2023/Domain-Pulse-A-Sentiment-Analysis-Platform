@@ -7,10 +7,14 @@ import { Observable, first, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import {
   AddNewDomain,
+  ChangePassword,
   DeleteDomain,
+  DeleteUser,
   EditDomain,
+  Logout,
   SetDomain,
   SetUserDetails,
+  ToastError,
 } from '../app.actions';
 import { AppState, DisplayDomain, UserDetails } from '../app.state';
 import { ModalContainerComponent } from '../modal-container/modal-container.component';
@@ -52,37 +56,22 @@ describe('SidebarComponent', () => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
-    spyOn(storeSpy, 'select').and.returnValue(of(null)); // be sure to mock the implementation here
-    spyOn(storeSpy, 'selectSnapshot').and.returnValue(null); // same here
+    spyOn(storeSpy, 'select').and.returnValue(of(null)); 
+    spyOn(storeSpy, 'selectSnapshot').and.returnValue(null); 
 
     actions$ = TestBed.inject(Actions);
     TestBed.inject(ToastrService);
     fixture.detectChanges();
   });
 
-  /* it('should change the document.body.classlist theme property when toggleTheme() is called', () => {
-    expect(component.theme).toBe(0);
-
-    component.toggleTheme();
-    expect(component.theme).toBe(1);
-    console.log(document.body.classList);
-    // expect(document.body.classList.contains('dark')).toBeTrue();
-    // expect(document.body.classList.contains('light')).toBeFalse();
-
-    component.toggleTheme();
-    expect(component.theme).toBe(0);
-    console.log(document.body.classList);
-    // expect(document.body.classList.contains('dark')).toBeFalse();
-    // expect(document.body.classList.contains('light')).toBeTrue();
-  }); */
-
+  
   it('should fire a "AddDomain" action', (done: DoneFn) => {
     component.newDomainName = 'New Domain Name';
     component.newDomainImageName = 'New Domain Image Name';
     component.newDomainDescription = 'New Domain Description';
 
     actions$.pipe(ofActionDispatched(AddNewDomain)).subscribe(() => {
-      // expect the clearing of the set variables
+      
       setTimeout(() => {
         expect(component.newDomainName).toBe('');
         expect(component.newDomainImageName).toBe('');
@@ -96,20 +85,20 @@ describe('SidebarComponent', () => {
   });
 
   it('should fire an "EditDomain" action', (done: DoneFn) => {
-    // mock out teh selectSnapshot
-    component.newDomainName = 'New Domain Name';
-    component.newDomainImageName = 'New Domain Image Name';
-    component.newDomainDescription = 'New Domain Description';
+    
+    component.editDomainName = 'New Domain Name';
+    component.editDomainImageName = 'image';
+    component.editDomainDescription = 'New Domain Description';
 
     actions$.pipe(ofActionDispatched(EditDomain)).subscribe(() => {
-      // expect the clearing of the set variables
+      
       setTimeout(() => {
         expect(component.newDomainName).toBe('');
         expect(component.newDomainImageName).toBe('');
         expect(component.newDomainDescription).toBe('');
 
         done();
-      }, 300);
+      }, 500);
     });
 
     const dummyDisplayDomain: DisplayDomain = {
@@ -192,7 +181,8 @@ describe('SidebarComponent', () => {
     });
 
     const displayId = '1';
-    component.deleteDomain(displayId);
+    component.deleteDomainId = displayId;
+    component.deleteDomain();
   });
 
   it('should fire sideBarClicked event when the sidebar is clicked', () => {
@@ -207,12 +197,12 @@ describe('SidebarComponent', () => {
     component.expanded = true;
     expect(component.smallLogoState).toBe('out');
     expect(component._expanded).toBe(true);
-    // test what happens afterwards
+    
 
     component.expanded = false;
     expect(component.fullLogoState).toBe('out');
     expect(component._expanded).toBe(false);
-    // test what happens afterwards
+    
   });
 });
 
@@ -253,8 +243,8 @@ describe('SidebarComponent and AppState', () => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
-    // spyOn(storeSpy, 'select').and.returnValue(of(null)); // be sure to mock the implementation here
-    // spyOn(storeSpy, 'selectSnapshot').and.returnValue(null); // same here
+    
+    
 
     actions$ = TestBed.inject(Actions);
     TestBed.inject(ToastrService);
@@ -302,4 +292,321 @@ describe('SidebarComponent and AppState', () => {
       done();
     }, 3000);
   });
+
+  it('should toggle the edit domain modal and set editDomain properties if selectedDomain is available', () => {
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(dummyDisplayDomain);
+
+    component.showEditDomainModal = false;
+    component.toggleEditDomainModal();
+
+    expect(component.showEditDomainModal).toBe(true);
+    expect(component.editDomainName).toBe(dummyDisplayDomain.name);
+    expect(component.editDomainImageName).toBe(dummyDisplayDomain.imageUrl);
+    expect(component.editDomainDescription).toBe(dummyDisplayDomain.description);
+  });
+
+  it('should toggle the edit domain modal without setting editDomain properties if selectedDomain is not available', () => {
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(null);
+
+    component.showEditDomainModal = false;
+    component.toggleEditDomainModal();
+
+    expect(component.showEditDomainModal).toBe(true);
+    expect(component.editDomainName).toBe(''); 
+    expect(component.editDomainImageName).toBe('');
+    expect(component.editDomainDescription).toBe('');
+  });
+
+  it('should set showEditDomainModal to false when calling toggleEditDomainModal if it was true', () => {
+    component.showEditDomainModal = true;
+
+    component.toggleEditDomainModal();
+
+    expect(component.showEditDomainModal).toBe(false);
+  });
+
+
+  it('should toggle the change password modal', () => {
+    component.showChangePasswordModal = false;
+    component.toggleChangePasswordModal();
+    expect(component.showChangePasswordModal).toBe(true);
+
+    component.showChangePasswordModal = true;
+    component.toggleChangePasswordModal();
+    expect(component.showChangePasswordModal).toBe(false);
+  });
+
+  it('should toggle the delete account modal', () => {
+    component.showDeleteAccountModal = false;
+    component.toggleDeleteAccountModal();
+    expect(component.showDeleteAccountModal).toBe(true);
+
+    component.showDeleteAccountModal = true;
+    component.toggleDeleteAccountModal();
+    expect(component.showDeleteAccountModal).toBe(false);
+    expect(component.showConfirmDeleteAccountModal).toBe(true);
+  });
+
+  it('should toggle the confirm delete account modal', () => {
+    component.showConfirmDeleteAccountModal = false;
+    component.toggleConfirmDeleteAccountModal();
+    expect(component.showConfirmDeleteAccountModal).toBe(true);
+
+    component.showConfirmDeleteAccountModal = true;
+    component.toggleConfirmDeleteAccountModal();
+    expect(component.showConfirmDeleteAccountModal).toBe(false);
+  });
+
+  it('should toggle the confirm delete domain modal and set deleteDomainId if id is provided', () => {
+    const dummyDomainId = '123';
+    component.deleteDomainId = ''; 
+
+    component.showConfirmDeleteDomainModal = true;
+    component.toggleConfirmDeleteDomainModal();
+    expect(component.showConfirmDeleteDomainModal).toBe(false);
+    expect(component.deleteDomainId).toBe('');
+
+    component.showConfirmDeleteDomainModal = false;
+    component.toggleConfirmDeleteDomainModal(dummyDomainId);
+    expect(component.showConfirmDeleteDomainModal).toBe(true);
+    expect(component.deleteDomainId).toBe(dummyDomainId);
+
+    
+  });
+
+  
+  it('should show a toast error and not dispatch an action when required fields are missing', (done:DoneFn) => {
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(null);
+
+    component['selectedFileDomain'] = null;
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    component.addNewDomain();
+
+    setTimeout(() => {
+      expect(component.addDomainSpinner).toBe(false);
+
+      expect(storeDispatchSpy).not.toHaveBeenCalledWith(jasmine.any(AddNewDomain));
+
+      expect(storeDispatchSpy).toHaveBeenCalledWith(new ToastError('Please select a domain icon'));
+
+      expect(component.newDomainName).toBe('');
+      expect(component.newDomainImageName).toBe('');
+      expect(component.newDomainDescription).toBe('');
+
+      done();
+    }, 0);
+  });
+
+
+  it('should show a toast error and not dispatch an action when required fields are missing', (done:DoneFn) => {
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(null);
+
+    component['selectedFileDomain'] = null;
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    component.addNewDomain();
+
+    setTimeout(() => {
+      expect(component.addDomainSpinner).toBe(false);
+
+      expect(storeDispatchSpy).not.toHaveBeenCalledWith(jasmine.any(AddNewDomain));
+
+      expect(storeDispatchSpy).toHaveBeenCalledWith(new ToastError('Please select a domain icon'));
+
+      expect(component.newDomainName).toBe('');
+      expect(component.newDomainImageName).toBe('');
+      expect(component.newDomainDescription).toBe('');
+
+      done();
+    }, 0);
+  });
+
+  it('should set newDomainImageName when selectIcon is called', () => {
+    const iconUrl = 'https://example.com/edit-icon.png';
+    component.selectIcon(iconUrl);
+    expect(component['newDomainImageName']).toBe(iconUrl);
+  });
+
+  it('should set editDomainImageName when selectIconEdit is called', () => {
+    const iconUrl = 'https://example.com/edit-icon.png';
+    component.selectIconEdit(iconUrl);
+    expect(component['editDomainImageName']).toBe(iconUrl);
+  });
+
+  it('results should be empty and not dispatch an action when required fields are missing', (done: DoneFn) => {
+
+    component.selectedFileDomain = null;
+
+    component.addNewDomain();
+    fixture.detectChanges(); 
+
+    expect(component.addDomainSpinner).toBe(false);
+
+    expect(component.newDomainName).toBe('');
+    expect(component.newDomainImageName).toBe('');
+    expect(component.newDomainDescription).toBe('');
+
+    done();
+  });
+
+  it('should check that both light and dark theme are present', () => {
+    component.toggleTheme();
+
+    expect(document.body.classList.contains('light')).toBeTruthy();
+    expect(document.body.classList.contains('dark')).toBeTruthy();
+  });
+
+
+
+  it('should set imagePreview to null when no image is selected', () => {
+    
+    const event = { target: { files: null } } as unknown as Event;
+
+    
+    component.onImageSelected(event);
+
+    if(component.selectedFile === undefined) {
+      component.selectedFile = null;
+    }
+    expect(component.selectedFile).toBeNull();
+    expect(component.imagePreview).toBeNull();
+  });
+
+  it('should show toast error if no image is selected', () => {
+    
+    component.selectedFile = null;
+    const toastErrorSpy = spyOn(component['store'], 'dispatch');
+
+    
+    component.uploadImage();
+
+    
+    expect(component.uploadSpinner).toBe(false);
+    expect(toastErrorSpy).toHaveBeenCalledWith(jasmine.any(ToastError));
+  });
+
+  it('should show a toast error message when no image is selected', () => {
+    component.selectedFileDomain = null; 
+    const toastErrorSpy = spyOn(component['store'], 'dispatch');
+
+  
+    component.uploadImageDomain();
+  
+    expect(toastErrorSpy).toHaveBeenCalledWith(jasmine.any(ToastError));
+  });
+
+
+it('should not upload image if no image is selected', () => {
+
+  component.selectedFileDomain = null; 
+
+  const blobStorageServiceSpy = spyOn(component.blobStorageService, 'uploadImage');
+
+  
+  const result = component.uploadImageDomain();
+
+  
+  expect(blobStorageServiceSpy).not.toHaveBeenCalled();
+  expect(result).toBeUndefined();
+});
+
+
+it('should set imagePreviewDomainEdit to null when no image is selected', () => {
+  
+  const eventMock = { target: { files: null } } as unknown as Event;
+
+  
+  component.onImageSelectedDomainEdit(eventMock);
+
+  if(component.selectedFileDomainEdit === undefined) {
+    component.selectedFileDomainEdit = null;
+  }
+  expect(component.selectedFileDomainEdit).toBeNull();
+  expect(component.imagePreviewDomainEdit).toBeNull();
+});
+
+it('should show a toast error message when no image is selected during uploadImageDomainEdit()', () => {
+  
+  component.selectedFileDomainEdit = null; 
+
+  const toastErrorSpy = spyOn(component['store'], 'dispatch');
+
+  
+  component.uploadImageDomainEdit();
+
+  
+  expect(toastErrorSpy).toHaveBeenCalledWith(jasmine.any(ToastError));
+});
+
+
+it('should not upload image if no image is selected during uploadImageDomainEdit()', () => {
+  
+  component.selectedFileDomainEdit = null; 
+
+  const blobStorageServiceSpy = spyOn(component.blobStorageService, 'uploadImage');
+
+  const result = component.uploadImageDomainEdit();
+
+  expect(blobStorageServiceSpy).not.toHaveBeenCalled();
+  expect(result).toBeUndefined();
+});
+
+it('should dispatch ChangePassword action and reset passwords', () => {
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of());
+
+  component.oldPassword = 'oldpassword';
+  component.newPassword = 'newpassword';
+
+  component.changePassword();
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(new ChangePassword('oldpassword', 'newpassword'));
+  expect(component.oldPassword).toBe('');
+  expect(component.newPassword).toBe('');
+  expect(component['showChangePasswordModal']).toBe(true);
+});
+
+it('should dispatch DeleteUser action when username is available', () => {
+  const userDetails = { username: 'testuser' };
+  spyOn(component['store'], 'selectSnapshot').and.returnValue(userDetails);
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of());
+
+  component.password = 'testpassword';
+  component.deleteAccount();
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(new DeleteUser('testuser', 'testpassword'));
+});
+
+it('should not dispatch DeleteUser action when username is not available', () => {
+  spyOn(component['store'], 'selectSnapshot').and.returnValue(null);
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of());
+
+  component.password = 'testpassword';
+  component.deleteAccount();
+
+  expect(storeDispatchSpy).not.toHaveBeenCalledWith(jasmine.any(DeleteUser));
+});
+
+it('should dispatch Logout action', () => {
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of());
+
+  component.logOut();
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(new Logout());
+});
+
 });

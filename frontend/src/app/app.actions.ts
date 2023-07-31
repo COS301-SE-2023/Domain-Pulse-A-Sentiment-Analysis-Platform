@@ -54,7 +54,7 @@ export class EditDomain {
   constructor(
     public domainId: string,
     public domainName: string,
-    public domainImagUrl: string,
+    public domainImageUrl: string,
     public description: string
   ) {}
 }
@@ -75,7 +75,12 @@ export class RefreshSourceData {
 
 export class SetSource {
   static readonly type = '[App] Set Source';
-  constructor(public source: DisplaySource) {}
+  constructor(public source: DisplaySource | null) {}
+}
+
+export class SetAllSourcesSelected{
+  static readonly type = '[App] Set All Sources Selected';
+  constructor(public selected: boolean) {}
 }
 
 export class AddNewSource {
@@ -83,7 +88,14 @@ export class AddNewSource {
   constructor(
     public name: string,
     public platform: string,
-    public params: any
+    public params: any,
+  ) {}
+}
+
+export class EditSource {
+  static readonly type = '[App] Edit Source';
+  constructor(
+    public name: string,
   ) {}
 }
 
@@ -105,6 +117,11 @@ export class AttempPsswdLogin {
   constructor(public username: string, public password: string) {}
 }
 
+export class DeleteUser {
+  static readonly type = '[Auth] Delete User';
+  constructor(public username: string, public password: string) {}
+}
+
 export class RegisterUser {
   static readonly type = '[Auth] Register User';
   constructor(
@@ -112,6 +129,11 @@ export class RegisterUser {
     public password: string,
     public email: string
   ) {}
+}
+
+export class Logout {
+  static readonly type = '[Auth] Logout';
+  constructor() {}
 }
 
 export class ChangePassword {

@@ -12,6 +12,8 @@ import {
   AttempPsswdLogin,
   CheckAuthenticate,
   ChooseStatistic,
+  DeleteSource,
+  EditSource,
   GetDomains,
   GetSourceDashBoardInfo,
   RefreshSourceData,
@@ -42,6 +44,9 @@ describe('AppState', () => {
       'getSourceSentimentData',
       'refreshSourceInfo',
       'addSource',
+      'getAggregatedDomainData',
+      'editSource',
+      'deleteSource',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -101,6 +106,7 @@ describe('AppState', () => {
       profileIconUrl: 'test',
     };
     store.reset({ app: { userDetails: mockProfile } });
+    apiSpy.getAggregatedDomainData.and.returnValue(of({ status: 'FAILURE' }));
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: ['dskjafl', 'sdjfkl'] })
     );
@@ -138,7 +144,7 @@ describe('AppState', () => {
         name: 'test',
         description: 'test',
         selected: true,
-        imageUrl: '../assets/test',
+        imageUrl: 'test',
         sourceIds: [],
         sources: [],
       },
@@ -147,7 +153,7 @@ describe('AppState', () => {
         name: 'test2',
         description: 'test2',
         selected: false,
-        imageUrl: '../assets/test2',
+        imageUrl: 'test2',
         sourceIds: [],
         sources: [],
       },
@@ -156,6 +162,35 @@ describe('AppState', () => {
     const actualDomains = store.selectSnapshot(AppState.domains);
     expect(actualDomains).toEqual(expectedDomains);
   });
+
+  it('should dispatch ToastError when no selected source to edit', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      done();
+    });
+
+    store.dispatch(new EditSource('New Source Name'));
+  });
+
+  it('should dispatch ToastError when editSource API call fails', (done: DoneFn) => {
+    apiSpy.editSource.and.returnValue(of({ status: 'FAILURE' }));
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      done();
+    });
+
+    const dummySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    
+    store.reset({ app: { sources: [dummySource], selectedSource: dummySource } });
+    store.dispatch(new EditSource('New Source Name'));
+  });
+
 
   it('should select the correct domain on "SetDomain" event', () => {
     const mockDomains: DisplayDomain[] = [
@@ -201,14 +236,14 @@ describe('AppState', () => {
         id: '1',
         name: 'test',
         url: 'test',
-        selected: true,
+        params: 'test',        selected: true,
         isRefreshing: false,
       },
       {
         id: '2',
         name: 'test2',
         url: 'test3',
-        selected: false,
+        params: 'test',        selected: false,
         isRefreshing: false,
       },
     ];
@@ -305,6 +340,7 @@ describe('AppState', () => {
       id: '1',
       name: 'test',
       url: 'test',
+      params: 'test',
       selected: true,
       isRefreshing: false,
     };
@@ -320,6 +356,7 @@ describe('AppState', () => {
       id: '1',
       name: 'test',
       url: 'test',
+      params: 'test',
       selected: true,
       isRefreshing: false,
     };
@@ -347,6 +384,7 @@ describe('AppState', () => {
       id: '1',
       name: 'test',
       url: 'test',
+      params: 'test',
       selected: true,
       isRefreshing: false,
     };
@@ -441,6 +479,7 @@ describe('AppState', () => {
         id: '64b940ec9bbccdb7731b81f9',
         name: 'Primegen 1',
         url: 'youtube-logo.png',
+        params: 'WjKQQAFwrR4',
         selected: false,
         isRefreshing: false,
       },
@@ -448,6 +487,7 @@ describe('AppState', () => {
         id: '64ba5fb1303c5fdb91cc4c5e',
         name: 'Linus 1',
         url: 'youtube-logo.png',
+        params: 'RGZFb2PlPlo',
         selected: false,
         isRefreshing: false,
       },

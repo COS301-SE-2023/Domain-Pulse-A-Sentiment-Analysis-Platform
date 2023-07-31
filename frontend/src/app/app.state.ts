@@ -25,9 +25,14 @@ import {
   ToastSuccess,
   ChangeProfileIcon,
   DeleteSource,
+  DeleteUser,
+  Logout,
+  EditSource,
+  SetAllSourcesSelected,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
+import { patch } from '@ngxs/store/operators';
 
 export interface Source {
   source_id: string;
@@ -48,6 +53,7 @@ export interface DisplaySource {
   id: string;
   name: string;
   url: string;
+  params: any;
   selected: boolean;
   isRefreshing: boolean;
 }
@@ -69,6 +75,7 @@ export interface UserDetails {
   profileIconUrl: string;
   oldPassword?: string;
   newPassword?: string;
+  password?: string;
 }
 
 export interface ProfileDetails {
@@ -80,28 +87,6 @@ export interface ProfileDetails {
 export interface Toast {
   message: string;
   timeout: number;
-}
-
-export class Comment {
-  comment: string;
-  commentSentiment: SentimentScores;
-  colorClass: string;
-
-  constructor(comment: string, commentSentiment: SentimentScores) {
-    this.comment = comment;
-    this.commentSentiment = commentSentiment;
-
-    if (commentSentiment.overallScore >= 70) {
-      this.colorClass = 'positive-color';
-    } else if (
-      commentSentiment.overallScore >= 40 &&
-      commentSentiment.overallScore < 70
-    ) {
-      this.colorClass = 'neutral-color';
-    } else {
-      this.colorClass = 'negative-color';
-    }
-  }
 }
 
 interface AppStateModel {
@@ -120,6 +105,7 @@ interface AppStateModel {
   profileDetails?: ProfileDetails;
   toasterError?: Toast;
   toasterSuccess?: Toast;
+  allSourcesSelected: boolean;
 }
 
 @State<AppStateModel>({
@@ -128,6 +114,7 @@ interface AppStateModel {
     authenticated: false,
     selectedStatisticIndex: 0,
     sourceIsLoading: true,
+    allSourcesSelected: true,
   },
 })
 @Injectable()
@@ -221,6 +208,11 @@ export class AppState {
     return undefined;
   }
 
+  @Selector()
+  static allSourcesSelected(state: AppStateModel) {
+    return state.allSourcesSelected;
+  }
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -272,6 +264,7 @@ export class AppState {
           }
 
           let domainRes = res.domain;
+
           let domainsIDs = domainRes.sources.map(
             (source: any) => source.source_id
           );
@@ -279,7 +272,7 @@ export class AppState {
             id: domainRes._id,
             name: domainRes.name,
             description: domainRes.description,
-            imageUrl: '../assets/' + domainRes.icon,
+            imageUrl: domainRes.icon,
             sourceIds: domainsIDs,
             sources: AppState.formatResponseSources(domainRes.sources),
             selected: false,
@@ -308,9 +301,8 @@ export class AppState {
             }
           }
 
-          /* ctx.patchState({
-            sourceIsLoading: false,
-          }); */
+          this.store.dispatch(new SetSource(null));
+
           console.log(ctx.getState().domains);
         });
       });
@@ -326,37 +318,72 @@ export class AppState {
       domain.selected = false;
     }
     state.domain.selected = true;
+
     ctx.patchState({
       domains: domains,
       selectedDomain: state.domain,
     });
+
+    localStorage.setItem('selectedDomain', state.domain.id);
 
     let sources = state.domain.sources;
     ctx.patchState({
       sources: sources,
     });
 
-    let firstSource = true;
+    const selectedSourceId = localStorage.getItem(state.domain.id);
+    if (selectedSourceId == '') {
+      this.store.dispatch(new SetSource(null));
+    } else {
+      const selectedSource = sources.find(
+        (source) => source.id === selectedSourceId
+      );
+
+      // If the selectedSource is found, set it to local storage
+      if (selectedSource) {
+        this.store.dispatch(new SetSource(selectedSource));
+      }
+    }
+
+    /* let found = false;
 
     for (let source of sources) {
-      if (firstSource) {
+      if (source.selected) {
         this.store.dispatch(new SetSource(source));
-        firstSource = false;
         break;
       }
     }
+
+    if (!found) {
+      this.store.dispatch(new SetSource(null));
+    } */
 
     this.store.dispatch(new GetSources());
   }
 
   @Action(SetSource)
   setSource(ctx: StateContext<AppStateModel>, state: SetSource) {
-    let sources = ctx.getState().sources;
+    const sources = ctx.getState().sources;
     if (!sources) return;
 
-    for (let souce of sources) {
-      souce.selected = false;
+    for (const source of sources) {
+      source.selected = false;
     }
+
+    if (!state.source) {
+      ctx.patchState({
+        allSourcesSelected: true,
+        selectedSource: undefined,
+      });
+      this.store.dispatch(new GetSourceDashBoardInfo());
+
+      return;
+    }
+
+    const selectedDomain = localStorage.getItem('selectedDomain');
+    if (!selectedDomain) return;
+
+    localStorage.setItem(selectedDomain, state.source.id);
     state.source.selected = true;
 
     this.store.dispatch(new GetSourceDashBoardInfo());
@@ -364,7 +391,7 @@ export class AppState {
     ctx.patchState({
       sources: sources,
       selectedSource: state.source,
-      /*       sourceIsLoading: false, */
+      allSourcesSelected: false,
     });
   }
 
@@ -375,7 +402,7 @@ export class AppState {
 
     let selectedDomain = ctx.getState().selectedDomain;
     if (!selectedDomain) return;
-    
+
     let domainID = selectedDomain.id;
     this.appApi
       .addSource(domainID, state.name, source_image_name, state.params)
@@ -393,7 +420,7 @@ export class AppState {
           id: domainRes._id,
           name: domainRes.name,
           description: domainRes.description,
-          imageUrl: '../assets/' + domainRes.icon,
+          imageUrl: domainRes.icon,
           sourceIds: domainsIDs,
           sources: AppState.formatResponseSources(domainRes.sources),
           selected: false,
@@ -417,9 +444,79 @@ export class AppState {
         let lastSource =
           selectedDomain.sources[selectedDomain.sources.length - 1];
         lastSource.isRefreshing = true;
+        this.store.dispatch(new SetSourceIsLoading(true));
         this.store.dispatch(new SetSource(lastSource));
         this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
       });
+  }
+
+  /*  @Action(EditSource)
+  editSource(ctx: StateContext<AppStateModel>, state: EditSource) {
+    let selectedDomain = ctx.getState().selectedDomain;
+    if (!selectedDomain) return;
+
+    let selectedSource = ctx.getState().selectedSource;
+    if (!selectedSource) return;
+
+    let sourceID = selectedSource.id;
+
+    this.appApi.editSource(sourceID, state.name).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your source could not be edited'));
+        return;
+      }else if(res.status === 'SUCCESS'){
+        this.store.dispatch(new ToastSuccess('Your source has been edited'));
+        if(!selectedSource) return;
+
+        let updatedSelectedSource: DisplaySource = {
+          id: selectedSource.id,
+          name: state.name,
+          url: selectedSource.url,
+          selected: selectedSource.selected,
+          params: selectedSource.params,
+          isRefreshing: selectedSource.isRefreshing,
+        };
+        ctx.patchState({ selectedSource: updatedSelectedSource });
+      }
+
+    });
+
+
+
+  } */
+
+  @Action(EditSource)
+  editSource(ctx: StateContext<AppStateModel>, state: EditSource) {
+    const currentState = ctx.getState();
+    const sources = currentState.sources || [];
+    const selectedSource = currentState.selectedSource;
+
+    if (!selectedSource) {
+      this.store.dispatch(new ToastError('No selected source to edit'));
+      return;
+    }
+
+    const sourceID = selectedSource.id;
+    this.appApi.editSource(sourceID, state.name).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your source could not be edited'));
+        return;
+      } else if (res.status === 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('Your source has been edited'));
+
+        const updatedSources = sources.map((source) => {
+          if (source.id === sourceID) {
+            return { ...source, name: state.name };
+          }
+          return source;
+        });
+
+        ctx.patchState({
+          sources: updatedSources,
+          selectedSource: { ...selectedSource, name: state.name },
+        });
+      }
+    });
   }
 
   @Action(DeleteSource)
@@ -439,13 +536,12 @@ export class AppState {
       }
 
       let domainRes = res.confirmation;
-      console.log(domainRes, domainRes.confirmation);
       let domainsIDs = domainRes.sources.map((source: any) => source.source_id);
       let selectedDomain: DisplayDomain = {
         id: domainRes._id,
         name: domainRes.name,
         description: domainRes.description,
-        imageUrl: '../assets/' + domainRes.icon,
+        imageUrl: domainRes.icon,
         sourceIds: domainsIDs,
         sources: AppState.formatResponseSources(domainRes.sources),
         selected: false,
@@ -524,47 +620,108 @@ export class AppState {
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
     console.log(state);
 
-    this.appApi
+    return this.appApi
       .addDomain(state.domainName, state.description, state.domainImagUrl)
-      .subscribe((res) => {
-        if (res.status === 'FAILURE') {
-          this.store.dispatch(new ToastError('Your domain could not be added'));
-          return;
-        }
-        this.store.dispatch(new GetDomains());
-      });
+      .pipe(
+        switchMap((res) => {
+          if (res.status === 'FAILURE') {
+            this.store.dispatch(
+              new ToastError('Your domain could not be added')
+            );
+            return of(res);
+          } else {
+            this.store.dispatch(new ToastSuccess('Your domain has been added'));
+            this.store.dispatch(new GetDomains());
+            return of(res);
+          }
+        }),
+        catchError((error: any) => {
+          this.store.dispatch(
+            new ToastError('An error occurred while adding the domain')
+          );
+          return throwError(
+            () => new Error('Error occurred while adding the domain')
+          );
+        })
+      );
   }
 
   @Action(EditDomain)
   editDomain(ctx: StateContext<AppStateModel>, state: EditDomain) {
-    // console.log(state);
-    console.log('siffies');
+    return this.appApi
+      .editDomain(
+        state.domainId,
+        state.domainName,
+        state.domainImageUrl,
+        state.description
+      )
+      .pipe(
+        switchMap((res) => {
+          if (res.status === 'SUCCESS') {
+            this.store.dispatch(
+              new ToastSuccess('Your domain has been updated')
+            );
+            this.store.dispatch(new GetDomains());
 
-    // call edit domain api
+            /* const currentState = ctx.getState();
+            console.log(state.domainId);
+            console.log(currentState.domains?.at(0));
+            const existingDomain = currentState.domains?.find(
+              (domain) => domain.id == res.id
+            );
 
-    // hard coded for now
-    // let selectedDomain = ctx.getState().selectedDomain;
-    // if (!selectedDomain) return;
+            const domains = currentState.domains;
 
-    // selectedDomain.name = state.domainName;
-    // selectedDomain.description = state.description;
-    // // selectedDomain.imageUrl = state.domainImagUrl;
+            if (domains) {
+              let index = 0;
 
-    // ctx.patchState({
-    //   selectedDomain: selectedDomain,
-    // });
+              while (index < domains.length) {
+                const currentDomain = domains[index];
+                if(currentState.domains?.at(index)?.id == state.domainId){
+                  console.log('found');
+                 
+                  
+                  domains[index] = res.domain;
+                  console.log(domains[index]);
+                  console.log(res.domain);
+                  console.log(res);
+                }
 
-    // let domains = ctx.getState().domains;
-    // if (!domains) return;
+                index++;
+              }
+            }
+ */
 
-    // for (let domain of domains) {
-    //   if (domain.id == selectedDomain.id) {
-    //     domain.name = state.domainName;
-    //     domain.description = state.description;
-    //     // domain.imageUrl = state.domainImagUrl;
-    //     break;
-    //   }
-    // }
+            /*  if (!existingDomain) {
+              return throwError(() => new Error('Domain not found'));
+            }
+
+            const updatedDomain: DisplayDomain = {
+              ...existingDomain, 
+              name: res.name,
+              description: res.description,
+              imageUrl: res.icon,
+              selected: true, // You need to set this value appropriately
+            };
+
+            const updatedDomains = currentState.domains?.map((domain) =>
+              domain.id === res.id ? updatedDomain : domain
+            );
+
+            return ctx.dispatch(patch({ domains: updatedDomains }));
+ */
+            return of(res);
+          } else {
+            this.store.dispatch(
+              new ToastError('Your domain could not be updated')
+            );
+            return throwError(() => new Error('edit domain failed'));
+          }
+        }),
+        catchError((error: any) => {
+          return of(error);
+        })
+      );
   }
 
   @Action(DeleteDomain)
@@ -584,7 +741,21 @@ export class AppState {
   getSourceDashBoardInfo(ctx: StateContext<AppStateModel>) {
     let selectedSource = ctx.getState().selectedSource;
     if (!selectedSource) {
-      console.log('no source selected to get dashboard info for');
+      let selectedDomain = ctx.getState().selectedDomain;
+      if (!selectedDomain) return;
+      const sourceIds = selectedDomain.sourceIds;
+      this.appApi.getAggregatedDomainData(sourceIds).subscribe((res) => {
+        if (res.status == 'SUCCESS') {
+          ctx.patchState({
+            overallSentimentScores: {
+              aggregated_metrics: res.aggregated_metrics,
+              meta_data: res.meta_data,
+            },
+            sampleData: res.individual_metrics,
+            sourceIsLoading: false,
+          });
+        }
+      });
       return;
     }
     let selectedSourceID = selectedSource.id;
@@ -595,14 +766,19 @@ export class AppState {
         return;
       }
 
-      ctx.patchState({
-        overallSentimentScores: {
-          aggregated_metrics: res.aggregated_metrics,
-          meta_data: res.meta_data,
-        },
-        sampleData: res.individual_metrics,
-        sourceIsLoading: false,
-      });
+      if (res.aggregated_metrics)
+        if (res.aggregated_metrics.general.category == 'No data') {
+          this.store.dispatch(new SetSourceIsLoading(true));
+        } else {
+          ctx.patchState({
+            overallSentimentScores: {
+              aggregated_metrics: res.aggregated_metrics,
+              meta_data: res.meta_data,
+            },
+            sampleData: res.individual_metrics,
+            sourceIsLoading: false,
+          });
+        }
     });
   }
 
@@ -688,7 +864,6 @@ export class AppState {
         switchMap((res) => {
           if (res.status === 'SUCCESS') {
             localStorage.setItem('JWT', res.JWT);
-            /* this.router.navigate(['']); */
             console.log('register success');
             return of();
           } else {
@@ -702,6 +877,27 @@ export class AppState {
           return of(error);
         })
       );
+  }
+
+  @Action(Logout)
+  logout(ctx: StateContext<AppStateModel>) {
+    return this.appApi.logOut().pipe(
+      switchMap((res) => {
+        if (res.status === 'SUCCESS') {
+          this.store.dispatch(new ToastSuccess('You have been logged out'));
+          localStorage.removeItem('JWT');
+          this.router.navigate(['/login']);
+
+          return of();
+        } else {
+          return throwError(() => new Error());
+        }
+      }),
+      catchError((error: any) => {
+        this.store.dispatch(new ToastError('You could not be logged out'));
+        return of(error);
+      })
+    );
   }
 
   @Action(ChangePassword)
@@ -736,6 +932,34 @@ export class AppState {
           );
         }
       });
+  }
+
+  @Action(DeleteUser)
+  deleteUser(ctx: StateContext<AppStateModel>, state: UserDetails) {
+    const { password } = state;
+    const username = ctx.getState().userDetails?.username;
+
+    if (!username) {
+      console.error('Username is not available in the state.');
+      return;
+    }
+
+    if (password === undefined) {
+      console.error('password must be provided.');
+      return;
+    }
+
+    this.appApi.deleteUser(username, password).subscribe((res) => {
+      if (res.status == 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('Your account has been deleted'));
+        localStorage.removeItem('JWT');
+        this.router.navigate(['/login']);
+      } else {
+        this.store.dispatch(
+          new ToastError('Your account could not be deleted')
+        );
+      }
+    });
   }
 
   @Action(ChangeProfileIcon)
@@ -800,10 +1024,17 @@ export class AppState {
     action: SetSourceIsLoading
   ) {
     const state = ctx.getState();
-    ctx.setState({
-      ...state,
+    ctx.patchState({
       sourceIsLoading: true,
     });
+  }
+
+  @Action(SetAllSourcesSelected)
+  setAllSourcesSelected(
+    ctx: StateContext<AppStateModel>,
+    { selected }: SetAllSourcesSelected
+  ) {
+    ctx.patchState({ allSourcesSelected: selected });
   }
 
   @Action(ChangeMode)
@@ -836,16 +1067,31 @@ export class AppState {
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
+
     for (let responseSource of responseSources) {
+      let sourceUrl = '';
+      if (responseSource.params.video_id) {
+        sourceUrl = responseSource.params.video_id;
+      } else if (responseSource.params.maps_url) {
+        sourceUrl = responseSource.params.maps_ur;
+      } else if (responseSource.params.tripadvisor_url) {
+        sourceUrl = responseSource.params.tripadvisor_url;
+      }
+
+      console.log(responseSource);
+
       let displaySource: DisplaySource = {
         id: responseSource.source_id,
         name: responseSource.source_name,
         url: responseSource.source_icon,
+        params: sourceUrl,
         selected: false,
         isRefreshing: false,
       };
       displaySources.push(displaySource);
     }
+    console.log('returning display sources');
+    console.log(displaySources);
     return displaySources;
   }
 

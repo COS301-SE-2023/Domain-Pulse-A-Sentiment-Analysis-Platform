@@ -1,85 +1,117 @@
 <div class="gap-div flex-row align-center">
-<div class="sources-div flex-row align-center scrollable-div">
-  <ng-container *ngIf="sources$ | async as sources; else loadingSources">
-    <div
-      *ngFor="let source of sources"
-      class="source-cat flex-column center clickable-item-nohover"
-      (click)="selectSource(source)"
-      [ngClass]="{ 'source-cat-selected': source.selected }"
-      data-cy="source"
-    >
-      <img
-        [src]="'../assets/' + source.url"
-        height="60%"
-        style="border-radius: 50%;"
-      />
+  <div class="sources-div flex-row align-center scrollable-div">
+    <ng-container *ngIf="sources$ | async as sources; else loadingSources">
+      <div
+        class="source-cat flex-column center clickable-item-nohover"
+        (click)="selectAllSources()"
+        [ngClass]="{ 'source-cat-selected': allSources$ | async }"
+      >
+        <img [src]="'../assets/icons/allSources.png'" height="60%" />
 
-      <p class="source-name">{{ source.name}}</p>
-      <ng-container *ngIf="source.isRefreshing" >
-        <div class="loading-spinner"></div>
-        <!-- <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;position: absolute;
+        <p class="source-name">All Sources</p>
+      </div>
+      <div
+        *ngFor="let source of sources"
+        class="source-cat flex-column center clickable-item-nohover"
+        (click)="selectSource(source)"
+        [ngClass]="{ 'source-cat-selected': source.selected }"
+        data-cy="source"
+      >
+        <img
+          [src]="'../assets/' + source.url"
+          height="60%"
+          style="border-radius: 50%"
+        />
+
+        <p class="source-name">{{ source.name }}</p>
+        <ng-container *ngIf="source.isRefreshing">
+          <div class="loading-spinner"></div>
+          <!-- <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;position: absolute;
         top: 0;
         right: 0;"/> -->
-      </ng-container>
-    </div>
-    
+        </ng-container>
+      </div>
+    </ng-container>
 
-    
-  </ng-container>
+    <ng-template #loadingSources>
+      <p>No sources: Add source -></p>
+    </ng-template>
 
-  <ng-template #loadingSources>
-    <p>No sources: Add source -></p>
-  </ng-template>
-
-  <div (click)="toggleAddSourcesModal()" class="flex-column center clickable-item" style="cursor: pointer;" >
-    <img
-      src="../assets/icons/add-blue.svg"
-      style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem;"
+    <div
+      (click)="toggleAddSourcesModal()"
+      class="flex-column center clickable-item"
+      style="cursor: pointer"
       data-cy="addSource"
-    />
-    <!-- <p>Add a Source</p> -->
-  </div>
-</div>
-
-
-<div class="source-actions flex-row center">
-  <div class="space-div flex-row center" style="margin-top: 0.5rem">
-  </div>
-  <div class="button-div flex-row center">
-    <div class="button clickable-item" (click)="refreshSource()" data-cy="refresh">
-      <img class="button-icon" src="../assets/icons/refresh.svg" alt="Icon">
-      <span class="button-text">Refresh</span>
-    </div>
-    <div class="button clickable-item" (click)="toggleEditSourceModal()" data-cy="edit">
-      <img class="button-icon" src="../assets/icons/edit.svg" alt="Icon">
-      <span class="button-text">Edit</span>
-    </div>
-    <div class="button clickable-item" (click)="deleteSource()" data-cy="delete">
-      <img class="button-icon" src="../assets/icons/trash-can-regular.svg" alt="Icon">
-      <span class="button-text">Delete</span>
-    </div>
-    <div class="button clickable-item">
-      <img class="button-icon" src="../assets/icons/search.svg" alt="Icon">
-
-      <span class="button-text">Inspect</span>
+    >
+      <img
+        src="../assets/icons/add-blue.svg"
+        style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem"
+      />
+      <!-- <p>Add a Source</p> -->
     </div>
   </div>
-  <div class="space-div flex-row center" style="margin-bottom: 0.5rem"></div>
-</div>
+
+  <div class="source-actions flex-row center">
+    <div class="space-div flex-row center" style="margin-top: 0.5rem"></div>
+    <div class="button-div flex-row center">
+      <div
+        class="button clickable-item"
+        (click)="refreshSource()"
+        data-cy="refresh"
+      >
+        <img class="button-icon" src="../assets/icons/refresh.svg" alt="Icon" />
+        <span class="button-text">Refresh</span>
+      </div>
+      <div
+        class="button clickable-item"
+        (click)="toggleEditSourceModal()"
+        data-cy="edit"
+      >
+        <img class="button-icon" src="../assets/icons/edit.svg" alt="Icon" />
+        <span class="button-text">Edit</span>
+      </div>
+
+      <div
+        class="button clickable-item"
+        (click)="toggleConfirmDeleteSourceModal()"
+        data-cy="deleteSourceModal"
+      >
+        <img
+          class="button-icon"
+          src="../assets/icons/trash-can-regular.svg"
+          alt="Icon"
+        />
+        <span class="button-text">Delete</span>
+      </div>
+      <div class="button clickable-item">
+        <img class="button-icon" src="../assets/icons/search.svg" alt="Icon" />
+
+        <span class="button-text">Inspect</span>
+      </div>
+    </div>
+    <div class="space-div flex-row center" style="margin-bottom: 0.5rem"></div>
+  </div>
 </div>
 
 <dp-modal-container
   [modalDisplay]="showAddSourcesModal"
   (close)="toggleAddSourcesModal()"
 >
-
-
-<div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
-  <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
-    <div class="heading-container">
-      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleAddSourcesModal()" data-cy="toggleAddSourcesModal">
-      <p class="modal-heading">Add a Source</p>
-    </div>
+  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+    <div
+      class="flex-column center modal-contents"
+      style="flex-basis: 55%; gap: 0.7rem"
+    >
+      <div class="heading-container">
+        <img
+          src="../assets/icons/back-arrow-right-light.svg"
+          alt="Back Arrow"
+          class="back-arrow clickable-item"
+          (click)="toggleAddSourcesModal()"
+          data-cy="toggleAddSourcesModal"
+        />
+        <p class="modal-heading">Add a Source</p>
+      </div>
       <div class="flex-column center content" style="width: 80%; gap: 0.5rem">
         <div class="flex-row" style="width: 80%">
           <p class="modal-step-tag">1</p>
@@ -89,123 +121,193 @@
               class="default-input"
               [(ngModel)]="newSourceName"
               type="text"
+              data-cy="newSourceNameInp"
             />
           </div>
         </div>
-      
-      
 
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">2</p>
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">2</p>
 
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source Type:</p>
-          <div class="outer-flex-row sources-options" >
-            <div class="inner-flex-row" style="overflow-x: auto; display: flex;">
-              <div class="platform-logo clickable-item" (click)="selectPlatform('googlereviews')" data-cy="selectGooglePlatform">
-                <img src="../assets/google-reviews-logo.png" [ngClass]="{'selected': newSourcePlatform === 'googlereviews'}" alt="Google Reviews" />
-                <p class="source-type-title">Google Reviews</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">Source Type:</p>
+            <div class="outer-flex-row sources-options">
+              <div
+                class="inner-flex-row"
+                style="overflow-x: auto; display: flex"
+              >
+                <div
+                  class="platform-logo clickable-item"
+                  (click)="selectPlatform('googlereviews')"
+                  data-cy="selectGooglePlatform"
+                >
+                  <img
+                    src="../assets/google-reviews-logo.png"
+                    [ngClass]="{
+                      selected: newSourcePlatform === 'googlereviews'
+                    }"
+                    alt="Google Reviews"
+                  />
+                  <p class="source-type-title">Google Reviews</p>
+                </div>
+                <div
+                  class="platform-logo clickable-item"
+                  (click)="selectPlatform('tripadvisor')"
+                  data-cy="selectTripadvisorPlatform"
+                >
+                  <img
+                    src="../assets/tripadvisor-logo.png"
+                    [ngClass]="{
+                      selected: newSourcePlatform === 'tripadvisor'
+                    }"
+                    alt="Trip Advisor"
+                  />
+                  <p class="source-type-title">Trip Advisor</p>
+                </div>
+                <div
+                  class="platform-logo clickable-item"
+                  (click)="selectPlatform('youtube')"
+                  data-cy="selectYoutubePlatform"
+                >
+                  <img
+                    src="../assets/youtube-logo.png"
+                    [ngClass]="{ selected: newSourcePlatform === 'youtube' }"
+                    alt="Youtube"
+                  />
+                  <p class="source-type-title">Youtube</p>
+                </div>
               </div>
-              <div class="platform-logo clickable-item"  (click)="selectPlatform('tripadvisor')" data-cy="selectTripadvisorPlatform">
-                <img src="../assets/tripadvisor-logo.png" [ngClass]="{'selected': newSourcePlatform === 'tripadvisor'}"  alt="Trip Advisor" />
-                <p class="source-type-title">Trip Advisor</p>
-              </div>
-              <div class="platform-logo clickable-item"  (click)="selectPlatform('youtube')" data-cy="selectYoutubePlatform">
-                <img src="../assets/youtube-logo.png"  [ngClass]="{'selected': newSourcePlatform === 'youtube'}" alt="Youtube" />
-                <p class="source-type-title">Youtube</p>
-              </div>
-              
             </div>
           </div>
         </div>
-      </div>
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">3</p>
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source url:</p>
-          <input class="default-input" [(ngModel)]="newSourceUrl" type="text" />
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">3</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">Source url:</p>
+            <input
+              class="default-input"
+              [(ngModel)]="newSourceUrl"
+              type="text"
+              data-cy="newSourceUrlInp"
+            />
+          </div>
+        </div>
+
+        <div class="bottom-div">
+          <button
+            class="new-source-btn clickable-item"
+            (click)="addNewSource()"
+            data-cy="confirmAddSource"
+          >
+            Confirm
+          </button>
         </div>
       </div>
-
-      <div class="bottom-div">
-        <button class="new-source-btn clickable-item" (click)="addNewSource()" data-cy="Confirm">Confirm</button>
-      </div>
     </div>
-    
+
+    <div class="picture"></div>
   </div>
-
-  <div
-    class="picture"
-  ></div>
-
-
-</div>
 </dp-modal-container>
 
 <dp-modal-container
-[modalDisplay]="showEditSourceModal"
-(close)="toggleEditSourceModal()"
-data-cy="editSourceModal"
+  [modalDisplay]="showEditSourceModal"
+  (close)="toggleEditSourceModal()"
+  data-cy="editSourceModal"
 >
-
-<div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
-  <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
-    <div class="heading-container">
-      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleEditSourceModal()" data-cy="editSourceModal2">
-      <p class="modal-heading">Edit a Source</p>
-    </div>
-    <div class="flex-column center content" style="width: 80%; gap: 0.5rem;">
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">1</p>
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source Name:</p>
-          <input class="default-input" [(ngModel)]="newSourceName" type="text" />
-        </div>
+  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+    <div
+      class="flex-column center modal-contents"
+      style="flex-basis: 55%; gap: 0.7rem"
+    >
+      <div class="heading-container">
+        <img
+          src="../assets/icons/back-arrow-right-light.svg"
+          alt="Back Arrow"
+          class="back-arrow clickable-item"
+          (click)="toggleEditSourceModal()"
+          data-cy="editSourceModal2"
+        />
+        <p class="modal-heading">Edit a Source</p>
       </div>
+      <div class="flex-column center content" style="width: 80%; gap: 0.5rem">
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">1</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">Source Name:</p>
+            <input
+              class="default-input"
+              [(ngModel)]="editSourceName"
+              type="text"
+            />
+          </div>
+        </div>
 
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">2</p>
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source Type:</p>
-          <select
-            [(ngModel)]="newSourcePlatform"
-            style="
-              border: solid rgb(133, 133, 133) 2px;
-              height: 30px;
-              border-radius: 10px;
-            "
+        <div class="flex-row" style="width: 80%">
+          <p class="modal-step-tag">3</p>
+          <div class="flex-column" style="width: 100%">
+            <p class="step-heading">Source url:</p>
+            <input
+              class="default-input"
+              [(ngModel)]="editSourceUrl"
+              type="text"
+            />
+          </div>
+        </div>
+
+        <div class="bottom-div">
+          <button
+            class="new-source-btn clickable-item"
+            (click)="editSource()"
+            data-cy="confirmEditSource"
           >
-            <option value="facebook">facebook</option>
-            <option value="instagram">instagram</option>
-            <option value="reddit">reddit</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="flex-row" style="width: 80%">
-        <p class="modal-step-tag">3</p>
-        <div class="flex-column" style="width: 100%">
-          <p class="step-heading">Source url:</p>
-          <input class="default-input" type="text" />
+            Confirm
+          </button>
         </div>
       </div>
     </div>
 
-    <div class="bottom-div">
-
-      <button class="new-source-btn clickable-item" (click)="editSource()" data-cy="confirmEditSource">Confirm</button>
-
-    </div>
-
-
-
-
+    <div class="picture"></div>
   </div>
-  <div
-    class="picture"
-  ></div>
-
-
-</div>
 </dp-modal-container>
 
+<dp-modal-container
+  [modalDisplay]="showConfirmDeleteSourceModal"
+  (close)="toggleConfirmDeleteSourceModal()"
+>
+  <div
+    class="flex-row modal"
+    style="width: 30vw; height: 25vh; color: black; border-radius: 10px"
+  >
+    <div class="flex-row center" style="width: 100%">
+      <div class="flex-column center" style="gap: 2rem">
+        <p class="confirm-text">Are you sure you want to delete your source?</p>
+        <div class="button-div-confirm">
+          <div
+            class="confirm-button clickable-item green center"
+            (click)="deleteSource()"
+            data-cy="confirmDeleteSource"
+          >
+            <img
+              class="button-icon-confirm"
+              src="../assets/icons/yes.svg"
+              alt="Icon"
+            />
+            <span class="button-text-confirm" style="margin-left: 0">Yes</span>
+          </div>
+          <div
+            class="confirm-button clickable-item red center"
+            (click)="toggleConfirmDeleteSourceModal()"
+            data-cy="cancelDeleteSource"
+          >
+            <img
+              class="button-icon-confirm"
+              src="../assets/icons/no.svg"
+              alt="Icon"
+            />
+            <span class="button-text-confirm" style="margin-left: 0">No</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dp-modal-container>

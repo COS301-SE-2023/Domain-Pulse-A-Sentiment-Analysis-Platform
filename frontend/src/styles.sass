@@ -6,8 +6,9 @@ $background-light: #e0efff
 $primary-light: #037fff
 $secondary-light: #17234c
 $highlight-light: rgba(3, 127, 255, 0.25)
+$dark-grey-light: #4d4d4d
 $grey-item-light: #949494
-$grey-subtle-light: #e0e0e0
+$grey-subtle-light: #cacaca
 $main-div-light: #ffffff
 $secondary-div-light: #ffffff
 $text-color-light: #000000
@@ -21,8 +22,9 @@ $background-dark: #4d4d4d
 $primary-dark: #037fff
 $secondary-dark: #e8ecfc
 $highlight-dark: rgba(3, 127, 255, 0.25)
-$grey-item-dark: #949494
-$grey-subtle-dark: #a0a0a0
+$dark-grey-dark: #646464
+$grey-item-dark: #858585
+$grey-subtle-dark: #b8b8b8
 $main-div-dark: #282828
 $secondary-div-dark: #404040
 $text-color-dark: #ffffff
@@ -32,11 +34,19 @@ $modal-background-dark: rgba(255, 255, 255, 0.181)
 $hover-opacity-highlight-dark: rgba(49, 49, 49, 0.301)
 $button-highlight-dark: #61b0ff
 
+$confirm: rgba(0, 184, 0, 0.9)
+$reject: rgba(184, 0, 0, 0.9)
+$spinner-top-light: #178332
+$spinner-bottom-light: #55d174
+$spinner-top-dark: #2ab94e
+$spinner-bottom-dark: #fdfdfd
+
 body.light
     --background: #{$background-light}
     --primary: #{$primary-light}
     --secondary: #{$secondary-light}
     --highlight: #{$highlight-light}
+    --dark-grey: #{$dark-grey-light}
     --grey-item: #{$grey-item-light}
     --grey-subtle: #{$grey-subtle-light}
     --main-div: #{$main-div-light}
@@ -47,12 +57,17 @@ body.light
     --modal-background: #{$modal-background-light}
     --button-highlight: #{$button-highlight-light}
     --hover-opacity-highlight: #{$hover-opacity-highlight-light}
+    --confirm: #{$confirm}
+    --reject: #{$reject}
+    --spinner-top: #{$spinner-top-light}
+    --spinner-bottom: #{$spinner-bottom-light}
 
 body.dark
     --background: #{$background-dark}
     --primary: #{$primary-dark}
     --secondary: #{$secondary-dark}
     --highlight: #{$highlight-dark}
+    --dark-grey: #{$dark-grey-dark}
     --grey-item: #{$grey-item-dark}
     --grey-subtle: #{$grey-subtle-dark}
     --main-div: #{$main-div-dark}
@@ -63,6 +78,10 @@ body.dark
     --modal-background: #{$modal-background-dark}
     --button-highlight: #{$button-highlight-dark}
     --hover-opacity-highlight: #{$hover-opacity-highlight-dark}
+    --confirm: #{$confirm}
+    --reject: #{$reject}
+    --spinner-top: #{$spinner-top-dark}
+    --spinner-bottom: #{$spinner-bottom-dark}
 
 body
     margin: 0
