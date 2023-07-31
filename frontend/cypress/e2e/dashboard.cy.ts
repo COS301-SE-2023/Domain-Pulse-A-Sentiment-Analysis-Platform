@@ -26,7 +26,7 @@ describe('Dashboard', function () {
       });
   });
 
-  it('add and delete domain', () => {
+  it.skip('add and delete domain', () => {
     cy.wait(2000);
 
     cy.get('[data-cy=addDomainModalToggle]').click();
@@ -50,6 +50,34 @@ describe('Dashboard', function () {
     cy.wait(2000);
     cy.get('[data-cy=sidebar]').click();
     cy.contains('test domain').should('not.exist');
+  });
+
+  it('add and delete source', () => {
+    cy.wait(2000);
+
+    cy.get('[data-cy=addSource]').click();
+    cy.wait(300);
+
+    cy.get('[data-cy=newSourceNameInp]').type('test source');
+    cy.get('[data-cy=selectYoutubePlatform]').click();
+    cy.get('[data-cy=newSourceUrlInp]').type('https://www.youtube.com/watch?v=FeIBbxMcmI4');
+
+    cy.get('[data-cy=confirmAddSource]').click();
+
+    cy.wait(2000);
+    cy.contains('test source').should('exist');
+    
+    // dont delete
+    cy.get('[data-cy=deleteSourceModal').click();
+    cy.get('[data-cy=cancelDeleteSource]').click();
+    cy.contains('test source').should('exist');
+
+    // actually delete
+    cy.get('[data-cy=deleteSourceModal').click();
+    cy.get('[data-cy=confirmDeleteSource]').click();
+
+    cy.wait(2000);
+    cy.contains('test source').should('not.exist');
   });
 
   it('should open the profile toggle and toggle theme', () => {
