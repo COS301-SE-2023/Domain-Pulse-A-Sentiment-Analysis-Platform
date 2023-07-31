@@ -32,9 +32,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
     'localhost',
     '154.73.32.89',
-    '.domain-pulse.co.za',
+    '.domainpulse.app',
     '.dp.cos301.thuthuka.me',
 ]
 
@@ -47,7 +48,7 @@ CORS_ORIGIN_WHITELIST = (
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?:\/\/)?((\w(-\w)*)+\.)*thuthuka\.me$',
-    '^(https?:\/\/)?((\w(-\w)*)+\.)*domain-pulse\.co\.za$',
+    '^(https?:\/\/)?((\w(-\w)*)+\.)*domainpulse\.app$',
 )
 
 CORS_ALLOW_CREDENTIALS = True

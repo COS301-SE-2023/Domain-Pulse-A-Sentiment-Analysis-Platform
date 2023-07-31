@@ -4,7 +4,8 @@
   (click)="clickSidebar(); $event.stopPropagation()"
 >
   <!-- [@logoSwitch]="logoState" -->
-  <div class="flex-column center" style="height: 86px">
+  <div class="flex-column center" style="height: 86px" 
+  data-cy="sidebar">
     <img
       [@smallLogoSwitch]="smallLogoState"
       *ngIf="showSmallLogo"
@@ -37,6 +38,7 @@
       width: _expanded ? '90%' : 'fit-content',
       color: domain.selected ? 'black' : 'white'
     }"
+    data-cy="domain"
   >
     <div class="circle-wrapper">
       <img [src]="domain.imageUrl" alt="Source logo" height="44px" />
@@ -59,6 +61,7 @@
         src="../assets/icons/pen-solid.svg"
         height="15px"
         class="clickable-item"
+        data-cy="editDomainModalToggle"
       />
       <img
         src="../assets/icons/grey-trash.svg"
@@ -67,6 +70,7 @@
           toggleConfirmDeleteDomainModal(domain.id); $event.stopPropagation()
         "
         class="clickable-item"
+        data-cy="deleteDomain"
       />
     </div>
   </div>
@@ -80,6 +84,7 @@
       padding: expanded ? '0 0rem' : '0px',
       width: _expanded ? '90%' : 'fit-content'
     }"
+    data-cy="addDomainModalToggle"
   >
     <div class="plus-wrapper flex-row center">
       <img src="../assets/icons/white-plus.svg" height="20px" />
@@ -92,6 +97,7 @@
   <div
     class="domain flex-row align-center clickable-item"
     (click)="toggleProfileModal(); $event.stopPropagation()"
+    data-cy="profileModalToggle"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
       width: _expanded ? '90%' : 'fit-content',
@@ -145,6 +151,7 @@
               class="default-input"
               [(ngModel)]="newDomainName"
               type="text"
+              data-cy="newDomainNameInput"
             />
           </div>
         </div>
@@ -157,7 +164,7 @@
               class="default-input"
               type="text"
               [(ngModel)]="newDomainDescription"
-              placeholder=""
+              data-cy="newDomainDescriptionInput"
             />
           </div>
         </div>
@@ -230,7 +237,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-domain-btn clickable-item" (click)="addNewDomain()">
+        <button class="new-domain-btn clickable-item" (click)="addNewDomain()" data-cy="addNewDomainBtn">
           Confirm
           <div [ngClass]="{ 'button-spinner': addDomainSpinner }"></div>
         </button>
@@ -402,7 +409,7 @@
       </div>
 
       <div class="button-div">
-        <div class="button clickable-item" (click)="toggleTheme()">
+        <div class="button clickable-item" (click)="toggleTheme()" data-cy="toggleTheme">
           <img
             class="button-icon"
             src="../assets/icons/palette-solid.svg"

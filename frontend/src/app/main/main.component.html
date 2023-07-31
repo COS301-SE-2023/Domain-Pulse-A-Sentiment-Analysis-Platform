@@ -3,6 +3,7 @@
     [expanded]="!sidebarCollapsed"
     [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
     (sidebarClicked)="toggleSidebar()"
+    data-cy="Togglesidebar2"
   ></dp-sidebar>
   <ng-container
     *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif"

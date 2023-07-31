@@ -18,6 +18,7 @@
       class="source-cat flex-column center clickable-item-nohover"
       (click)="selectSource(source)"
       [ngClass]="{ 'source-cat-selected': source.selected }"
+      data-cy="source"
     >
       <img
         [src]="'../assets/' + source.url"
@@ -46,6 +47,7 @@
     <img
       src="../assets/icons/add-blue.svg"
       style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem;"
+      data-cy="addSource"
     />
     <!-- <p>Add a Source</p> -->
   </div>
@@ -56,15 +58,17 @@
   <div class="space-div flex-row center" style="margin-top: 0.5rem">
   </div>
   <div class="button-div flex-row center">
-    <div class="button clickable-item" (click)="refreshSource()" >
+    <div class="button clickable-item" (click)="refreshSource()" data-cy="refresh">
       <img class="button-icon" src="../assets/icons/refresh.svg" alt="Icon">
       <span class="button-text">Refresh</span>
     </div>
-    <div class="button clickable-item" (click)="toggleEditSourceModal()">
+    <div class="button clickable-item" (click)="toggleEditSourceModal()" data-cy="edit">
       <img class="button-icon" src="../assets/icons/edit.svg" alt="Icon">
       <span class="button-text">Edit</span>
     </div>
-    <div class="button clickable-item" (click)="toggleConfirmDeleteSourceModal()">
+
+    <div class="button clickable-item" (click)="toggleConfirmDeleteSourceModal()" data-cy="delete">
+
       <img class="button-icon" src="../assets/icons/trash-can-regular.svg" alt="Icon">
       <span class="button-text">Delete</span>
     </div>
@@ -87,7 +91,7 @@
 <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
   <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
     <div class="heading-container">
-      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleAddSourcesModal()">
+      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleAddSourcesModal()" data-cy="toggleAddSourcesModal">
       <p class="modal-heading">Add a Source</p>
     </div>
       <div class="flex-column center content" style="width: 80%; gap: 0.5rem">
@@ -112,15 +116,15 @@
           <p class="step-heading">Source Type:</p>
           <div class="outer-flex-row sources-options" >
             <div class="inner-flex-row" style="overflow-x: auto; display: flex;">
-              <div class="platform-logo clickable-item" (click)="selectPlatform('googlereviews')">
+              <div class="platform-logo clickable-item" (click)="selectPlatform('googlereviews')" data-cy="selectGooglePlatform">
                 <img src="../assets/google-reviews-logo.png" [ngClass]="{'selected': newSourcePlatform === 'googlereviews'}" alt="Google Reviews" />
                 <p class="source-type-title">Google Reviews</p>
               </div>
-              <div class="platform-logo clickable-item"  (click)="selectPlatform('tripadvisor')">
+              <div class="platform-logo clickable-item"  (click)="selectPlatform('tripadvisor')" data-cy="selectTripadvisorPlatform">
                 <img src="../assets/tripadvisor-logo.png" [ngClass]="{'selected': newSourcePlatform === 'tripadvisor'}"  alt="Trip Advisor" />
                 <p class="source-type-title">Trip Advisor</p>
               </div>
-              <div class="platform-logo clickable-item"  (click)="selectPlatform('youtube')">
+              <div class="platform-logo clickable-item"  (click)="selectPlatform('youtube')" data-cy="selectYoutubePlatform">
                 <img src="../assets/youtube-logo.png"  [ngClass]="{'selected': newSourcePlatform === 'youtube'}" alt="Youtube" />
                 <p class="source-type-title">Youtube</p>
               </div>
@@ -138,7 +142,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-source-btn clickable-item" (click)="addNewSource()">Confirm</button>
+        <button class="new-source-btn clickable-item" (click)="addNewSource()" data-cy="Confirm">Confirm</button>
       </div>
     </div>
     
@@ -155,13 +159,16 @@
 <dp-modal-container
 [modalDisplay]="showEditSourceModal"
 (close)="toggleEditSourceModal()"
+data-cy="editSourceModal"
 >
 
 <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
   <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
     <div class="heading-container">
-      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleEditSourceModal()">
-      <p class="modal-heading">Add a Source</p>
+
+      <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item" (click)="toggleEditSourceModal()" data-cy="editSourceModal2">
+      <p class="modal-heading">Edit a Source</p>
+
     </div>
       <div class="flex-column center content" style="width: 80%; gap: 0.5rem">
         <div class="flex-row" style="width: 80%">
@@ -185,7 +192,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-source-btn clickable-item" (click)="editSource()">Confirm</button>
+        <button class="new-source-btn clickable-item" (click)="editSource() data-cy="confirmEditSource"">Confirm</button>
       </div>
     </div>
     
