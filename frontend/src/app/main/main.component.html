@@ -1,46 +1,48 @@
 <div class="flex-row app-container">
   <dp-sidebar
-  [expanded]="!sidebarCollapsed"
-  [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-  (sidebarClicked)="toggleSidebar()"
-></dp-sidebar>
-<ng-container *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif">
-  <!-- Display the content when selectedDomain$ emits a value (selectedDomain is defined) -->
-  <div class="flex-column" style="width: 92%; gap: 1.3rem">
-    <div class="header flex-row centered" style="gap: 1.2rem">
-      <!-- [src]="'../assets/' + selectedDomain.imageUrl" -->
-      <img
-        [src]="
-          selectedDomain.id == '0'
-            ? '../assets/cat-1.png'
-            : '../assets/cat-2.png'
-        "
-        alt="Starbucks loog"
-        height="80%"
-      />
-      <div class="flex-column">
-        <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
-        <p class="domainDesc">{{ selectedDomain.description }}</p>
+    [expanded]="!sidebarCollapsed"
+    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (sidebarClicked)="toggleSidebar()"
+    data-cy="Togglesidebar2"
+  ></dp-sidebar>
+  <ng-container
+    *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif"
+  >
+    <!-- Display the content when selectedDomain$ emits a value (selectedDomain is defined) -->
+    <div class="flex-column" style="width: 95%; min-width: 80%; gap: 1.3rem">
+      <div class="header flex-row centered" style="gap: 1.2rem">
+        <!-- [src]="'../assets/' + selectedDomain.imageUrl" -->
+        <img
+          [src]="
+            selectedDomain.id == '0'
+              ? '../assets/cat-1.png'
+              : '../assets/cat-2.png'
+          "
+          alt="Starbucks loog"
+          height="80%"
+        />
+        <div class="flex-column">
+          <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
+          <p class="domainDesc">{{ selectedDomain.description }}</p>
+        </div>
+      </div>
+
+      <source-selector class="flex-row align-center"></source-selector>
+
+      <statistic-selector></statistic-selector>
+
+      <div
+        class="source-manager flex-row"
+        style="gap: 1rem; height: 43%; width: 100%"
+      >
+        <graph-selector></graph-selector>
+        <comments-view></comments-view>
       </div>
     </div>
-
-    <source-selector class="flex-row align-center"></source-selector>
-
-    <statistic-selector></statistic-selector>
-
-    <div
-      class="source-manager flex-row"
-      style="gap: 1rem; height: 43%; width: 100%"
-    >
-      <graph-selector></graph-selector>
-      <comments-view></comments-view>
+  </ng-container>
+  <ng-template #loadingGif>
+    <div class="loading-container">
+      <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
     </div>
-  </div>
-</ng-container>
-<ng-template #loadingGif>
-  <div class="loading-container">
-    <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
-  </div>
-</ng-template>
+  </ng-template>
 </div>
-

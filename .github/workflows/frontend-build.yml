@@ -12,7 +12,9 @@ jobs:
       - name: setup port .env
         working-directory: ./backend
         run: |
-          echo "${{ secrets.PROD_DJANGO_PORTS }}" > .env
+          echo "$PROD_DJANGO_PORTS" > .env
+        env:
+          PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
 
       - name: cache dependencies
         id: npm-cache

@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from processor import processing
 from postprocessor import aggregation
 import json
-
+import socketio
 
 # Create your views here.
 
@@ -37,9 +37,32 @@ def perform_analysis(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
         new_records = raw_data["data"]
+
         scores = []
-        for item in new_records:
-            scores.append(processing.analyse_content(item))
+
+        if "room_id" in raw_data:
+            sio = socketio.Client()
+            sio.connect('http://localhost:5000')
+
+            room_id = raw_data["room_id"]
+
+            for item, timestamp in zip(new_records, raw_data["data_timestamps"]):
+                new_score = processing.analyse_content(item)
+                new_score["timestamp"] = timestamp
+
+                # compute aggregated metrics
+                aggregated_metrics = aggregation.aggregate_sentiment_data(scores)
+                new_data_to_send = { "new_individual_metrics": new_score, "aggregated_metrics": aggregated_metrics, "room_id": room_id }
+
+                sio.emit('new_source_data', new_data_to_send)
+
+                scores.append(new_score)
+
+            sio.disconnect()
+        else:
+            for item in new_records:
+                scores.append(processing.analyse_content(item))
+        
         return JsonResponse({"metrics": scores})
     return JsonResponse({"status": "FAILURE"})
 
