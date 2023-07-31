@@ -444,6 +444,7 @@ export class AppState {
         let lastSource =
           selectedDomain.sources[selectedDomain.sources.length - 1];
         lastSource.isRefreshing = true;
+        this.store.dispatch(new SetSourceIsLoading(true));
         this.store.dispatch(new SetSource(lastSource));
         this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
       });

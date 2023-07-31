@@ -51,7 +51,7 @@ export class SourceSelectorComponent {
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     );
     this.newSourceName = '';
-
+    this.newSourceUrl = '';
     this.showAddSourcesModal = false;
   }
 
