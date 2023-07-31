@@ -44,12 +44,12 @@ export class GraphSelectorComponent implements OnInit {
         onClick: (event: any, elements: string | any[]) => {
           if (elements && elements.length > 0) {
             const clickedIndex = elements[0]._index;
-            this.showPopup(clickedIndex); 
+            this.showPopup(clickedIndex);
           }
         },
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '50%', 
+        cutout: '50%',
         rotation: 1 * Math.PI,
         tooltips: {
           enabled: false,
@@ -58,28 +58,28 @@ export class GraphSelectorComponent implements OnInit {
           legend: {
             display: false,
           },
-          labels:{
-            fontColor: 'white'
-          }
+          labels: {
+            fontColor: 'white',
+          },
         },
       },
     },
     {
       type: 'pie',
       data: {
-        labels: ['Positive', 'Negative', 'Neutral'], 
+        labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [
           {
-            data: [], 
+            data: [],
             backgroundColor: [
               'rgba(75, 192, 192, 0.8)',
               'rgba(255, 99, 132, 0.8)',
               'rgba(54, 162, 235, 0.8)',
             ],
             borderColor: [
-              'rgba(75, 192, 192, 1)', 
-              'rgba(255, 99, 132, 1)', 
-              'rgba(54, 162, 235, 1)', 
+              'rgba(75, 192, 192, 1)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
             ],
             borderWidth: 1,
           },
@@ -91,13 +91,12 @@ export class GraphSelectorComponent implements OnInit {
             const clickedIndex = elements[0]._index;
             this.showPopup(clickedIndex);
           }
-        }
+        },
       },
     },
     {
-      type: 'bar', 
+      type: 'bar',
       data: {
-
         labels: [
           'anger',
           'disgust',
@@ -109,8 +108,8 @@ export class GraphSelectorComponent implements OnInit {
         ],
         datasets: [
           {
-            label: 'Rating per Emotion', 
-            data: [], 
+            label: 'Rating per Emotion',
+            data: [],
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
@@ -119,9 +118,8 @@ export class GraphSelectorComponent implements OnInit {
               'rgba(54, 162, 235, 0.8)',
               'rgba(255, 206, 86, 0.8)',
 
-              'rgba(75, 192, 192, 0.8)'
-            ], 
-            
+              'rgba(75, 192, 192, 0.8)',
+            ],
 
             borderColor: [
               'rgba(3, 127, 255, 1)',
@@ -147,8 +145,8 @@ export class GraphSelectorComponent implements OnInit {
         drawChartArea: false,
         maintainAspectRatio: false,
         interaction: {
-          mode: 'nearest', 
-          intersect: false, 
+          mode: 'nearest',
+          intersect: false,
         },
         legend: {
           display: false,
@@ -158,16 +156,16 @@ export class GraphSelectorComponent implements OnInit {
             const clickedIndex = elements[0]._index;
             this.showPopup(clickedIndex);
           }
-        }
+        },
       },
     },
     {
       type: 'pie',
       data: {
-        labels: ['Toxic', 'Non-Toxic'], 
+        labels: ['Toxic', 'Non-Toxic'],
         datasets: [
           {
-            data: [], 
+            data: [],
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
@@ -186,7 +184,7 @@ export class GraphSelectorComponent implements OnInit {
             const clickedIndex = elements[0]._index;
             this.showPopup(clickedIndex);
           }
-        }
+        },
       },
     },
     /* {
@@ -236,7 +234,6 @@ export class GraphSelectorComponent implements OnInit {
     // ...
   ];
 
-
   showPopup(index: number) {
     console.log('Clicked on section:', index);
   }
@@ -246,15 +243,20 @@ export class GraphSelectorComponent implements OnInit {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
-        this.updatedGraphArray = this.assignGraphData(data.aggregated_metrics, this.graphs);
-        setTimeout(() => {
-          this.renderGraph();
-        }, 300);
+        if (data.aggregated_metrics.general.category != 'No data') {
+          this.updatedGraphArray = this.assignGraphData(
+            data.aggregated_metrics,
+            this.graphs
+          );
+          setTimeout(() => {
+            this.renderGraph();
+          }, 300);
+        }
       }
     });
 
     this.statisticIndex.subscribe((statIndex) => {
-      if (statIndex!== this.currentGraphIndex &&statIndex!== undefined) {
+      if (statIndex !== this.currentGraphIndex && statIndex !== undefined) {
         this.currentGraphIndex = statIndex;
         this.renderGraph();
       }
@@ -330,6 +332,10 @@ export class GraphSelectorComponent implements OnInit {
   }
 
   renderGraph() {
+    if (!this.myChart || !this.chartContainer) {
+      return;
+    }
+
     if (this.chart) {
       this.chart.destroy();
     }
@@ -339,19 +345,20 @@ export class GraphSelectorComponent implements OnInit {
       const styles = window.getComputedStyle(element);
       const backgroundColor = styles.getPropertyValue('--text-color');
       Chart.defaults.global.defaultFontColor = backgroundColor;
-
     }
-    
-
-    if (!this.updatedGraphArray) return;
 
     const ctx = this.myChart.nativeElement.getContext('2d');
+
     const container = this.chartContainer.nativeElement;
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
 
     this.myChart.nativeElement.width = containerWidth;
     this.myChart.nativeElement.height = containerHeight;
+
+    if (!this.updatedGraphArray || this.updatedGraphArray.length === 0) {
+      return;
+    }
 
     const currentGraph = this.updatedGraphArray[this.currentGraphIndex];
 

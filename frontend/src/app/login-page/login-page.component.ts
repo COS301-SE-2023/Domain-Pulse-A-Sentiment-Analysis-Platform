@@ -16,7 +16,7 @@ export class LoginPageComponent {
 
   login() {
     this.isSpinning = true;
-  
+    
     this.store.dispatch(new AttempPsswdLogin(this.username, this.password))
       .subscribe({
         next: (res) => {
