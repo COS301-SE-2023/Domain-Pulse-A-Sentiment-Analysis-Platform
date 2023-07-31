@@ -73,3 +73,47 @@ jobs:
 
       - name: copy build artifacts
         run: scp -r frontend-build/domain-pulse ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/frontend/dist
+
+  update_production_environment:
+    if: github.ref == 'refs/heads/main'
+    needs: [test_backend, test_frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+
+      - name: install ssh keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: setup .envs
+        run: |
+          echo "$PROD_DJANGO_PORTS" > .env
+          echo "$POSTGRES_CONFIG_SERVER" > .postgresql.env
+        env:
+          PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
+          POSTGRES_CONFIG_SERVER: ${{ secrets.POSTGRES_CONFIG_SERVER }}
+
+      - name: connect and pull
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.WORK_DIR_PROD }}
+            git checkout ${{ secrets.MAIN_BRANCH }}
+            git pull
+
+            cd backend
+            # pipenv sync
+
+            cd ../frontend
+            exit
+            EOF
+
+      - name: copy .env files
+        run: |
+          scp .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_PROD }}/backend
+          scp .postgresql.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_PROD }}/backend
+
+      - name: copy build artifacts
+        run: scp -r frontend-build/domain-pulse ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_PROD }}/frontend/dist
