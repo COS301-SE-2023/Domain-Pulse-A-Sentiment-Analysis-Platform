@@ -10,7 +10,7 @@ import { ChooseStatistic } from '../app.actions';
   templateUrl: './graph-selector.component.html',
   styleUrls: ['./graph-selector.component.sass'],
 })
-export class GraphSelectorComponent {
+export class GraphSelectorComponent implements OnInit {
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
@@ -18,12 +18,14 @@ export class GraphSelectorComponent {
   sourceOverallSentiment!: Observable<any | null>;
   @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
   currentGraphIndex: number = 0;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   chart: Chart | undefined;
   gradient: CanvasGradient | undefined;
   graphs = [
     {
       type: 'doughnut',
+      fontColor: 'white',
       data: {
         labels: ['Overall Score'],
         datasets: [
@@ -31,7 +33,7 @@ export class GraphSelectorComponent {
             data: [],
             backgroundColor: [
               'rgba(3, 127, 255, 1)',
-              'rgba(0, 0, 0, 0.1)',
+              'rgba(170, 170, 170, 0.71)',
               'rgba(0, 0, 0, 0)',
             ],
             borderWidth: 0,
@@ -39,16 +41,25 @@ export class GraphSelectorComponent {
         ],
       },
       options: {
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex);
+          }
+        },
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '50%', // Adjust the cutout percentage to control the size of the gauge
-        rotation: 1 * Math.PI, // Adjust the rotation angle to position the gauge needle
+        cutout: '50%',
+        rotation: 1 * Math.PI,
         tooltips: {
-          enabled: false, // Disable tooltips to prevent them from appearing on hover
+          enabled: false,
         },
         plugins: {
           legend: {
-            display: false, // Disable legend display
+            display: false,
+          },
+          labels: {
+            fontColor: 'white',
           },
         },
       },
@@ -56,30 +67,35 @@ export class GraphSelectorComponent {
     {
       type: 'pie',
       data: {
-        labels: ['Positive', 'Negative', 'Neutral'], // Replace with your data labels
+        labels: ['Positive', 'Negative', 'Neutral'],
         datasets: [
           {
-            data: [], // Replace with your data values
+            data: [],
             backgroundColor: [
-              'rgba(75, 192, 192, 0.8)', // Color for slice 1
-              'rgba(255, 99, 132, 0.8)', // Color for slice 2
-              'rgba(54, 162, 235, 0.8)', // Color for slice 3
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
             ],
             borderColor: [
-              'rgba(75, 192, 192, 1)', // Border color for slice 1
-              'rgba(255, 99, 132, 1)', // Border color for slice 2
-              'rgba(54, 162, 235, 1)', // Border color for slice 3
+              'rgba(75, 192, 192, 1)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
             ],
             borderWidth: 1,
           },
         ],
       },
       options: {
-        // Additional options for your chart
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex);
+          }
+        },
       },
     },
     {
-      type: 'bar', // Replace with your desired chart type (e.g., line, pie, etc.)
+      type: 'bar',
       data: {
         labels: [
           'anger',
@@ -89,11 +105,11 @@ export class GraphSelectorComponent {
           'neutral',
           'sadness',
           'surprise',
-        ], // Replace with your data labels
+        ],
         datasets: [
           {
-            label: 'Rating per Emotion', // Replace with your dataset label
-            data: [], // Replace with your dataset values
+            label: 'Rating per Emotion',
+            data: [],
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
@@ -101,8 +117,9 @@ export class GraphSelectorComponent {
               'rgba(255, 99, 132, 0.8)',
               'rgba(54, 162, 235, 0.8)',
               'rgba(255, 206, 86, 0.8)',
+
               'rgba(75, 192, 192, 0.8)',
-            ], // Replace with desired colors
+            ],
 
             borderColor: [
               'rgba(3, 127, 255, 1)',
@@ -128,21 +145,27 @@ export class GraphSelectorComponent {
         drawChartArea: false,
         maintainAspectRatio: false,
         interaction: {
-          mode: 'nearest', // Set the interaction mode to 'nearest' to prevent hover events
-          intersect: false, // Disable event interactions with elements
+          mode: 'nearest',
+          intersect: false,
         },
         legend: {
           display: false,
+        },
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex);
+          }
         },
       },
     },
     {
       type: 'pie',
       data: {
-        labels: ['Toxic', 'Non-Toxic'], // Replace with your data labels
+        labels: ['Toxic', 'Non-Toxic'],
         datasets: [
           {
-            data: [], // Replace with your data values
+            data: [],
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
@@ -156,22 +179,27 @@ export class GraphSelectorComponent {
         ],
       },
       options: {
-        // Additional options for your chart
+        onClick: (event: any, elements: string | any[]) => {
+          if (elements && elements.length > 0) {
+            const clickedIndex = elements[0]._index;
+            this.showPopup(clickedIndex);
+          }
+        },
       },
     },
     /* {
-      type: 'bar', // Replace with your desired chart type (e.g., line, pie, etc.)
+      type: 'bar', 
       data: {
-        labels: ['Facebook', 'Instagram', 'Reddit'], // Replace with your data labels
+        labels: ['Facebook', 'Instagram', 'Reddit'], 
         datasets: [
           {
-            label: 'Nr. of Sentiments', // Replace with your dataset label
-            data: [23000, 17530, 3450], // Replace with your dataset values
+            label: 'Nr. of Sentiments', 
+            data: [23000, 17530, 3450], 
             backgroundColor: [
               'rgba(3, 127, 255, 0.8)',
               'rgba(145, 44, 246, 0.8)',
               'rgba(23, 35, 76, 0.8)',
-            ], // Replace with desired colors
+            ], 
             borderColor: [
               'rgba(3, 127, 255, 1)',
               'rgba(145, 44, 246, 1)',
@@ -191,8 +219,8 @@ export class GraphSelectorComponent {
         drawChartArea: false,
         maintainAspectRatio: false,
         interaction: {
-          mode: 'nearest', // Set the interaction mode to 'nearest' to prevent hover events
-          intersect: false, // Disable event interactions with elements
+          mode: 'nearest', 
+          intersect: false, 
         },
         legend: {
           display: false,
@@ -206,21 +234,37 @@ export class GraphSelectorComponent {
     // ...
   ];
 
-  constructor(private store: Store) {
+  showPopup(index: number) {
+    console.log('Clicked on section:', index);
+  }
+  constructor(private store: Store) {}
+
+  ngOnInit(): void {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
-        this.updatedGraphArray = this.assignGraphData(data, this.graphs);
-        setTimeout(() => {
-          this.renderGraph();
-        }, 300);
+        if (data.aggregated_metrics.general.category != 'No data') {
+          this.updatedGraphArray = this.assignGraphData(
+            data.aggregated_metrics,
+            this.graphs
+          );
+          setTimeout(() => {
+            this.renderGraph();
+          }, 300);
+        }
       }
     });
 
     this.statisticIndex.subscribe((statIndex) => {
-      this.currentGraphIndex = statIndex;
-      this.renderGraph();
+      if (statIndex !== this.currentGraphIndex && statIndex !== undefined) {
+        this.currentGraphIndex = statIndex;
+        this.renderGraph();
+      }
     });
+  }
+
+  ngAfterViewInit() {
+    this.renderGraph();
   }
 
   assignGraphData(mockData: any, graphArray: any[]): any[] {
@@ -260,10 +304,6 @@ export class GraphSelectorComponent {
 
   updatedGraphArray?: any[];
 
-  ngAfterViewInit() {
-    this.renderGraph();
-  }
-
   switchToPreviousGraph() {
     if (!this.updatedGraphArray) return;
 
@@ -281,7 +321,6 @@ export class GraphSelectorComponent {
   switchToNextGraph() {
     if (!this.updatedGraphArray) return;
 
-    console.log('next graph');
     if (this.currentGraphIndex < this.updatedGraphArray.length - 1) {
       this.currentGraphIndex++;
       this.renderGraph();
@@ -293,12 +332,23 @@ export class GraphSelectorComponent {
   }
 
   renderGraph() {
+    if (!this.myChart || !this.chartContainer) {
+      return;
+    }
+
     if (this.chart) {
       this.chart.destroy();
     }
-    if (!this.updatedGraphArray) return;
+
+    const element = document.querySelector('body'); // Replace with your actual element selector
+    if (element) {
+      const styles = window.getComputedStyle(element);
+      const backgroundColor = styles.getPropertyValue('--text-color');
+      Chart.defaults.global.defaultFontColor = backgroundColor;
+    }
 
     const ctx = this.myChart.nativeElement.getContext('2d');
+
     const container = this.chartContainer.nativeElement;
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
@@ -306,11 +356,15 @@ export class GraphSelectorComponent {
     this.myChart.nativeElement.width = containerWidth;
     this.myChart.nativeElement.height = containerHeight;
 
+    if (!this.updatedGraphArray || this.updatedGraphArray.length === 0) {
+      return;
+    }
+
     const currentGraph = this.updatedGraphArray[this.currentGraphIndex];
 
     this.chart = new Chart(ctx, currentGraph);
     if (this.chart && this.chart.config.type === 'doughnut') {
-      const offset = 50;
+      const offset = 30;
       this.myChart.nativeElement.style.transform = `translateY(${offset}px)`;
     } else {
       this.myChart.nativeElement.style.transform = `translateY(0px)`;

@@ -48,11 +48,12 @@ def summarize_emotions(emotions):
     emotion_list = emotions[0]
     for emotion in emotion_list:
         name = emotion["label"]
-        score = emotion["score"]
-        if len(top_three) < 3:
-            top_three.append({"label": name, "score": score})
-        elif have_better(top_three, score):
-            top_three = replace_worst(top_three, name, score)
+        if name.lower() != "neutral":
+            score = emotion["score"]
+            if len(top_three) < 3:
+                top_three.append({"label": name, "score": score})
+            elif have_better(top_three, score):
+                top_three = replace_worst(top_three, name, score)
 
     totalScore = 0
     for emotion in top_three:
@@ -107,6 +108,9 @@ def summarize_toxicity(toxicity):
 def analyse_content(data):
     originalData = data
     data = preprocessing.process_data(data)
+
+    data = data[:512]
+    # print(str(len(data)) + " " + data)
 
     vader = ANALYSER.polarity_scores(data)
     emotions = EMOTION_CLASSIFIER(data)

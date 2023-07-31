@@ -3,130 +3,129 @@ from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from utils import profilescrud
-from utils import domainscrud
+
+
 # Create your views here.
 @csrf_exempt
 def create_user(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.create_user(request,raw_data["username"],raw_data["email"],raw_data["password"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(
+            profilescrud.create_user(
+                request, raw_data["username"], raw_data["email"], raw_data["password"]
+            )
+        )
     return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def login_user(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.login_user(request,raw_data["username"],raw_data["password"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(
+            profilescrud.login_user(request, raw_data["username"], raw_data["password"])
+        )
     return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def change_password(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.change_password(request,raw_data["id"], raw_data["oldpassword"],raw_data["newpassword"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(
+            profilescrud.change_password(
+                request,
+                raw_data["id"],
+                raw_data["oldpassword"],
+                raw_data["newpassword"],
+            )
+        )
     return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def logout_user(request: HttpRequest):
-    raw_data=json.loads(request.body)
+    raw_data = json.loads(request.body)
     return JsonResponse(profilescrud.logout_user(request))
+
 
 # def create_profile(request, user_id, profileIcon, mode):
 #     return JsonResponse(profilescrud.create_profile(raw_data["user_id"],raw_data["profileIcon"] , raw_data["mode"]))
 
+
 @csrf_exempt
 def delete_user(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.delete_user(request,raw_data["username"],raw_data["password"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(
+            profilescrud.delete_user(
+                request, raw_data["username"], raw_data["password"]
+            )
+        )
     return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def swap_mode(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.swap_mode(request,raw_data["id"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(profilescrud.swap_mode(request, raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def edit_profile_picture(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.edit_profile_picture(request,raw_data["id"], raw_data["pictureURL"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(
+            profilescrud.edit_profile_picture(
+                request, raw_data["id"], raw_data["pictureURL"]
+            )
+        )
     return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def edit_profile_mode(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.edit_profile_mode(request,raw_data["id"], raw_data["mode"]))
-    return JsonResponse({"status": "FAILURE"})    
+        raw_data = json.loads(request.body)
+        return JsonResponse(
+            profilescrud.edit_profile_mode(request, raw_data["id"], raw_data["mode"])
+        )
+    return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def get_profile(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.get_profile(request,raw_data["id"]))
-    return JsonResponse({"status": "FAILURE"})   
-
-@csrf_exempt
-def add_domain_to_profile(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.add_domain_to_profile(request, raw_data["id"], raw_data["domain_id"]))
-    return JsonResponse({"status": "FAILURE"})   
-
-@csrf_exempt
-def remove_domain_from_profile(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.remove_domain_from_profile(request,raw_data["id"], raw_data["domain_id"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(profilescrud.get_profile(request, raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
+
 
 @csrf_exempt
 def get_domains_for_user(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(profilescrud.get_domains_for_user(request,raw_data["id"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(profilescrud.get_domains_for_user(request, raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
 
+
 @csrf_exempt
-def get_user_by_id(request:HttpRequest):
+def get_user_by_id(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
+        raw_data = json.loads(request.body)
         return JsonResponse(profilescrud.get_user_by_id(raw_data["id"]))
     return JsonResponse({"status": "FAILURE"})
 
-@csrf_exempt
-def check_logged_in(request:HttpRequest):
-    if request.method == "POST":
-        return JsonResponse(profilescrud.check_logged_in(request))
-    return JsonResponse({"status": "FAILURE"})
 
 @csrf_exempt
-def create_domain(request: HttpRequest):
+def get_sources_for_domain(request: HttpRequest):
     if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.create_domain(request, raw_data["name"], raw_data["description"], raw_data["icon"]))
-    return JsonResponse({"status": "FAILURE"})
-
-@csrf_exempt
-def remove_domain(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.remove_domain(request, raw_data["id"]))
-    return JsonResponse({"status": "FAILURE"})
-
-@csrf_exempt
-def add_source(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.add_source(request, raw_data["domain_id"],raw_data["source_id"]))
-    return JsonResponse({"status": "FAILURE"})
-
-@csrf_exempt
-def get_domain(request: HttpRequest):
-    if request.method == "POST":
-        raw_data=json.loads(request.body)
-        return JsonResponse(domainscrud.get_domain(request,raw_data["id"]))
+        raw_data = json.loads(request.body)
+        return JsonResponse(
+            profilescrud.get_sources_for_domain(
+                request, raw_data["id"], raw_data["domain_id"]
+            )
+        )
     return JsonResponse({"status": "FAILURE"})

@@ -1,180 +1,251 @@
-import csv
-import os
+from utils import db_connection
+import pymongo
+from bson.objectid import ObjectId
 
-DOMAIN_ID_COUNTER = 11
-USER_ID_COUNTER = 10
-SOURCE_ID_COUNTER = 10
+mongo_host = db_connection.HOST
+mongo_port = db_connection.PORT
+mongo_db = "domain_pulse_domains"
+mongo_collection = "domains"
 
-domains_db = [
-    {
-        "user_id": 1,
-        "domains": [
-            {
-                "domain_id": 1,
-                "domain_name": "Starbucks",
-                "image_url": "starbucks-logo-69391AB0A9-seeklogo.com.png",
-                "sources": [
-                    {
-                        "source_id": 1,
-                        "source_name": "Facebook",
-                        "source_image_name": "facebook-logo.png",
-                    }
-                ],
-            },
-            {
-                "domain_id": 10,
-                "domain_name": "Apple",
-                "image_url": "apple-1-logo-png-transparent.png",
-                "sources": [],
-            },
-            {
-                "domain_id": 11,
-                "domain_name": "McDonalds",
-                "image_url": "donalds-logo.png",
-                "sources": [],
-            },
-        ],
-    },
-    {
-        "user_id": 2,
-        "domains": [
-            {
-                "domain_id": 2,
-                "domain_name": "GodOfWar",
-                "sources": [
-                    {
-                        "source_id": 2,
-                        "source_name": "Reddit",
-                        "source_image_name": "reddit-logo.png",
-                    }
-                ],
-            },
-            {
-                "domain_id": 3,
-                "domain_name": "LeinsterRugby",
-                "sources": [
-                    {
-                        "source_id": 3,
-                        "source_name": "Instagram",
-                        "source_image_name": "instagram-Icon.png",
-                    }
-                ],
-            },
-        ],
-    },
-    {
-        "user_id": 3,
-        "domains": [
-            {
-                "domain_id": 4,
-                "domain_name": "Bitcoin",
-                "sources": [
-                    {
-                        "source_id": 8,
-                        "source_name": "Facebook",
-                        "source_image_name": "facebook-logo.png",
-                    },
-                    {
-                        "source_id": 9,
-                        "source_name": "Reddit",
-                        "source_image_name": "reddit-logo.png",
-                    },
-                ],
+
+def get_source(source_id):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    query = {"sources.source_id": ObjectId(source_id)}
+    result = collection.find_one(query)
+
+    final_source = {}
+    for source in result["sources"]:
+        if source["source_id"] == ObjectId(source_id):
+            final_source = source
+
+    client.close()
+
+    final_source["source_id"] = str(final_source["source_id"])
+
+    return final_source
+
+
+def edit_source(source_id, name):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    query = {"sources.source_id": ObjectId(source_id)}
+    result = collection.find_one(query)
+
+    for source in result["sources"]:
+        if source["source_id"] == ObjectId(source_id):
+            source["source_name"] = name
+            break
+    collection.update_one(
+        {"_id": result["_id"]}, {"$set": {"sources": result["sources"]}}
+    )
+    result["_id"] = str(result["_id"])
+    for i in result["sources"]:
+        i["source_id"] = str(i["source_id"])
+
+    client.close()
+
+    return result
+
+
+def update_last_refresh(source_id, new_last_refresh):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    source_id = ObjectId(source_id)
+
+    try:
+        query = {"sources.source_id": source_id}
+        result = collection.find_one(query)
+
+        for source in result["sources"]:
+            if source["source_id"] == source_id:
+                source["last_refresh_timestamp"] = new_last_refresh
+                break
+
+        collection.update_one(
+            {"_id": result["_id"]}, {"$set": {"sources": result["sources"]}}
+        )
+    except Exception:
+        return False
+
+    client.close()
+
+    return True
+
+
+def create_domain(domain_name, domain_icon, description):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    new_item = {
+        "name": domain_name,
+        "icon": domain_icon,
+        "description": description,
+        "sources": [],
+    }
+    ret = collection.insert_one(new_item)
+    client.close()
+    return {
+        "id": str(ret.inserted_id),
+        "name": domain_name,
+        "icon": domain_icon,
+        "description": description,
+        "sources": [],
+    }
+
+
+def edit_domain(id, domain_name, domain_icon, description):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+
+    ret = collection.find_one_and_update(
+        {"_id": ObjectId(id)},
+        {
+            "$set": {
+                "name": domain_name,
+                "icon": domain_icon,
+                "description": description,
             }
-        ],
-    },
-    {"user_id": 4, "domains": []},
-    {"user_id": 5, "domains": []},
-]
+        },
+    )
+    client.close()
+    for i in ret["sources"]:
+        i["source_id"] = str(i["source_id"])
+    return {
+        "id": str(ret["_id"]),
+        "name": domain_name,
+        "icon": domain_icon,
+        "description": description,
+        "sources": ret["sources"],
+    }
 
 
-def next_user_id():
-    global USER_ID_COUNTER
-    USER_ID_COUNTER += 1
-    return USER_ID_COUNTER
+def delete_domain(id):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = {"_id": ObjectId(id)}
+    ret = collection.delete_one(query)
+    client.close()
+
+    if ret.deleted_count > 0:
+        return {"status": "SUCCESS"}
+    else:
+        return {"status": "FAILURE", "details": "No Entry Found"}
 
 
-def next_source_id():
-    global SOURCE_ID_COUNTER
-    SOURCE_ID_COUNTER += 1
-    return SOURCE_ID_COUNTER
+def get_domain(id):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = {"_id": ObjectId(id)}
+    result = collection.find_one(query)
+    if result == None:
+        client.close()
+        return {"status": "FAILURE", "details": "No Entry Found"}
+    resId = str(result["_id"])
+    result["_id"] = resId
+    for i in result["sources"]:
+        i["source_id"] = str(i["source_id"])
+    client.close()
+
+    return result
 
 
-def next_domain_id():
-    global DOMAIN_ID_COUNTER
-    DOMAIN_ID_COUNTER += 1
-    return DOMAIN_ID_COUNTER
+def add_source(domain_id, source_name, source_image_name, params):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = {"_id": ObjectId(domain_id)}
+    result = collection.find_one(query)
+    if result == None:
+        client.close()
+        return {"status": "FAILURE", "details": "No Entry Found"}
+    new_id = ObjectId()
+    new_source = {
+        "source_id": (new_id),
+        "source_name": source_name,
+        "source_icon": source_image_name,
+        "last_refresh_timestamp": 0,
+        "params": params,
+    }
+    collection.update_one(result, {"$push": {"sources": new_source}})
+    result["sources"].append(new_source)
+    for i in result["sources"]:
+        i["source_id"] = str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"] = resId
+    client.close()
+    result.update({"new_source_id": str(new_id)})
+    return result
 
 
-def add_domain(user_id, domain_name, domain_image_name):
-    user_id = int(user_id)
+def remove_source(domain_id, source_id):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = {"_id": ObjectId(domain_id)}
+    result = collection.find_one(query)
+    for i in result["sources"]:
+        if str(i["source_id"]) == (source_id):
+            result["sources"].remove(i)
+    collection.update_one(query, {"$set": {"sources": result["sources"]}})
+    for i in result["sources"]:
+        i["source_id"] = str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"] = resId
+    client.close()
 
-    for entry in domains_db:
-        if entry["user_id"] == user_id:
-            entry["domains"].append(
-                {
-                    "domain_id": next_domain_id(),
-                    "domain_name": domain_name,
-                    "image_url": domain_image_name,
-                    "sources": [],
-                }
-            )
-            return get_domains(user_id)
-    return get_domains(user_id)
-
-
-def remove_domain(user_id, domain_id):
-    user_id = int(user_id)
-    domain_id = int(domain_id)
-
-    for entry in domains_db:
-        if entry["user_id"] == user_id:
-            for domain in list(entry["domains"]):
-                if int(domain["domain_id"]) == domain_id:
-                    entry["domains"].remove(domain)
-                    return get_domains(user_id)
-    return get_domains(user_id)
+    return result
 
 
-def get_domains(user_id):
-    user_id = int(user_id)
+def create_param(domain_id, source_id, key, value):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = {"_id": ObjectId(domain_id)}
+    result = collection.find_one(query)
+    if result == None:
+        client.close()
+        return {"status": "FAILURE", "details": "No Entry Found"}
+    for i in result["sources"]:
+        if str(i["source_id"]) == (source_id):
+            i["params"].update({key: value})
+    collection.update_one(query, {"$set": {"sources": result["sources"]}})
+    for i in result["sources"]:
+        i["source_id"] = str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"] = resId
+    client.close()
 
-    for entry in domains_db:
-        if entry["user_id"] == user_id:
-            return entry
-    return {}
-
-
-def add_source(user_id, domain_id, source_name, source_image_name):
-    user_id = int(user_id)
-    domain_id = int(domain_id)
-
-    for entry in domains_db:
-        if int(entry["user_id"]) == user_id:
-            for domain in list(entry["domains"]):
-                if int(domain["domain_id"]) == domain_id:
-                    domain["sources"].append(
-                        {
-                            "source_id": next_source_id(),
-                            "source_name": source_name,
-                            "source_image_name": source_image_name,
-                        }
-                    )
-                    return get_domains(user_id)
-    return get_domains(user_id)
+    return result
 
 
-def remove_source(user_id, domain_id, source_id):
-    user_id = int(user_id)
-    domain_id = int(domain_id)
-    source_id = int(source_id)
+def delete_param(domain_id, source_id, key):
+    client = pymongo.MongoClient(mongo_host, mongo_port)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
+    query = {"_id": ObjectId(domain_id)}
+    result = collection.find_one(query)
+    if result == None:
+        client.close()
+        return {"status": "FAILURE", "details": "No Entry Found"}
+    for i in result["sources"]:
+        if str(i["source_id"]) == (source_id):
+            del i["params"][key]
+    collection.update_one(query, {"$set": {"sources": result["sources"]}})
+    for i in result["sources"]:
+        i["source_id"] = str(i["source_id"])
+    resId = str(result["_id"])
+    result["_id"] = resId
+    client.close()
 
-    for entry in domains_db:
-        if entry["user_id"] == user_id:
-            for domain in list(entry["domains"]):
-                if int(domain["domain_id"]) == domain_id:
-                    for source in domain["sources"]:
-                        if source["source_id"] == source_id:
-                            domain["sources"].remove(source)
-                            return get_domains(user_id)
-    return get_domains(user_id)
+    return result

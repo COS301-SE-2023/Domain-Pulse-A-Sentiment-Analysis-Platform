@@ -1,0 +1,258 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} 
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
+
+
+\title{Technical Installation Manual}
+\author{Ctrl Alt Defeat}
+\date{\today} 
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+
+\section{Introduction}
+The following is a Technical Installation Manual for COS301 capstone project, Domain Pulse - A Sentiment Analysis Platform. Domain Pulse is
+a system designed to fetch, analyse, aggregate, and present results of sentiment analysis on publically available data pertaining to
+businesses, products, places, and more! Sources of data include (but are not limited to) Google reviews, TripAdvisor and Youtube.
+
+This installation guide details how to setup and install the system locally. The system uses a Django backend (consisting of 5 independently deployable projects),
+an Angular frontend as well as PostgreSQL and MongoDB databases. The installation of these components and the packages used within in
+them, shall be explained within this manual.
+
+Please note that the production application is a web application that is deployed to a private virtual machine acting as a web server. For
+security purposes, this guide will not provide details or keys for connecting to the deployment server - instead this guide details local installation
+of the application.
+
+Once again, this is not the recommended approach for using the application. Instead, is it recommended that one interacts with the hosted web
+application available at: \code{www.domainpulse.app}
+
+\subsection{Recommended - Using the Domain Pulse web app}
+In order to interact with the web app hosted at www.domainpulse.app, no configuration or installation is required. The only
+prerequisites are: a modern web browser (Brave, Firefox, or Google Chrome recommended) and a stable Internet connection. This is the
+intended and preferred approach for using the application. Simply use your browser to navigate to www.domainpulse.app, and make use of
+our User Manual (link provided at end of document) to familiarise yourself with the application.
+
+
+\subsection{Overview of local installation process}
+To reiterate, this is not the recommended approach as there is a substantial number of prerequisites to install and configure.
+The process of installing the application locally consists of the following stages, each of which is to be described in detail
+later in the manual:
+\begin{itemize}
+    \item Installation and acquisition of prerequisitesW
+    \item Downloading and configuring application
+    \item Installing project specific dependencies
+    \item Running the application
+\end{itemize}
+Consequently, the remainder of this manual details the local installation process for Domain Pulse.
+
+\section{Prerequisites - General Software}
+The following software are prerequisites for the complete installation and set-up of Domain Pulse: Python 3.8, Pipenv (any 2022 or post 2022 version), Node.js (v18 later), Angular (v14), MongoDB (Community Edition, v6 or later), PostgreSQL 12.
+Of course an operating system of either Linux (Ubuntu) or Windows is required, as well as a modern web browser.
+
+Note: The installation of the project specific dependencies and packages is detailed later in the manual.
+
+\subsection{Operating System}
+The system may be installed locally on either a Windows or Linux (Ubuntu) operating system. The following versions are most suitable
+\begin{itemize}
+    \item Linux (Ubuntu): v22 or later
+    \item Windows: v10 or later
+\end{itemize}
+Note that earlier or different versions of these operating systems may successfully install and run the application, however the provided
+versions are deemed to be most suitable and confirmed to work.
+
+\subsection{Web Browser}
+Any modern web browser should support the appropriate rendering of the application. The following browsers have been confirmed as suitable:
+\begin{itemize}
+    \item Google Chrome - Latest version
+    \item Mozilla Firefox - Latest version
+    \item Brave - Latest version
+\end{itemize}
+
+\subsection{Python 3.8}
+\subsubsection{Linux}
+The following resources commands be used for installing Python 3.8 on Linux:\\
+\code{sudo apt-get update}\\
+\code{sudo add-apt-repository ppa:deadsnakes/ppa -y}\\
+\code{sudo apt-get update}\\
+\code{sudo apt install python3.8}\\ \\
+Ensure that the correct version of python is installed by running the following command:
+\code{python --version}
+
+\subsubsection{Windows}
+The following resources may be used for installing Python 3.8 on Windows:
+https://www.python.org/downloads/release/python-380/
+
+\subsection{Pipenv (any 2022 or post 2022 version)}
+Once Python is installed, pip will be installed along with in. To install pipenv, enter into the terminal:\\
+\code{pip install pipenv}
+
+\subsection{Node.js v18 or later}
+Node.js is needed for the installation and use of Angular and can be installed
+following the instructions on the following resource:\\
+https://nodejs.dev/en/learn/how-to-install-nodejs/
+
+\subsection{Angular v14}
+Once Node.js is installed, Angular can be installed by entering the following command into the terminal:\\
+\code{npm install -g @angular/cli}
+
+\subsection{MongoDB (Community Edition v6 or later)}
+The following resources may be used for installing MongoDB
+\begin{itemize}
+    \item Windows: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/
+    \item Ubuntu: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
+    \item MacOS: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/
+\end{itemize}
+
+\subsection{PostgreSQL 12}
+The following resource can be used for installing PostgreSQL 12
+\begin{itemize}
+    \item https://www.postgresql.org/download/
+\end{itemize}
+Important note: Ensure that, regardless of what installer is used, PostgreSQL 12 specifically is installed.\\
+Once installed, the following needs to be completed to ensure that the database is ready for use:
+\subsubsection*{Linux}
+\begin{itemize}
+    \item Log in to psql CLI using \code{sudo -u postgres psql}
+    \item Create the database using \code{CREATE DATABASE profiles;}
+\end{itemize}
+
+\subsubsection*{Windows}
+Note: Ensure that the PostgreSQL bin directory is added to the PATH environment variable.\\
+\begin{itemize}
+    \item Log in to psql CLI using \code{psql -U postgres}
+    \item Create the database using \code{CREATE DATABASE profiles;}
+\end{itemize}
+
+
+
+\section{Prerequisites - Hardware}
+The following are the minimum recommended specifications required to install and run Domain Pulse locally.
+\begin{itemize}
+    \item CPU: Intel i5 11th Gen or Ryzen equivalent recommended
+    \item RAM: 8GB minimum, 16GB recommended
+    \item Storage: At least 20GB free space recommended (but database size dependent on use of application)
+\end{itemize}
+
+
+\section{Installation}
+
+\subsection{Cloning the repo}
+The repo may be cloned locally from Github using the following command: \\
+\code{git clone https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform.git}
+
+
+
+\subsection{Installing dependencies}
+\subsubsection{Backend}
+In terminal, navigate to the 'backend' directory. To install all necessary dependencies at the appropriate versions, issue the following
+command: \\
+\code{pipenv install}\\
+This will install all the necessary dependencies into a local virtual environment.
+
+Note: Some of the dependencies are fairly sizable. Depending on Internet speeds, this process may take a few minutes.
+
+The full list of dependencies that will be installed can be found in the the file backend/Pipfile. Furthemore, to see the specific versions you may issue the CLI command:\\
+\code{pipenv graph} \\
+The dependencies are as follows:
+\begin{itemize}
+    \item coverage==7.2.6
+    \item django-cors-headers==4.2.0
+    \item djangorestframework-simplejwt==5.2.2
+    \item mock==5.1.0
+    \item nltk==3.8.1
+    \item psycopg2-binary==2.9.6
+    \item pymongo==4.4.0
+    \item python-dotenv==1.0.0
+    \item transformers==4.30.2
+    \item vaderSentiment==3.3.2
+\end{itemize}
+Note that each dependencies may have its own sub-dependencies. These too will be installed via \code{pipenv install}
+
+\subsubsection{Frontend}
+To install the dependencies required for the frontend, navigate to th 'frontend' directory and issue the following command to install
+all the necessary dependencies at the correct version: \\
+\code{npm ci}\\
+A list of the dependencies that will be installed (along with their appropriate versions) can be found in the file \code{package.json}
+
+
+\subsection{Configuring the application for local deployment}
+Domain Pulse is a web application deployed to a private virtual machine provded by our industry client. Consequently, the default
+configuration of the application is set to interact with this server via SSH. For security reasons, this guide details how to configure
+the application for local deployment only, and no SSH or API credential will be provided.
+
+\subsubsection{Acquiring API Keys}
+In order for the project to successfully interact with the necessary external services, one needs to acquire API keys for the following services.
+Note that each service may require some setup of its own.
+\begin{itemize}
+    \item Outscraper: https://outscraper.com/
+    \item Youtube Data API v3: https://blog.hubspot.com/website/how-to-get-youtube-api-key
+    \item Azure Blob Storage: https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal
+\end{itemize}
+
+
+\subsubsection{Setting up enviroment variables}
+To establish connections to local database, you will need to create an environment variable file called \code{.postgresql.env} (in the root of the project directory). The file
+needs to have the following contents:
+\begin{lstlisting}[basicstyle=\ttfamily]
+    USE_TUNNEL=False
+    SQL_DATABASE_HOST=localhost
+    SQL_DATABASE_NAME=[Your PostgreSQL database name]
+    SQL_DATABASE_USER=[Your PostgreSQL server username]
+    SQL_DATABASE_PASS=[Your PostgreSQL server password]
+    SQL_DATABASE_PORT=[The port on which your PostgreSQL server is running]
+    MONGO_HOST=localhost
+    MONGO_PORT=[The port on which your MongoDB server is running]
+    MONGO_DB_NAME=[Your MongoDB database name]
+\end{lstlisting}
+
+Similarly, you will need to create a file named \code{.env} which will contain a number of other details. These include some details
+regarding service ports and external service API keys.
+\begin{lstlisting}[basicstyle=\ttfamily]
+    ENVIRONMENT=local
+    DJANGO_DOMAINS_PORT=8000
+    DJANGO_ENGINE_PORT=8001
+    DJANGO_PROFILES_PORT=8002
+    DJANGO_SOURCECONNECTOR_PORT=8003
+    DJANGO_WAREHOUSE_PORT=8004
+    MONGO_PORT = [The port on which your MongoDB server is running]
+    OUTSCRAPER_API_KEY = [The API key obtained from Outscraper]
+    TRIPADVISOR_API_KEY = [The API key obtained from Outscraper]
+    GOOGLE_REVIEWS_API_KEY = [The API key obtained from Outscraper]
+    TRUSTPILOT_API_KEY = [The API key obtained from Outscraper]
+    YOUTUBE_API_KEY = [The Youtube Data API v3 key obtained]
+    SECRET_KEY = [Private key string to be used for encryption]
+    AZURE_SAS = [API key associated with Azure Blob Storage container]
+\end{lstlisting}
+
+
+
+\section{Deployment and Running}
+Once all previous steps have been followed and completed, and PostgreSQL and MongoDB are running, the application may be run locally. To do so,
+the depolyment of the backend and frontend is done separately.
+\subsection{Backend}
+In terminal, navigate to the 'backend' directory. To deploy the backend, issue the following commands:\\ \code{pipenv shell}
+\\Next: \code{cd scripts}\\
+Finally: \code{./run-projects.sh}\\
+
+\subsection{Frontend}
+In terminal, navigate to the 'frontend' directory. To deploy the frontend, issue the following commands:\\
+\code{npm run start}\\
+The web app will be deployed locally to localhost:4200
+
+\subsection{Using the app}
+Using your chosen web browser, enter localhost:4200 into the browser. Welcome to Domain Pulse! Now that you've got our application
+up and running locally, feel free to consult our User Manual to familiarise yourself with the application.
+
+\section{Link to User Manual}
+The Domain Pulse User Manual can be found at:
+
+
+\end{document}

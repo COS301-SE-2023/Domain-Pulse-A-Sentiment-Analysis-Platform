@@ -1,33 +1,35 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
-from utils import mock_data
+import json
+from youtube import youtube_connector
+from googlereviews import google_reviews_connector
+from tripadvisor import tripadvisor_connector
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 
 
-def refresh_instagram_source(request: HttpRequest, source_id):
-    source_id = str(source_id)
+def decide_function(source_type, params):
+    if source_type.lower() == "youtube":
+        return youtube_connector.handle_request(params)
+    elif source_type.lower() == "googlereviews":
+        return google_reviews_connector.handle_request(params)
+    elif source_type.lower() == "tripadvisor":
+        return tripadvisor_connector.handle_request(params)
+    else:
+        return JsonResponse(
+            {"status": "FAILURE", "details": "Invalid source type provided"}
+        )
 
-    retData = []
 
-    if source_id == "2":
-        retData = mock_data.MOCK_DATA["2"]
-    elif source_id == "3":
-        retData = mock_data.MOCK_DATA["3"]
+@csrf_exempt
+def refresh_source(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        source_type = str(raw_data["source"])
+        params = dict(raw_data["params"])
 
-    return JsonResponse({"new_data": retData})
+        return decide_function(source_type, params)
 
-
-def refresh_google_reviews_source(request: HttpRequest, source_id):
-    source_id = str(source_id)
-
-    retData = []
-
-    if source_id == "0":
-        retData = mock_data.MOCK_DATA["0"]
-    elif source_id == "1":
-        retData = mock_data.MOCK_DATA["1"]
-    elif source_id == "4":
-        retData = mock_data.MOCK_DATA["4"]
-
-    return JsonResponse({"new_data": retData})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})

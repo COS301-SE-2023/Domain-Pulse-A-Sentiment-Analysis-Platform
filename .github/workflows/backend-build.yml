@@ -1,11 +1,7 @@
-name: Check backend code builds
+name: Backend Checks
 on:
-  push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,15 +12,27 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: setup .envs
+        working-directory: ./backend
+        run: |
+          echo "$PROD_DJANGO_PORTS" > .env
+          echo "$POSTGRES_CONFIG" > .postgresql.env
+          mkdir ~/.ssh
+          echo "$POSTGRES_USER_PRIV_KEY" >> ~/.ssh/posgresql-user-priv_key
+        env:
+          PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
+          POSTGRES_CONFIG: ${{ secrets.POSTGRES_CONFIG }}
+          POSTGRES_USER_PRIV_KEY: ${{ secrets.POSTGRES_USER_PRIV_KEY }}
+
       - name: install pipenv
         working-directory: ./backend
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
-          
+
       - name: cache pipenv
         id: cache-pipenv
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: backend/.venv
           key: venv_cache-${{ hashFiles('backend/Pipfile.lock') }}
@@ -41,3 +49,13 @@ jobs:
         working-directory: ./backend
         run: |
           pipenv run check_all
+
+      - name: Run Tests
+        working-directory: ./backend
+        run: pipenv run coverage_gen
+        
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-test
+          path: backend/coverage.lcov

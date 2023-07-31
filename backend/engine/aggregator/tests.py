@@ -20,6 +20,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.015, "neutral": 0.0817, "joy": 0.9033},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.353, "neutral": 0.647, "negative": 0.0},
+                    "timestamp": 1690542558,
                 },
                 {
                     "data": "Starbucks is good because there is always good coffee, there is Wi-Fi Internet and your name will be loudly called here once. It is right if it is simple and wrong if it is unusual. All of the above is in this Starbucks, which is conveniently located at a significant intersection in Rosebank.",
@@ -27,6 +28,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.514, "joy": 0.0918, "neutral": 0.3942},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.226, "neutral": 0.682, "negative": 0.092},
+                    "timestamp": 1690442558,
                 },
                 {
                     "data": "I just got looked at when I was at the wrong side of the line (not clear where the right side is) Could not spell my name correctly even though I spelt it out 3 times.",
@@ -38,6 +40,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.097, "neutral": 0.787, "negative": 0.116},
+                    "timestamp": 1690552558,
                 },
                 {
                     "data": "Everything is amazing about Starbucks The service is just so good The drinks are the absolute best Keep coming back ⭐️⭐️⭐️⭐️⭐️👍",
@@ -45,6 +48,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.0683, "joy": 0.8565, "neutral": 0.0752},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.391, "neutral": 0.609, "negative": 0.0},
+                    "timestamp": 1690432558,
                 },
                 {
                     "data": "Just bad choice of blend. Poorly made. Really bad texture of frothed milk. Very hyped. Seattle Coffee Co. still the best.",
@@ -56,6 +60,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0009},
                     "ratios": {"positive": 0.133, "neutral": 0.635, "negative": 0.232},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)",
@@ -63,6 +68,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"sadness": 0.0421, "joy": 0.9376, "surprise": 0.0203},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.388, "neutral": 0.612, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "Coffee is always Good , but unfortunately the food is not up to Starbucks quality Like overseas , the food is premade and delivered , so if you eat a toasted cheese it just get heated up in the microwave",
@@ -74,6 +80,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0007},
                     "ratios": {"positive": 0.209, "neutral": 0.698, "negative": 0.093},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
@@ -81,6 +88,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.1751, "neutral": 0.318, "joy": 0.5069},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.215, "neutral": 0.785, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
             ]
         }
@@ -102,7 +110,11 @@ class DataAggregationTests(TestCase):
                 "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                 "ratios": {"positive": 0.2515, "neutral": 0.6819, "negative": 0.0666},
             },
-            "metadata": {"num_analysed": 8},
+            "metadata": {
+                "num_analysed": 8,
+                "earliest_record": "27 July 2023",
+                "latest_record": "28 July 2023",
+            },
             "individual_data": [
                 {
                     "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
@@ -110,6 +122,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.015, "neutral": 0.0817, "joy": 0.9033},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.353, "neutral": 0.647, "negative": 0.0},
+                    "timestamp": 1690542558,
                 },
                 {
                     "data": "Starbucks is good because there is always good coffee, there is Wi-Fi Internet and your name will be loudly called here once. It is right if it is simple and wrong if it is unusual. All of the above is in this Starbucks, which is conveniently located at a significant intersection in Rosebank.",
@@ -117,6 +130,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.514, "joy": 0.0918, "neutral": 0.3942},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.226, "neutral": 0.682, "negative": 0.092},
+                    "timestamp": 1690442558,
                 },
                 {
                     "data": "I just got looked at when I was at the wrong side of the line (not clear where the right side is) Could not spell my name correctly even though I spelt it out 3 times.",
@@ -128,6 +142,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.097, "neutral": 0.787, "negative": 0.116},
+                    "timestamp": 1690552558,
                 },
                 {
                     "data": "Everything is amazing about Starbucks The service is just so good The drinks are the absolute best Keep coming back ⭐️⭐️⭐️⭐️⭐️👍",
@@ -135,6 +150,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.0683, "joy": 0.8565, "neutral": 0.0752},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.391, "neutral": 0.609, "negative": 0.0},
+                    "timestamp": 1690432558,
                 },
                 {
                     "data": "Just bad choice of blend. Poorly made. Really bad texture of frothed milk. Very hyped. Seattle Coffee Co. still the best.",
@@ -146,6 +162,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0009},
                     "ratios": {"positive": 0.133, "neutral": 0.635, "negative": 0.232},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)",
@@ -153,6 +170,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"sadness": 0.0421, "joy": 0.9376, "surprise": 0.0203},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.388, "neutral": 0.612, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "Coffee is always Good , but unfortunately the food is not up to Starbucks quality Like overseas , the food is premade and delivered , so if you eat a toasted cheese it just get heated up in the microwave",
@@ -164,6 +182,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0007},
                     "ratios": {"positive": 0.209, "neutral": 0.698, "negative": 0.093},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
@@ -171,6 +190,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.1751, "neutral": 0.318, "joy": 0.5069},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.215, "neutral": 0.785, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
             ],
         }
@@ -190,6 +210,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.015, "neutral": 0.0817, "joy": 0.9033},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.353, "neutral": 0.647, "negative": 0.0},
+                    "timestamp": 1690542558,
                 },
                 {
                     "data": "Starbucks is good because there is always good coffee, there is Wi-Fi Internet and your name will be loudly called here once. It is right if it is simple and wrong if it is unusual. All of the above is in this Starbucks, which is conveniently located at a significant intersection in Rosebank.",
@@ -197,6 +218,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.514, "joy": 0.0918, "neutral": 0.3942},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.226, "neutral": 0.682, "negative": 0.092},
+                    "timestamp": 1690442558,
                 },
                 {
                     "data": "I just got looked at when I was at the wrong side of the line (not clear where the right side is) Could not spell my name correctly even though I spelt it out 3 times.",
@@ -208,6 +230,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.097, "neutral": 0.787, "negative": 0.116},
+                    "timestamp": 1690552558,
                 },
                 {
                     "data": "Everything is amazing about Starbucks The service is just so good The drinks are the absolute best Keep coming back ⭐️⭐️⭐️⭐️⭐️👍",
@@ -215,6 +238,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.0683, "joy": 0.8565, "neutral": 0.0752},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.391, "neutral": 0.609, "negative": 0.0},
+                    "timestamp": 1690432558,
                 },
                 {
                     "data": "Just bad choice of blend. Poorly made. Really bad texture of frothed milk. Very hyped. Seattle Coffee Co. still the best.",
@@ -226,6 +250,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0009},
                     "ratios": {"positive": 0.133, "neutral": 0.635, "negative": 0.232},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)",
@@ -233,6 +258,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"sadness": 0.0421, "joy": 0.9376, "surprise": 0.0203},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.388, "neutral": 0.612, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "Coffee is always Good , but unfortunately the food is not up to Starbucks quality Like overseas , the food is premade and delivered , so if you eat a toasted cheese it just get heated up in the microwave",
@@ -244,6 +270,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0007},
                     "ratios": {"positive": 0.209, "neutral": 0.698, "negative": 0.093},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
@@ -251,6 +278,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.1751, "neutral": 0.318, "joy": 0.5069},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.215, "neutral": 0.785, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
             ]
         }
@@ -278,7 +306,11 @@ class DataAggregationTests(TestCase):
                 "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                 "ratios": {"positive": 0.2515, "neutral": 0.6819, "negative": 0.0666},
             },
-            "metadata": {"num_analysed": 8},
+            "metadata": {
+                "num_analysed": 8,
+                "earliest_record": "27 July 2023",
+                "latest_record": "28 July 2023",
+            },
             "individual_data": [
                 {
                     "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
@@ -286,6 +318,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.015, "neutral": 0.0817, "joy": 0.9033},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.353, "neutral": 0.647, "negative": 0.0},
+                    "timestamp": 1690542558,
                 },
                 {
                     "data": "Starbucks is good because there is always good coffee, there is Wi-Fi Internet and your name will be loudly called here once. It is right if it is simple and wrong if it is unusual. All of the above is in this Starbucks, which is conveniently located at a significant intersection in Rosebank.",
@@ -293,6 +326,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.514, "joy": 0.0918, "neutral": 0.3942},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.226, "neutral": 0.682, "negative": 0.092},
+                    "timestamp": 1690442558,
                 },
                 {
                     "data": "I just got looked at when I was at the wrong side of the line (not clear where the right side is) Could not spell my name correctly even though I spelt it out 3 times.",
@@ -304,6 +338,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.097, "neutral": 0.787, "negative": 0.116},
+                    "timestamp": 1690552558,
                 },
                 {
                     "data": "Everything is amazing about Starbucks The service is just so good The drinks are the absolute best Keep coming back ⭐️⭐️⭐️⭐️⭐️👍",
@@ -311,6 +346,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.0683, "joy": 0.8565, "neutral": 0.0752},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.391, "neutral": 0.609, "negative": 0.0},
+                    "timestamp": 1690432558,
                 },
                 {
                     "data": "Just bad choice of blend. Poorly made. Really bad texture of frothed milk. Very hyped. Seattle Coffee Co. still the best.",
@@ -322,6 +358,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0009},
                     "ratios": {"positive": 0.133, "neutral": 0.635, "negative": 0.232},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)",
@@ -329,6 +366,7 @@ class DataAggregationTests(TestCase):
                     "emotions": {"sadness": 0.0421, "joy": 0.9376, "surprise": 0.0203},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.388, "neutral": 0.612, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "Coffee is always Good , but unfortunately the food is not up to Starbucks quality Like overseas , the food is premade and delivered , so if you eat a toasted cheese it just get heated up in the microwave",
@@ -340,6 +378,7 @@ class DataAggregationTests(TestCase):
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0007},
                     "ratios": {"positive": 0.209, "neutral": 0.698, "negative": 0.093},
+                    "timestamp": 1690568558,
                 },
                 {
                     "data": "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
@@ -347,10 +386,52 @@ class DataAggregationTests(TestCase):
                     "emotions": {"surprise": 0.1751, "neutral": 0.318, "joy": 0.5069},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.215, "neutral": 0.785, "negative": 0.0},
+                    "timestamp": 1690568558,
                 },
             ],
         }
 
         self.assertEqual(response.json(), expected_data)
+
+    def test_aggregate_metrics_empty_data(self):
+        request_body = {"metrics": []}
+
+        response: JsonResponse = self.client.post(
+            path="/aggregator/aggregate/",
+            data=request_body,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        assert response.json() == {
+            "overall": {
+                "general": {"category": "No data", "score": 0},
+                "emotions": {
+                    "anger": 0,
+                    "disgust": 0,
+                    "fear": 0,
+                    "joy": 0,
+                    "neutral": 0,
+                    "sadness": 0,
+                    "surprise": 0,
+                },
+                "toxicity": {
+                    "level_of_toxic": "No data",
+                    "score": 0,
+                },
+                "ratios": {
+                    "positive": 0,
+                    "neutral": 0,
+                    "negative": 0,
+                },
+            },
+            "metadata": {
+                "num_analysed": 0,
+                "earliest_record": "NA",
+                "latest_record": "NA",
+            },
+            "individual_data": [],
+        }
 
     # ----------------------------------------------------------------

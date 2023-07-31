@@ -1,20 +1,20 @@
----
-name: Check frontend code builds
+name: Frontend Checks
 on:
-  push:
-    branches:
-      - "frontend/**"
-      - "testcicd"
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     steps:
       - name: setup
         uses: actions/checkout@v3
+
+      - name: setup port .env
+        working-directory: ./backend
+        run: |
+          echo "$PROD_DJANGO_PORTS" > .env
+        env:
+          PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
 
       - name: cache dependencies
         id: npm-cache
@@ -33,4 +33,21 @@ jobs:
         working-directory: ./frontend
         run: |
           npm link @angular/cli
-          ng build --configuration=development
+          npm run build:dev
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/dist
+
+      - name: Test
+        working-directory: ./frontend
+        run: |
+          npm run actions:test
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-test
+          path: frontend/coverage

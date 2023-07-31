@@ -1,15 +1,29 @@
-import { DisplayDomain, DisplaySource } from './app.state';
+import { DisplayDomain, DisplaySource, Toast } from './app.state';
 
-export class Demo2Setup {
-  static readonly type = '[App] Demo2 Setup';
+export class ToastError {
+  static readonly type = '[App] Toast Error';
+  constructor(public message: string, public timeout?: number) {}
+}
+
+export class ToastSuccess {
+  static readonly type = '[App] Toast Success';
+  constructor(public message: string, public timeout?: number) {}
+}
+
+export class Initialise {
+  static readonly type = '[App] Initialise';
 }
 
 export class LoadUserDomains {
   static readonly type = '[App] Load User Domains';
 }
 
-export class SetProfileId {
-  static readonly type = '[App] Set Profile Id';
+/* export class GetProfileID {
+  static readonly type = '[App] Get Profile ID';
+} */
+
+export class SetUserDetails {
+  static readonly type = '[App] Set Profile Details';
   constructor(public profileId: number) {}
 }
 
@@ -38,30 +52,56 @@ export class AddNewDomain {
 export class EditDomain {
   static readonly type = '[App] Edit Domain';
   constructor(
-    public domainId: number,
+    public domainId: string,
     public domainName: string,
-    public domainImagUrl: string,
+    public domainImageUrl: string,
     public description: string
   ) {}
 }
 
 export class DeleteDomain {
   static readonly type = '[App] Delete Domain';
-  constructor(public domainID: number) {}
+  constructor(public domainID: string) {}
 }
 
 export class GetSources {
   static readonly type = '[App] Get Sources';
 }
 
+export class RefreshSourceData {
+  static readonly type = '[App] Refresh Source Data';
+  constructor(public sourceId?: string) {}
+}
+
 export class SetSource {
   static readonly type = '[App] Set Source';
-  constructor(public source: DisplaySource) {}
+  constructor(public source: DisplaySource | null) {}
+}
+
+export class SetAllSourcesSelected{
+  static readonly type = '[App] Set All Sources Selected';
+  constructor(public selected: boolean) {}
 }
 
 export class AddNewSource {
   static readonly type = '[App] Add New Source';
-  constructor(public name: string, public platform: string) {}
+  constructor(
+    public name: string,
+    public platform: string,
+    public params: any,
+  ) {}
+}
+
+export class EditSource {
+  static readonly type = '[App] Edit Source';
+  constructor(
+    public name: string,
+  ) {}
+}
+
+export class DeleteSource {
+  static readonly type = '[App] Delete Source';
+  constructor() {}
 }
 
 export class CheckAuthenticate {
@@ -77,6 +117,11 @@ export class AttempPsswdLogin {
   constructor(public username: string, public password: string) {}
 }
 
+export class DeleteUser {
+  static readonly type = '[Auth] Delete User';
+  constructor(public username: string, public password: string) {}
+}
+
 export class RegisterUser {
   static readonly type = '[Auth] Register User';
   constructor(
@@ -86,7 +131,32 @@ export class RegisterUser {
   ) {}
 }
 
+export class Logout {
+  static readonly type = '[Auth] Logout';
+  constructor() {}
+}
+
+export class ChangePassword {
+  static readonly type = '[Auth] Change Password';
+  constructor(public oldPassword: string, public newPassword: string) {}
+}
+
+export class ChangeMode {
+  static readonly type = '[App] Change Mode';
+  constructor() {}
+}
+
 export class ChooseStatistic {
   static readonly type = '[App] Choose Statistic';
   constructor(public statisticIndex: number) {}
+}
+
+export class SetSourceIsLoading {
+  static readonly type = '[Source] Set Loading';
+  constructor(public isLoading: boolean) {}
+}
+
+export class ChangeProfileIcon{
+  static readonly type = '[Profile] Change Icon';
+  constructor(public profileIcon: string) {}
 }

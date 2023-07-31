@@ -8,14 +8,22 @@
 
 .domain
     gap: 0.6rem
-    height: 50px
-    border-radius: 25px
+    height: fit-content
+    border-radius: 2.5vw
     width: fit-content
     display: flex
     align-items: center
+    transition: 0.2s ease
+
+    &:hover
+        background-color: rgba(255, 255, 255, 0.267)
+        cursor: pointer
 
 .selected-domain
-    background-color: white
+    background-color: white !important
+
+.add-domain-plus
+    background-color: rgba(0, 0, 0, 0)!important
 
 .icons-container
     position: flex-end
@@ -23,18 +31,11 @@
     gap: 0.5rem
     margin-left: auto
     padding-right: 1rem
-    
-  
-.domain-name 
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
 
-
-
-
-
-
+.domain-name
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
 
 .add-domain-btn
     gap: 2rem
@@ -44,11 +45,11 @@
     border-radius: 25px
 
 .circle-wrapper
-    width: 44px
-    height: 44px
-    min-width: 44px
-    min-height: 44px
-    border-radius: 44px
+    width: 2.5vw
+    height: 2.5vw
+    min-width: 2.5vw
+    min-height: 2.5vw
+    border-radius: 2.5vw
     background-color: white
     overflow: hidden
     border: solid 2px white
@@ -56,22 +57,40 @@
     justify-content: center
     align-items: center
 
- 
+.circle-wrapper img
+    width: 100%
+    height: 100%
+    object-fit: cover
 
+.circle-wrapper-domain
+    width: 100px
+    height: 100px
+    min-width: 100px
+    min-height: 100px
+    border-radius: 100px
+    background-color: white
+    overflow: hidden
+    border: solid 2px white
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+    justify-content: center
+    align-items: center
 
-.circle-wrapper img 
-  width: 100%
-  height:100%
-  object-fit: cover
+.circle-wrapper-domain img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.circular-image
+    border-radius: 50px
+    width: 50px
+    height: 50px
+    object-fit: cover
 
 .plus-wrapper
     width: 44px
     height: 44px
     min-width: 44px
     min-height: 44px
-
-
-
 
 // below is where the styles for the modal are
 
@@ -93,15 +112,23 @@
     border: none
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
 
-
 .modal-heading
     font-family: 'Open Sans'
+    text-align: center
     font-weight: 700
     font-size: 20pt
     color: var(--primary)
 
+.confirm-text
+    font-family: 'Source Sans 3'
+    font-weight: 300
+    font-size: 1.3em
+    color: var(--text-color)
+    text-align: center
+    margin: 0 1rem 0 1rem
 
-.heading-container 
+
+.heading-container
     text-align: left
     width: 80%
     display: flex
@@ -110,10 +137,9 @@
     margin-top: 4%
     margin-left: 10%
 
-
-.back-arrow 
-  width: 25px
-  margin-right: 10px
+.back-arrow
+    width: 25px
+    margin-right: 10px
 
 .modal-step-tag
     font-size: 50px
@@ -136,16 +162,15 @@
     background-image: url("../../assets/stock-bg.png")
     background-repeat: no-repeat
     background-size: cover
-    width:100%
+    width: 100%
 
-.profile-section 
-
+.profile-section
 
 //Profile Modal
 
 .profile-image
-    width: 180px
-    height: 180px
+    width: 100%
+    height: 100%
     border-radius: 50%
     object-fit: cover
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
@@ -156,26 +181,57 @@
     font-size: 18pt
     color: var(--secondary)
 
+.email
+    font-family: 'Source Sans 3'
+    font-weight: 300
+    font-size: 14pt
+    color: var(--text-color)
+
 .profile-icon
-    width:15px
+    width: 3vw
 
 .modal-contents
-  display: flex
-  flex-direction: column
-  justify-content: space-between
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    max-width: 55%
 
-  
+.profile-container
+    position: relative
+    width: 12vw
+    height: 12vw
+    margin-bottom: 1rem
+
+.profile-overlay
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--hover-opacity-highlight)
+    display: flex
+    justify-content: center
+    align-items: center
+    opacity: 0
+    transition: opacity 0.3s
+    border-radius: 50%
+
+.profile-container:hover .profile-overlay
+    opacity: 1
+
+.overlay-icon
+    font-size: 36px
 
 .content
-  flex-grow: 1
+    flex-grow: 1
 
 .button-div
-  display: grid
-  grid-template-columns: repeat(2, 1fr)
-  gap: 1rem
-  align-content: center
-  justify-content: center
-  margin-bottom: 5%
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: 1rem
+    align-content: center
+    justify-content: center
+    margin-bottom: 5%
 
 .button
     display: flex
@@ -185,30 +241,151 @@
     border-radius: 1rem
     background-color: var(--primary)
     cursor: pointer
-    width: 12rem
+    width: 10vw
     color: white
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
 
+.confirm-button
+    display: flex
+    align-items: center
+    height: 2rem
+    padding: 0 1rem
+    border-radius: 1rem
+    cursor: pointer
+    width: 5vw
+    color: white
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
+
+.delete-account-button
+    display: flex
+    align-items: center
+    height: 2rem
+    padding: 0 1rem
+    border-radius: 1em
+    cursor: pointer
+    width: 1re
+    color: white
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
+
+.green
+    background-color: var(--confirm)
+
+.red
+    background-color: var(--reject)
+
 .button:hover
-  background-color: var(--secondary)
+    background-color: var(--button-highlight)
 
 .button-text
-  margin-left: 0.5rem
+    margin-left: 0.5rem
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    font-size: 0.9em
 
-
-.button-icon 
+.button-icon
     margin-left: 0.3rem
     margin-right: 0.5rem
     width: 0.8rem
 
 .bottom-div
-  align-content: center
-  justify-content: center
-  margin-bottom: 6%
+    align-content: center
+    justify-content: center
+    margin-bottom: 6%
 
-    
+.wrapper
 
+    width: 15vw
+    height: 15vw
+    align-items: center
+    justify-content: center
 
+.wrapper-domain
+    width: 100px
+    height: 100px
+    align-items: center
+    justify-content: center
 
-  
+.file-upload
+    height: 100%
+    width: 100%
+    border-radius: 15vw
+    position: relative
+    display: flex
+    justify-content: center
+    align-items: center
+    overflow: hidden
+    background-image: linear-gradient(to bottom, var(--primary) 50%, var(--button-highlight) 50%)
+    background-size: 100% 200%
+    transition: all 1s
+    color: #FFFFFF
+    font-size: 100px
+    input[type='file']
+        position: absolute
+        top: 0
+        left: 0
+        opacity: 0
+        cursor: pointer
 
+    &:hover
+        background-position: 0 -100%
+
+.preview-image
+    display: block
+    border: 1px solid #ccc
+    border-radius: 4px
+    height: 100%
+
+.default-icon
+    margin-right: 20px
+    margin-left: 20px
+    margin-top: 10px
+    margin-bottom: 10px
+    display: flex
+    flex-direction: column
+    align-items: center
+
+.default-icon img
+    width: auto
+    cursor: pointer
+    transition: height 0.3s ease
+    opacity: 0.5
+
+.default-icon img.selected
+    opacity: 1
+
+.sources-options
+    border: solid rgb(133, 133, 133) 2px
+    border-radius: 10px
+    height: 150px
+
+.outer-flex-row
+    display: flex
+
+.source-type-title
+    font-size: 10px
+
+.inner-flex-row
+    flex-direction: row
+    flex-basis: 100%
+    overflow-x: auto
+    scrollbar-width: 5px
+    scrollbar-color: var(--grey-subtle)
+    border-bottom: transparent 5px solid
+    border-left: transparent 5px solid
+    border-right: transparent 5px solid
+
+    &::-webkit-scrollbar
+        height: 10px
+        width: 0
+
+    &::-webkit-scrollbar-track
+        background-color: var(--grey-subtle)
+        border-radius: 5px
+
+    &::-webkit-scrollbar-thumb
+        background-color: var(--grey-item)
+        border-radius: 5px
+
+    &::-webkit-scrollbar-thumb:hover
+        background-color: var(--dark-grey)

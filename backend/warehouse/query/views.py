@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from datamanager import sentiment_record_model
 import json
 import requests
+from authchecker import auth_checks
+import os
 
 # Create your views here.
 
@@ -25,8 +27,16 @@ def get_dashboard_data_source(request: HttpRequest):
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
 
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[source_id_raw]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+
         individual_records = sentiment_record_model.get_records_by_source_id(
-            int(source_id_raw)
+            source_id_raw
         )
 
         for record in individual_records:
@@ -34,7 +44,7 @@ def get_dashboard_data_source(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = "http://localhost:8001/aggregator/aggregate/"
+        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -46,6 +56,7 @@ def get_dashboard_data_source(request: HttpRequest):
             agg_response_body = response_from_aggregator.json()
 
             response["aggregated_metrics"] = agg_response_body["overall"]
+            response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
 
             return JsonResponse(response)
@@ -67,9 +78,18 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         individual_records = []
         source_ids = list(source_ids_raw)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=source_ids
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+
         for source_id in source_ids_raw:
             individual_records += sentiment_record_model.get_records_by_source_id(
-                int(source_id)
+                source_id
             )
 
         for record in individual_records:
@@ -77,7 +97,7 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = "http://localhost:8001/aggregator/aggregate/"
+        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -89,6 +109,7 @@ def get_dashboard_data_domain(request: HttpRequest):
             agg_response_body = response_from_aggregator.json()
 
             response["aggregated_metrics"] = agg_response_body["overall"]
+            response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
 
             return JsonResponse(response)
@@ -101,60 +122,110 @@ def get_dashboard_data_domain(request: HttpRequest):
 @csrf_exempt
 def refresh_source(request: HttpRequest):
     # FINAL VERSION
+    # 0. Given a source_id, get the details of the source from the Domains service (performs auth)
     # 1. Given the appropriate source, invoke the SourceConnector to get new data (ie: past the most recent timestamp)
     # 2. Send the new data from 1 to the analyser (engine)
     # 3. Store the data with its computed metrics in the database
+    # 3.1 Update the last_refreshed field in the domains database for the source (performs auth)
     # 4. (Frontend concern) - call the get_data_dashboard_source/domain endpoint to refresh the frontend dashboard
 
-    # STUBBED VERSION
-    # 1. Given the source_id, query the database to get the data for the source
-    # 2. Next, invoke the source connector to get new data
-    # 3. Send the new data to the analyser for the metrics to be computed
-    # 4. Combining the new and the old data, send it to the aggregator
-    # 5. Return the result of the aggregator
+    originalRequest = request
+
+    GET_SOURCE_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+    )
+    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
+    SOURCE_CONNECTOR_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
+    ANALYSER_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    )
 
     if request.method == "POST":
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
 
-        # 1
-        individual_records = sentiment_record_model.get_records_by_source_id(
-            int(source_id_raw)
-        )
+        # 0. Make a request to the domains service to get the info on the source (this also authenticates the request)
 
-        for record in individual_records:
-            record["_id"] = ""
+        headers = {"Content-Type": "application/json"}
 
-        # 2
-        sid = int(source_id_raw)
-        if sid == 0:
-            url = "http://localhost:8003/refresh/googlereviews/0/"
-        elif sid == 1:
-            url = "http://localhost:8003/refresh/googlereviews/1/"
-        elif sid == 2:
-            url = "http://localhost:8003/refresh/instagram/2/"
-        elif sid == 3:
-            url = "http://localhost:8003/refresh/instagram/3/"
-        elif sid == 4:
-            url = "http://localhost:8003/refresh/googlereviews/4/"
-        response_from_source_connector = requests.get(url)
-        if response_from_source_connector.status_code == 200:
-            pass
+        # ------------------- VERIFYING ACCESS -----------------------
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # ------------------------------------------------------------
+
+        data = {"source_id": source_id_raw}
+        response = requests.post(GET_SOURCE_ENDPOINT, json=data, headers=headers)
+
+        if response.status_code != 200:
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Domains Service",
+                }
+            )
+        elif response.json()["status"] == "FAILURE":
+            return JsonResponse(
+                {"status": "FAILURE", "details": response.json()["details"]}
+            )
         else:
+            source_details = response.json()["source"]["params"]
+            type = source_details["source_type"]
+            params = source_details
+            params["last_refresh_timestamp"] = response.json()["source"][
+                "last_refresh_timestamp"
+            ]
+
+        # 1.
+        source_type = type
+        source_params = params
+
+        data = {"source": source_type, "params": source_params}
+        response = requests.post(SOURCE_CONNECTOR_ENDPOINT, json=data)
+
+        if response.status_code != 200:
             return JsonResponse(
                 {
                     "status": "FAILURE",
                     "details": "Could not connect to Source Connector",
                 }
             )
-        new_data = response_from_source_connector.json()["new_data"]
 
-        # 3
-        request_to_engine_body = {"data": new_data}
-        url = "http://localhost:8001/analyser/compute/"
+        resp_data = response.json()
+        status = resp_data["status"]
+        new_data = resp_data["newdata"]
+        latest_retrieval = resp_data["latest_retrieval"]
+
+        if status == "FAILURE":
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Source Connector",
+                }
+            )
+
+        # 2.
+        raw_new_data = []
+        data_timestamps = []
+        for x in new_data:
+            raw_new_data.append(x["text"])
+            data_timestamps.append(x["timestamp"])
+
+        request_to_engine_body = {}
+        if "room_id" in raw_data:
+            request_to_engine_body = {"data": raw_new_data, "data_timestamps": data_timestamps, "room_id": raw_data["room_id"]}
+        else:
+            request_to_engine_body = {"data": raw_new_data}
+
+        # print(request_to_engine_body)
+
         response_from_analyser = requests.post(
-            url, data=json.dumps(request_to_engine_body)
+            ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
         )
+
         if response_from_analyser.status_code == 200:
             pass
         else:
@@ -166,31 +237,51 @@ def refresh_source(request: HttpRequest):
             )
         new_data_metrics = response_from_analyser.json()["metrics"]
 
-        # 4
-        data_to_aggregate = []
-        data_to_aggregate += new_data_metrics
-        data_to_aggregate += individual_records
+        data_to_store = []
+        for metrics, stamped in zip(new_data_metrics, new_data):
+            metrics["timestamp"] = stamped["timestamp"]
+            metrics["source_id"] = source_id_raw
+            data_to_store.append(metrics)
 
-        request_to_engine_body = {"metrics": data_to_aggregate}
-        url = "http://localhost:8001/aggregator/aggregate/"
-        response_from_aggregator = requests.post(
-            url, data=json.dumps(request_to_engine_body)
+        # 3.
+        for x in data_to_store:
+            sentiment_record_model.add_record(x)
+
+        # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
+
+        headers = {"Content-Type": "application/json"}
+        # ------------------- VERIFYING ACCESS -----------------------
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # ------------------------------------------------------------
+
+        data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
+        response = requests.post(
+            UPDATE_LAST_REFRESHED_ENDPOINT, json=data, headers=headers
         )
 
-        if response_from_aggregator.status_code == 200:
-            # 5
-            response = {}
-            response["status"] = "SUCCESS"
-
-            agg_response_body = response_from_aggregator.json()
-
-            response["aggregated_metrics"] = agg_response_body["overall"]
-            response["individual_metrics"] = agg_response_body["individual_data"]
-
-            return JsonResponse(response)
-        else:
+        if response.status_code != 200:
             return JsonResponse(
-                {"status": "FAILURE", "details": "Could not connect to Aggregator"}
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Domains Service",
+                }
             )
+        elif response.json()["status"] == "FAILURE":
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": response.json()["details"],
+                }
+            )
+
+        # 4.
+        return JsonResponse(
+            {"status": "SUCCESS", "details": "Data source refreshed successfully"}
+        )
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})

@@ -1,22 +1,22 @@
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { NgxsModule, Store } from '@ngxs/store';
 import { AppComponent } from './app.component';
-import { BackendService } from './backend.service';
-import { HttpClientModule } from '@angular/common/http';
-import { ModalContainerComponent } from './modal-container/modal-container.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-
+import { TestBed } from '@angular/core/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HttpClientModule, RouterTestingModule],
-      declarations: [AppComponent, ModalContainerComponent, SidebarComponent],
-    }).compileComponents();
+  let component: AppComponent;
+  let toastrSpy: jasmine.SpyObj<ToastrService>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [AppComponent],
+      imports: [NgxsModule.forRoot([]), ToastrModule.forRoot()],
+    });
+
+    component = TestBed.inject(AppComponent);
+    toastrSpy = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 });

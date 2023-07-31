@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { ChooseStatistic } from '../app.actions';
 
+
+
 export interface aggregated_metrics {
   general: {
     category: string;
@@ -38,6 +40,8 @@ interface DisplayableMetrics {
   emotionIconUrl: string;
   toxicity: number;
   analysedSum: string;
+  earliestDate: string;
+  latestDate: string;
 }
 
 @Component({
@@ -49,10 +53,11 @@ export class StatisticSelectorComponent {
   @Select(AppState.sourceOverallSentimentScores)
   sourceOverallSentiment!: Observable<any | null>;
   @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
+  @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   displayedMetrics?: DisplayableMetrics;
 
-  mockData?: { aggregated_metrics: aggregated_metrics; metadata?: any };
+  mockData?: any;
 
   selectedCategoryIndex = 0;
 
@@ -68,15 +73,17 @@ export class StatisticSelectorComponent {
     });
   }
 
+
   selectStatisticCategory(categoryIndex: number) {
     this.store.dispatch(new ChooseStatistic(categoryIndex));
   }
 
   assignValues(
-    freshData: aggregated_metrics,
-    metaData?: any
+    freshData: any,
   ): DisplayableMetrics {
-    const aggregatedMetrics = freshData;
+    const aggregatedMetrics = freshData.aggregated_metrics;
+    const newMetadata = freshData.meta_data;
+
 
     const overallScore = Math.floor(aggregatedMetrics.general.score * 100);
     const positiveScore = Math.floor(aggregatedMetrics.ratios.positive * 100);
@@ -88,9 +95,15 @@ export class StatisticSelectorComponent {
       emotions[a] > emotions[b] ? a : b
     );
 
-    const emotionIconUrl = `../../assets/logos/${emotion.toLowerCase()}.png`;
+    const emotionIconUrl = `../../assets/icons/${emotion.toLowerCase()}.svg`;
+  
 
     const toxicity = Math.floor(aggregatedMetrics.toxicity.score * 100);
+
+    const analysedSum = newMetadata.num_analysed;
+    const earliestDate = newMetadata.earliest_record;
+    const latestDate = newMetadata.latest_record;
+
 
     return {
       overallScore,
@@ -100,7 +113,9 @@ export class StatisticSelectorComponent {
       emotion,
       emotionIconUrl,
       toxicity,
-      analysedSum: '23k',
+      analysedSum,
+      earliestDate,
+      latestDate,
     };
   }
 }

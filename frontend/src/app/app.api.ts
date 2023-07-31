@@ -4,14 +4,10 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AppApi {
-  private engineBaseUrl = `http://${window.location.hostname}:8001/`;
-  private profilesBaseUrl = `http://${window.location.hostname}:8002/`;
-
-  private warehouseBaseUrl = `http://${window.location.hostname}:8004/`;
-  private getDomainsUrl = 'domains/get_domains';
-
-  // using the below to back in the source_id
-  private source_id_gen = 1;
+  private engineBaseUrl = `/api/engine/`;
+  private profilesBaseUrl = `/api/profiles/`;
+  private warehouseBaseUrl = `/api/warehouse/`;
+  private domainBaseUrl = `/api/domains/`;
 
   constructor(private http: HttpClient) {}
 
@@ -27,8 +23,8 @@ export class AppApi {
     );
   }
 
-  getDomainInfo(domainID: number): Observable<any> {
-    const getDomainInfoUrl = this.profilesBaseUrl + 'profiles/get_domain';
+  getDomainInfo(domainID: string): Observable<any> {
+    const getDomainInfoUrl = this.domainBaseUrl + 'domains/get_domain';
     return this.http.post(
       getDomainInfoUrl,
       { id: domainID },
@@ -36,12 +32,24 @@ export class AppApi {
     );
   }
 
+  getAggregatedDomainData(sourceIds: string[]): Observable<any> {
+    const getAggregatedDomainDataUrl =
+      this.warehouseBaseUrl + 'query/get_domain_dashboard/';
+    const body = {
+      source_ids: sourceIds,
+    };
+    return this.http.post(getAggregatedDomainDataUrl, body, {
+      withCredentials: true,
+    });
+  }
+
+
   addDomain(
     domainName: string,
     domainDescrption: string,
     domainImageUrl: string
   ): Observable<any> {
-    const addDomainUrl = this.profilesBaseUrl + 'profiles/create_domain';
+    const addDomainUrl = this.domainBaseUrl + 'domains/create_domain';
     const body = {
       name: domainName,
       description: domainDescrption,
@@ -52,19 +60,23 @@ export class AppApi {
   }
 
   editDomain(
-    domainID: number,
+    domainID: string,
     domainName: string,
-    domainDescrption: string,
-    domainImageUrl: string
+    domainImageUrl: string,
+    domainDescrption: string,    
   ): Observable<any> {
-    const editDomainUrl = this.profilesBaseUrl + 'profiles/edit_domain';
-    const body = {};
-    alert('FIND THE CORRECT BODY FOR THIS CODE');
+    const editDomainUrl = this.domainBaseUrl + 'domains/edit_domain';
+    const body = {
+      id: domainID,
+      name: domainName,
+      icon: domainImageUrl,
+      description: domainDescrption,      
+    };
     return this.http.post(editDomainUrl, body, { withCredentials: true });
   }
 
-  removeDomain(domainID: number): Observable<any> {
-    const removeDomainUrl = this.profilesBaseUrl + 'profiles/remove_domain';
+  removeDomain(domainID: string): Observable<any> {
+    const removeDomainUrl = this.domainBaseUrl + 'domains/delete_domain';
     const body = {
       id: domainID,
     };
@@ -86,22 +98,54 @@ export class AppApi {
   }
 
   addSource(
-    domainID: number,
+    domainID: string,
     sourceName: string,
-    sourceImageUrl: string
+    sourceImageUrl: string,
+    params: any
   ): Observable<any> {
-    const addSourceUrl = this.profilesBaseUrl + 'profiles/add_source';
+    const addSourceUrl = this.domainBaseUrl + 'domains/add_source';
+
     const body = {
-      domain_id: domainID,
-      source_id: this.source_id_gen++,
-      // icon: sourceImageUrl,
-    };
+      id: domainID,
+      source_name: sourceName,
+      source_icon: sourceImageUrl,
+      params: params,
+    }
 
     return this.http.post(addSourceUrl, body, { withCredentials: true });
   }
 
+  editSource(sourceId: string, sourceName: string): Observable<any> {
+    const editSourceUrl = this.domainBaseUrl + 'domains/edit_source';
+    const body = {
+      source_id: sourceId,
+      name: sourceName,
+    };
+
+    return this.http.post(editSourceUrl, body, { withCredentials: true });
+  }
+
+  deleteSource(domainID: string, sourceID: string): Observable<any> {
+    const deleteSourceUrl = this.domainBaseUrl + 'domains/remove_source';
+    const body = {
+      id: domainID,
+      source_id: sourceID,
+    };
+
+    return this.http.post(deleteSourceUrl, body, { withCredentials: true });
+  }
+
+  refreshSourceInfo(sourceID: string): Observable<any> {
+    const refreshSourceInfoUrl = this.warehouseBaseUrl + 'query/refresh_source/';
+    const body = {
+      source_id: sourceID,
+    }
+
+    return this.http.post(refreshSourceInfoUrl, body, { withCredentials: true });
+  }
+
   getSourceInfo(sourceID: number): Observable<any> {
-    const getSourceInfoUrl = this.profilesBaseUrl + 'profiles/get_source';
+    const getSourceInfoUrl = this.domainBaseUrl + 'domains/get_source';
     return this.http.post(
       getSourceInfoUrl,
       { id: sourceID },
@@ -109,11 +153,11 @@ export class AppApi {
     );
   }
 
-  getSourceSentimentData(domainID: number): Observable<any> {
+  getSourceSentimentData(sourceID: string): Observable<any> {
     const getOverallSentimentScoresUrl =
       this.warehouseBaseUrl + 'query/get_source_dashboard/';
     const body = {
-      source_id: domainID,
+      source_id: sourceID,
     };
 
     return this.http.post(getOverallSentimentScoresUrl, body);
@@ -121,8 +165,13 @@ export class AppApi {
 
   checkAuthenticate(): Observable<any> {
     const checkAuthenticateUrl =
-      this.profilesBaseUrl + 'profiles/check_logged_in';
+      this.profilesBaseUrl + 'check/check_logged_in/';
     return this.http.post(checkAuthenticateUrl, {}, { withCredentials: true });
+  }
+
+  logOut(): Observable<any> {
+    const logOutUrl = this.profilesBaseUrl + 'profiles/logout_user';
+    return this.http.post(logOutUrl, {}, { withCredentials: true });
   }
 
   registerUser(
@@ -139,6 +188,39 @@ export class AppApi {
     return this.http.post(registerUserUrl, body);
   }
 
+  changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    const changePasswordUrl = this.profilesBaseUrl + 'profiles/change_password';
+    const body = {
+      id: userId,
+      oldpassword: oldPassword,
+      newpassword: newPassword,
+    };
+    return this.http.post(changePasswordUrl, body, { withCredentials: true });
+  }
+
+  deleteUser(username: string, password: string): Observable<any> {
+    const deleteUserUrl = this.profilesBaseUrl + 'profiles/delete_user';
+    const body = {
+      username: username,
+      password: password,
+    };
+    return this.http.post(deleteUserUrl, body, { withCredentials: true });
+  }
+
+  changeProfileIcon(profileID: number, profilePicture: string): Observable<any> {
+    const changeProfilePictureUrl = this.profilesBaseUrl + 'profiles/edit_profile_picture';
+    const body = {
+      id: profileID,
+      pictureURL: profilePicture,
+    };
+    return this.http.post(changeProfilePictureUrl, body, { withCredentials: true });
+
+  }
+
   attemptPsswdLogin(username: string, password: string): Observable<any> {
     const attemptPsswdLoginUrl = this.profilesBaseUrl + 'profiles/login_user';
     const body = {
@@ -150,4 +232,39 @@ export class AppApi {
       withCredentials: true,
     });
   }
+
+  getProfile(profileID: number): Observable<any> {
+    const getProfileUrl = this.profilesBaseUrl + 'profiles/get_profile';
+    const body = {
+      id: profileID,
+    };
+    // send with credentials enabled
+    return this.http.post(getProfileUrl, body, {
+      withCredentials: true,
+    });
+  }
+
+  //gte user
+  getUserByID(userID: number): Observable<any> {
+    const getUserUrl = this.profilesBaseUrl + 'profiles/get_user_by_id';
+    const body = {
+      id: userID,
+    };
+    // send with credentials enabled
+    return this.http.post(getUserUrl, body, {
+      withCredentials: true,
+    });
+  }
+
+  changeMode(profileID: number): Observable<any> {
+    const changeModeUrl = this.profilesBaseUrl + 'profiles/swap_mode';
+    const body = {
+      id: profileID,
+    };
+    // send with credentials enabled
+    return this.http.post(changeModeUrl, body, {
+      withCredentials: true,
+    });
+  }
+
 }

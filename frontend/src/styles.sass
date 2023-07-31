@@ -1,37 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap')
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap')
-
+@import 'ngx-toastr/toastr'
 // global style variables
 $background-light: #e0efff
 $primary-light: #037fff
 $secondary-light: #17234c
 $highlight-light: rgba(3, 127, 255, 0.25)
+$dark-grey-light: #4d4d4d
 $grey-item-light: #949494
-$grey-subtle-light: #e0e0e0
+$grey-subtle-light: #cacaca
 $main-div-light: #ffffff
 $secondary-div-light: #ffffff
 $text-color-light: #000000
 $sidebar-top-light: #037fff
 $sidebar-bottom-light: #17234c
+$modal-background-light: rgba(0, 0, 0, 0.181)
+$hover-opacity-highlight-light: rgba(0, 0, 0, 0.301)
+$button-highlight-light: #17234c
 
 $background-dark: #4d4d4d
 $primary-dark: #037fff
 $secondary-dark: #e8ecfc
 $highlight-dark: rgba(3, 127, 255, 0.25)
-$grey-item-dark: #949494
-$grey-subtle-dark: #e0e0e0
+$dark-grey-dark: #646464
+$grey-item-dark: #858585
+$grey-subtle-dark: #b8b8b8
 $main-div-dark: #282828
 $secondary-div-dark: #404040
 $text-color-dark: #ffffff
 $sidebar-top-dark: #0058b2
 $sidebar-bottom-dark: #0058b2
+$modal-background-dark: rgba(255, 255, 255, 0.181)
+$hover-opacity-highlight-dark: rgba(49, 49, 49, 0.301)
+$button-highlight-dark: #61b0ff
 
+$confirm: rgba(0, 184, 0, 0.9)
+$reject: rgba(184, 0, 0, 0.9)
+$spinner-top-light: #178332
+$spinner-bottom-light: #55d174
+$spinner-top-dark: #2ab94e
+$spinner-bottom-dark: #fdfdfd
 
 body.light
     --background: #{$background-light}
     --primary: #{$primary-light}
     --secondary: #{$secondary-light}
     --highlight: #{$highlight-light}
+    --dark-grey: #{$dark-grey-light}
     --grey-item: #{$grey-item-light}
     --grey-subtle: #{$grey-subtle-light}
     --main-div: #{$main-div-light}
@@ -39,12 +54,20 @@ body.light
     --text-color: #{$text-color-light}
     --sidebar-top: #{$sidebar-top-light}
     --sidebar-bottom: #{$sidebar-bottom-light}
+    --modal-background: #{$modal-background-light}
+    --button-highlight: #{$button-highlight-light}
+    --hover-opacity-highlight: #{$hover-opacity-highlight-light}
+    --confirm: #{$confirm}
+    --reject: #{$reject}
+    --spinner-top: #{$spinner-top-light}
+    --spinner-bottom: #{$spinner-bottom-light}
 
 body.dark
     --background: #{$background-dark}
     --primary: #{$primary-dark}
     --secondary: #{$secondary-dark}
     --highlight: #{$highlight-dark}
+    --dark-grey: #{$dark-grey-dark}
     --grey-item: #{$grey-item-dark}
     --grey-subtle: #{$grey-subtle-dark}
     --main-div: #{$main-div-dark}
@@ -52,6 +75,13 @@ body.dark
     --text-color: #{$text-color-dark}
     --sidebar-top: #{$sidebar-top-dark}
     --sidebar-bottom: #{$sidebar-bottom-dark}
+    --modal-background: #{$modal-background-dark}
+    --button-highlight: #{$button-highlight-dark}
+    --hover-opacity-highlight: #{$hover-opacity-highlight-dark}
+    --confirm: #{$confirm}
+    --reject: #{$reject}
+    --spinner-top: #{$spinner-top-dark}
+    --spinner-bottom: #{$spinner-bottom-dark}
 
 body
     margin: 0
@@ -61,8 +91,13 @@ body
     font-family: 'Source Sans 3'
     background-color: white
     color: var(--text-color)
+
+.icon
+    font-size: 1.5rem
+
 p
     margin: 0
+    font-family: 'Source Sans 3'
 
 .flex-row
     display: flex
@@ -78,3 +113,83 @@ p
 .center
     justify-content: center
     align-items: center
+
+//Toasts
+.custom-toast
+    width: 40% !important
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2) !important
+    border-radius: 0.5rem !important
+    transition: all 0.3s ease
+
+    &.error
+        background-color: rgba(184, 0, 0, 0.7) !important
+
+    &.success
+        background-color: rgba(0, 184, 0, 0.7) !important
+
+    &.error:hover
+        background-color: rgba(184, 0, 0, 0.9) !important
+
+    &.success:hover
+        background-color: rgba(0, 184, 0, 0.9) !important
+
+.custom-toast:hover
+    cursor: pointer
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4) !important
+
+//Clickable items
+.clickable-item
+    cursor: pointer
+    transition: transform 0.4s ease 
+    will-change: transform
+
+.clickable-item:not(:active)
+    animation: click-animation 0.4s ease 
+
+.clickable-item:hover
+    transform: scale(1.075)
+
+@keyframes click-animation
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(1.1)
+    100%
+        transform: scale(1)
+
+//Clickable items without hover
+.clickable-item-nohover
+    cursor: pointer
+    will-change: transform
+
+.clickable-item-nohover:not(:active)
+    animation: click-animation 0.4s ease
+
+
+@keyframes click-animation
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(0.95)
+    100%
+        transform: scale(1)
+
+.button-spinner
+  border: 0.2rem solid rgb(0,0 ,0, 0 )
+  border-top: 0.2rem solid #ffffff
+
+  border-radius: 50%
+  width: 1rem
+  height: 1rem
+  animation: spin 1s linear infinite
+  position: absolute
+  transform: translate(-50%, -50%)
+  position: absolute
+  top: 0.5rem
+  right: 0.5rem
+
+@keyframes spin
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)

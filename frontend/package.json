@@ -3,10 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node env-config.js && ng serve",
+    "build": "node env-config.js && ng build",
+    "build:prod": "node env-config.js && ng build --configuration=production",
+    "build:dev": "node env-config.js && ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "actions:test": "node env-config.js && ng test --no-watch --code-coverage --browsers ChromeHeadless",
+    "e2e": "ng e2e",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +26,7 @@
     "@ngxs/logger-plugin": "^3.8.1",
     "@ngxs/store": "^3.8.1",
     "chart.js": "^2.9.4",
+    "ngx-toastr": "^16.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
@@ -29,14 +35,18 @@
     "@angular-devkit/build-angular": "^15.2.8",
     "@angular/cli": "~15.2.8",
     "@angular/compiler-cli": "^15.2.0",
+    "@cypress/schematic": "^2.5.0",
+    "@azure/storage-blob": "^12.15.0",
     "@types/chart.js": "^2.9.37",
     "@types/jasmine": "~4.3.0",
+    "dotenv": "^16.3.1",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.9.4"
+    "typescript": "~4.9.4",
+    "cypress": "latest"
   }
 }
