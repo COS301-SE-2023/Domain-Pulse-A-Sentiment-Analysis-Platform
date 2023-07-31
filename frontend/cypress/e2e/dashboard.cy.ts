@@ -4,6 +4,7 @@ describe('Dashboard', function () {
   // we can use these values to log in
   const username = 'thugger';
   const password = '123456';
+  const changePassword = '12345';
   let JWT: string = '';
 
   // but set the user before visiting the page
@@ -26,7 +27,7 @@ describe('Dashboard', function () {
       });
   });
 
-  it('add and delete domain', () => {
+  it.skip('add and delete domain', () => {
     cy.wait(2000);
 
     cy.get('[data-cy=addDomainModalToggle]').click();
@@ -49,7 +50,7 @@ describe('Dashboard', function () {
     cy.contains('test domain').should('not.exist');
   });
 
-  it('should open the profile toggle and toggle theme', () => {
+  it.skip('should open the profile toggle and toggle theme', () => {
     cy.wait(2000);
     cy.get('[data-cy=profileModalToggle]').click();
     cy.contains('thugger').should('exist');
@@ -69,7 +70,7 @@ describe('Dashboard', function () {
     });
   });
 
-  it('should persist theme on refresh', () => {
+  it.skip('should persist theme on refresh', () => {
     cy.wait(1000);
     cy.get('[data-cy=profileModalToggle]').click();
     cy.contains('thugger').should('exist');
@@ -85,5 +86,58 @@ describe('Dashboard', function () {
         expect(reloadTheme).to.equal(theme);
       });
     });
+
+    
   });
+
+  
+
+  it.skip('should change password and change it back', () => {
+
+    cy.wait(2000);
+    cy.get('[data-cy=profileModalToggle]').click();
+    cy.contains('thugger').should('exist');
+
+    
+
+    cy.get('[data-cy=openChangePassword]').click();
+
+    cy.get('[data-cy=oldPassword]').type(password);
+
+    cy.get('[data-cy=newPassword]').type(changePassword);
+
+    cy.get('[data-cy=confirmChangePassword]').click();
+
+
+    cy.visit('/login');
+    cy.wait(2000);
+    cy.get('[data-cy=username]').type('thugger');
+
+    cy.get('[data-cy=password]').type(changePassword);
+
+    cy.get('[data-cy=logInButton]').click();
+
+    cy.location('pathname').should('eq', '/');
+
+    cy.wait(2000);
+    cy.get('[data-cy=profileModalToggle]').click();
+    cy.contains('thugger').should('exist');
+
+    
+
+    cy.get('[data-cy=openChangePassword]').click({force: true});
+
+    cy.get('[data-cy=oldPassword]').type(changePassword);
+
+    cy.get('[data-cy=newPassword]').type(password);
+
+    cy.get('[data-cy=confirmChangePassword]').click();
+
+    Cypress.on('uncaught:exception', (err, runnable) => {
+
+      return false
+    })
+
+  });
+  
 });

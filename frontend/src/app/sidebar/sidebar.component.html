@@ -428,6 +428,7 @@
         <div
           class="button clickable-item"
           (click)="toggleChangePasswordModal()"
+          data-cy="openChangePassword"
         >
           <img
             class="button-icon"
@@ -480,6 +481,7 @@
             [(ngModel)]="oldPassword"
             class="default-input"
             type="password"
+            data-cy="oldPassword"
           />
         </div>
       </div>
@@ -492,6 +494,7 @@
             [(ngModel)]="newPassword"
             class="default-input"
             type="password"
+            data-cy="newPassword"
           />
         </div>
       </div>
@@ -500,6 +503,7 @@
         <button
           class="new-domain-btn clickable-item"
           (click)="changePassword()"
+          data-cy="confirmChangePassword"
         >
           Confirm
         </button>
