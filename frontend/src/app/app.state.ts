@@ -89,7 +89,6 @@ export interface Toast {
   timeout: number;
 }
 
-
 interface AppStateModel {
   authenticated: boolean;
   domains?: DisplayDomain[];
@@ -766,6 +765,12 @@ export class AppState {
         return;
       }
 
+      if (res.aggregated_metrics)
+        if (res.aggregated_metrics.general.category == 'No data') {
+          this.store.dispatch(new SetSourceIsLoading(true));
+          return;
+        }
+
       ctx.patchState({
         overallSentimentScores: {
           aggregated_metrics: res.aggregated_metrics,
@@ -1019,8 +1024,7 @@ export class AppState {
     action: SetSourceIsLoading
   ) {
     const state = ctx.getState();
-    ctx.setState({
-      ...state,
+    ctx.patchState({
       sourceIsLoading: true,
     });
   }
