@@ -3,16 +3,19 @@ import { TestBed } from '@angular/core/testing';
 import { SourceSelectorComponent } from './source-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import {
   AddNewSource,
   AttempPsswdLogin,
   DeleteSource,
   EditSource,
+  RefreshSourceData,
+  SetAllSourcesSelected,
   SetSource,
+  SetSourceIsLoading,
 } from '../app.actions';
-import { DisplaySource } from '../app.state';
+import { DisplaySource, Source } from '../app.state';
 
 describe('SourceSelectorComponent', () => {
   let component: SourceSelectorComponent;
@@ -141,4 +144,93 @@ describe('SourceSelectorComponent', () => {
     expect(component.deleteSource).toHaveBeenCalled();
     expect(component.showEditSourceModal).toBe(false);
   });
+
+  it('should return the correct source parameters for different platforms', () => {
+	component.newSourcePlatform = 'googlereviews';
+	component.newSourceUrl = 'https://maps.google.com/';
+	expect(component.determineSourceParams()).toEqual({
+	  source_type: 'googlereviews',
+	  maps_url: 'https://maps.google.com/',
+	});
+  
+	component.newSourcePlatform = 'tripadvisor';
+	component.newSourceUrl = 'https://www.tripadvisor.com/';
+	expect(component.determineSourceParams()).toEqual({
+	  source_type: 'TripAdvisor',
+	  tripadvisor_url: 'https://www.tripadvisor.com/',
+	});
+  
+	component.newSourcePlatform = 'youtube';
+	component.newSourceUrl = 'https://www.youtube.com/watch?v=scWj1BMRHUA';
+	expect(component.determineSourceParams()).toEqual({
+	  source_type: 'youtube',
+	  video_id: 'scWj1BMRHUA',
+	});
+  
+  
+	component.newSourcePlatform = 'youtube';
+	component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
+	expect(component.determineSourceParams()).toEqual({
+	  source_type: 'youtube',
+	  video_id: 'scWj1BMRHUA',
+	});
+  
+
+  });
+  
+  it('should return null for unknown platforms', () => {
+	component.newSourcePlatform = 'unknown';
+	component.newSourceUrl = '';
+	expect(component.determineSourceParams()).toBeNull();
+  });
+
+   it('should update source properties and call addNewSource when the URL is changed', () => {
+    const selectedSource: Source = {
+		source_id: '1',
+		source_name: 'Source 1',
+		sourceImageUrl: 'image.png',
+    };
+    const addNewSourceSpy = spyOn(component, 'addNewSource');
+    const deleteSourceSpy = spyOn(component, 'deleteSource');
+
+    component['editSourceUrl'] = 'https://www.tripadvisor.com/';
+    component['editSourceName'] = 'New Source Name';
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(selectedSource);
+
+    component.editSource();
+
+    expect(component['newSourceName']).toBe('New Source Name');
+    expect(component['newSourceUrl']).toBe('https://www.tripadvisor.com/');
+    expect(component['newSourcePlatform']).toBe('');
+    expect(deleteSourceSpy).toHaveBeenCalled();
+    expect(addNewSourceSpy).toHaveBeenCalled();
+    expect(component['showEditSourceModal']).toBe(true);
+  });
+
+  it('should update the newSourcePlatform property', () => {
+  const platform = 'youtube';
+
+  component.selectPlatform(platform);
+
+  expect(component['newSourcePlatform']).toBe(platform);
+});
+
+it('should dispatch RefreshSourceData action', () => {
+	const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of());
+  
+	component.refreshSource();
+  
+	expect(storeDispatchSpy).toHaveBeenCalledWith(new RefreshSourceData());
+  });
+
+  it('should dispatch SetAllSourcesSelected, SetSourceIsLoading, and SetSource actions', () => {
+	const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+  
+	component.selectAllSources();
+  
+	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetAllSourcesSelected(true));
+	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSourceIsLoading(true));
+	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSource(null));
+  });
+  
 });
