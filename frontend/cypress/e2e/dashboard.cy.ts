@@ -34,6 +34,7 @@ describe('Dashboard', function () {
     cy.get('[data-cy=newDomainNameInput]').type('test domain');
     cy.get('[data-cy=newDomainDescriptionInput]').type('test description');
 
+    cy.get('.default-icon').eq(1).click();
     cy.get('[data-cy=addNewDomainBtn]').click();
 
     cy.wait(2000);
@@ -43,6 +44,8 @@ describe('Dashboard', function () {
     cy.contains('test domain').should('exist');
     cy.contains('test domain').click();
     cy.contains('test domain').parent().find('[data-cy=deleteDomain]').click();
+
+    cy.contains('Yes').click();
 
     cy.wait(2000);
     cy.get('[data-cy=sidebar]').click();
