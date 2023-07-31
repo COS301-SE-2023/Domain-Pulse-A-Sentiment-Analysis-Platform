@@ -64,6 +64,7 @@ describe('SidebarComponent', () => {
     fixture.detectChanges();
   });
 
+  // Integration Test
   
   it('should fire a "AddDomain" action', (done: DoneFn) => {
     component.newDomainName = 'New Domain Name';
@@ -83,6 +84,8 @@ describe('SidebarComponent', () => {
 
     component.addNewDomain();
   });
+
+  // Integration Test
 
   it('should fire an "EditDomain" action', (done: DoneFn) => {
     
@@ -155,6 +158,8 @@ describe('SidebarComponent', () => {
     expect(component.showProfileEditModal).toBe(false);
   });
 
+  // Integration Test
+
   it('should fire the "SetDomain" action', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(SetDomain)).subscribe(() => {
       expect(true).toBe(true);
@@ -173,6 +178,8 @@ describe('SidebarComponent', () => {
 
     component.selectDomain(dummyDisplayDomain);
   });
+
+  // Integration Test
 
   it('should fire a "DeleteDomain" action', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(DeleteDomain)).subscribe(() => {
