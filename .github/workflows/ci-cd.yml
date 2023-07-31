@@ -31,6 +31,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   update_deployment_environment:
+    if: github.ref == 'refs/heads/dev'
     needs: [test_backend, test_frontend]
     runs-on: ubuntu-latest
     steps:
