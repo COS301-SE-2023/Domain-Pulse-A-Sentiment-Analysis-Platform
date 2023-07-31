@@ -768,17 +768,16 @@ export class AppState {
       if (res.aggregated_metrics)
         if (res.aggregated_metrics.general.category == 'No data') {
           this.store.dispatch(new SetSourceIsLoading(true));
-          return;
+        } else {
+          ctx.patchState({
+            overallSentimentScores: {
+              aggregated_metrics: res.aggregated_metrics,
+              meta_data: res.meta_data,
+            },
+            sampleData: res.individual_metrics,
+            sourceIsLoading: false,
+          });
         }
-
-      ctx.patchState({
-        overallSentimentScores: {
-          aggregated_metrics: res.aggregated_metrics,
-          meta_data: res.meta_data,
-        },
-        sampleData: res.individual_metrics,
-        sourceIsLoading: false,
-      });
     });
   }
 
