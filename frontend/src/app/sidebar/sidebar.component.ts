@@ -153,13 +153,13 @@ export class SidebarComponent {
   domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
 
 
-  private selectedFile: File | null = null;
-  private selectedFileDomain: File | null = null;
-  private selectedFileDomainEdit: File | null = null;
+  public selectedFile: File | null = null;
+  public selectedFileDomain: File | null = null;
+  public selectedFileDomainEdit: File | null = null;
 
   constructor(
     private store: Store,
-    private blobStorageService: AzureBlobStorageService
+    public blobStorageService: AzureBlobStorageService
   ) {}
 
   toggleDomainModal(): void {
