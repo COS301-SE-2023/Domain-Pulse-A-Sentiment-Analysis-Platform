@@ -13,7 +13,7 @@ GOOGLE_REVIEWS_API_KEY = os.getenv("GOOGLE_REVIEWS_API_KEY")
 
 client = ApiClient(api_key=GOOGLE_REVIEWS_API_KEY)
 
-REVIEWS_LIMIT = 10  # number of reviews to return (please keep this to a small number, around 1-10 ideally)
+REVIEWS_LIMIT = 15  # number of reviews to return (please keep this to a small number, around 1-10 ideally)
 LIMIT = 1  # pls DO NOT change this
 SORT = "newest"  # options: "most_relevant", "newest" "highest_rating" "lowest_rating"
 IGNORE_EMPTY = True  # ignores reviews with no text (please don't change this)
