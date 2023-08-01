@@ -104,15 +104,7 @@ export class SourceSelectorComponent {
       this.newSourceUrl = this.editSourceUrl;
       this.newSourcePlatform = selectedSource?.url || '';
 
-      if(this.newSourcePlatform.includes('youtube')){
-        this.newSourcePlatform = 'youtube';
-      }
-      else if(this.newSourcePlatform.includes('tripadvisor')){
-        this.newSourcePlatform = 'tripadvisor';
-      }
-      else if(this.newSourcePlatform.includes('google')){
-        this.newSourcePlatform = 'googlereviews';
-      }
+      this.newSourcePlatform = this.determinePlatformFromNewSourcePlatform();
 
       this.deleteSource();
       this.addNewSource();
@@ -120,10 +112,22 @@ export class SourceSelectorComponent {
       return;
     }
     else if(this.editSourceName != selectedSource?.name){
-      this.store.dispatch(new EditSource(this.editSourceName));
-      this.toggleEditSourceModal();
+      // this.store.dispatch(new EditSource(this.editSourceName));
+      // this.toggleEditSourceModal();
       return;
     }
+  }
+
+  determinePlatformFromNewSourcePlatform(): string {
+    switch (this.newSourcePlatform) {
+      case 'googlereviews':
+        return 'googlereviews';
+      case 'tripadvisor':
+        return 'tripadvisor';
+      case 'youtube':
+        return 'YouTube';
+    }
+    return '';
   }
 
   refreshSource() {
