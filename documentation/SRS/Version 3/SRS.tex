@@ -382,15 +382,17 @@ In terms of prior knowledge and experience, users may have different levels of e
         \begin{itemize}
           \item Sentiment Analysis
                 \begin{enumerate}
-                  \item Pie chart - Ratios of sentiment
-                  \item Gauge chart - Objectivity-Subjectivity Score / Overall Sentiment Score
+                  \item Pie chart - Ratios of positive, negative, and neutral sentiment
+                  \item Bar Graph - Emotions
+                  \item Gauge chart - An overall sentiment score (from negative to positive) with an
+                        overall categorization within the following groups
+                  \item Pie Chart - Toxicity
                 \end{enumerate}
           \item Meta-data
                 \begin{enumerate}
-                  \item Bar graph - Data from each source / Data retrieval metrics for all sources
-                  \item Timeline - Timeframe of data production for all sources
+                  \item Bar graph - How many pieces of data from each source were considered from each sources
+                  \item Timeline - Line graph indicating sentiment over time (per metric)
                 \end{enumerate}
-          \item Optional: Time-series data
         \end{itemize}
 \end{enumerate}
 
@@ -439,11 +441,6 @@ In terms of prior knowledge and experience, users may have different levels of e
 
 \subsection{User Profiles}
 \begin{enumerate}
-  \item The domains a user wants to track are stored, this includes:
-        \begin{enumerate}
-          \item The sources for the domain
-          \item Optional: The keywords to specifically monitor
-        \end{enumerate}
   \item Personalization and preferences
         \begin{enumerate}
           \item User can specify either dark mode or light mode
