@@ -404,7 +404,7 @@ In terms of prior knowledge and experience, users may have different levels of e
   \item The results of sentiment analysis on a grouping are returned as follows
         \begin{enumerate}
           \item The ratios of positive, negative, and neutral sentiment
-          \item An objectivity-subjectivity score
+          \item The most prevelant emotions
           \item An overall sentiment score (from negative to positive)
           \item An overall categorization within the following groups
                 \begin{enumerate}
@@ -416,17 +416,14 @@ In terms of prior knowledge and experience, users may have different levels of e
                   \item Positive
                   \item Very positive
                 \end{enumerate}
+          \item Toxicity score
         \end{enumerate}
   \item Meta-data is returned whenever a user performs sentiment analysis on an entire domain
         \begin{enumerate}
           \item The meta-data to be returned is as follows
                 \begin{enumerate}
-                  \item Which analysis sources were consulted (ex: Twitter, Instagram, etc.)
                   \item How many pieces of data from each source were considered
                   \item An indication of the timeframe over which the data was produced
-                  \item Whether new data needed to be retrieved from the web
-                  \item Display metrics pertaining to how quickly data was retrieved
-                  \item Optional: Based on the number of and type of sources consulted, provide the user an estimate of how good a source the data is for sentiment analysis
                 \end{enumerate}
         \end{enumerate}
   \item Optional: Time-series data
@@ -434,8 +431,8 @@ In terms of prior knowledge and experience, users may have different levels of e
           \item Time-series data is returned whenever a user performs sentiment analysis
           \item The following time-series data will be returned
                 \begin{enumerate}
-                  \item The change in sentiment score (negative to positive) over a period of time.
-                  \item A prediction of the future trend of the sentiment of the domain
+                  \item A time gradient metric (ie: an indication of the upward or downward sentiment trend)
+                  \item Identity time periods of peaks and troughs in sentiment data
                 \end{enumerate}
         \end{enumerate}
 \end{enumerate}
