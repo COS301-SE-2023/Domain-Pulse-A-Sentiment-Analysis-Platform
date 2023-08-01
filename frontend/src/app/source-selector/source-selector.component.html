@@ -25,7 +25,7 @@
 
         <p class="source-name">{{ source.name }}</p>
         <ng-container *ngIf="source.isRefreshing">
-          <div class="loading-spinner"></div>
+          <div data-cy="sourceRefresh" class="loading-spinner"></div>
           <!-- <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;position: absolute;
         top: 0;
         right: 0;"/> -->
@@ -238,6 +238,7 @@
               class="default-input"
               [(ngModel)]="editSourceName"
               type="text"
+              data-cy="sourceNameEdit"
             />
           </div>
         </div>
@@ -250,6 +251,7 @@
               class="default-input"
               [(ngModel)]="editSourceUrl"
               type="text"
+              data-cy="editSourceUrl"
             />
           </div>
         </div>

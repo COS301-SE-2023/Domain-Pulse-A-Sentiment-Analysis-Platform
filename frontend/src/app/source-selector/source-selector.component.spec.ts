@@ -42,17 +42,42 @@ describe('SourceSelectorComponent', () => {
 
   it('should fire a "AddNewSource" action', (done: DoneFn) => {
     component.newSourceName = 'New Domain Name';
+    component.newSourcePlatform = 'Twitter';
+    spyOn(component, 'determineSourceParams').and.returnValue({
+      source_type: 'youtube',
+      video_id: 'dQw4w9WgXcQ',
+    });
 
     actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
       // expect the clearing of the set variables
       setTimeout(() => {
         expect(component.newSourceName).toBe('');
+        expect(component.newSourceUrl).toBe('');
+        expect(component.showAddSourcesModal).toBe(false);
 
         done();
       }, 300);
     });
 
     component.addNewSource();
+  });
+
+  it('should test "determinePlatformFromNewSourcePlatform()"', () => {
+    component.newSourcePlatform = 'googlereviews';
+    expect(component.determinePlatformFromNewSourcePlatform()).toBe(
+      'googlereviews'
+    );
+
+    component.newSourcePlatform = 'tripadvisor';
+    expect(component.determinePlatformFromNewSourcePlatform()).toBe(
+      'tripadvisor'
+    );
+
+    component.newSourcePlatform = 'youtube';
+    expect(component.determinePlatformFromNewSourcePlatform()).toBe('YouTube');
+
+    component.newSourcePlatform = 'test';
+    expect(component.determinePlatformFromNewSourcePlatform()).toBe('');
   });
 
   it('should fire the "SetSource" action when selectSource function called', (done) => {
@@ -122,6 +147,31 @@ describe('SourceSelectorComponent', () => {
     component.editSource();
   });
 
+  it('should fire "EditSource" action when this.editSourceName != selectedSource?.name', () => {
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: {
+        source_type: 'youtube',
+        video_id: 'dQw4w9WgXcQ',
+      },
+      selected: true,
+      isRefreshing: false,
+    };
+    spyOn(storeSpy, 'selectSnapshot').and.returnValue(dummyDisplaySource);
+
+    component.editSourceUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    component.editSourceName = 'testDiff';
+
+    actions$.pipe(ofActionDispatched(EditSource)).subscribe((action) => {
+      expect(action.name).toBe('test');
+      expect(component.showEditSourceModal).toBe(false);
+    });
+
+    component.toggleEditSourceModal();
+  });
+
   it('should call addNewSource and deleteSource when editSource function called with different url', () => {
     const dummyDisplaySource: DisplaySource = {
       id: '1',
@@ -174,6 +224,13 @@ describe('SourceSelectorComponent', () => {
 	  source_type: 'youtube',
 	  video_id: 'scWj1BMRHUA',
 	});
+
+  // component.newSourcePlatform = 'youtube';
+	// component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
+	// expect(component.determineSourceParams()).toEqual({
+	//   source_type: 'youtube',
+	//   video_id: 'scWj1BMRHUA',
+	// });
   
 
   });

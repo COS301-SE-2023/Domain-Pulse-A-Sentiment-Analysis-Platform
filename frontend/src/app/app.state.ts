@@ -613,6 +613,9 @@ export class AppState {
           selectedSource,
         });
       }
+      this.store.dispatch(
+        new ToastSuccess('Your source has been refreshed')
+      );
     });
   }
 
@@ -874,7 +877,7 @@ export class AppState {
           this.store.dispatch(
             new ToastError('Your account could not be registered')
           );
-          return of(error);
+          return throwError(() => new Error());
         })
       );
   }

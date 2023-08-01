@@ -4,7 +4,7 @@ import { RegisterPageComponent } from './register-page.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RegisterUser } from '../app.actions';
 
 describe('RegisterPageComponent', () => {
@@ -15,7 +15,7 @@ describe('RegisterPageComponent', () => {
 
   beforeEach(() => {
     appApiSpy = jasmine.createSpyObj('AppApi', ['registerUser']);
-    appApiSpy.registerUser.and.callThrough();
+    appApiSpy.registerUser.and.returnValue(of({ status: 'SUCCESS' }));
 
     TestBed.configureTestingModule({
       providers: [

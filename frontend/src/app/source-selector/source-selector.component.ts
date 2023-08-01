@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetSource, SetSourceIsLoading } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetSource, SetSourceIsLoading, ToastError } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -47,6 +47,11 @@ export class SourceSelectorComponent {
     console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
     console.log('url: ' + this.newSourceName);
+
+    if (!params || !this.newSourcePlatform || !this.newSourceName) {
+      this.store.dispatch(new ToastError('Please fill in all fields'));
+      return;
+    }
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     );
@@ -99,15 +104,7 @@ export class SourceSelectorComponent {
       this.newSourceUrl = this.editSourceUrl;
       this.newSourcePlatform = selectedSource?.url || '';
 
-      if(this.newSourcePlatform.includes('youtube')){
-        this.newSourcePlatform = 'youtube';
-      }
-      else if(this.newSourcePlatform.includes('tripadvisor')){
-        this.newSourcePlatform = 'tripadvisor';
-      }
-      else if(this.newSourcePlatform.includes('google')){
-        this.newSourcePlatform = 'googlereviews';
-      }
+      this.newSourcePlatform = this.determinePlatformFromNewSourcePlatform();
 
       this.deleteSource();
       this.addNewSource();
@@ -115,10 +112,22 @@ export class SourceSelectorComponent {
       return;
     }
     else if(this.editSourceName != selectedSource?.name){
-      this.store.dispatch(new EditSource(this.editSourceName));
-      this.toggleEditSourceModal();
+      // this.store.dispatch(new EditSource(this.editSourceName));
+      // this.toggleEditSourceModal();
       return;
     }
+  }
+
+  determinePlatformFromNewSourcePlatform(): string {
+    switch (this.newSourcePlatform) {
+      case 'googlereviews':
+        return 'googlereviews';
+      case 'tripadvisor':
+        return 'tripadvisor';
+      case 'youtube':
+        return 'YouTube';
+    }
+    return '';
   }
 
   refreshSource() {
