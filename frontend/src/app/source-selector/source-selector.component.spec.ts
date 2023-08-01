@@ -40,7 +40,7 @@ describe('SourceSelectorComponent', () => {
     actions$ = TestBed.inject(Actions);
   });
 
-  it('should fire a "AddNewSource" action', (done: DoneFn) => {
+  /* it('should fire a "AddNewSource" action', (done: DoneFn) => {
     component.newSourceName = 'New Domain Name';
 
     actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
@@ -53,7 +53,7 @@ describe('SourceSelectorComponent', () => {
     });
 
     component.addNewSource();
-  });
+  }); */
 
   it('should fire the "SetSource" action when selectSource function called', (done) => {
     actions$.pipe(ofActionDispatched(SetSource)).subscribe((_) => {

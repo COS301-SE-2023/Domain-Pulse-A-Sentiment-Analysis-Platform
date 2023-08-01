@@ -198,6 +198,7 @@
                         (change)="onImageSelectedDomain($event)"
                         accept="image/*"
                         style="height: 100%; width: 100%; border-radius: 50%"
+                        data-cy="domainImageInput"
                       />
                       <img
                         *ngIf="imagePreviewDomain"
@@ -275,6 +276,7 @@
               class="default-input"
               [(ngModel)]="editDomainName"
               type="text"
+              data-cy="name"
             />
           </div>
         </div>
@@ -287,6 +289,8 @@
               class="default-input"
               [(ngModel)]="editDomainDescription"
               type="text"
+              data-cy="description"
+
             />
           </div>
         </div>
@@ -320,6 +324,7 @@
                         (change)="onImageSelectedDomainEdit($event)"
                         accept="image/*"
                         style="height: 100%; width: 100%; border-radius: 50%"
+                        data-cy="domainIconUpload"
                       />
                       <img
                         *ngIf="imagePreviewDomainEdit"
@@ -340,6 +345,7 @@
                   *ngFor="let domain of domainNames"
                   class="default-icon clickable-item"
                   (click)="selectIconEdit(domain)"
+                  data-cy="domainIconEdit"
                 >
                   <div
                     class="circle-wrapper-domain flex-row center"
@@ -359,7 +365,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-domain-btn clickable-item" (click)="editDomain()">
+        <button class="new-domain-btn clickable-item" (click)="editDomain()" data-cy="confirmEditDomain">
           Confirm
           <div [ngClass]="{ 'button-spinner': editDomainSpinner }"></div>
         </button>
@@ -391,7 +397,7 @@
         class="flex-column center content clickable-item-nohover"
         style="width: 80%"
       >
-        <div (click)="toggleProfileEditModal()" class="profile-container">
+        <div (click)="toggleProfileEditModal()" class="profile-container" data-cy="toggleProfilePic">
           <img
             [src]="(profileDetails$ | async)?.profileIcon"
             alt="Profile Image"
@@ -417,7 +423,7 @@
           />
           <span class="button-text">Toggle Theme</span>
         </div>
-        <div class="button clickable-item" (click)="logOut()">
+        <div class="button clickable-item" (click)="logOut()" data-cy="logOutButton">
           <img
             class="button-icon"
             src="../assets/icons/right-from-bracket-solid.svg"
@@ -440,6 +446,7 @@
         <div
           class="button clickable-item"
           (click)="toggleConfirmDeleteAccountModal()"
+          data-cy="openDeleteAccount"
         >
           <img
             class="button-icon"
@@ -535,12 +542,13 @@
       <div class="flex-row" style="width: 80%">
         <div class="flex-column center" style="width: 100%">
           <div class="wrapper">
-            <div class="file-upload">
+            <div class="file-upload" data-cy="fileUpload">
               <input
                 type="file"
                 (change)="onImageSelected($event)"
                 accept="image/*"
                 style="height: 100%; width: 100%; border-radius: 50%"
+                data-cy="fileUploadInput"
               />
               <img
                 *ngIf="imagePreview"
@@ -559,7 +567,7 @@
       </div>
 
       <div class="bottom-div">
-        <button class="new-domain-btn clickable-item" (click)="uploadImage()">
+        <button class="new-domain-btn clickable-item" (click)="uploadImage()" data-cy="confirmUpload">
           Confirm
           <div [ngClass]="{ 'button-spinner': uploadSpinner }"></div>
         </button>
@@ -618,6 +626,7 @@
           <div
             class="confirm-button clickable-item green center"
             (click)="toggleDeleteAccountModal()"
+            data-cy="yesDeleteAccount"
           >
             <img class="button-icon" src="../assets/icons/yes.svg" alt="Icon" />
             <span class="button-text" style="margin-left: 0">Yes</span>
@@ -625,6 +634,7 @@
           <div
             class="confirm-button clickable-item red center"
             (click)="toggleConfirmDeleteAccountModal()"
+            data-cy="noDeleteAccount"
           >
             <img class="button-icon" src="../assets/icons/no.svg" alt="Icon" />
             <span class="button-text" style="margin-left: 0">No</span>
@@ -652,12 +662,14 @@
             type="password"
             class="default-input"
             name="password"
+            data-cy="passwordDeleteAccount"
           />
         </div>
         <div class="button-div">
           <div
             class="delete-account-button clickable-item red center"
             (click)="deleteAccount()"
+            data-cy="deleteAccount"
           >
             <img
               class="button-icon"
@@ -671,6 +683,7 @@
           <div
             class="delete-account-button clickable-item green center"
             (click)="toggleDeleteAccountModal()"
+            data-cy="cancelDeleteAccount"
           >
             <img class="button-icon" src="../assets/icons/no.svg" alt="Icon" />
             <span class="button-text" style="margin-left: 0">Cancel</span>

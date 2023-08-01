@@ -360,6 +360,9 @@ export class GraphSelectorComponent implements OnInit {
       return;
     }
 
+    this.myChart.nativeElement.setAttribute('data-cy', this.currentGraphIndex);
+
+
     const currentGraph = this.updatedGraphArray[this.currentGraphIndex];
 
     this.chart = new Chart(ctx, currentGraph);

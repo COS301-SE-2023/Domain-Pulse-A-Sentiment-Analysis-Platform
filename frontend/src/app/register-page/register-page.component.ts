@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { AttempPsswdLogin, RegisterUser } from '../app.actions';
+import { AttempPsswdLogin, RegisterUser, ToastSuccess } from '../app.actions';
 
 @Component({
   selector: 'app-register-page',
@@ -23,7 +23,7 @@ export class RegisterPageComponent {
       .dispatch(new RegisterUser(this.username, this.email, this.password))
       .subscribe({
         next: (res) => {
-          this.store
+          /* this.store
             .dispatch(
               new AttempPsswdLogin(this.username, this.password)
             )
@@ -35,7 +35,9 @@ export class RegisterPageComponent {
                 console.log(error);
                 this.isSpinning = false;
               },
-            });
+            }); */
+            this.isSpinning = false;
+            this.store.dispatch(new ToastSuccess('Account created successfully!'));
         },
         error: (error) => {
           console.log(error);
