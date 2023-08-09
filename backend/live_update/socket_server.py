@@ -22,7 +22,7 @@ def join_room(sid, data):
 
 @sio.event
 def new_source_data(sid, data):
-    print('new_source_data: ', data)
+    # print('new_source_data: ', data)
     sio.emit('new_source_data', data, room=data['room_id'])
 
 @sio.event
