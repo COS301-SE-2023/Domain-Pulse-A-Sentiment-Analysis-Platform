@@ -19,7 +19,7 @@ def decide_function(source_type, params):
     elif source_type.lower() == "tripadvisor":
         return tripadvisor_connector.handle_request(params)
     elif source_type.lower() == "trustpilot":
-        trustpilot_connector.handle_request(params)
+        return trustpilot_connector.handle_request(params)
     else:
         return JsonResponse(
             {"status": "FAILURE", "details": "Invalid source type provided"}
