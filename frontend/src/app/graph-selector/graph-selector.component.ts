@@ -19,6 +19,8 @@ export class GraphSelectorComponent implements OnInit {
   @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
   currentGraphIndex: number = 0;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  @Select(AppState.graphAnimations) graphAnimationsEnabled$!: Observable<boolean>;
+  graphAnimationsEnabled: boolean = true;
 
   chart: Chart | undefined;
   gradient: CanvasGradient | undefined;
@@ -240,6 +242,10 @@ export class GraphSelectorComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
+    this.graphAnimationsEnabled$.subscribe((data) => {
+      this.graphAnimationsEnabled = data;
+    });
+
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
@@ -249,6 +255,10 @@ export class GraphSelectorComponent implements OnInit {
             this.graphs
           );
           setTimeout(() => {
+            if(this.graphAnimationsEnabled)
+              this.enableAnimations();
+            else
+              this.disableAnimations();
             this.renderGraph();
           }, 300);
         }
@@ -371,6 +381,24 @@ export class GraphSelectorComponent implements OnInit {
       this.myChart.nativeElement.style.transform = `translateY(${offset}px)`;
     } else {
       this.myChart.nativeElement.style.transform = `translateY(0px)`;
+    }
+  }
+
+  disableAnimations() {
+    if (!this.updatedGraphArray) return;
+    for (let graph of this.updatedGraphArray) {
+      graph.options["animation"] = {};
+      graph.options["animation"]["duration"] = 0;
+      graph.options["responsiveAnimationDuration"] = 0;
+    }
+  }
+
+  enableAnimations() {
+    if (!this.updatedGraphArray) return;
+    for (let graph of this.updatedGraphArray) {
+      graph.options["animation"] = {};
+      graph.options["animation"]["duration"] = 700;
+      graph.options["responsiveAnimationDuration"] = 700;
     }
   }
 }

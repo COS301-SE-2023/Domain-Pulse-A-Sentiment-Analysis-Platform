@@ -135,10 +135,11 @@ export class AppApi {
     return this.http.post(deleteSourceUrl, body, { withCredentials: true });
   }
 
-  refreshSourceInfo(sourceID: string): Observable<any> {
+  refreshSourceInfo(sourceID: string, roomID: string): Observable<any> {
     const refreshSourceInfoUrl = this.warehouseBaseUrl + 'query/refresh_source/';
     const body = {
       source_id: sourceID,
+      room_id: roomID,
     }
 
     return this.http.post(refreshSourceInfoUrl, body, { withCredentials: true });

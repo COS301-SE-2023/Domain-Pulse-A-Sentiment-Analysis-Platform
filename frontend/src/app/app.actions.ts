@@ -73,6 +73,11 @@ export class RefreshSourceData {
   constructor(public sourceId?: string) {}
 }
 
+export class PartialRefreshSourceData {
+  static readonly type = '[App] Partial Refresh Source Data';
+  constructor(public newSourceData: any) {}
+}
+
 export class SetSource {
   static readonly type = '[App] Set Source';
   constructor(public source: DisplaySource | null) {}

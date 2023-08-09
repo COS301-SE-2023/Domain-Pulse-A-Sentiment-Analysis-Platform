@@ -29,10 +29,11 @@ import {
   Logout,
   EditSource,
   SetAllSourcesSelected,
+  PartialRefreshSourceData,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
-import { patch } from '@ngxs/store/operators';
+import { io } from 'socket.io-client';
 
 export interface Source {
   source_id: string;
@@ -106,6 +107,7 @@ interface AppStateModel {
   toasterError?: Toast;
   toasterSuccess?: Toast;
   allSourcesSelected: boolean;
+  graphAnimations: boolean;
 }
 
 @State<AppStateModel>({
@@ -115,10 +117,13 @@ interface AppStateModel {
     selectedStatisticIndex: 0,
     sourceIsLoading: true,
     allSourcesSelected: true,
+    graphAnimations: true,
   },
 })
 @Injectable()
 export class AppState {
+  socket = io('/');
+
   constructor(
     private readonly appApi: AppApi,
     private readonly store: Store,
@@ -136,6 +141,10 @@ export class AppState {
           }
         }
       });
+
+    this.socket.on('new_source_data', (newSourceData) => {
+      this.store.dispatch(new PartialRefreshSourceData(newSourceData));
+    });
   }
 
   @Selector()
@@ -211,6 +220,11 @@ export class AppState {
   @Selector()
   static allSourcesSelected(state: AppStateModel) {
     return state.allSourcesSelected;
+  }
+
+  @Selector()
+  static graphAnimations(state: AppStateModel) {
+    return state.graphAnimations;
   }
 
   @Action(ToastError)
@@ -591,7 +605,16 @@ export class AppState {
     }
 
     console.log('refreshing with sourceID' + sourceID);
-    this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
+
+    // set a random roomid for the socket/source
+    let roomID = Math.random().toString(36).substring(7);
+    this.socket.emit('join_room', { room_id: roomID });
+    // setting the graphAnimations to false because as partial data comes in the animation must not keep firing
+    ctx.patchState({
+      graphAnimations: false,
+    });
+
+    this.appApi.refreshSourceInfo(sourceID, roomID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         this.store.dispatch(
           new ToastError('Source data could not be refreshed')
@@ -611,11 +634,29 @@ export class AppState {
         selectedSource.isRefreshing = false;
         ctx.patchState({
           selectedSource,
+          graphAnimations: true,
         });
       }
-      this.store.dispatch(
-        new ToastSuccess('Your source has been refreshed')
-      );
+      this.store.dispatch(new ToastSuccess('Your source has been refreshed'));
+    });
+  }
+
+  @Action(PartialRefreshSourceData)
+  partialRefreshSourceData(
+    ctx: StateContext<AppStateModel>,
+    state: PartialRefreshSourceData
+  ) {
+    let newPartialGraphData = {
+      aggregated_metrics: state.newSourceData.aggregated_metrics.overall,
+      meta_data: state.newSourceData.aggregated_metrics.metadata,
+    };
+    let newCommentData = state.newSourceData.aggregated_metrics.individual_data;
+    newCommentData.push(state.newSourceData.new_individual_metrics);
+    newCommentData = newCommentData.reverse();
+
+    ctx.patchState({
+      overallSentimentScores: newPartialGraphData,
+      sampleData: newCommentData,
     });
   }
 
