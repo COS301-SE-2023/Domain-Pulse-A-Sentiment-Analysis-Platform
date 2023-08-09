@@ -305,7 +305,8 @@ describe('AppApi', () => {
   });
 
   it('should make a POST request to refresh source information', () => {
-    const sourceId = 'source123'; 
+    const sourceId = 'source123';
+    const roomID = 'room123';
     const expectedResponse = {
       status: 'SUCCESS',
       message: 'Source information refreshed successfully',
@@ -314,7 +315,7 @@ describe('AppApi', () => {
       },
     };
   
-    appApi.refreshSourceInfo(sourceId).subscribe((response) => {
+    appApi.refreshSourceInfo(sourceId, roomID).subscribe((response) => {
       expect(response).toEqual(expectedResponse);
     });
   
@@ -322,6 +323,7 @@ describe('AppApi', () => {
     const expectedMethod = 'POST';
     const expectedBody = {
       source_id: sourceId,
+      room_id: roomID,
     };
   
     const req = httpTestingController.expectOne(expectedUrl);
