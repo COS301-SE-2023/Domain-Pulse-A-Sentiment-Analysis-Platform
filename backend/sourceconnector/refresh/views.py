@@ -4,6 +4,7 @@ import json
 from youtube import youtube_connector
 from googlereviews import google_reviews_connector
 from tripadvisor import tripadvisor_connector
+from trustpilot import trustpilot_connector
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -17,6 +18,8 @@ def decide_function(source_type, params):
         return google_reviews_connector.handle_request(params)
     elif source_type.lower() == "tripadvisor":
         return tripadvisor_connector.handle_request(params)
+    elif source_type.lower() == "trustpilot":
+        return trustpilot_connector.handle_request(params)
     else:
         return JsonResponse(
             {"status": "FAILURE", "details": "Invalid source type provided"}
