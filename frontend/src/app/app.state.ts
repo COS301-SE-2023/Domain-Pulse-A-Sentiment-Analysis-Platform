@@ -657,6 +657,7 @@ export class AppState {
     ctx.patchState({
       overallSentimentScores: newPartialGraphData,
       sampleData: newCommentData,
+      sourceIsLoading: false,
     });
   }
 
