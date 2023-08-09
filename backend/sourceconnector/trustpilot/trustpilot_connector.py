@@ -53,3 +53,16 @@ def get_trustpilot_reviews(query_url: str, last_refreshed_timestamp):
 
             ret_data.append(review_item)
     return ret_data, latest_retrieval
+
+
+def handle_request(params):
+    query_url = params["query_url"]
+    last_refresh_timestamp = float(params["last_refresh_timestamp"])
+
+    reviews, latest_retrieval = get_trustpilot_reviews(
+        query_url, last_refresh_timestamp
+    )
+
+    return JsonResponse(
+        {"status": "SUCCESS", "newdata": reviews, "latest_retrieval": latest_retrieval}
+    )
