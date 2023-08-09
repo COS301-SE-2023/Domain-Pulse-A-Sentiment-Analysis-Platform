@@ -411,6 +411,33 @@ class DomainsTests(TestCase):
         result = validator.validate_tripadvisor("test")
         self.assertEqual(result, True)
 
+    @mock.patch("requests.get", side_effect=mocked_request_get)
+    def test_validate_trustpilot(self, mock):
+        result = validator.validate_trustpilot("test")
+        self.assertEqual(result, True)
+
+    @mock.patch("sourcevalidator.validator.validate_trustpilot", return_value=True)
+    def test_handler_trustpilot_success(self, mock_validate):
+        params = {"source_type": "trustpilot", "query_url": "test"}
+        is_valid, details = validator.handler(params)
+        self.assertEqual(is_valid, True)
+        self.assertEqual(details, "Source details are valid")
+
+    @mock.patch("sourcevalidator.validator.validate_trustpilot", return_value=False)
+    def test_handler_trustpilot_Failure(self, mock_validate):
+        params = {"source_type": "trustpilot", "query_url": "test"}
+        is_valid, details = validator.handler(params)
+        self.assertEqual(is_valid, False)
+        self.assertEqual(details, "query_url is invalid")
+
+    @mock.patch("sourcevalidator.validator.validate_trustpilot", return_value=False)
+    def test_handler_trustpilot_Failure_on_param(self, mock_validate):
+        params = {"source_type": "trustpilot", "wrong_url": "test"}
+        is_valid, details = validator.handler(params)
+        self.assertEqual(is_valid, False)
+        self.assertEqual(details, "Missing parameter: query_url")
+    
+
     # ----------------------------------------------------------------
 
     # ---------------------- INTEGRATION TESTS -----------------------
