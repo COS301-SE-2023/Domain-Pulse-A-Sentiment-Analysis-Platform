@@ -11,24 +11,24 @@ import socketio
 
 
 # Uses the mock data
-def get_sentiment_metrics(request: HttpRequest, source_id):
-    source_id = int(source_id)
-    if source_id == 1:
-        data = mock_data.starbucks_rosebank_tripadvisor
-    elif source_id == 2:
-        data = mock_data.leinster_loss_to_munster_insta
-    elif source_id == 3:
-        data = mock_data.bitcoin_article
-    elif source_id == 4:
-        data = mock_data.the_witcher_reviews_reddit
-    elif source_id == 5:
-        data = mock_data.lance_reddit_data
-    data = list(data)
-    scores = []
-    for d in data:
-        scores.append(processing.analyse_content(d))
+# def get_sentiment_metrics(request: HttpRequest, source_id):
+#     source_id = int(source_id)
+#     if source_id == 1:
+#         data = mock_data.starbucks_rosebank_tripadvisor
+#     elif source_id == 2:
+#         data = mock_data.leinster_loss_to_munster_insta
+#     elif source_id == 3:
+#         data = mock_data.bitcoin_article
+#     elif source_id == 4:
+#         data = mock_data.the_witcher_reviews_reddit
+#     elif source_id == 5:
+#         data = mock_data.lance_reddit_data
+#     data = list(data)
+#     scores = []
+#     for d in data:
+#         scores.append(processing.analyse_content(d))
 
-    return JsonResponse(aggregation.aggregate_sentiment_data(scores))
+#     return JsonResponse(aggregation.aggregate_sentiment_data(scores))
 
 
 # Perform analysis on given data
@@ -42,7 +42,7 @@ def perform_analysis(request: HttpRequest):
 
         if "room_id" in raw_data:
             sio = socketio.Client()
-            sio.connect('http://localhost:5000')
+            sio.connect("http://localhost:5000")
 
             room_id = raw_data["room_id"]
 
@@ -52,9 +52,13 @@ def perform_analysis(request: HttpRequest):
 
                 # compute aggregated metrics
                 aggregated_metrics = aggregation.aggregate_sentiment_data(scores)
-                new_data_to_send = { "new_individual_metrics": new_score, "aggregated_metrics": aggregated_metrics, "room_id": room_id }
+                new_data_to_send = {
+                    "new_individual_metrics": new_score,
+                    "aggregated_metrics": aggregated_metrics,
+                    "room_id": room_id,
+                }
 
-                sio.emit('new_source_data', new_data_to_send)
+                sio.emit("new_source_data", new_data_to_send)
 
                 scores.append(new_score)
 
@@ -62,7 +66,7 @@ def perform_analysis(request: HttpRequest):
         else:
             for item in new_records:
                 scores.append(processing.analyse_content(item))
-        
+
         return JsonResponse({"metrics": scores})
     return JsonResponse({"status": "FAILURE"})
 
