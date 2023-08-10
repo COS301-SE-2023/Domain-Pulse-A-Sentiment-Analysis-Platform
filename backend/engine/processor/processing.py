@@ -7,48 +7,80 @@ from processor.nn_models import (
 )
 
 
-def summarize_general(general_metrics):
+def summarize_general(general_metrics, vader):
     category = general_metrics[0]["label"]
     intensity = general_metrics[0]["score"]
 
     fineCat = ""
 
-    if category == "POSITIVE":
-        if 0 <= intensity < 0.25:
+    if category != "POSITIVE":
+        intensity = intensity * -1
+
+    # consult two differrent models to try reach consensus
+    intensity = round((intensity + 1) / 2, 4)
+
+    vader_compound = vader["compound"]
+    vader_compound = round((vader_compound + 1) / 2, 4)
+
+    diff = intensity - vader_compound
+    if diff < -0.6 or diff > 0.6:
+        fineCat = "UNDECIDED"
+        score = 0.5
+    else:
+        score = round((vader_compound + intensity) / 2, 4)
+        if score <= 0.1:
+            fineCat = "VERY_NEGATIVE"
+        elif score <= 0.3:
+            fineCat = "NEGATIVE"
+        elif score <= 0.45:
+            fineCat = "SOMEWHAT_NEGATIVE"
+        elif score <= 0.55:
+            fineCat = "NEUTRAL"
+        elif score <= 0.7:
             fineCat = "SOMEWHAT_POSITIVE"
-        elif 0.25 <= intensity < 0.75:
+        elif score <= 0.9:
             fineCat = "POSITIVE"
         else:
             fineCat = "VERY_POSITIVE"
-    else:
-        if 0 <= intensity < 0.25:
-            fineCat = "SOMEWHAT_NEGATIVE"
-        elif 0.25 <= intensity < 0.75:
-            fineCat = "NEGATIVE"
-        else:
-            fineCat = "VERY_NEGATIVE"
-
-        intensity = intensity * -1
-
-    score = round((intensity + 1) / 2, 4)
 
     return {"category": fineCat, "score": score}
 
 
-def summarize_vader(vader_metrics):
+def summarize_vader(vader_metrics, score):
+    neutral = vader_metrics["neu"]
+    positive = vader_metrics["pos"]
+    negative = vader_metrics["neg"]
+
+    # reduce the amount of neutral and distribute between pos and neg proportionately
+    neutral_adjustment = neutral * 0.5
+
+    pos_addition = neutral_adjustment * score
+    neg_addition = neutral_adjustment - pos_addition
+
+    neutral = neutral_adjustment
+    positive += pos_addition
+    negative += neg_addition
+
     return {
-        "positive": vader_metrics["pos"],
-        "neutral": vader_metrics["neu"],
-        "negative": vader_metrics["neg"],
+        "positive": positive,
+        "neutral": neutral,
+        "negative": negative,
     }
 
 
-def summarize_emotions(emotions):
+def summarize_emotions(emotions, category):
+    # exclude certain emotions to ensure consensus
+    excluded_emotions = []
+    if "POSITIVE" in category:
+        excluded_emotions.append("disgust")
+    elif "NEGATIVE" in category:
+        excluded_emotions.append("joy")
+
     top_three = []
     emotion_list = emotions[0]
     for emotion in emotion_list:
         name = emotion["label"]
-        if name.lower() != "neutral":
+        if name.lower() != "neutral" and name.lower() not in excluded_emotions:
             score = emotion["score"]
             if len(top_three) < 3:
                 top_three.append({"label": name, "score": score})
@@ -91,14 +123,12 @@ def summarize_toxicity(toxicity):
     if label != "toxic":
         score = score * -1
 
-    # print(toxicity)
     score = round((score + 1) / 2, 4)
 
     new_label = ""
-    if score < 0.25:
+    if score < 0.40:
         new_label = "Non-toxic"
-    elif 0.25 <= score <= 0.75:
-        new_label = "Neutral"
+    # err on the side of caution (ie: if somewhat unsure - go toxic)
     else:
         new_label = "Toxic"
 
@@ -110,19 +140,22 @@ def analyse_content(data):
     data = preprocessing.process_data(data)
 
     data = data[:512]
-    # print(str(len(data)) + " " + data)
 
     vader = ANALYSER.polarity_scores(data)
     emotions = EMOTION_CLASSIFIER(data)
     toxicity = TOXIC_CLASSIFIER(data)
     general = GENERAL_CLASSIFIER(data)
 
+    general_summary = summarize_general(general, vader)
+    category = general_summary["category"]
+    score = general_summary["score"]
+
     metrics = {
         "data": originalData,
-        "general": summarize_general(general),
-        "emotions": summarize_emotions(emotions),
+        "general": general_summary,
+        "emotions": summarize_emotions(emotions, category),
         "toxicity": summarize_toxicity(toxicity),
-        "ratios": summarize_vader(vader),
+        "ratios": summarize_vader(vader, score),
     }
 
     return metrics

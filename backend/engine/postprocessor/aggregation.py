@@ -58,9 +58,13 @@ def aggregate_sentiment_data(sentiment_data):
     earliest_timestamp = 9999999999
     latest_timestamp = -1
 
+    num_overall_score_considered = 0
+
     for item in sentiment_data:
-        # General
-        summed_overall_score += item["general"]["score"]
+        # General (ignored undecided records)
+        if item["general"]["category"] != "UNDECIDED":
+            summed_overall_score += item["general"]["score"]
+            num_overall_score_considered += 1
 
         # Emotions
         for label, score in dict(item["emotions"]).items():
@@ -69,7 +73,7 @@ def aggregate_sentiment_data(sentiment_data):
         # Toxicity
         summed_toxicity += item["toxicity"]["score"]
 
-        # Ratio
+        # Ratios
         summed_positive_ratio += item["ratios"]["positive"]
         summed_neutral_ratio += item["ratios"]["neutral"]
         summed_negative_ratio += item["ratios"]["negative"]
@@ -84,7 +88,13 @@ def aggregate_sentiment_data(sentiment_data):
         if timestamp < earliest_timestamp:
             earliest_timestamp = timestamp
 
-    agg_overall_score = round(summed_overall_score / num_individuals, 4)
+    # GENERAL
+    if num_overall_score_considered == 0:
+        agg_overall_score = 0.5
+    else:
+        agg_overall_score = round(
+            summed_overall_score / num_overall_score_considered, 4
+        )
     overall_cat = ""
     if 0.5 <= agg_overall_score < 0.625:
         overall_cat = "SOMEWHAT_POSITIVE"
@@ -99,28 +109,30 @@ def aggregate_sentiment_data(sentiment_data):
     else:
         overall_cat = "VERY_NEGATIVE"
 
+    # EMOTIONS
     summed_emotion_scores = 0
     for score in emotions.values():
         summed_emotion_scores += score
     for label, score in emotions.items():
         emotions[label] = round(score / summed_emotion_scores, 4)
 
+    # TOXICITY
     agg_toxicity_score = round(summed_toxicity / num_individuals, 4)
     toxic_label = ""
     if agg_toxicity_score < 0.25:
         toxic_label = "Non-toxic"
-    elif 0.25 <= agg_toxicity_score <= 0.75:
-        toxic_label = "Neutral"
+    # once again, erring on the side of toxicity
     else:
         toxic_label = "Toxic"
 
+    # RATIOS
     agg_positive_ratio = round(summed_positive_ratio / num_individuals, 4)
     agg_neutral_ratio = round(summed_neutral_ratio / num_individuals, 4)
     agg_negative_ratio = round(summed_negative_ratio / num_individuals, 4)
 
+    # META DATA
     earliest = datetime.datetime.fromtimestamp(earliest_timestamp)
     latest = datetime.datetime.fromtimestamp(latest_timestamp)
-
     earliest = earliest.strftime("%d %B %Y")
     latest = latest.strftime("%d %B %Y")
 
