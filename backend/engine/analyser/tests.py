@@ -22,19 +22,19 @@ def mocked_process_data(dummy):
     return dummy
 
 
-def mocked_summarize_vader(dummy):
+def mocked_summarize_vader(dummy, score):
     return {}
 
 
-def mocked_summarize_general(dummy):
+def mocked_summarize_general(dummy, vader):
+    return {"category": "test cat", "score": -1}
+
+
+def mocked_summarize_emotions(dummy, category):
     return {}
 
 
-def mocked_summarize_emotions(dummy):
-    return {}
-
-
-def mocked_summarize_toxicity(dummy):
+def mocked_summarize_toxicity(*dummy):
     return {}
 
 
@@ -45,53 +45,63 @@ class SentimentAnalysisTests(TestCase):
         gen_metrics1 = [{"label": "POSITIVE", "score": 0.11117471}]
         gen_metrics2 = [{"label": "POSITIVE", "score": 0.6666246266}]
         gen_metrics3 = [{"label": "POSITIVE", "score": 0.88882464288}]
-        gen_metrics4 = [{"label": "NEGATIVE", "score": 0.111246111}]
+        gen_metrics4 = [{"label": "NEGATIVE", "score": 0.311246111}]
         gen_metrics5 = [{"label": "NEGATIVE", "score": 0.66624624666}]
         gen_metrics6 = [{"label": "NEGATIVE", "score": 0.888824688}]
 
         assert (
-            processing.summarize_general(gen_metrics1)["category"]
+            processing.summarize_general(gen_metrics1, {"compound": 0.65})["category"]
             == "SOMEWHAT_POSITIVE"
         )
-        assert processing.summarize_general(gen_metrics2)["category"] == "POSITIVE"
-        assert processing.summarize_general(gen_metrics3)["category"] == "VERY_POSITIVE"
+        assert (
+            processing.summarize_general(gen_metrics2, {"compound": 0.8})["category"]
+            == "POSITIVE"
+        )
+        assert (
+            processing.summarize_general(gen_metrics3, {"compound": 0.9})["category"]
+            == "VERY_POSITIVE"
+        )
 
         assert (
             0
-            < processing.summarize_general(gen_metrics1)["score"]
-            < processing.summarize_general(gen_metrics2)["score"]
-            < processing.summarize_general(gen_metrics3)["score"]
+            < processing.summarize_general(gen_metrics1, {"compound": 0.65})["score"]
+            < processing.summarize_general(gen_metrics2, {"compound": 0.8})["score"]
+            < processing.summarize_general(gen_metrics3, {"compound": 0.9})["score"]
             < 1
         )
 
         assert (
-            processing.summarize_general(gen_metrics4)["category"]
+            processing.summarize_general(gen_metrics4, {"compound": -0.3})["category"]
             == "SOMEWHAT_NEGATIVE"
         )
-        assert processing.summarize_general(gen_metrics5)["category"] == "NEGATIVE"
-        assert processing.summarize_general(gen_metrics6)["category"] == "VERY_NEGATIVE"
+        assert (
+            processing.summarize_general(gen_metrics5, {"compound": -0.7})["category"]
+            == "NEGATIVE"
+        )
+        assert (
+            processing.summarize_general(gen_metrics6, {"compound": -0.9})["category"]
+            == "VERY_NEGATIVE"
+        )
 
         assert (
             1
-            > processing.summarize_general(gen_metrics4)["score"]
-            > processing.summarize_general(gen_metrics5)["score"]
-            > processing.summarize_general(gen_metrics6)["score"]
+            > processing.summarize_general(gen_metrics4, {"compound": -0.3})["score"]
+            > processing.summarize_general(gen_metrics5, {"compound": -0.7})["score"]
+            > processing.summarize_general(gen_metrics6, {"compound": -0.9})["score"]
             > 0
         )
 
         assert (
-            processing.summarize_general(gen_metrics3)["score"]
-            > processing.summarize_general(gen_metrics4)["score"]
+            processing.summarize_general(gen_metrics3, {"compound": 0.9})["score"]
+            > processing.summarize_general(gen_metrics4, {"compound": -0.35})["score"]
         )
 
     def test_summarize_vader_unit(self):
         test = {"pos": 0.1, "neu": 0.7, "neg": 0.2}
-        result = processing.summarize_vader(test)
-        assert (
-            result["positive"] == test["pos"]
-            and result["negative"] == test["neg"]
-            and result["neutral"] == test["neu"]
-        )
+        result = processing.summarize_vader(test, 0.8)
+        assert result["positive"] == 0.38
+        assert result["negative"] == 0.27
+        assert result["neutral"] == 0.35
 
     @mock.patch("processor.processing.have_better", side_effect=mocked_have_better)
     @mock.patch("processor.processing.replace_worst", side_effect=mocked_replace_worst)
@@ -108,7 +118,7 @@ class SentimentAnalysisTests(TestCase):
             ]
         ]
 
-        result = processing.summarize_emotions(emotions)
+        result = processing.summarize_emotions(emotions, "NEGATIVE")
         assert result["anger"] + result["disgust"] + result["fear"] == 1
 
     def test_summarize_toxicity_unit(self):
@@ -123,7 +133,7 @@ class SentimentAnalysisTests(TestCase):
         result3 = processing.summarize_toxicity(toxicity_tox)
 
         assert result1["level_of_toxic"] == "Non-toxic"
-        assert result2["level_of_toxic"] == "Neutral"
+        assert result2["level_of_toxic"] == "Toxic"
         assert result3["level_of_toxic"] == "Toxic"
 
         assert result1["score"] < result2["score"] < result3["score"]
@@ -149,7 +159,7 @@ class SentimentAnalysisTests(TestCase):
         result = processing.analyse_content(data)
 
         assert result["data"] == data
-        assert result["general"] == {}
+        assert result["general"] == {"category": "test cat", "score": -1}
         assert result["emotions"] == {}
         assert result["toxicity"] == {}
         assert result["ratios"] == {}
@@ -227,67 +237,67 @@ class SentimentAnalysisTests(TestCase):
             "metrics": [
                 {
                     "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9998},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9295},
                     "emotions": {"surprise": 0.016, "sadness": 0.0073, "joy": 0.9767},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
-                    "ratios": {"positive": 0.25, "neutral": 0.75, "negative": 0.0},
+                    "ratios": {"positive": 0.6, "neutral": 0.38, "negative": 0.03},
                 },
                 {
                     "data": "Starbucks is good because there is always good coffee, there is Wi-Fi Internet and your name will be loudly called here once. It is right if it is simple and wrong if it is unusual. All of the above is in this Starbucks, which is conveniently located at a significant intersection in Rosebank.",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9897},
+                    "general": {"category": "POSITIVE", "score": 0.8804},
                     "emotions": {"anger": 0.139, "surprise": 0.5295, "joy": 0.3314},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
-                    "ratios": {"positive": 0.117, "neutral": 0.835, "negative": 0.048},
+                    "ratios": {"positive": 0.48, "neutral": 0.42, "negative": 0.1},
                 },
                 {
                     "data": "I just got looked at when I was at the wrong side of the line (not clear where the right side is) Could not spell my name correctly even though I spelt it out 3 times.",
-                    "general": {"category": "VERY_NEGATIVE", "score": 0.0002},
+                    "general": {"category": "VERY_NEGATIVE", "score": 0.0884},
                     "emotions": {
                         "surprise": 0.5791,
                         "disgust": 0.0491,
                         "sadness": 0.3718,
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
-                    "ratios": {"positive": 0.0, "neutral": 0.875, "negative": 0.125},
+                    "ratios": {"positive": 0.04, "neutral": 0.44, "negative": 0.52},
                 },
                 {
                     "data": "Everything is amazing about Starbucks The service is just so good The drinks are the absolute best Keep coming back ⭐️⭐️⭐️⭐️⭐️👍",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9999},
-                    "emotions": {"anger": 0.0084, "joy": 0.9343, "surprise": 0.0573},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9785},
+                    "emotions": {"anger": 0.0084, "surprise": 0.0573, "joy": 0.9343},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
-                    "ratios": {"positive": 0.329, "neutral": 0.671, "negative": 0.0},
+                    "ratios": {"positive": 0.66, "neutral": 0.34, "negative": 0.01},
                 },
                 {
                     "data": "Just bad choice of blend. Poorly made. Really bad texture of frothed milk. Very hyped. Seattle Coffee Co. still the best.",
-                    "general": {"category": "VERY_NEGATIVE", "score": 0.0049},
+                    "general": {"category": "NEGATIVE", "score": 0.1336},
                     "emotions": {
                         "surprise": 0.0749,
                         "disgust": 0.2795,
                         "sadness": 0.6456,
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0008},
-                    "ratios": {"positive": 0.122, "neutral": 0.667, "negative": 0.211},
+                    "ratios": {"positive": 0.17, "neutral": 0.33, "negative": 0.5},
                 },
                 {
                     "data": "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9999},
-                    "emotions": {"surprise": 0.0402, "joy": 0.9401, "sadness": 0.0197},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9848},
+                    "emotions": {"surprise": 0.0402, "sadness": 0.0197, "joy": 0.9401},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
-                    "ratios": {"positive": 0.335, "neutral": 0.665, "negative": 0.0},
+                    "ratios": {"positive": 0.66, "neutral": 0.33, "negative": 0.01},
                 },
                 {
                     "data": "Coffee is always Good , but unfortunately the food is not up to Starbucks quality Like overseas , the food is premade and delivered , so if you eat a toasted cheese it just get heated up in the microwave",
-                    "general": {"category": "POSITIVE", "score": 0.7908},
-                    "emotions": {"joy": 0.0183, "sadness": 0.8799, "surprise": 0.1018},
+                    "general": {"category": "POSITIVE", "score": 0.7137},
+                    "emotions": {"sadness": 0.8799, "surprise": 0.1018, "joy": 0.0183},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
-                    "ratios": {"positive": 0.115, "neutral": 0.817, "negative": 0.068},
+                    "ratios": {"positive": 0.41, "neutral": 0.41, "negative": 0.18},
                 },
                 {
                     "data": "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9861},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9462},
                     "emotions": {"anger": 0.0271, "surprise": 0.2946, "joy": 0.6783},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0011},
-                    "ratios": {"positive": 0.131, "neutral": 0.869, "negative": 0.0},
+                    "ratios": {"positive": 0.54, "neutral": 0.43, "negative": 0.02},
                 },
             ]
         }

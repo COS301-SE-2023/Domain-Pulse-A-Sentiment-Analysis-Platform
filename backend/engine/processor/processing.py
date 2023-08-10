@@ -62,9 +62,9 @@ def summarize_vader(vader_metrics, score):
     negative += neg_addition
 
     return {
-        "positive": positive,
-        "neutral": neutral,
-        "negative": negative,
+        "positive": round(positive, 2),
+        "neutral": round(neutral, 2),
+        "negative": round(negative, 2),
     }
 
 
