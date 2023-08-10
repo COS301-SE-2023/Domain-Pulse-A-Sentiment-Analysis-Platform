@@ -41,60 +41,55 @@ def mocked_summarize_toxicity(*dummy):
 class SentimentAnalysisTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
-    def test_summarize_general_unit(self):
-        gen_metrics1 = [{"label": "POSITIVE", "score": 0.11117471}]
-        gen_metrics2 = [{"label": "POSITIVE", "score": 0.6666246266}]
-        gen_metrics3 = [{"label": "POSITIVE", "score": 0.88882464288}]
-        gen_metrics4 = [{"label": "NEGATIVE", "score": 0.311246111}]
-        gen_metrics5 = [{"label": "NEGATIVE", "score": 0.66624624666}]
-        gen_metrics6 = [{"label": "NEGATIVE", "score": 0.888824688}]
+    def test_summarize_general(self):
+        # VERY_NEGATIVE
+        general_metrics = [{"label": "NEGATIVE", "score": 0.9}]
+        vader = {"compound": -0.75}
+        result = processing.summarize_general(general_metrics, vader)
+        self.assertEqual(result["category"], "VERY_NEGATIVE")
+        self.assertEqual(result["score"], 0.0875)
 
-        assert (
-            processing.summarize_general(gen_metrics1, {"compound": 0.65})["category"]
-            == "SOMEWHAT_POSITIVE"
-        )
-        assert (
-            processing.summarize_general(gen_metrics2, {"compound": 0.8})["category"]
-            == "POSITIVE"
-        )
-        assert (
-            processing.summarize_general(gen_metrics3, {"compound": 0.9})["category"]
-            == "VERY_POSITIVE"
-        )
+        # NEGATIVE
+        general_metrics = [{"label": "NEGATIVE", "score": 0.8}]
+        vader = {"compound": -0.7}
+        result = processing.summarize_general(general_metrics, vader)
+        self.assertEqual(result["category"], "NEGATIVE")
+        self.assertEqual(result["score"], 0.125)
 
-        assert (
-            0
-            < processing.summarize_general(gen_metrics1, {"compound": 0.65})["score"]
-            < processing.summarize_general(gen_metrics2, {"compound": 0.8})["score"]
-            < processing.summarize_general(gen_metrics3, {"compound": 0.9})["score"]
-            < 1
-        )
+        # SOMEWHAT_NEGATIVE
+        general_metrics = [{"label": "NEGATIVE", "score": 0.35}]
+        vader = {"compound": -0.3}
+        result = processing.summarize_general(general_metrics, vader)
+        self.assertEqual(result["category"], "SOMEWHAT_NEGATIVE")
+        self.assertEqual(result["score"], 0.3375)
 
-        assert (
-            processing.summarize_general(gen_metrics4, {"compound": -0.3})["category"]
-            == "SOMEWHAT_NEGATIVE"
-        )
-        assert (
-            processing.summarize_general(gen_metrics5, {"compound": -0.7})["category"]
-            == "NEGATIVE"
-        )
-        assert (
-            processing.summarize_general(gen_metrics6, {"compound": -0.9})["category"]
-            == "VERY_NEGATIVE"
-        )
+        # VERY_POSITIVE
+        general_metrics = [{"label": "POSITIVE", "score": 0.9}]
+        vader = {"compound": 0.85}
+        result = processing.summarize_general(general_metrics, vader)
+        self.assertEqual(result["category"], "VERY_POSITIVE")
+        self.assertEqual(result["score"], 0.9375)
 
-        assert (
-            1
-            > processing.summarize_general(gen_metrics4, {"compound": -0.3})["score"]
-            > processing.summarize_general(gen_metrics5, {"compound": -0.7})["score"]
-            > processing.summarize_general(gen_metrics6, {"compound": -0.9})["score"]
-            > 0
-        )
+        # POSITIVE
+        general_metrics = [{"label": "POSITIVE", "score": 0.7}]
+        vader = {"compound": 0.78}
+        result = processing.summarize_general(general_metrics, vader)
+        self.assertEqual(result["category"], "POSITIVE")
+        self.assertEqual(result["score"], 0.87)
 
-        assert (
-            processing.summarize_general(gen_metrics3, {"compound": 0.9})["score"]
-            > processing.summarize_general(gen_metrics4, {"compound": -0.35})["score"]
-        )
+        # SOMEWHAT_POSITIVE
+        general_metrics = [{"label": "POSITIVE", "score": 0.35}]
+        vader = {"compound": 0.3}
+        result = processing.summarize_general(general_metrics, vader)
+        self.assertEqual(result["category"], "SOMEWHAT_POSITIVE")
+        self.assertEqual(result["score"], 0.6625)
+
+        # UNDECIDED
+        general_metrics = [{"label": "NEGATIVE", "score": 0.8}]
+        vader = {"compound": 0.6}
+        result = processing.summarize_general(general_metrics, vader)
+        self.assertEqual(result["category"], "UNDECIDED")
+        self.assertEqual(result["score"], 0.5)
 
     def test_summarize_vader_unit(self):
         test = {"pos": 0.1, "neu": 0.7, "neg": 0.2}
