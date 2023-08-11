@@ -31,6 +31,10 @@ class MockedItem:
         ]
 
 
+def mocked_find_one_with_excpetion(dummy):
+    raise Exception()
+
+
 def mocked_insert_one(dummy):
     mock = MockedItem()
     mock.name = dummy["name"]
@@ -436,7 +440,6 @@ class DomainsTests(TestCase):
         is_valid, details = validator.handler(params)
         self.assertEqual(is_valid, False)
         self.assertEqual(details, "Missing parameter: query_url")
-    
 
     # ----------------------------------------------------------------
 
@@ -678,6 +681,18 @@ class DomainsTests(TestCase):
 
         response_data = json.loads(response.content)
         self.assertEqual(response_data["status"], "SUCCESS")
+
+    @mock.patch(
+        "pymongo.collection.Collection.find_one",
+        side_effect=mocked_find_one_with_excpetion,
+    )
+    def test_connection_error_cases(self, *mocks):
+        assert (
+            domainscrud.update_last_refresh(
+                ObjectId("64d5f6df18d3d3b8b648b077"), 123456789
+            )
+            == False
+        )
 
     def test_extract_token(self):
         # Valid case
