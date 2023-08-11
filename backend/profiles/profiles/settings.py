@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "profileservice",
     "check_auth",
+    "reportgenerator",
     "corsheaders",
 ]
 
