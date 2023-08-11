@@ -29,6 +29,8 @@ sshtunnel = "*"
 outscraper = "*"
 python-socketio = "*"
 eventlet = "*"
+matplotlib = "*"
+numpy = "*"
 
 [dev-packages]
 
