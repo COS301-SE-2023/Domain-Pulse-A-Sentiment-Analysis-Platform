@@ -30,9 +30,7 @@ def update_last_refresh(request: HttpRequest):
             return JsonResponse(
                 {"status": "SUCCESS", "details": "Timestamp updated successfully"}
             )
-    return JsonResponse(
-        {"status": "FAILURE", "details": "Error interacting with the database"}
-    )
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -54,9 +52,7 @@ def get_source(request: HttpRequest):
                 "source": domainscrud.get_source(raw_data["source_id"]),
             }
         )
-    return JsonResponse(
-        {"status": "FAILURE", "details": "Error fetching source from DB"}
-    )
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt

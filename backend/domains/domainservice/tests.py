@@ -722,6 +722,64 @@ class DomainsTests(TestCase):
         self.assertFalse(result)
         self.assertEqual(error_msg, "Authorization header - Missing Bearer")
 
+    def test_endpoints_post_only(self):
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/create_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/get_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/add_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/remove_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/create_param",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_param",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/get_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/update_last_refresh",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+
+        response: JsonResponse = self.client.get(
+            path="/domains/edit_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+
+        response: JsonResponse = self.client.get(
+            path="/domains/edit_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
     @mock.patch("requests.post")
     def test_auth_checker(self, mocked_response):
         # FOR DOMAIN IDs
