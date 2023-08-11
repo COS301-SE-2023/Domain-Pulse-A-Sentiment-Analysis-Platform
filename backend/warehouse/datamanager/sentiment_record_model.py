@@ -9,8 +9,10 @@ def add_record(new_record):
     collection.insert_one(new_record)
     client.close()
 
+
 def remove_record():
     pass
+
 
 def get_records_by_source_id(source_id):
     client = pymongo.MongoClient(db_connection.HOST, db_connection.PORT)
@@ -28,3 +30,13 @@ def get_records_by_source_id(source_id):
     client.close()
 
     return retArr
+
+
+def delete_data_by_soure_ids(source_ids):
+    client = pymongo.MongoClient(db_connection.HOST, db_connection.PORT)
+    db = client[db_connection.DB_NAME]
+    collection = db["sentiment_records"]
+
+    collection.delete_many({"source_id": {"$in": source_ids}})
+
+    client.close()
