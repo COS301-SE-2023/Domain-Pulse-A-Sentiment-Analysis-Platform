@@ -149,28 +149,28 @@ def delete_domain(request: HttpRequest):
             return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
-        # Get the source_ids to be deleted
-        source_ids_to_clean = []
-        this_domain = domainscrud.get_domain(raw_data["id"])
-        for source in this_domain["sources"]:
-            source_ids_to_clean.append(source["source_id"])
+        # # Get the source_ids to be deleted
+        # source_ids_to_clean = []
+        # this_domain = domainscrud.get_domain(raw_data["id"])
+        # for source in this_domain["sources"]:
+        #     source_ids_to_clean.append(source["source_id"])
 
-        # Make request to cleanup warehouse
-        CLEANUP_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/query/cleanup_sources/"
-        checked, jwt = auth_checks.extract_token(request)
-        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-        cleanup_response = requests.post(
-            CLEANUP_ENDPOINT, json={"source_ids": source_ids_to_clean}, headers=headers
-        )
+        # # Make request to cleanup warehouse
+        # CLEANUP_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/query/cleanup_sources/"
+        # checked, jwt = auth_checks.extract_token(request)
+        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # cleanup_response = requests.post(
+        #     CLEANUP_ENDPOINT, json={"source_ids": source_ids_to_clean}, headers=headers
+        # )
 
-        cleanup_response = cleanup_response.json()
-        if cleanup_response["status"] != "SUCCESS":
-            return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": "Failure occured when performing cleanup",
-                }
-            )
+        # cleanup_response = cleanup_response.json()
+        # if cleanup_response["status"] != "SUCCESS":
+        #     return JsonResponse(
+        #         {
+        #             "status": "FAILURE",
+        #             "details": "Failure occured when performing cleanup",
+        #         }
+        #     )
 
         return JsonResponse(
             {
@@ -254,25 +254,25 @@ def remove_source(request: HttpRequest):
             return JsonResponse({"status": "FAILURE", "details": details})
         # ------------------------------------------------------------
 
-        # Get the source_ids to be deleted
-        source_ids_to_clean = [raw_data["source_id"]]
+        # # Get the source_ids to be deleted
+        # source_ids_to_clean = [raw_data["source_id"]]
 
-        # Make request to cleanup warehouse
-        CLEANUP_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/query/cleanup_sources/"
-        checked, jwt = auth_checks.extract_token(request)
-        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-        cleanup_response = requests.post(
-            CLEANUP_ENDPOINT, json={"source_ids": source_ids_to_clean}, headers=headers
-        )
+        # # Make request to cleanup warehouse
+        # CLEANUP_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/query/cleanup_sources/"
+        # checked, jwt = auth_checks.extract_token(request)
+        # headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # cleanup_response = requests.post(
+        #     CLEANUP_ENDPOINT, json={"source_ids": source_ids_to_clean}, headers=headers
+        # )
 
-        cleanup_response = cleanup_response.json()
-        if cleanup_response["status"] != "SUCCESS":
-            return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": "Failure occured when performing cleanup",
-                }
-            )
+        # cleanup_response = cleanup_response.json()
+        # if cleanup_response["status"] != "SUCCESS":
+        #     return JsonResponse(
+        #         {
+        #             "status": "FAILURE",
+        #             "details": "Failure occured when performing cleanup",
+        #         }
+        #     )
 
         return JsonResponse(
             {
