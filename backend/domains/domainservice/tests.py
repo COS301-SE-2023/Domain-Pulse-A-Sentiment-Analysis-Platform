@@ -31,6 +31,10 @@ class MockedItem:
         ]
 
 
+def mocked_find_one_with_excpetion(dummy):
+    raise Exception()
+
+
 def mocked_insert_one(dummy):
     mock = MockedItem()
     mock.name = dummy["name"]
@@ -436,7 +440,6 @@ class DomainsTests(TestCase):
         is_valid, details = validator.handler(params)
         self.assertEqual(is_valid, False)
         self.assertEqual(details, "Missing parameter: query_url")
-    
 
     # ----------------------------------------------------------------
 
@@ -679,6 +682,18 @@ class DomainsTests(TestCase):
         response_data = json.loads(response.content)
         self.assertEqual(response_data["status"], "SUCCESS")
 
+    @mock.patch(
+        "pymongo.collection.Collection.find_one",
+        side_effect=mocked_find_one_with_excpetion,
+    )
+    def test_connection_error_cases(self, *mocks):
+        assert (
+            domainscrud.update_last_refresh(
+                ObjectId("64d5f6df18d3d3b8b648b077"), 123456789
+            )
+            == False
+        )
+
     def test_extract_token(self):
         # Valid case
         request = HttpRequest()
@@ -706,6 +721,64 @@ class DomainsTests(TestCase):
         result, error_msg = auth_checks.extract_token(request)
         self.assertFalse(result)
         self.assertEqual(error_msg, "Authorization header - Missing Bearer")
+
+    def test_endpoints_post_only(self):
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/create_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/get_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/add_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/remove_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/create_param",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_param",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/get_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/update_last_refresh",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+
+        response: JsonResponse = self.client.get(
+            path="/domains/edit_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+
+        response: JsonResponse = self.client.get(
+            path="/domains/edit_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
 
     @mock.patch("requests.post")
     def test_auth_checker(self, mocked_response):
