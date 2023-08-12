@@ -47,7 +47,7 @@ def ingest_live_review(request: HttpRequest):
         )
 
         if response_from_analyser.status_code == 200:
-            new_record = response_from_analyser.json()
+            new_record = response_from_analyser.json()["metrics"][0]
             new_record["timestamp"] = timestamp
             new_record["source_id"] = source_id_raw
 

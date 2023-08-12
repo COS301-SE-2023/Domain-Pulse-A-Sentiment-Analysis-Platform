@@ -46,11 +46,15 @@ class LiveIngestionTests(TestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "data": "some data",
-            "general": {},
-            "ratios": {},
-            "emotions": {},
-            "toxicity": {},
+            "metrics": [
+                {
+                    "data": "some data",
+                    "general": {},
+                    "ratios": {},
+                    "emotions": {},
+                    "toxicity": {},
+                }
+            ],
             "status": "SUCCESS",
         }
         mocked_post.return_value = mock_response
@@ -77,5 +81,4 @@ class LiveIngestionTests(TestCase):
             "ratios": {},
             "emotions": {},
             "toxicity": {},
-            "status": "SUCCESS",
         }
