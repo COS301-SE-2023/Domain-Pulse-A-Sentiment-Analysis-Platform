@@ -2,7 +2,7 @@ import json
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.test import TestCase
 from unittest import mock
-
+from unittest.mock import patch, MagicMock, ANY
 from requests import Response
 from utils import domainscrud
 from bson.objectid import ObjectId
@@ -722,6 +722,62 @@ class DomainsTests(TestCase):
         self.assertFalse(result)
         self.assertEqual(error_msg, "Authorization header - Missing Bearer")
 
+    @patch("utils.domainscrud.get_source")
+    def test_verify_live_sources(self, mocked_db_function):
+        request_body = {"source_id": "some source id"}
+
+        # Case: Invalid request
+        response = self.client.get(path="/domains/verify_live_source")
+        assert response.json() == {"status": "FAILURE", "details": "Invalid request"}
+
+        # Case: no existing source
+        mocked_db_function.return_value = {}
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {"status": "FAILURE", "details": "Not a valid source"}
+
+        # Case: Source exists but wrong type
+        mocked_db_function.return_value = {
+            "params": {"source_type": "youtube", "is_active": False}
+        }
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {
+            "status": "FAILURE",
+            "details": "Not a valid live source",
+        }
+
+        # Case: Source is live but not active
+        mocked_db_function.return_value = {
+            "params": {"source_type": "livereview", "is_active": False}
+        }
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {
+            "status": "FAILURE",
+            "details": "Source is not active",
+        }
+
+        # Case: Valid case
+        mocked_db_function.return_value = {
+            "params": {"source_type": "livereview", "is_active": True}
+        }
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {"status": "SUCCESS", "details": "Valid live and active source"}
+
     def test_endpoints_post_only(self):
         response: JsonResponse = self.client.get(
             path="/domains/delete_domain",
@@ -768,12 +824,10 @@ class DomainsTests(TestCase):
         )
         assert response.json()["status"] == "FAILURE"
 
-
         response: JsonResponse = self.client.get(
             path="/domains/edit_source",
         )
         assert response.json()["status"] == "FAILURE"
-
 
         response: JsonResponse = self.client.get(
             path="/domains/edit_domain",
