@@ -25,7 +25,7 @@ def ingest_live_review(request: HttpRequest):
             DOMAINS_ENDPOINT, data=json.dumps(request_to_domains_body)
         )
         if response_from_domains.status_code == 200:
-            if response_from_domains.json(["status"]) != "SUCCESS":
+            if response_from_domains.json()["status"] != "SUCCESS":
                 return JsonResponse(
                     {
                         "status": "FAILURE",

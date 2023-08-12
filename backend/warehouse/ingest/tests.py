@@ -24,6 +24,7 @@ def mocked_analyser_request(dummy1, **kwargs):
         "ratios": {},
         "emotions": {},
         "toxicity": {},
+        "status": "SUCCESS",
     }
     return mock_response
 
@@ -40,8 +41,20 @@ class LiveIngestionTests(TestCase):
     @mock.patch(
         "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
     )
-    @mock.patch("requests.post", side_effect=mocked_analyser_request)
-    def test_positive_case(self, *mocks):
+    @patch("requests.post")
+    def test_positive_case(self, mocked_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "data": "some data",
+            "general": {},
+            "ratios": {},
+            "emotions": {},
+            "toxicity": {},
+            "status": "SUCCESS",
+        }
+        mocked_post.return_value = mock_response
+
         response: JsonResponse = self.client.post(
             path="/ingest/live_review/",
             data={
@@ -64,4 +77,5 @@ class LiveIngestionTests(TestCase):
             "ratios": {},
             "emotions": {},
             "toxicity": {},
+            "status": "SUCCESS",
         }
