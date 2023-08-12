@@ -20,6 +20,7 @@ def get_source(source_id):
     for source in result["sources"]:
         if source["source_id"] == ObjectId(source_id):
             final_source = source
+            break
 
     client.close()
 

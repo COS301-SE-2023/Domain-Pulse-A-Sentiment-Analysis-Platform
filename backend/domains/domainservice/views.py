@@ -12,6 +12,37 @@ import requests
 
 
 @csrf_exempt
+def verify_live_source(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        source_id = raw_data["source_id"]
+
+        source = domainscrud.get_source(source_id)
+
+        if source != {}:
+            params = source["params"]
+            source_type = str(params["source_type"])
+
+            if source_type == "livereview":
+                if bool(params["is_active"]):
+                    return JsonResponse(
+                        {"status": "SUCCESS", "details": "Valid live and active source"}
+                    )
+                else:
+                    return JsonResponse(
+                        {"status": "FAILURE", "details": "Source is not active"}
+                    )
+            else:
+                return JsonResponse(
+                    {"status": "FAILURE", "details": "Not a valid live source"}
+                )
+        else:
+            return JsonResponse({"status": "FAILURE", "details": "Not a valid source"})
+
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
+@csrf_exempt
 def update_last_refresh(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
