@@ -34,7 +34,11 @@ def ingest_live_review(request: HttpRequest):
             sentiment_record_model.add_record(new_record)
 
             return JsonResponse(
-                {"status": "SUCCESS", "details": "Review ingested successfully!"}
+                {
+                    "status": "SUCCESS",
+                    "details": "Review ingested successfully!",
+                    "confirmation": new_record,
+                }
             )
         else:
             return JsonResponse(
