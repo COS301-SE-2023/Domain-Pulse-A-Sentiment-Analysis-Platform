@@ -14,17 +14,6 @@ from sshtunnel import SSHTunnelForwarder
 # MongoDB connection settings
 HOST = os.getenv("MONGO_HOST")
 DB_NAME = os.getenv("MONGO_DB_NAME")
-if os.getenv("USE_TUNNEL") != "False":
-    ssh_tunnel = SSHTunnelForwarder(
-        os.getenv("DB_TUNNEL_HOST"),
-        ssh_username=os.getenv("DB_TUNNEL_USERNAME"),
-        ssh_pkey=os.getenv("DB_TUNNEL_PRIVATE_KEY"),
-        remote_bind_address=('127.0.0.1', int(os.getenv("MONGO_PORT"))),
-    )
-
-    print("SSH Tunnel Starting")
-    ssh_tunnel.start()
-
-    PORT = ssh_tunnel.local_bind_port
-else:
-    PORT = int(os.getenv("MONGO_PORT"))
+PORT = os.getenv("MONGO_PORT")
+USER = os.getenv("MONGO_USER")
+PASSWORD = os.getenv("MONGO_PASSWORD")

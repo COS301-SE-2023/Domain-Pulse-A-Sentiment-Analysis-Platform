@@ -7,9 +7,13 @@ mongo_port = db_connection.PORT
 mongo_db = "domain_pulse_domains"
 mongo_collection = "domains"
 
+mongo_user = db_connection.USER
+mongo_password = db_connection.PASSWORD
+
+connection_string = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/domain_pulse_domains?directConnection=true"
 
 def get_source(source_id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
 
@@ -29,7 +33,7 @@ def get_source(source_id):
 
 
 def edit_source(source_id, name):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
 
@@ -53,7 +57,7 @@ def edit_source(source_id, name):
 
 
 def update_last_refresh(source_id, new_last_refresh):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
 
@@ -80,7 +84,7 @@ def update_last_refresh(source_id, new_last_refresh):
 
 
 def create_domain(domain_name, domain_icon, description):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
 
@@ -102,7 +106,7 @@ def create_domain(domain_name, domain_icon, description):
 
 
 def edit_domain(id, domain_name, domain_icon, description):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
 
@@ -129,7 +133,7 @@ def edit_domain(id, domain_name, domain_icon, description):
 
 
 def delete_domain(id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(id)}
@@ -143,7 +147,7 @@ def delete_domain(id):
 
 
 def get_domain(id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(id)}
@@ -161,7 +165,7 @@ def get_domain(id):
 
 
 def add_source(domain_id, source_name, source_image_name, params):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
@@ -189,7 +193,7 @@ def add_source(domain_id, source_name, source_image_name, params):
 
 
 def remove_source(domain_id, source_id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
@@ -208,7 +212,7 @@ def remove_source(domain_id, source_id):
 
 
 def create_param(domain_id, source_id, key, value):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
@@ -230,7 +234,7 @@ def create_param(domain_id, source_id, key, value):
 
 
 def delete_param(domain_id, source_id, key):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
+    client = pymongo.MongoClient(connection_string)
     db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
