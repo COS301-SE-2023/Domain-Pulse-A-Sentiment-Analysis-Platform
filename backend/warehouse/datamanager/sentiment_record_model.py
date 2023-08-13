@@ -3,7 +3,7 @@ import pymongo
 
 
 def add_record(new_record):
-    client = pymongo.MongoClient(db_connection.HOST, db_connection.PORT)
+    client = pymongo.MongoClient(db_connection.connnection_string)
     db = client[db_connection.DB_NAME]
     collection = db["sentiment_records"]
     collection.insert_one(new_record)
@@ -13,7 +13,7 @@ def remove_record():
     pass
 
 def get_records_by_source_id(source_id):
-    client = pymongo.MongoClient(db_connection.HOST, db_connection.PORT)
+    client = pymongo.MongoClient(db_connection.connnection_string)
     db = client[db_connection.DB_NAME]
     collection = db["sentiment_records"]
 
