@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "23e54a5e4dcfb1eeeb921412f9cb3341e0e41bd7a28ff0a60142e401b2a4637b"
+            "sha256": "a6bc7db8c5066710ec85ea28a0bcd05b2f8e8d891e6167261b0f47c40f25f0b1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -616,7 +616,7 @@
                 "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852",
                 "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"
             ],
-            "markers": "python_version >= '3.7'",
+            "index": "pypi",
             "version": "==3.1.2"
         },
         "joblib": {
@@ -987,6 +987,15 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==3.3.1"
+        },
+        "pdfkit": {
+            "hashes": [
+                "sha256:992f821e1e18fc8a0e701ecae24b51a2d598296a180caee0a24c0af181da02a9",
+                "sha256:a7a4ca0d978e44fa8310c4909f087052430a6e8e0b1dd7ceef657f139789f96f",
+                "sha256:cc122e5aed594198ff7aaa566f2950d2163763576ab891c161bb1f6c630f5a8e"
+            ],
+            "index": "pypi",
+            "version": "==1.0.0"
         },
         "pillow": {
             "hashes": [

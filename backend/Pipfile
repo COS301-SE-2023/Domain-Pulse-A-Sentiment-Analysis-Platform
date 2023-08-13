@@ -31,6 +31,8 @@ python-socketio = "*"
 eventlet = "*"
 matplotlib = "*"
 numpy = "*"
+pdfkit = "*"
+jinja2 = "*"
 
 [dev-packages]
 
