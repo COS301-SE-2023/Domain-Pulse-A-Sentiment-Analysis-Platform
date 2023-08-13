@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.http import JsonResponse, HttpRequest
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, ANY
 from authchecker import auth_checks
 import json
 import os
@@ -347,5 +347,31 @@ class QueryEngineTests(TestCase):
         status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
+
+    @patch("pymongo.MongoClient")
+    def test_add_record_sentiment_model(self, mock_mongo_client):
+        mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
+            "sentiment_records"
+        ]
+        mocked_insert_one = mocked_collection.insert_one
+
+        dummy_record = {"text": "this is some review", "timestamp": 123456789}
+        sentiment_record_model.add_record(dummy_record)
+        mock_mongo_client.assert_called_once_with("localhost", ANY)
+        mocked_insert_one.assert_called_once_with(dummy_record)
+        mock_mongo_client.return_value.close.assert_called_once()
+
+    @patch("pymongo.MongoClient")
+    def test_get_records_sentiment_model(self, mock_mongo_client):
+        mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
+            "sentiment_records"
+        ]
+        mocked_find = mocked_collection.find
+
+        dummy_source_id = "bbfbekjfbkAFKAKHEBFL"
+        sentiment_record_model.get_records_by_source_id(dummy_source_id)
+        mock_mongo_client.assert_called_once_with("localhost", ANY)
+        mocked_find.assert_called_once_with({"source_id": dummy_source_id})
+        mock_mongo_client.return_value.close.assert_called_once()
 
     # ----------------------------------------------------------------

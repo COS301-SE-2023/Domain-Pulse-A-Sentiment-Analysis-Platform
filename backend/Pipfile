@@ -29,6 +29,7 @@ sshtunnel = "*"
 outscraper = "*"
 python-socketio = "*"
 eventlet = "*"
+bleach = "*"
 
 [dev-packages]
 
