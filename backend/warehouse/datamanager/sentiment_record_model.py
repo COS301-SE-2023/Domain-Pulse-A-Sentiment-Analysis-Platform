@@ -1,23 +1,16 @@
 from utils import db_connection
-import pymongo
 
-mongo_host = db_connection.HOST
-mongo_port = db_connection.PORT
 mongo_db = "domain_pulse_warehouse"
 mongo_collection = "sentiment_records"
 
+db = db_connection.get_db_handle(mongo_db)
 
 def add_record(new_record):
-    client = pymongo.MongoClient(db_connection.connnection_string)
-    db = client[mongo_db]
     collection = db[mongo_collection]
     collection.insert_one(new_record)
-    client.close()
 
 
 def get_records_by_source_id(source_id):
-    client = pymongo.MongoClient(db_connection.connnection_string)
-    db = client[mongo_db]
     collection = db[mongo_collection]
 
     query = {"source_id": source_id}
@@ -27,8 +20,6 @@ def get_records_by_source_id(source_id):
     retArr = []
     for document in result:
         retArr.append(dict(document))
-
-    client.close()
 
     return retArr
 
