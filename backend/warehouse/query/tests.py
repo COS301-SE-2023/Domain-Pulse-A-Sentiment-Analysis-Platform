@@ -200,13 +200,17 @@ class QueryEngineTests(TestCase):
         self.assertEqual(response3.json(), expected_data)
 
     @patch("requests.post")
-    def test_successful_refresh(self, mocked_response):
+    @patch("datamanager.sentiment_record_model.add_record")
+    def test_successful_refresh(self, mocked_response_2, mocked_response):
         mocked_response.return_value.status_code = 200
         mocked_response.return_value.json.return_value = {
             "status": "SUCCESS",
-            "newdata": [],
+            "newdata": [
+                {"text": "test item 1", "timestamp": 123456789},
+                {"text": "test item 2", "timestamp": 123456789},
+            ],
             "latest_retrieval": 123456789,
-            "metrics": [],
+            "metrics": [{"test": 1}, {"test": 2}],
             "source": {
                 "params": {
                     "source_type": "youtube",
