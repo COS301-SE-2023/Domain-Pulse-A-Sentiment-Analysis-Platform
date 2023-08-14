@@ -40,7 +40,7 @@ def generate_report(request: HttpRequest):
         y = np.array([positive, neutral, negative])
         mylabels = ["Positive", "Neutral", "Negative"]
         plt.figure(figsize=(2.5, 2), dpi=200)
-        plt.pie(y, labels=mylabels)
+        plt.pie(y, labels=mylabels, colors=["royalblue", "grey", "firebrick"])
         plt.subplots_adjust(left=-0.2, right=1, top=1, bottom=0)
         positivity_file = "images/positivity.png"
         plt.savefig(positivity_file)
@@ -55,11 +55,23 @@ def generate_report(request: HttpRequest):
         }
         emotions = list(data.keys())
         values = list(data.values())
-
-        plt.bar(emotions, values, color="maroon", width=0.4)
+        plt.figure(figsize=(5.7, 4.4), dpi=200)
+        plt.bar(
+            emotions,
+            values,
+            color=(
+                "springgreen",
+                "darkblue",
+                "maroon",
+                "slategray",
+                "darkgreen",
+                "gold",
+            ),
+            width=0.4,
+        )
         plt.xlabel("Emotions")
         plt.ylabel("Number of Reviews")
-
+        plt.subplots_adjust(left=0.11, right=0.99, top=0.98, bottom=0.11)
         emotion_file = "images/emotions.png"
         plt.savefig(emotion_file)
         plt.close()
@@ -69,7 +81,7 @@ def generate_report(request: HttpRequest):
         y = np.array([toxic, nontoxic])
         mylabels = ["Toxic", "Non-Toxic"]
         plt.figure(figsize=(2.8, 2), dpi=200)
-        plt.pie(y, labels=mylabels)
+        plt.pie(y, labels=mylabels, colors=["gray", "royalblue"])
         plt.subplots_adjust(left=0, right=1.1, top=1, bottom=0)
         toxicity_file = "images/toxicity.png"
         plt.savefig(toxicity_file)
