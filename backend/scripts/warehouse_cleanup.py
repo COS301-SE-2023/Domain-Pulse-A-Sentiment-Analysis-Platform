@@ -10,9 +10,6 @@ print(BASE_DIR)
 DATABASE_ENV_FILE = BASE_DIR / ".postgresql.env"
 load_dotenv(DATABASE_ENV_FILE)
 
-# Ssh tunnel for security
-from sshtunnel import SSHTunnelForwarder
-
 # MongoDB connection settings
 HOST = os.getenv("MONGO_HOST")
 DB_NAME = os.getenv("MONGO_DB_NAME")
@@ -42,12 +39,11 @@ source_ids = list(source_ids)
 
 
 # Remove the unused sources
-mongo_host = HOST
-mongo_port = PORT
 mongo_db = "domain_pulse_warehouse"
 mongo_collection = "sentiment_records"
+connection_string = f"mongodb://{USER}:{PASSWORD}@{HOST}:{PORT}/{mongo_db}?directConnection=true"
 
-client = pymongo.MongoClient(mongo_host, mongo_port)
+client = pymongo.MongoClient(connection_string)
 db = client[mongo_db]
 collection = db[mongo_collection]
 collection.delete_many({"source_id": {"$nin": source_ids}})
