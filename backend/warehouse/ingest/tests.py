@@ -62,7 +62,6 @@ class LiveIngestionTests(TestCase):
         response: JsonResponse = self.client.post(
             path="/ingest/live_review/",
             data={
-                "timestamp": 123456789,
                 "review_text": "some data",
                 "source_id": "some source id",
             },
@@ -75,7 +74,7 @@ class LiveIngestionTests(TestCase):
 
         assert response.json()["confirmation"] == {
             "data": "some data",
-            "timestamp": 123456789,
+            "timestamp": ANY,
             "source_id": "some source id",
             "general": {},
             "ratios": {},

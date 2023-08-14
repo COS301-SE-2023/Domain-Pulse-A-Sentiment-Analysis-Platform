@@ -357,7 +357,7 @@ class QueryEngineTests(TestCase):
 
         dummy_record = {"text": "this is some review", "timestamp": 123456789}
         sentiment_record_model.add_record(dummy_record)
-        mock_mongo_client.assert_called_once_with("localhost", ANY)
+        mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
         mocked_insert_one.assert_called_once_with(dummy_record)
         mock_mongo_client.return_value.close.assert_called_once()
 
@@ -370,7 +370,7 @@ class QueryEngineTests(TestCase):
 
         dummy_source_id = "bbfbekjfbkAFKAKHEBFL"
         sentiment_record_model.get_records_by_source_id(dummy_source_id)
-        mock_mongo_client.assert_called_once_with("localhost", ANY)
+        mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
         mocked_find.assert_called_once_with({"source_id": dummy_source_id})
         mock_mongo_client.return_value.close.assert_called_once()
 
