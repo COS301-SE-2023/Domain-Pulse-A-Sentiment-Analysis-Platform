@@ -7,6 +7,7 @@ import requests
 from authchecker import auth_checks
 import os
 import bleach
+from datetime import datetime
 
 # Create your views here.
 
@@ -16,7 +17,7 @@ def ingest_live_review(request: HttpRequest):
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
         review_text = bleach.clean(raw_data["review_text"])
-        timestamp = int(raw_data["timestamp"])
+        timestamp = datetime.now().timestamp()
 
         # ----------- Verifying source is valid ------------
         DOMAINS_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
