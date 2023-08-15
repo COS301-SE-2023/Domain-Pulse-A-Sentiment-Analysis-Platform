@@ -33,6 +33,7 @@ matplotlib = "*"
 numpy = "*"
 pdfkit = "*"
 jinja2 = "*"
+azure-storage-blob = "*"
 
 [dev-packages]
 

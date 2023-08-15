@@ -8,6 +8,20 @@ import numpy as np
 import pdfkit
 import jinja2
 import uuid
+from azure.storage.blob import BlobClient
+
+
+def upload_pdf_to_azure(file_path, file_name):
+    sas_url = f"{os.getenv('BLOB_URL')}{file_name}{os.getenv('BLOD_SAS_KEY')}"
+    print(sas_url)
+    client = BlobClient.from_blob_url(sas_url)
+
+    with open(file_path, "rb") as data:
+        client.upload_blob(data)
+
+    pdf_url = client.url
+
+    return pdf_url
 
 
 @csrf_exempt
@@ -95,4 +109,5 @@ def generate_report(request: HttpRequest):
             options={"enable-local-file-access": ""},
         )
 
-        return JsonResponse({"status": "SUCCESS"})
+        pdf_url = upload_pdf_to_azure(output_pdf, str(id) + "pdf_generated.pdf")
+        return JsonResponse({"status": "SUCCESS", "url": pdf_url})
