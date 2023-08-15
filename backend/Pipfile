@@ -35,6 +35,7 @@ pdfkit = "*"
 jinja2 = "*"
 azure-storage-blob = "*"
 shortuuid = "*"
+bleach = "*"
 
 [dev-packages]
 

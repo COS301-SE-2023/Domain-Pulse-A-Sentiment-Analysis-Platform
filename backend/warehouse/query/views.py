@@ -216,7 +216,11 @@ def refresh_source(request: HttpRequest):
 
         request_to_engine_body = {}
         if "room_id" in raw_data:
-            request_to_engine_body = {"data": raw_new_data, "data_timestamps": data_timestamps, "room_id": raw_data["room_id"]}
+            request_to_engine_body = {
+                "data": raw_new_data,
+                "data_timestamps": data_timestamps,
+                "room_id": raw_data["room_id"],
+            }
         else:
             request_to_engine_body = {"data": raw_new_data}
 
@@ -285,3 +289,27 @@ def refresh_source(request: HttpRequest):
         )
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
+# @csrf_exempt
+# def cleanup_sources(request: HttpRequest):
+#     if request.method == "POST":
+#         raw_data = json.loads(request.body)
+#         source_ids_raw = raw_data["source_ids"]
+
+#         source_ids_to_clean = list(source_ids_raw)
+
+#         # ------------------- VERIFYING ACCESS -----------------------
+#         check_passed, details = auth_checks.verify_user_owns_source_ids(
+#             original_request=request, source_id_list=source_ids_to_clean
+#         )
+#         if not check_passed:
+#             return JsonResponse({"status": "FAILURE", "details": details})
+#         # ------------------------------------------------------------
+
+#         sentiment_record_model.delete_data_by_soure_ids(source_ids_to_clean)
+#         return JsonResponse(
+#             {"status": "SUCCESS", "details": "Sentiment records removed successfully"}
+#         )
+#     else:
+#         return JsonResponse({"status": "FAILURE", "details": "Invalid request"})

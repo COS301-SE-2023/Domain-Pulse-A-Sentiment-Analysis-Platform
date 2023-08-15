@@ -52,6 +52,11 @@ def handler(params):
             return False, "query_url is invalid"
         return True, "Source details are valid"
 
+    elif type_of_source.lower() == "livereview":
+        if "is_active" not in params:
+            return False, "Missing parameter: is_active"
+        return True, "Source details are valid"
+
     else:
         return False, "Unknown source_type"
 
