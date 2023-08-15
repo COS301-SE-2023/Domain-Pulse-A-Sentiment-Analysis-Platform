@@ -34,6 +34,7 @@ numpy = "*"
 pdfkit = "*"
 jinja2 = "*"
 azure-storage-blob = "*"
+shortuuid = "*"
 
 [dev-packages]
 
