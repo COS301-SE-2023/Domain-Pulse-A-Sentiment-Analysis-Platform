@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  django:
+    build:
+      context: ./domains/
+    env_file:
+      - .env
+      - .postgresql.env
+    restart: always
+    command: >
+      sh -c "uwsgi --ini domains.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+    - "localhost:host-gateway"
+  
+  nginx:
+    build: ./nginx/
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    ports:
+      - "8000:80"
+    depends_on:
+      - django
+
+
+
+volumes:
+  uwsgi_data:
