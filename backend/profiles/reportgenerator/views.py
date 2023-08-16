@@ -11,6 +11,7 @@ import requests
 from azure.storage.blob import BlobClient
 from check_auth import views as checks
 import shortuuid
+import tempfile
 
 GET_DOMAINS_ENDPOINT = (
     "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
@@ -38,10 +39,9 @@ def generate_report(request: HttpRequest):
         domain_id = raw_data["domain_id"]
         data = {"id": domain_id}
 
-        jwt = checks.extract_token(request)
-        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-
-        response = requests.post(GET_DOMAINS_ENDPOINT, json=data, headers=headers)
+        response = requests.post(
+            GET_DOMAINS_ENDPOINT, json=data, headers=request.headers
+        )
         response_data = response.json()
         if response_data["status"] == "FAILURE":
             return JsonResponse(
@@ -60,7 +60,10 @@ def generate_report(request: HttpRequest):
         ax.pie(val, colors=colors)
         ax.add_artist(plt.Circle((0, 0), 0.6, color="white"))
         plt.subplots_adjust(left=-0.2, right=1.2, top=1.1, bottom=-1)
-        generalSent_file = "images/" + domain["name"] + str(id) + "generalSent.png"
+        temp_file = tempfile.NamedTemporaryFile(
+            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
+        )
+        generalSent_file = temp_file.name
         plt.savefig(generalSent_file)
         plt.close()
         positive = 0.6
@@ -71,7 +74,10 @@ def generate_report(request: HttpRequest):
         plt.figure(figsize=(2.5, 2), dpi=200)
         plt.pie(y, labels=mylabels, colors=["royalblue", "grey", "firebrick"])
         plt.subplots_adjust(left=-0.2, right=1, top=1, bottom=0)
-        positivity_file = "images/" + domain["name"] + str(id) + "positivity.png"
+        temp_file = tempfile.NamedTemporaryFile(
+            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
+        )
+        positivity_file = temp_file.name
         plt.savefig(positivity_file)
         plt.close()
         data = {
@@ -101,10 +107,12 @@ def generate_report(request: HttpRequest):
         plt.xlabel("Emotions")
         plt.ylabel("Number of Reviews")
         plt.subplots_adjust(left=0.11, right=0.99, top=0.98, bottom=0.11)
-        emotion_file = "images/" + domain["name"] + str(id) + "emotions.png"
+        temp_file = tempfile.NamedTemporaryFile(
+            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
+        )
+        emotion_file = temp_file.name
         plt.savefig(emotion_file)
         plt.close()
-
         toxic = 0.05
         nontoxic = 0.95
         y = np.array([toxic, nontoxic])
@@ -112,21 +120,37 @@ def generate_report(request: HttpRequest):
         plt.figure(figsize=(2.8, 2), dpi=200)
         plt.pie(y, labels=mylabels, colors=["gray", "royalblue"])
         plt.subplots_adjust(left=0, right=1.1, top=1, bottom=0)
-        toxicity_file = "images/" + domain["name"] + str(id) + "toxicity.png"
+        temp_file = tempfile.NamedTemporaryFile(
+            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
+        )
+        toxicity_file = temp_file.name
         plt.savefig(toxicity_file)
         plt.close()
-        print(str(os.getenv("PROFILES_PATH")) + generalSent_file)
-        output = f"<html>{html_template}<div> <h1>All Sources</h1> </div> <div> <img src=\"{str(os.getenv('PROFILES_PATH'))}{generalSent_file}\"> </div> <div> <img src=\"{str(os.getenv('PROFILES_PATH'))}{emotion_file}\"> </div><div> <img src=\"{str(os.getenv('PROFILES_PATH'))}{positivity_file}\"> </div><div> <img src=\"{str(os.getenv('PROFILES_PATH'))}{toxicity_file}\"> </div></html>"
+        output = f'<html>{html_template}<div> <h1>All Sources</h1> </div> <div> <img src="{generalSent_file}"> </div> <div> <img src="{emotion_file}"> </div><div> <img src="{positivity_file}"> </div><div> <img src="{toxicity_file}"> </div></html>'
 
         config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
-        output_pdf = "pdfs/" + domain["name"] + "Report" + str(id) + ".pdf"
+        output_pdf = domain["name"] + "Report" + str(id)
+        temp_file = tempfile.NamedTemporaryFile(
+            prefix=output_pdf,
+            suffix=".pdf",
+            dir=str(os.getenv("TEMP_PATH")),
+            delete=False,
+        )
+        pdf_path = temp_file.name
         pdfkit.from_string(
             output,
-            output_pdf,
+            pdf_path,
             configuration=config,
             css="css/style.css",
             options={"enable-local-file-access": ""},
         )
 
-        pdf_url = upload_pdf_to_azure(output_pdf, str(id) + "pdf_generated.pdf")
+        pdf_url = upload_pdf_to_azure(
+            pdf_path, domain["name"] + "Report" + str(id) + ".pdf"
+        )
+        os.unlink(generalSent_file)
+        os.unlink(emotion_file)
+        os.unlink(positivity_file)
+        os.unlink(toxicity_file)
+        os.unlink(pdf_path)
         return JsonResponse({"status": "SUCCESS", "url": pdf_url})
