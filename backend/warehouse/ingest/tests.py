@@ -89,6 +89,60 @@ class LiveIngestionTests(TestCase):
             ),
         )
 
+    @patch("requests.post")
+    def test_domains_service_down_case(self, mocked_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 500
+        mocked_post.return_value = mock_response
+
+        response: HttpResponse = self.client.post(
+            path="/ingest/live_review/",
+            data=urlencode(
+                {
+                    "review_text": "some data",
+                    "source_id": "some source id",
+                }
+            ),
+            content_type="application/x-www-form-urlencoded",
+        )
+
+        self.assertContains(
+            response,
+            """<body>
+    <h1>There was an error submitting your review!</h1>
+    <h2>Details: {{details}}</h2>
+</body>""".replace(
+                "{{details}}", "Could not verify the source ID"
+            ),
+        )
+
+    @patch("requests.post")
+    def test_domains_service_failed_case(self, mocked_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mocked_post.return_value = mock_response
+        mock_response.json.return_value = {"status": "FAILURE", "details": "Some error"}
+
+        response: HttpResponse = self.client.post(
+            path="/ingest/live_review/",
+            data=urlencode(
+                {
+                    "review_text": "some data",
+                    "source_id": "some source id",
+                }
+            ),
+            content_type="application/x-www-form-urlencoded",
+        )
+        self.assertContains(
+            response,
+            """<body>
+    <h1>There was an error submitting your review!</h1>
+    <h2>Details: {{details}}</h2>
+</body>""".replace(
+                "{{details}}", "Some error"
+            ),
+        )
+
     def test_form_endpoint(self):
         response = self.client.get(
             path="/ingest/post-review/abcde12345/somesourcename/"

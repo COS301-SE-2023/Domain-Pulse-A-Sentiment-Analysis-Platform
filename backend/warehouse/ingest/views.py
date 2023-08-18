@@ -48,7 +48,7 @@ def ingest_live_review(request: HttpRequest):
                 return render(
                     request,
                     "error.html",
-                    {"details": response_from_domains.json(["details"])},
+                    {"details": response_from_domains.json()["details"]},
                 )
         else:
             return render(
