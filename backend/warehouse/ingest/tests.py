@@ -1,5 +1,6 @@
 from django.test import TestCase
-from django.http import JsonResponse, HttpRequest
+from django.shortcuts import render
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from unittest.mock import patch, MagicMock, ANY
@@ -7,6 +8,7 @@ import os
 import mock
 from . import views
 from datamanager import sentiment_record_model
+from urllib.parse import urlencode
 
 # Create your tests here.
 
@@ -34,9 +36,17 @@ class LiveIngestionTests(TestCase):
         self.factory = RequestFactory()
 
     def test_is_post_only(self):
-        response = self.client.get(path="/ingest/live_review/").json()
-        assert response["status"] == "FAILURE"
-        assert response["details"] == "Invalid request"
+        response = self.client.get(path="/ingest/live_review/")
+        self.assertEqual(200, response.status_code)
+        self.assertContains(
+            response,
+            """<body>
+    <h1>There was an error submitting your review!</h1>
+    <h2>Details: {{details}}</h2>
+</body>""".replace(
+                "{{details}}", "Invalid request"
+            ),
+        )
 
     @mock.patch(
         "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
@@ -59,25 +69,22 @@ class LiveIngestionTests(TestCase):
         }
         mocked_post.return_value = mock_response
 
-        response: JsonResponse = self.client.post(
+        response: HttpResponse = self.client.post(
             path="/ingest/live_review/",
-            data={
-                "review_text": "some data",
-                "source_id": "some source id",
-            },
-            content_type="application/json",
+            data=urlencode(
+                {
+                    "review_text": "some data",
+                    "source_id": "some source id",
+                }
+            ),
+            content_type="application/x-www-form-urlencoded",
         )
 
-        assert response.json()["status"] == "SUCCESS"
-
-        assert response.json()["details"] == "Review ingested successfully!"
-
-        assert response.json()["confirmation"] == {
-            "data": "some data",
-            "timestamp": ANY,
-            "source_id": "some source id",
-            "general": {},
-            "ratios": {},
-            "emotions": {},
-            "toxicity": {},
-        }
+        self.assertContains(
+            response,
+            """<body>
+    <p>You successfully submitted the review: {{review_text}}</p>
+</body>""".replace(
+                "{{review_text}}", "some data"
+            ),
+        )
