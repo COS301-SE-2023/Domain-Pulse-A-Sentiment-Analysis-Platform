@@ -4,7 +4,7 @@ django-cors-headers
 python-dotenv
 
 # app specific packages
-torch
-nltk
-transformers
+# torch
+transformers==2.4.0
 vadersentiment
+nltk

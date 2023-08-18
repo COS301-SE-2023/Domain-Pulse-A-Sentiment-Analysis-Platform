@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  domains:
+    build:
+      context: ./backend/domains/
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    restart: always
+    command: >
+      sh -c "uwsgi --ini domains.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+      - "localhost:host-gateway"
+
+  engine:
+    build:
+      context: ./backend/engine/
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    restart: always
+    command: >
+      sh -c "uwsgi --ini engine.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+      - "localhost:host-gateway"
+
+  webserver:
+    build: .
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    ports:
+      - "7998:80"
+    depends_on:
+      - engine
+      - domains
+
+volumes:
+  uwsgi_data:
