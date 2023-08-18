@@ -88,3 +88,23 @@ class LiveIngestionTests(TestCase):
                 "{{review_text}}", "some data"
             ),
         )
+
+    def test_form_endpoint(self):
+        response = self.client.get(
+            path="/ingest/post-review/abcde12345/somesourcename/"
+        )
+        self.assertEqual(200, response.status_code)
+        self.assertContains(
+            response,
+            """<form method="post", action="/ingest/live_review/">
+        <label for="review_text">Please provide your review for {{source_name}}:</label>
+        <input type="text" name="review_text" id="review_text">
+        <input type="hidden" name="source_id" value={{source_id}}>
+        <br>
+        <input type="submit" value="Submit">
+    </form>""".replace(
+                "{{source_name}}", "somesourcename"
+            ).replace(
+                "{{source_id}}", "abcde12345"
+            ),
+        )
