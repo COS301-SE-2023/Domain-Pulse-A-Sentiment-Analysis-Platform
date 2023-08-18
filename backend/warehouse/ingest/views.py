@@ -12,25 +12,26 @@ from datetime import datetime
 # Create your views here.
 
 
-@csrf_exempt
-def test_endpoint(request: HttpRequest):
-    if request.method == "POST":
-        review_text = bleach.clean(request.POST.get("review_text"))
-        source_id_raw = request.POST.get("source_id")
-        timestamp = int(datetime.now().timestamp())
-        return JsonResponse(
-            {
-                "review_text": review_text,
-                "source_id": source_id_raw,
-                "timestamp": timestamp,
-            }
-        )
+# @csrf_exempt
+# def test_endpoint(request: HttpRequest):
+#     if request.method == "POST":
+#         review_text = bleach.clean(request.POST.get("review_text"))
+#         source_id_raw = request.POST.get("source_id")
+#         timestamp = int(datetime.now().timestamp())
+#         return JsonResponse(
+#             {
+#                 "review_text": review_text,
+#                 "source_id": source_id_raw,
+#                 "timestamp": timestamp,
+#             }
+#         )
 
 
 @csrf_exempt
 def ingest_live_review(request: HttpRequest):
     if request.method == "POST":
-        review_text = bleach.clean(request.POST.get("review_text"))
+        original_review_text = request.POST.get("review_text")
+        review_text = bleach.clean(original_review_text)
         source_id_raw = request.POST.get("source_id")
         timestamp = datetime.now().timestamp()
 
@@ -42,15 +43,16 @@ def ingest_live_review(request: HttpRequest):
         )
         if response_from_domains.status_code == 200:
             if response_from_domains.json()["status"] != "SUCCESS":
-                return JsonResponse(
-                    {
-                        "status": "FAILURE",
-                        "details": response_from_domains.json(["details"]),
-                    }
+                return render(
+                    request,
+                    "error.html",
+                    {"details": response_from_domains.json(["details"])},
                 )
         else:
-            return JsonResponse(
-                {"status": "FAILURE", "details": "Could not verify the source ID"}
+            return render(
+                request,
+                "error.html",
+                {"details": "Could not verify the source ID"},
             )
         # --------------------------------------------------
 
@@ -69,19 +71,23 @@ def ingest_live_review(request: HttpRequest):
 
             sentiment_record_model.add_record(new_record)
 
-            return JsonResponse(
-                {
-                    "status": "SUCCESS",
-                    "details": "Review ingested successfully!",
-                    "confirmation": new_record,
-                }
+            return render(
+                request,
+                "done.html",
+                {"review_text": original_review_text},
             )
         else:
-            return JsonResponse(
-                {"status": "FAILURE", "details": "Error communicating with analyser"}
+            return render(
+                request,
+                "error.html",
+                {"details": "Error communicating with analyser"},
             )
 
-    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+    return render(
+        request,
+        "error.html",
+        {"details": "Invalid request"},
+    )
 
 
 def make_live_review(request: HttpRequest, source_id, source_name):
