@@ -34,6 +34,8 @@ export class SourceSelectorComponent {
     this.store.dispatch(new SetAllSourcesSelected(false));
     this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new SetSource(source));
+    console.log('source: ' + source.id);
+    console.log('source: ' + source.name);
   }
 
   selectAllSources(){
@@ -46,7 +48,7 @@ export class SourceSelectorComponent {
     var params = this.determineSourceParams();
     console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
-    console.log('url: ' + this.newSourceName);
+    console.log('name: ' + this.newSourceName);
 
     if (!params || !this.newSourcePlatform || !this.newSourceName) {
       this.store.dispatch(new ToastError('Please fill in all fields'));
@@ -60,6 +62,11 @@ export class SourceSelectorComponent {
     this.showAddSourcesModal = false;
   }
 
+  /* elif type_of_source.lower() == "livereview":
+        if "is_active" not in params:
+            return False, "Missing parameter: is_active"
+        return True, "Source details are valid"
+ */
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
       case 'googlereviews':
@@ -71,6 +78,11 @@ export class SourceSelectorComponent {
         return {
           source_type: 'TripAdvisor',
           tripadvisor_url: this.newSourceUrl,
+        }
+      case 'livereview':
+        return {
+          source_type: 'livereview',
+          is_active: true,
         }
       case 'youtube':
 
@@ -126,6 +138,8 @@ export class SourceSelectorComponent {
         return 'tripadvisor';
       case 'youtube':
         return 'YouTube';
+      case 'livereview':
+        return 'livereview';
     }
     return '';
   }

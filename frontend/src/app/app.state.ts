@@ -1119,6 +1119,9 @@ export class AppState {
       case 'googlereviews':
         source_image_name = 'google-reviews.png';
         break;
+      case 'livereview':
+        source_image_name = 'live-review-logo.png';
+        break;
     }
     return source_image_name;
   }
