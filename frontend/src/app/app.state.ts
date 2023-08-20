@@ -443,10 +443,19 @@ export class AppState {
 
         let lastSource =
           selectedDomain.sources[selectedDomain.sources.length - 1];
-        lastSource.isRefreshing = true;
+        
         this.store.dispatch(new SetSourceIsLoading(true));
         this.store.dispatch(new SetSource(lastSource));
-        this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
+        console.log("identifier3: " + state.platform)
+        if(state.platform == "livereview"){
+          console.log("live review here")
+          this.store.dispatch(new GetSourceDashBoardInfo());
+        }
+        else{
+          lastSource.isRefreshing = true;
+          this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
+
+        }
       });
   }
 
@@ -577,6 +586,32 @@ export class AppState {
     state: RefreshSourceData
   ) {
     let selectedSource = ctx.getState().selectedSource;
+    console.log(selectedSource)
+    console.log(selectedSource?.params)
+    console.log(selectedSource?.params?.source_type)
+    if(selectedSource?.url == "live-review-logo.png"){
+      console.log("live review here")
+      if (!selectedSource) return;
+
+      selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
+
+      this.store.dispatch(new GetSourceDashBoardInfo());
+
+      if (selectedSource) {
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+      }
+      this.store.dispatch(
+        new ToastSuccess('Your source has been refreshed')
+      );
+
+      return;
+    }
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
