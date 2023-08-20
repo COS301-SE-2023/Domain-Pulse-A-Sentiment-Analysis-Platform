@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 
-.body{
+body{
     margin: 0;
     padding: 0;
     width: 100vw;
@@ -50,7 +50,7 @@ p {
 }
 
 .block{
-    width: 90%;
+    width: 85%;
     max-width: 400px;
     height: 45%;
     background-color: rgb(255, 255, 255);
@@ -100,7 +100,8 @@ p{
 }
 
 .button{
-    
+    display: flex;
+    align-items: center;
     height: 2rem;
     padding: 0 1rem;
     border-radius: 1rem;
@@ -132,4 +133,33 @@ p{
 .clickable-item:hover{
     transform: scale(1.075);
 }
+
+.button-spinner {
+    border: 0.2rem solid rgba(0, 0, 0, 0);
+    opacity: 0;
+    border-top: 0.2rem solid #ffffff;
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    animation: spin 1s linear infinite paused;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.button-spinner.active {
+    animation-play-state: running; 
+    opacity: 1;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 

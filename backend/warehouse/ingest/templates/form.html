@@ -1,30 +1,51 @@
 <!DOCTYPE html>
 <html>
+  {% load static %}
 
-{% load static %}
-
-<head>
+  <head>
     <title>Input Form</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-</head>
-<body>
-    <div class="flex-column center container" >
-        <img class = "logo" src = "{% static 'Centre logo white.svg' %}">
-      <div class = "flex-column center block">
-            <div class = "title">
-                <p>What do you think about</p><p class = "domain-name">{{source_name}}?</p>
-            </div>
-            <form class="form flex-column center" method="post", action="/ingest/live_review/">
-                <textarea name="review_text" id="review_text" class="textbox" placeholder="Write your review here..."></textarea>
-                <input type="hidden" name="source_id" value={{source_id}}>
-                <button type="submit" value="Submit" class="button clickable-item">submit</button>
-            </form>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const submitButton = document.querySelector('.button');
+          const spinner = document.querySelector('.button-spinner');
+  
+          submitButton.addEventListener('click', function () {
+            spinner.classList.add('active');
+          });
+        });
+      </script>
+  </head>
+  <body>
+    <div class="flex-column center container">
+      <img class="logo" src="{% static 'Centre logo white.svg' %}" />
+      <div class="flex-column center block">
+        <div class="title">
+          <p>What do you think about</p>
+          <p class="domain-name">{{source_name}}?</p>
         </div>
-    
-        
-        <div class="filler"></div>
-    
-    </div>
+        <form
+          class="form flex-column center"
+          method="post"
+          ,
+          action="/ingest/live_review/"
+        >
+          <textarea
+            name="review_text"
+            id="review_text"
+            class="textbox"
+            placeholder="Write your review here..."
+          ></textarea>
+          <input type="hidden" name="source_id" value="{{source_id}}" />
+          <button type="submit" value="Submit" class="button center clickable-item">
+            submit
+            <div class="button-spinner"></div>
+          </button>
+        </form>
+      </div>
 
-</body>
+      <div class="filler"></div>
+    </div>
+  </body>
 </html>
