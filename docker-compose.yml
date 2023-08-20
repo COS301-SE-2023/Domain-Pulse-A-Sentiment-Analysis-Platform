@@ -25,6 +25,8 @@ services:
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    ports:
+      - "8001:8001"
     restart: always
     command: >
       sh -c "uwsgi --ini engine.uwsgi.ini"
@@ -97,7 +99,7 @@ services:
     ports:
       - "7998:80"
     depends_on:
-      # - engine
+      - engine
       - domains
       - profiles
       - sourceconnector
