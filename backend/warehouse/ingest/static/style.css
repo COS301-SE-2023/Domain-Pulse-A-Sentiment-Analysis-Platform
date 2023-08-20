@@ -78,6 +78,14 @@ p{
     font-size: 1.3em;
 }
 
+.message{
+    font-family: 'Source Sans 3';
+    text-align: center;
+    font-weight: 400;
+    font-size: 1.3em;
+
+}
+
 .domain-name{
     color: #037fff;
 }
