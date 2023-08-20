@@ -18,7 +18,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Install required Python packages
-RUN python -m pip install torch==1.9.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+RUN python -m pip install torch==1.9.1+cpu torchvision==0.10.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
 RUN pip install --no-cache-dir uwsgi
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -61,6 +61,6 @@ CMD ["uwsgi", "--ini", "/code/engine.uwsgi.ini"]
 # RUN python -m pip install uwsgi
 # # torchvision==0.10.1+cpu torchaudio==0.9.1
 # RUN python -m pip install torch==1.9.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
-# RUN python -m pip install -r requirements.txt
+# RUN python -m pip install --no-cache-dir -r requirements.txt
 
 # CMD ["uwsgi", "--ini", "/code/engine.uwsgi.ini"]
