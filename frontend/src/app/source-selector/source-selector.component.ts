@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
@@ -9,17 +9,20 @@ import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSource
   templateUrl: './source-selector.component.html',
   styleUrls: ['./source-selector.component.sass'],
 })
-export class SourceSelectorComponent {
+export class SourceSelectorComponent implements OnInit {
   @Select(AppState.sources) sources$!: Observable<DisplaySource[] | null>;
   @Select(AppState.selectedSource)
-  selectedSource$!: Observable<DisplaySource | null>;
+  selectedSource$!: Observable<DisplaySource | undefined>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
   @Select(AppState.allSourcesSelected) allSources$!: Observable<number>;
+  selectedSource?: DisplaySource;
+
 
 
   showAddSourcesModal = false;
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
+  showInfoModal = false;
   newSourceName = '';
   newSourcePlatform = '';
   newSourceUrl = '';
@@ -29,6 +32,12 @@ export class SourceSelectorComponent {
 
 
   constructor(private store: Store) {}
+
+  ngOnInit(): void {
+    this.selectedSource$.subscribe(source => {
+      this.selectedSource = source;
+    });
+  }
 
   selectSource(source: DisplaySource) {
     this.store.dispatch(new SetAllSourcesSelected(false));
@@ -181,5 +190,18 @@ export class SourceSelectorComponent {
     } else {
       this.showConfirmDeleteSourceModal = false;
     }
+  }
+
+  toggleInfoModal() {
+    if (!this.showInfoModal) {
+      this.showInfoModal = true;
+    } else {
+      this.showInfoModal = false;
+    }
+  }
+
+  showInfo(event: Event): void {
+    event.stopPropagation();
+    this.toggleInfoModal();
   }
 }
