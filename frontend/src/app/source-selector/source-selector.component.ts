@@ -30,6 +30,8 @@ export class SourceSelectorComponent implements OnInit {
   editSourceName = '';
   editSourceUrl = '';
 
+  isOpen = false;
+
 
   constructor(private store: Store) {}
 
@@ -203,5 +205,10 @@ export class SourceSelectorComponent implements OnInit {
   showInfo(event: Event): void {
     event.stopPropagation();
     this.toggleInfoModal();
+  }
+
+  onValueChange(event: any) {
+    console.log('onValueChange', event);
+
   }
 }
