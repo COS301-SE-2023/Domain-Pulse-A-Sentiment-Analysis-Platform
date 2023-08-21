@@ -150,13 +150,14 @@ class LiveIngestionTests(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertContains(
             response,
-            """<form method="post", action="/ingest/live_review/">
-        <label for="review_text">Please provide your review for {{source_name}}:</label>
-        <input type="text" name="review_text" id="review_text">
-        <input type="hidden" name="source_id" value={{source_id}}>
-        <br>
-        <input type="submit" value="Submit">
-    </form>""".replace(
+            """ <div class = "title">
+                <p>What do you think about</p><p class = "domain-name">{{source_name}}?</p>
+            </div>
+            <form class="form flex-column center" method="post", action="/ingest/live_review/">
+                <textarea name="review_text" id="review_text" class="textbox" placeholder="Write your review here..."></textarea>
+                <input type="hidden" name="source_id" value={{source_id}}>
+                <button type="submit" value="Submit" class="button clickable-item">submit</button>
+            </form>""".replace(
                 "{{source_name}}", "somesourcename"
             ).replace(
                 "{{source_id}}", "abcde12345"
