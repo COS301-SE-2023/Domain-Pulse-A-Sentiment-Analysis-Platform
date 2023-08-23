@@ -396,4 +396,42 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["status"], "FAILURE")
         self.assertEqual(data["details"], "Invalid request")
 
+    @patch("authchecker.auth_checks.verify_user_owns_source_ids")
+    @patch("datamanager.sentiment_record_model.get_records_by_source_id")
+    @patch("requests.post")
+    def test_valid_request_get_report_data_internal(
+        self, mocked_response, mock_get_records, mock_verify_user
+    ):
+        url = "/query/get_report_data_internal/"
+        source_ids = ["hbfhwbgufbo724n2n7", "hbfhwbgufbo724n2n7"]
+        request_body = {"source_ids": source_ids}
+
+        mock_verify_user.return_value = True, ""
+
+        mock_records = [
+            {},
+            {},
+        ]
+        mock_get_records.return_value = mock_records
+
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "overall": {},
+            "metadata": {},
+            "individual_data": {},
+        }
+        mocked_response.return_value = mock_response
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "SUCCESS")
+        self.assertEqual(data["domain"]["aggregated_metrics"], {})
+        self.assertEqual(data["domain"]["meta_data"], {})
+        self.assertEqual(data["domain"]["individual_metrics"], {})
+
     # ----------------------------------------------------------------
