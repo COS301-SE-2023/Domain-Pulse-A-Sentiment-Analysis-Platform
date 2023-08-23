@@ -50,7 +50,7 @@ def generate_report(request: HttpRequest):
         domain = response_data["domain"]
 
         id = shortuuid.ShortUUID().random(length=12)
-        url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/get_domain_dashboard/"
+        url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/get_report_data_internal/"
         overall_score = 0.8
         val = [1 - overall_score, overall_score]
         val.append(sum(val))
