@@ -388,4 +388,12 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["status"], "FAILURE")
         self.assertEqual(data["details"], "Foreign Request")
 
+    def test_invalid_request_method_get_report_data_internal(self):
+        url = "/query/get_report_data_internal/"
+        response = self.client.get(path=url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Invalid request")
+
     # ----------------------------------------------------------------
