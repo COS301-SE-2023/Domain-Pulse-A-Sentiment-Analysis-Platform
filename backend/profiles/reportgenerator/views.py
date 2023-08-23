@@ -49,8 +49,22 @@ def generate_report(request: HttpRequest):
             )
         domain = response_data["domain"]
 
+        source_ids = []
+        for i in domain["sources"]:
+            source_ids.append(i["source_id"])
+
         id = shortuuid.ShortUUID().random(length=12)
-        url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/get_report_data_internal/"
+        url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+
+        data = {"source_ids": source_ids}
+        response = requests.post(url, json=data, headers=headers)
+        response_data = response.json()
+        if response_data["status"] == "FAILURE":
+            return JsonResponse(
+                {"status": "FAILURE", "details": response_data["details"]}
+            )
+        domain_data = response_data["domain"]
+
         overall_score = 0.8
         val = [1 - overall_score, overall_score]
         val.append(sum(val))
