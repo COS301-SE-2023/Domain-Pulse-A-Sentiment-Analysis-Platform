@@ -24,9 +24,9 @@ export class CommentsViewComponent {
   }
 
   initializeShowCommentArray() {
-    if(this.comments){
+    if (this.comments) {
       this.showComment = Array(this.comments.length).fill(false);
-    }else{
+    } else {
       this.showComment = [];
     }
   }
@@ -38,7 +38,7 @@ export class CommentsViewComponent {
   transformComments(jsonData: any): any[] {
     const individualMetrics = jsonData;
 
-    return individualMetrics.map((metric: any) => ({
+    const temp = individualMetrics.map((metric: any) => ({
       comment: metric.data,
       ratings: [
         `${Math.floor(metric.general.score * 100)}%`,
@@ -46,28 +46,33 @@ export class CommentsViewComponent {
         Object.keys(metric.emotions).reduce((a, b) =>
           metric.emotions[a] > metric.emotions[b] ? a : b
         ),
-        metric.toxicity.level_of_toxic
+        metric.toxicity.level_of_toxic,
       ],
+      ratingColour: [],
     }));
+
+    return temp.map((comment: any) => {
+      comment['ratingCssClass'] = [];
+      for (let i = 0; i < comment.ratings.length; i++) {
+        comment.ratingCssClass.push(this.getRatingClass(i, comment.ratings[i]));
+      }
+      return comment;
+    });
   }
 
   getRatingClass(index: number, score: string): string {
     let colorClass = 'neutral-color';
     if (index === 0) {
       colorClass = this.getRatingColor(score);
-    }
-    else if (index===1){
+    } else if (index === 1) {
       colorClass = this.getCategoryColor(score);
-    }
-    else if (index===2){
+    } else if (index === 2) {
       colorClass = this.getEmotionColor(score);
-    }
-    else if(index===3){
+    } else if (index === 3) {
       colorClass = this.getToxicityColor(score);
     }
     return colorClass;
   }
-
 
   getRatingColor(score: string): string {
     let colorClass = '';
@@ -124,7 +129,7 @@ export class CommentsViewComponent {
 
   getEmotionColor(emotion: string): string {
     let colorClass = '';
-  
+
     switch (emotion) {
       case 'anger':
       case 'disgust':
@@ -144,7 +149,7 @@ export class CommentsViewComponent {
       default:
         colorClass = 'neutral-color';
     }
-  
+
     return colorClass;
   }
 
@@ -162,11 +167,7 @@ export class CommentsViewComponent {
       default:
         colorClass = 'neutral-color';
     }
-  
+
     return colorClass;
   }
-  
-
-  
-
 }

@@ -316,7 +316,7 @@ def refresh_source(request: HttpRequest):
 
         data_to_store = []
         for metrics, stamped in zip(new_data_metrics, new_data):
-            metrics["timestamp"] = stamped["timestamp"]
+            metrics["timestamp"] = int(stamped["timestamp"])
             metrics["source_id"] = source_id_raw
             data_to_store.append(metrics)
 

@@ -1,0 +1,11 @@
+#the packages for most
+django
+django-cors-headers
+python-dotenv
+
+# app specific packages
+psycopg2-binary
+djangorestframework-simplejwt
+
+# move away from sshtunnel
+sshtunnel
