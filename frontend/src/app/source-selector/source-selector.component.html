@@ -292,21 +292,20 @@
   (close)="toggleInfoModal()"
   data-cy="infoModal"
 >
-  <div class="flex-row modal" style="width: 30vw; height: 60vh; color: black">
+  <div class="flex-row modal" style="width: 20vw; height: 55vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="width: 100%; max-width: none"
     >
-      <div class="heading-container">
+      <div class="heading-container" style="padding-bottom: 1rem;">
         <img
           src="../assets/icons/back-arrow-right-light.svg"
           alt="Back Arrow"
           class="back-arrow clickable-item"
           (click)="toggleInfoModal()"
         />
-        <p class="modal-heading">Source Info</p>
       </div>
-      <div class="flex-column center content" style="width: 80%; gap: 0.5rem">
+      <div class="flex-column content" style="width: 80%; gap: 1rem">
         <!-- id: string;
   name: string;
   url: string;
@@ -314,21 +313,42 @@
   selected: boolean;
   isRefreshing: boolean; -->
         <ng-container *ngIf="selectedSource?.url === 'live-review-logo.png'">
-          <p>{{ selectedSource?.name }}</p>
-          <a
-            href="http://localhost:8004/ingest/post-review/{{
-              selectedSource?.id || ''
-            }}/{{ selectedSource?.name || '' }}/"
-          >
-            Visit URL
-          </a>
-          <img
-            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:8004/ingest/post-review/{{
-              selectedSource?.id || ''
-            }}/{{ selectedSource?.name || '' }}/"
-            alt="Source Image"
-          />
-          <ui-switch [checked]="selectedSource?.params" (valueChange)="toggleActive($event)"></ui-switch>
+          <div class="flex-row left">
+            <div class="tag flex-row center">Name</div>
+            <p>{{ selectedSource?.name }}</p>
+          </div>
+          <div class="flex-row left">
+            <div class="tag flex-row center">Live Reviewing</div>
+            <ui-switch
+              [checked]="selectedSource?.params"
+              (valueChange)="toggleActive($event)"
+              checkedLabel="enabled"
+              uncheckedLabel="disabled"
+              size="small"
+            ></ui-switch>
+          </div>
+          <div class="flex-row left">
+            <div class="tag flex-row center">URL</div>
+            <a
+              href="http://localhost:8004/ingest/post-review/{{
+                selectedSource?.id || ''
+              }}/{{ selectedSource?.name || '' }}/"
+              target="_blank"
+            >
+              Live Review Link
+            </a>
+          </div>
+          <div class="flex-column left" style="gap:1rem;">
+            <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:8004/ingest/post-review/{{
+                selectedSource?.id || ''
+              }}/{{ selectedSource?.name || '' }}/"
+              alt="Source Image"
+              style="width: 80%;"
+            />
+          </div>
+          
         </ng-container>
         <ng-container *ngIf="selectedSource?.url === 'youtube-logo.png'">
           <p>{{ selectedSource?.name }}</p>
