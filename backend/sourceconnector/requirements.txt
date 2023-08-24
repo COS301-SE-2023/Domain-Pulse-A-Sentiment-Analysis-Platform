@@ -1,0 +1,8 @@
+#the packages for most
+django
+django-cors-headers
+python-dotenv
+
+# app specific packages
+requests
+outscraper

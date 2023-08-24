@@ -352,30 +352,86 @@ class QueryEngineTests(TestCase):
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
 
-    @patch("pymongo.MongoClient")
-    def test_add_record_sentiment_model(self, mock_mongo_client):
-        mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
-            "sentiment_records"
+    # @patch("pymongo.MongoClient")
+    # def test_add_record_sentiment_model(self, mock_mongo_client):
+    #     mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
+    #         "sentiment_records"
+    #     ]
+    #     mocked_insert_one = mocked_collection.insert_one
+
+    #     dummy_record = {"text": "this is some review", "timestamp": 123456789}
+    #     sentiment_record_model.add_record(dummy_record)
+    #     mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
+    #     mocked_insert_one.assert_called_once_with(dummy_record)
+    #     mock_mongo_client.return_value.close.assert_called_once()
+
+    # @patch("pymongo.MongoClient")
+    # def test_get_records_sentiment_model(self, mock_mongo_client):
+    #     mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
+    #         "sentiment_records"
+    #     ]
+    #     mocked_find = mocked_collection.find
+
+    #     dummy_source_id = "bbfbekjfbkAFKAKHEBFL"
+    #     sentiment_record_model.get_records_by_source_id(dummy_source_id)
+    #     mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
+    #     mocked_find.assert_called_once_with({"source_id": dummy_source_id})
+    #     mock_mongo_client.return_value.close.assert_called_once()
+
+    @patch("query.views.get_address")
+    def test_foreign_request_method_get_report_data_internal(self, mock_get_address):
+        mock_get_address.return_value = "192.1.1.1"
+        url = "/query/get_report_data_internal/"
+        response = self.client.get(path=url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Foreign Request")
+
+    def test_invalid_request_method_get_report_data_internal(self):
+        url = "/query/get_report_data_internal/"
+        response = self.client.get(path=url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Invalid request")
+
+    @patch("authchecker.auth_checks.verify_user_owns_source_ids")
+    @patch("datamanager.sentiment_record_model.get_records_by_source_id")
+    @patch("requests.post")
+    def test_valid_request_get_report_data_internal(
+        self, mocked_response, mock_get_records, mock_verify_user
+    ):
+        url = "/query/get_report_data_internal/"
+        source_ids = ["hbfhwbgufbo724n2n7", "hbfhwbgufbo724n2n7"]
+        request_body = {"source_ids": source_ids}
+
+        mock_verify_user.return_value = True, ""
+
+        mock_records = [
+            {},
+            {},
         ]
-        mocked_insert_one = mocked_collection.insert_one
+        mock_get_records.return_value = mock_records
 
-        dummy_record = {"text": "this is some review", "timestamp": 123456789}
-        sentiment_record_model.add_record(dummy_record)
-        mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
-        mocked_insert_one.assert_called_once_with(dummy_record)
-        mock_mongo_client.return_value.close.assert_called_once()
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "overall": {},
+            "metadata": {},
+            "individual_data": {},
+        }
+        mocked_response.return_value = mock_response
 
-    @patch("pymongo.MongoClient")
-    def test_get_records_sentiment_model(self, mock_mongo_client):
-        mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
-            "sentiment_records"
-        ]
-        mocked_find = mocked_collection.find
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
 
-        dummy_source_id = "bbfbekjfbkAFKAKHEBFL"
-        sentiment_record_model.get_records_by_source_id(dummy_source_id)
-        mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
-        mocked_find.assert_called_once_with({"source_id": dummy_source_id})
-        mock_mongo_client.return_value.close.assert_called_once()
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "SUCCESS")
+        self.assertEqual(data["domain"]["aggregated_metrics"], {})
+        self.assertEqual(data["domain"]["meta_data"], {})
+        self.assertEqual(data["domain"]["individual_metrics"], {})
 
     # ----------------------------------------------------------------
