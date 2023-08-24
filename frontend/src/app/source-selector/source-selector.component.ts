@@ -207,7 +207,7 @@ export class SourceSelectorComponent implements OnInit {
     this.toggleInfoModal();
   }
 
-  onValueChange(event: any) {
+  toggleActive(event: any) {
     console.log('onValueChange', event);
 
     const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
