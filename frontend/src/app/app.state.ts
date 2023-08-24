@@ -29,6 +29,7 @@ import {
   Logout,
   EditSource,
   SetAllSourcesSelected,
+  SetIsActive,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -1103,17 +1104,60 @@ export class AppState {
     });
   }
 
+  @Action(SetIsActive)
+  setIsActive(ctx: StateContext<AppStateModel>, state: SetIsActive) {
+
+    const currentState = ctx.getState();
+    const selectedSource = currentState.selectedSource;
+    const sources = currentState.sources || [];
+
+    if (!selectedSource) {
+      this.store.dispatch(new ToastError('No selected source to toggle'));
+      return;
+    }
+
+    const sourceID = selectedSource.id;
+    const activeVal = state.isActive;
+
+    this.appApi.setIsActive(sourceID, activeVal).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your live review source could not be toggled'));
+        return;
+      } else if (res.status === 'SUCCESS') {
+
+        this.store.dispatch(new ToastSuccess('Your live review source has been toggled to ' + activeVal));
+
+        const updatedSources = sources.map((source) => {
+          if (source.id === sourceID) {
+            return { ...source, params: activeVal };
+          }
+          return source;
+        });
+
+        ctx.patchState({
+          sources: updatedSources,
+          selectedSource: { ...selectedSource, params: activeVal },
+        });
+
+      }
+    });
+    
+  }
+
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
 
     for (let responseSource of responseSources) {
-      let sourceUrl = '';
+      let sourceUrl: any = '';
       if (responseSource.params.video_id) {
         sourceUrl = responseSource.params.video_id;
       } else if (responseSource.params.maps_url) {
-        sourceUrl = responseSource.params.maps_ur;
+        sourceUrl = responseSource.params.maps_url;
       } else if (responseSource.params.tripadvisor_url) {
         sourceUrl = responseSource.params.tripadvisor_url;
+      }
+      else if (responseSource.params.is_active){
+        sourceUrl = responseSource.params.is_active;
       }
 
       console.log(responseSource);

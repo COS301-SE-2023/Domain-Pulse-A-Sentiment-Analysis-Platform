@@ -328,7 +328,8 @@
             }}/{{ selectedSource?.name || '' }}/"
             alt="Source Image"
           />
-          <ui-switch [(ngModel)]="isOpen" (valueChange)="onValueChange($event)"></ui-switch>
+          <p>{{ selectedSource?.params }}</p>
+          <ui-switch [checked]="selectedSource?.params" (valueChange)="onValueChange($event)"></ui-switch>
         </ng-container>
         <ng-container *ngIf="selectedSource?.url === 'youtube-logo.png'">
           <p>{{ selectedSource?.name }}</p>

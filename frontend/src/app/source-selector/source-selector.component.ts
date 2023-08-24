@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetSource, SetSourceIsLoading, ToastError } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -209,6 +209,13 @@ export class SourceSelectorComponent implements OnInit {
 
   onValueChange(event: any) {
     console.log('onValueChange', event);
+
+    const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
+    
+
+
+    this.store.dispatch(new SetIsActive(!selectedSource?.params));
+
 
   }
 }
