@@ -1125,7 +1125,7 @@ export class AppState {
         return;
       } else if (res.status === 'SUCCESS') {
 
-        this.store.dispatch(new ToastSuccess('Your live review source has been toggled to ' + activeVal));
+        this.store.dispatch(new ToastSuccess('Your live review source access has been toggled'));
 
         const updatedSources = sources.map((source) => {
           if (source.id === sourceID) {
