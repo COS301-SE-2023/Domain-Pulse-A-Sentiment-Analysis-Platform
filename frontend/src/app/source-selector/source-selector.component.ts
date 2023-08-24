@@ -39,7 +39,25 @@ export class SourceSelectorComponent implements OnInit {
     this.selectedSource$.subscribe(source => {
       this.selectedSource = source;
     });
+
+    const copyIcon = document.getElementById('copyIcon');
+    if (copyIcon) {
+      copyIcon.addEventListener('click', () => {
+        this.copyToClipboard();
+      });
+    }
+    
   }
+
+  copyToClipboard() {
+    const liveReviewLink = document.getElementById('liveReviewLink');
+    if (liveReviewLink) {
+      const textToCopy = liveReviewLink.getAttribute('href')!;
+      navigator.clipboard.writeText(textToCopy);
+    }
+  }
+
+  
 
   selectSource(source: DisplaySource) {
     this.store.dispatch(new SetAllSourcesSelected(false));

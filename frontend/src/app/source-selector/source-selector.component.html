@@ -315,7 +315,7 @@
         <ng-container *ngIf="selectedSource?.url === 'live-review-logo.png'">
           <div class="flex-row left">
             <div class="tag flex-row center">Name</div>
-            <p>{{ selectedSource?.name }}</p>
+            <p class="info-data">{{ selectedSource?.name }}</p>
           </div>
           <div class="flex-row left">
             <div class="tag flex-row center">Live Reviewing</div>
@@ -330,6 +330,7 @@
           <div class="flex-row left">
             <div class="tag flex-row center">URL</div>
             <a
+              id="liveReviewLink"
               href="http://localhost:8004/ingest/post-review/{{
                 selectedSource?.id || ''
               }}/{{ selectedSource?.name || '' }}/"
@@ -337,6 +338,7 @@
             >
               Live Review Link
             </a>
+            <img id="copyIcon" src="../assets/icons/copy.svg" alt="copy live review link" class="copy-icon clickable-item" (click)="copyToClipboard()"/>
           </div>
           <div class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
