@@ -353,11 +353,28 @@
           
         </ng-container>
         <ng-container *ngIf="selectedSource?.url === 'youtube-logo.png'">
-          <p>{{ selectedSource?.name }}</p>
-          <p>{{ selectedSource?.url }}</p>
-          <a href="https://www.youtube.com/watch?v={{ selectedSource?.params }}"
-            >https://www.youtube.com/watch?v={{ selectedSource?.params }}</a
-          >
+          <div class="flex-row left">
+            <div class="tag flex-row center">Name</div>
+            <p class="info-data">{{ selectedSource?.name }}</p>
+          </div>
+          <div class="flex-row left">
+            <div class="tag flex-row center">URL</div>
+            <a
+              id="youtube video link"
+              href="https://www.youtube.com/watch?v={{ selectedSource?.params }}"
+              target="_blank"
+            >
+              Youtube Video Link
+            </a>
+          </div>
+          <div class="flex-column left" style="gap:1rem;">
+            <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.youtube.com/watch?v={{ selectedSource?.params }}"
+              alt="Source Image"
+              style="width: 80%;"
+            />
+          </div>
         </ng-container>
         <ng-container
           *ngIf="
@@ -365,11 +382,28 @@
             selectedSource?.url !== 'youtube-logo.png'
           "
         >
-          <p>{{ selectedSource?.name }}</p>
-          <p>{{ selectedSource?.params }}</p>
-          <a href="{{ selectedSource?.params }}">{{
-            selectedSource?.params
-          }}</a>
+        <div class="flex-row left">
+          <div class="tag flex-row center">Name</div>
+          <p class="info-data">{{ selectedSource?.name }}</p>
+        </div>
+        <div class="flex-row left">
+          <div class="tag flex-row center">URL</div>
+          <a
+            id="source link"
+            href="{{ selectedSource?.params }}"
+            target="_blank"
+          >
+            Link to Source
+          </a>
+        </div>
+        <div class="flex-column left" style="gap:1rem;">
+          <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ selectedSource?.params }}"
+            alt="Source Image"
+            style="width: 80%;"
+          />
+        </div>
         </ng-container>
       </div>
     </div>
