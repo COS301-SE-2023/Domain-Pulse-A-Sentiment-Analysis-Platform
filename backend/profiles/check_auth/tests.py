@@ -1,3 +1,4 @@
+import os
 from django.test import TestCase
 from profileservice import models as profile_models
 from profileservice import views as profile_views
@@ -19,10 +20,6 @@ def mocked_create_profile(dummy, dummy1, dummy2):
 
 def mocked_login(dummy, dummy1):
     return {}
-
-
-def mocked_address(dummy):
-    return socket.gethostbyname(socket.gethostname())
 
 
 def mocked_extract_token(dummy):
@@ -88,7 +85,6 @@ class ProfileChecksTests(TestCase):
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
-    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
     @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
     @mock.patch(
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
@@ -105,7 +101,6 @@ class ProfileChecksTests(TestCase):
         self,
         mock_create_profile,
         mock_login,
-        mock_address,
         mock_extract_token,
         mock_get_user,
         mock_get_domains,
@@ -126,7 +121,11 @@ class ProfileChecksTests(TestCase):
             id = 5
 
         profilescrud.add_domain_to_profile(response["id"], "1")
-        data = {"domain_ids": ["1"], "item": {"id": "1"}}
+        data = {
+            "domain_ids": ["1"],
+            "item": {"id": "1"},
+            "local_key": os.getenv("LOCAL_KEY"),
+        }
         request2.user = MockUserLoggedIn()
         request2._body = json.dumps(data)
 
@@ -139,7 +138,6 @@ class ProfileChecksTests(TestCase):
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
-    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
     @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
     @mock.patch(
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
@@ -156,7 +154,6 @@ class ProfileChecksTests(TestCase):
         self,
         mock_create_profile,
         mock_login,
-        mock_address,
         mock_extract_token,
         mock_get_user,
         mock_get_domains,
@@ -176,7 +173,7 @@ class ProfileChecksTests(TestCase):
             is_authenticated = True
             id = 5
 
-        data = {"domain_ids": ["1", "2", "3"]}
+        data = {"domain_ids": ["1", "2", "3"], "local_key": os.getenv("LOCAL_KEY")}
         request2.user = MockUserLoggedIn()
         request2._body = json.dumps(data)
         jwt = response["JWT"]
@@ -188,7 +185,6 @@ class ProfileChecksTests(TestCase):
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
-    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
     @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
     @mock.patch(
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
@@ -201,7 +197,6 @@ class ProfileChecksTests(TestCase):
         self,
         mock_create_profile,
         mock_login,
-        mock_address,
         mock_extract_token,
         mock_get_user,
         mock_add_source,
@@ -222,7 +217,7 @@ class ProfileChecksTests(TestCase):
 
         profilescrud.add_domain_to_profile(response["id"], "1")
 
-        data = {"domain_id": "1", "source_id": "1"}
+        data = {"domain_id": "1", "source_id": "1", "local_key": os.getenv("LOCAL_KEY")}
         request2.user = MockUserLoggedIn()
         request2._body = json.dumps(data)
         jwt = response["JWT"]
@@ -234,7 +229,6 @@ class ProfileChecksTests(TestCase):
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
-    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
     @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
     @mock.patch(
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
@@ -247,7 +241,6 @@ class ProfileChecksTests(TestCase):
         self,
         mock_create_profile,
         mock_login,
-        mock_address,
         mock_extract_token,
         mock_get_user,
         mock_add_domain,
@@ -266,7 +259,7 @@ class ProfileChecksTests(TestCase):
             is_authenticated = True
             id = 5
 
-        data = {"id": "1"}
+        data = {"id": "1", "local_key": os.getenv("LOCAL_KEY")}
 
         request2.user = MockUserLoggedIn()
         request2._body = json.dumps(data)
@@ -280,7 +273,6 @@ class ProfileChecksTests(TestCase):
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
-    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
     @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
     @mock.patch(
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
@@ -297,7 +289,6 @@ class ProfileChecksTests(TestCase):
         self,
         mock_create_profile,
         mock_login,
-        mock_address,
         mock_extract_token,
         mock_get_user,
         mock_get_sources,
@@ -319,7 +310,11 @@ class ProfileChecksTests(TestCase):
 
         profilescrud.add_domain_to_profile(response["id"], "1")
 
-        data = {"source_ids": ["1"], "item": {"id": "1", "source_id": "1"}}
+        data = {
+            "source_ids": ["1"],
+            "item": {"id": "1", "source_id": "1"},
+            "local_key": os.getenv("LOCAL_KEY"),
+        }
         request2.user = MockUserLoggedIn()
         request2._body = json.dumps(data)
         jwt = response["JWT"]
@@ -370,7 +365,6 @@ class ProfileChecksTests(TestCase):
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
-    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
     @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
     @mock.patch(
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
@@ -383,7 +377,6 @@ class ProfileChecksTests(TestCase):
         self,
         mock_create_profile,
         mock_login,
-        mock_address,
         mock_extract_token,
         mock_get_user,
         mock_get_sources,
@@ -416,7 +409,6 @@ class ProfileChecksTests(TestCase):
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
-    @mock.patch("check_auth.views.get_address", side_effect=mocked_address)
     @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
     @mock.patch(
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
@@ -429,7 +421,6 @@ class ProfileChecksTests(TestCase):
         self,
         mock_create_profile,
         mock_login,
-        mock_address,
         mock_extract_token,
         mock_get_user,
         mock_get_domains,

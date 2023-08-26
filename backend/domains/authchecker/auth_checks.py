@@ -44,7 +44,7 @@ def verify_user_owns_source_ids(
 
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
     item = dict(json.loads(original_request.body))
-    data = {"source_ids": source_ids, "item": item}
+    data = {"source_ids": source_ids, "item": item, "local_key": os.getenv("LOCAL_KEY")}
     if action == None:
         response = requests.post(VERIFY_SOURCES_ENDPOINT, json=data, headers=headers)
     elif action == "remove_source":
@@ -78,7 +78,7 @@ def verify_user_owns_domain_ids(
 
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
     item = dict(json.loads(original_request.body))
-    data = {"domain_ids": domain_ids, "item": item}
+    data = {"domain_ids": domain_ids, "item": item, "local_key": os.getenv("LOCAL_KEY")}
 
     if action == None:
         response = requests.post(VERIFY_DOMAINS_ENDPOINT, json=data, headers=headers)
@@ -108,7 +108,7 @@ def create_domain_in_profile(original_request: HttpRequest, domain_id):
 
     jwt = details
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-    data = {"id": domain_id}
+    data = {"id": domain_id, "local_key": os.getenv("LOCAL_KEY")}
     response = requests.post(ADD_DOMAIN_ENDPOINT, json=data, headers=headers)
     return response
 
@@ -121,6 +121,10 @@ def add_source_in_profile(original_request: HttpRequest, domain_id, source_id):
 
     jwt = details
     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-    data = {"domain_id": domain_id, "source_id": source_id}
+    data = {
+        "domain_id": domain_id,
+        "source_id": source_id,
+        "local_key": os.getenv("LOCAL_KEY"),
+    }
     response = requests.post(ADD_SOURCE_ENDPOINT, json=data, headers=headers)
     return response
