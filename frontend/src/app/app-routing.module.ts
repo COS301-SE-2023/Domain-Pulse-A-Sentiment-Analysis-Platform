@@ -5,9 +5,11 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { MainComponent } from './main/main.component';
 import { AuthGuardService } from './auth.guard';
+import { HelpPageComponent } from './help-page/help-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
+  { path: 'help', component: HelpPageComponent},
   { path: 'register', component: RegisterPageComponent },
   { path: '', component: MainComponent, canActivate: [AuthGuardService] },
   { path: '**', redirectTo: 'register' },
