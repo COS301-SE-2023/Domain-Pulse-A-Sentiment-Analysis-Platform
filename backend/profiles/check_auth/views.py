@@ -8,6 +8,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+import socket
 
 
 # Create your views here.
@@ -106,7 +107,7 @@ def validate_token(request):
 
 @csrf_exempt
 def check_source_ids_and_remove_source(request):
-    if get_address(request) == "127.0.0.1":
+    if get_address(request) == socket.gethostbyname(socket.gethostname()):
         if request.method == "POST":
             flag, token = extract_token(request)
             user = get_user_from_token(token)
@@ -151,7 +152,7 @@ def check_source_ids_and_remove_source(request):
 
 @csrf_exempt
 def add_domain(request):
-    if get_address(request) == "127.0.0.1":
+    if get_address(request) == socket.gethostbyname(socket.gethostname()):
         if request.method == "POST":
             flag, token = extract_token(request)
 
@@ -183,7 +184,7 @@ def add_domain(request):
 
 @csrf_exempt
 def add_source(request):
-    if get_address(request) == "127.0.0.1":
+    if get_address(request) == socket.gethostbyname(socket.gethostname()):
         if request.method == "POST":
             flag, token = extract_token(request)
 
@@ -217,7 +218,7 @@ def add_source(request):
 
 @csrf_exempt
 def check_domain_ids_and_remove_domain(request):
-    if get_address(request) == "127.0.0.1":
+    if get_address(request) == socket.gethostbyname(socket.gethostname()):
         if request.method == "POST":
             flag, token = extract_token(request)
             user = get_user_from_token(token)
