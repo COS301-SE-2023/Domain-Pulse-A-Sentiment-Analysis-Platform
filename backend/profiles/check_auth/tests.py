@@ -6,6 +6,7 @@ from unittest import mock
 from django.http import HttpRequest, JsonResponse
 from utils import profilescrud
 import json
+import socket
 
 
 # Create your tests here.
@@ -21,7 +22,7 @@ def mocked_login(dummy, dummy1):
 
 
 def mocked_address(dummy):
-    return "127.0.0.1"
+    return socket.gethostbyname(socket.gethostname())
 
 
 def mocked_extract_token(dummy):
