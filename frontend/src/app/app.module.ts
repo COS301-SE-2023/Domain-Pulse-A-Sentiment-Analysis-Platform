@@ -22,6 +22,7 @@ import { AppApi } from './app.api';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
 import { ApiInterceptor } from './api.interceptor';
+import { HelpPageComponent } from './help-page/help-page.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ApiInterceptor } from './api.interceptor';
     RegisterPageComponent,
     MainComponent,
     SourceSelectorComponent,
+    HelpPageComponent,
   ],
   imports: [
     BrowserModule,
