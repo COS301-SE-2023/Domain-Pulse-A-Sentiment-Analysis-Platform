@@ -59,6 +59,7 @@
       <img
         (click)="toggleEditDomainModal(); $event.stopPropagation()"
         src="../assets/icons/pen-solid.svg"
+        [tooltip]="'Edit existing domain'"
         height="15px"
         class="clickable-item"
         data-cy="editDomainModalToggle"
