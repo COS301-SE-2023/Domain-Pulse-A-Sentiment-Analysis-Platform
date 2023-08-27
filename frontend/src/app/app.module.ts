@@ -23,6 +23,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
 import { ApiInterceptor } from './api.interceptor';
 import { HelpPageComponent } from './help-page/help-page.component';
+import { TooltipDirective } from './tooltip.directive';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { HelpPageComponent } from './help-page/help-page.component';
     MainComponent,
     SourceSelectorComponent,
     HelpPageComponent,
+    TooltipDirective,
   ],
   imports: [
     BrowserModule,
