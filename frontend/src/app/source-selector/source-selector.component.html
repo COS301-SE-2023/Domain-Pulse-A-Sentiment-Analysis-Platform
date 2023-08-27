@@ -45,6 +45,7 @@
     >
       <img
         src="../assets/icons/add-blue.svg"
+        [tooltip]="'The \'+\' button is to begin the process of adding a new source'"
         style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem"
       />
       <!-- <p>Add a Source</p> -->
@@ -81,7 +82,7 @@
           src="../assets/icons/trash-can-regular.svg"
           alt="Icon"
         />
-        <span class="button-text" [tooltip]="'wopshot'">Delete</span>
+        <span class="button-text" [tooltip]="'The \'Delete\' button deletes the source currently selected'">Delete</span>
       </div>
       <div class="button clickable-item">
         <img class="button-icon" src="../assets/icons/search.svg" alt="Icon" />
@@ -184,12 +185,28 @@
           <p class="modal-step-tag">3</p>
           <div class="flex-column" style="width: 100%">
             <p class="step-heading">Source url:</p>
-            <input
+            <div class="flex-row">
+              <input
               class="default-input"
+              style="flex-basis: 90%;"
               [(ngModel)]="newSourceUrl"
               type="text"
               data-cy="newSourceUrlInp"
+              
             />
+            <!-- tooltip for help with icon -->
+            <span [tooltip]="'The \'?\' button is to help you find the url of the source you want to add'">
+              
+              <img
+                src="../../assets/cat-1.png"
+                
+                style="width: 40px; padding-bottom: 0.5rem; padding-right: 2rem;"
+              />
+
+            </span>
+              
+            </div>
+            
           </div>
         </div>
 
