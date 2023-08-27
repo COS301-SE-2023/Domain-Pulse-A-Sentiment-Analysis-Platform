@@ -185,12 +185,28 @@
           <p class="modal-step-tag">3</p>
           <div class="flex-column" style="width: 100%">
             <p class="step-heading">Source url:</p>
-            <input
+            <div class="flex-row">
+              <input
               class="default-input"
+              style="flex-basis: 90%;"
               [(ngModel)]="newSourceUrl"
               type="text"
               data-cy="newSourceUrlInp"
+              
             />
+            <!-- tooltip for help with icon -->
+            <span [tooltip]="'The \'?\' button is to help you find the url of the source you want to add'">
+              
+              <img
+                src="../../assets/cat-1.png"
+                
+                style="width: 40px; padding-bottom: 0.5rem; padding-right: 2rem;"
+              />
+
+            </span>
+              
+            </div>
+            
           </div>
         </div>
 
