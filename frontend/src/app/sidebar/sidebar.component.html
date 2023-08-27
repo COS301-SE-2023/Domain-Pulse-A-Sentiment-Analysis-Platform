@@ -66,6 +66,7 @@
       />
       <img
         src="../assets/icons/grey-trash.svg"
+        [tooltip]="'Removes the domain from your list'"
         height="15px"
         (click)="
           toggleConfirmDeleteDomainModal(domain.id); $event.stopPropagation()
