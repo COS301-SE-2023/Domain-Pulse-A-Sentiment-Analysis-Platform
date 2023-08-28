@@ -9,3 +9,6 @@ djangorestframework-simplejwt
 
 # move away from sshtunnel
 sshtunnel
+
+#monitoring
+elastic-apm

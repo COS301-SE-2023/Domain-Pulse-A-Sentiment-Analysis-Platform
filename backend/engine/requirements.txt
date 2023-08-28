@@ -9,3 +9,6 @@ transformers
 vadersentiment
 nltk
 python-socketio
+
+#monitoring
+elastic-apm

@@ -30,6 +30,7 @@ outscraper = "*"
 python-socketio = "*"
 eventlet = "*"
 bleach = "*"
+elastic-apm = "*"
 
 [dev-packages]
 

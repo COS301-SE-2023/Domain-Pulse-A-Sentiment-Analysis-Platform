@@ -7,3 +7,6 @@ python-dotenv
 pymongo
 requests
 bleach
+
+#monitoring
+elastic-apm

@@ -6,3 +6,6 @@ python-dotenv
 # app specific packages
 requests
 outscraper
+
+#monitoring
+elastic-apm

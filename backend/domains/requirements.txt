@@ -7,3 +7,6 @@ requests
 # app specific packages
 pymongo
 outscraper
+
+#monitoring
+elastic-apm
