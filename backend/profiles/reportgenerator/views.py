@@ -57,7 +57,7 @@ def generate_report(request: HttpRequest):
         url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
 
         data = {"source_ids": source_ids}
-        response = requests.post(url, json=data, headers=headers)
+        response = requests.post(url, json=data)
         response_data = response.json()
         if response_data["status"] == "FAILURE":
             return JsonResponse(
