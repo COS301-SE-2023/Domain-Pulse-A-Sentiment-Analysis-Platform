@@ -32,7 +32,28 @@ def upload_pdf_to_azure(file_path, file_name):
 
 @csrf_exempt
 def generate_report(request: HttpRequest):
-    html_template = '<div class="header"> <h1>Domain Pulse</h1> </div>'
+    html_template = '<div class="header"> <h1>Hello World</h1> </div>'
+
+    output = f'<html>{html_template}</html>'
+
+    config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
+    output_pdf = "Report"
+    temp_file = tempfile.NamedTemporaryFile(
+        prefix=output_pdf,
+        suffix=".pdf",
+        dir="profiles/reportgenerator",
+        delete=False,
+    )
+    pdf_path = temp_file.name
+    pdfkit.from_string(
+        output,
+        pdf_path,
+        configuration=config,
+        css="profiles/css/style.css",
+        options={"enable-local-file-access": ""},
+    )
+
+    return
 
     if request.method == "POST":
         raw_data = json.loads(request.body)
