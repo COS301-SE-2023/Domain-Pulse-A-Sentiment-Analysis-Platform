@@ -44,7 +44,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "refresh",
+    "elasticapm.contrib.django",
 ]
+
+ELASTIC_APM = {
+    "LOG_LEVEL": "debug",
+    "SERVER_URL": os.getenv("APM_SERVER_URL"),
+    "SERVICE_NAME": "sourceconnector",
+    "SECRET_TOKEN": "<shared with gpg>",
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

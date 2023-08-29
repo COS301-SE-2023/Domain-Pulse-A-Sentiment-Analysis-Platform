@@ -34,7 +34,7 @@ RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
+    "127.0.0.1",
     "localhost",
     "154.73.32.89",
     ".domainpulse.app",
@@ -67,7 +67,15 @@ INSTALLED_APPS = [
     "profileservice",
     "check_auth",
     "corsheaders",
+    "elasticapm.contrib.django",
 ]
+
+ELASTIC_APM = {
+    "LOG_LEVEL": "debug",
+    "SERVER_URL": os.getenv("APM_SERVER_URL"),
+    "SERVICE_NAME": "profiles",
+    "SECRET_TOKEN": "<shared with gpg>",
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -108,7 +116,6 @@ from sshtunnel import SSHTunnelForwarder
 
 local_port_to_connect_to = -1
 if os.getenv("USE_TUNNEL") != "False":
-
     # setup ssh tunnel
     ssh_tunnel = SSHTunnelForwarder(
         os.getenv("DB_TUNNEL_HOST"),
