@@ -1,7 +1,19 @@
+body {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
 .header {
-    padding: 10px;
+    padding: 0;
+    margin: 0;
     text-align: right;
     background: #037fff;
     color: white;
     font-size: 10px;
+}
+
+.page {
+    margin: 0;
+    padding: 0;
+    page-break-after: always;
 }

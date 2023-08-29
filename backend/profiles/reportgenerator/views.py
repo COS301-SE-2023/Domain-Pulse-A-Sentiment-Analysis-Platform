@@ -32,7 +32,10 @@ def upload_pdf_to_azure(file_path, file_name):
 
 @csrf_exempt
 def generate_report(request: HttpRequest):
-    html_template = '<div class="header"> <h1>Hello World</h1> </div>'
+    #html_template = '<div class="header"><h1>Hello World</h1> </div>'
+
+    with open("profiles/css/input_template.html", "r") as html_template_file:
+        html_template = html_template_file.read()
 
     output = f'<html>{html_template}</html>'
 
