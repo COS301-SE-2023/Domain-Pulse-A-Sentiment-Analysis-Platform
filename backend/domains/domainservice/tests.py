@@ -64,7 +64,7 @@ def mocked_find_one(dummy):
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
-                "params": {"t": "t"},
+                "params": {"t": "t", "source_type": "livereview"},
             }
         ],
     }
@@ -1055,3 +1055,11 @@ class DomainsTests(TestCase):
         self.assertEqual(
             response.json(), {"status": "FAILURE", "details": "Some auth error"}
         )
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_toogle_is_active(self, mock_find, mock_update):
+        result = domainscrud.set_source_active("64a2d2e0b5b66c122b03e8d2", True)
+        self.assertEqual(result, True)
