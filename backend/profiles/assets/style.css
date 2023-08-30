@@ -10,6 +10,7 @@ body {
 
 p{
     margin: 0;
+    font-family: 'Source Sans 3', sans-serif;
 }
 
 .flex-row{
@@ -32,7 +33,7 @@ p{
 }
 
 .content{
-    height: 81.6%;
+    height: 78%;
     width: 90%;
     margin-top: 8%;
     margin-bottom: 3%;
@@ -53,6 +54,25 @@ p{
     top: 0;
     width: 100%;
     height: fit-content;
+}
+
+.dp-icon{
+    width: 95%;
+    z-index: 999;
+}
+
+.watermark{
+    width: 50px;
+    float: right;
+    padding-top:2rem;
+}
+
+.top-right {
+    position:sticky;
+    top: 0;
+    right: 0;
+    padding: 10px; /* Add padding for spacing */
+    background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent background */
 }
 
 
@@ -107,10 +127,13 @@ p{
     position: absolute;
     bottom: 0;
     right: 0;
-    color: rgb(201, 85, 85);
+    color: white;
+    font-family: 'open sans', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
     z-index: 999;
     margin-bottom: 1rem;
-    margin-right: 1rem;
+    margin-right: 2rem;
 }
 
 
