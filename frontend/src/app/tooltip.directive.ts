@@ -28,13 +28,10 @@ export class TooltipDirective {
     this.renderer.setStyle(this.tooltip, 'position', 'absolute');
     this.renderer.setStyle(this.tooltip, 'z-index', '11');
     
-    // Position the tooltip to the right of the element
-    // this.renderer.setStyle(this.tooltip, 'top', rect.top - 40 + 'px');
-    // this.renderer.setStyle(this.tooltip, 'left', rect.right + 'px');
-    this.updateTooltipPosition();
 
     this.tooltip.textContent = this.tooltipText;
     this.renderer.appendChild(document.body, this.tooltip);
+    this.updateTooltipPosition();
   }
 
   @HostListener('mouseleave') onMouseLeave() {
