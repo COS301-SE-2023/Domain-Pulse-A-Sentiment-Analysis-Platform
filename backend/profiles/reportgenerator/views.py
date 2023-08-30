@@ -32,10 +32,19 @@ def upload_pdf_to_azure(file_path, file_name):
 
 @csrf_exempt
 def generate_report(request: HttpRequest):
-    #html_template = '<div class="header"><h1>Hello World</h1> </div>'
 
-    with open("profiles/css/input_template.html", "r") as html_template_file:
+    assets_path = os.getenv("ASSETS_PATH")
+
+    #html_template = f'<div class="header"><h1>Hello World</h1> <img src="{assets_path}/images/google-logo.png"></div>'
+
+
+    with open(assets_path + "/input_template.html", "r") as html_template_file:
         html_template = html_template_file.read()
+
+    html_template = html_template.replace('{assets_path}', assets_path)
+
+    # Format the html_template string.
+    html_template = format(html_template)
 
     output = f'<html>{html_template}</html>'
 
@@ -44,7 +53,7 @@ def generate_report(request: HttpRequest):
     temp_file = tempfile.NamedTemporaryFile(
         prefix=output_pdf,
         suffix=".pdf",
-        dir="profiles/reportgenerator",
+        dir= assets_path,
         delete=False,
     )
     pdf_path = temp_file.name
@@ -52,11 +61,17 @@ def generate_report(request: HttpRequest):
         output,
         pdf_path,
         configuration=config,
-        css="profiles/css/style.css",
-        options={"enable-local-file-access": ""},
+        css= assets_path + "/style.css",
+        options={"enable-local-file-access": "",
+                'margin-top': '0in',
+                'margin-right': '0in',
+                'margin-bottom': '0in',
+                'margin-left': '0in',
+                'encoding': "UTF-8",
+                'no-outline': None},
     )
 
-    return
+    return JsonResponse({"status": "SUCCESS", "url": ""})
 
     if request.method == "POST":
         raw_data = json.loads(request.body)

@@ -1,0 +1,77 @@
+body {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    background-color: #DFEEFE;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.align-center{
+    align-items: center;
+}
+
+.center{
+    justify-content: center;
+    align-items: center;
+}
+
+.content{
+    height: 81.6%;
+    width: 90%;
+    margin-top: 8%;
+    margin-bottom: 3%;
+}
+
+.outline{
+    border: 0.1px #DFEEFE solid;
+
+}
+.header {
+    margin: 0;
+    padding: 0;
+    background: #037fff;
+    color: white;
+    font-size: 10px;
+}
+
+.page {
+    page-break-after: always;
+    width: 30cm;
+    height: 42.46cm;
+    overflow: hidden;
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
+}
+
+.footer-image {
+    width: 100%; /* Set the width to 100% of the container */
+    position: relative; /* Position the image absolutely within the footer */
+    bottom: 0; /* Position the image at the bottom of the footer */
+    left: 0; /* Align the image to the left edge of the footer */
+}
+
+.pageNum{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: rgb(201, 85, 85);
+    z-index: 999;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+}
+
+
