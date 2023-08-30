@@ -35,6 +35,10 @@ def mocked_find_one_with_excpetion(dummy):
     raise Exception()
 
 
+def mocked_failing_auth(**dummy):
+    return False, "Some auth error"
+
+
 def mocked_insert_one(dummy):
     mock = MockedItem()
     mock.name = dummy["name"]
@@ -776,7 +780,10 @@ class DomainsTests(TestCase):
             data=json.dumps(request_body),
             content_type="application/json",
         )
-        assert response.json() == {"status": "SUCCESS", "details": "Valid live and active source"}
+        assert response.json() == {
+            "status": "SUCCESS",
+            "details": "Valid live and active source",
+        }
 
     def test_endpoints_post_only(self):
         response: JsonResponse = self.client.get(
@@ -917,3 +924,134 @@ class DomainsTests(TestCase):
         status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
+
+    @mock.patch(
+        "authchecker.auth_checks.verify_user_owns_source_ids",
+        side_effect=mocked_failing_auth,
+    )
+    @mock.patch(
+        "authchecker.auth_checks.verify_user_owns_domain_ids",
+        side_effect=mocked_failing_auth,
+    )
+    def test_endpoints_fail_auth(self, mock1, mock2):
+        request_body = {
+            "id": "64ef5dcb0c87c0a4316cb9ad",
+            "source_id": "64ef5dcb0c87c0a4316cb9ad",
+        }
+
+        response: JsonResponse = self.client.post(
+            path="/domains/create_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/delete_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/get_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/add_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/remove_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/create_param",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/delete_param",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/get_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/update_last_refresh",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/edit_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/edit_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        # response: JsonResponse = self.client.post(
+        #     path="/domains/verify_live_source",
+        #     data=json.dumps(request_body),
+        #     content_type="application/json",
+        # )
+        # self.assertEqual(
+        #     response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        # )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/toggle_is_active",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
