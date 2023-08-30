@@ -13,9 +13,9 @@ export class TooltipDirective {
 
   @Input('tooltip') tooltipText: string = '';
   @Input() tooltipPosition: string = 'right'; // Default position is right
+  @Input('mul') tooltipMargin: number = 1.0; 
 
   @HostListener('mouseenter') onMouseEnter() {
-    this.updateTooltipPosition();
     this.renderer.setStyle(this.tooltip, 'background-color', '#333');
     this.renderer.setStyle(this.tooltip, 'color', 'white');
     this.renderer.setStyle(this.tooltip, 'padding', '10px');
@@ -46,26 +46,27 @@ export class TooltipDirective {
 
   private updateTooltipPosition() {
     const rect = this.el.nativeElement.getBoundingClientRect();
-    console.log("left", rect.left);
-    console.log("top", rect.top);
-    console.log("width", rect.width);
-    console.log("height", rect.height);
+    const tooltipRect = this.tooltip.getBoundingClientRect();
+
+    const tooltipWidth = tooltipRect.width * this.tooltipMargin;
+    const tooltipHeight = tooltipRect.height * this.tooltipMargin;
+
     switch (this.tooltipPosition) {
       case 'top':
-        this.renderer.setStyle(this.tooltip, 'top', rect.top - 40 + 'px');
-        this.renderer.setStyle(this.tooltip, 'left', rect.left + rect.width / 2 + 'px');
+        this.renderer.setStyle(this.tooltip, 'top', rect.top - tooltipHeight + 'px');
+        this.renderer.setStyle(this.tooltip, 'left', rect.left + rect.width / 2 - tooltipRect.width / 2 + 'px');
         break;
       case 'right':
-        this.renderer.setStyle(this.tooltip, 'top', rect.top - 40 + 'px');
-        this.renderer.setStyle(this.tooltip, 'left', rect.right + 'px');
+        this.renderer.setStyle(this.tooltip, 'top', rect.top + rect.height / 2 - tooltipRect.height / 2 + 'px');
+        this.renderer.setStyle(this.tooltip, 'left', rect.right + tooltipWidth - tooltipRect.width + 'px');
         break;
       case 'bottom':
-        this.renderer.setStyle(this.tooltip, 'top', rect.bottom + 'px');
-        this.renderer.setStyle(this.tooltip, 'left', rect.left + rect.width / 2 + 'px');
+        this.renderer.setStyle(this.tooltip, 'top', rect.bottom + tooltipHeight - tooltipRect.height + 'px');
+        this.renderer.setStyle(this.tooltip, 'left', rect.left + rect.width / 2 - tooltipRect.width / 2 + 'px');
         break;
       case 'left':
-        this.renderer.setStyle(this.tooltip, 'top', rect.top - 40 + 'px');
-        this.renderer.setStyle(this.tooltip, 'left', rect.left - rect.width - 150  + 'px');
+        this.renderer.setStyle(this.tooltip, 'top', rect.top + rect.height / 2 - tooltipRect.height / 2 + 'px');
+        this.renderer.setStyle(this.tooltip, 'left', rect.left - tooltipWidth + 'px');
         break;
     }
   }
