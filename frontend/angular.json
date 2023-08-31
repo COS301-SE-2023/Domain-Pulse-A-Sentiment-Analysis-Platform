@@ -37,7 +37,7 @@
                 "src"
               ]
             },
-            "scripts": []
+            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           },
           "configurations": {
             "production": {
@@ -109,7 +109,7 @@
                 "src"
               ]
             },
-            "scripts": []
+            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           }
         },
         "cypress-run": {

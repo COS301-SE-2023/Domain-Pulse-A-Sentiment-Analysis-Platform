@@ -20,9 +20,21 @@
       />
     </div>
 
-    <div id="chartContainer" #chartContainer class="chart-container">
-      <canvas #myChart data-cy="canvas-element"></canvas>
-    </div>
+    <div id="chartContainer" #chartContainer class="chart-container" style="text-align:center;">
+      <!-- <canvas #myChart data-cy="canvas-element"></canvas> -->
+      <apx-chart
+      [series]="chartOptions.series!"
+      [chart]="chartOptions.chart!"
+      [xaxis]="chartOptions.xaxis!"
+      [title]="chartOptions.title!"
+      [dataLabels]="chartOptions.dataLabels!"
+      [colors]="chartOptions.colors!"
+      [legend]="chartOptions.legend!"
+      [fill]="chartOptions.fill!"
+      [yaxis]="chartOptions.yaxis!"
+
+
+    ></apx-chart>    </div>
 
     <div class="flex-row center" style="width: 2%">
       <img
