@@ -70,7 +70,7 @@
         data-cy="edit"
       >
         <img class="button-icon" src="../assets/icons/edit.svg" alt="Icon" />
-        <span class="button-text">Edit</span>
+        <span class="button-text"[mul]="1.05" [tooltipPosition]="'left'" [tooltip]="'The \'Edit\' button is to edit an already existing source'">Edit</span>
       </div>
 
       <div
@@ -83,7 +83,7 @@
           src="../assets/icons/trash-can-regular.svg"
           alt="Icon"
         />
-        <span class="button-text" [tooltip]="'The \'Delete\' button deletes the source currently selected'">Delete</span>
+        <span class="button-text" [mul]="1.1" [tooltip]="'The \'Delete\' button deletes the source currently selected'">Delete</span>
       </div>
       <div class="button clickable-item">
         <img class="button-icon" src="../assets/icons/search.svg" alt="Icon" />
