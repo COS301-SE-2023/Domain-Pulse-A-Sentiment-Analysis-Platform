@@ -16,9 +16,11 @@ export class TooltipDirective {
   @Input('mul') tooltipMargin: number = 1.0; 
 
   @HostListener('mouseenter') onMouseEnter() {
-    this.renderer.setStyle(this.tooltip, 'background-color', '#333');
-    this.renderer.setStyle(this.tooltip, 'color', 'white');
+    this.renderer.setStyle(this.tooltip, 'background-color', '#037fff');
+    this.renderer.setStyle(this.tooltip, 'color', '#e0efff');
     this.renderer.setStyle(this.tooltip, 'padding', '10px');
+    //create shadow behind the tooltip
+    this.renderer.setStyle(this.tooltip, 'box-shadow', '0 0 10px rgba(0, 0, 0, 0.8)');
     // set width
     this.renderer.setStyle(this.tooltip, 'width', '150px');
     this.renderer.setStyle(this.tooltip, 'border-radius', '20px');
