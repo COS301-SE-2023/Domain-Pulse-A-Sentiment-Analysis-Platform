@@ -37,9 +37,24 @@ query_cache = {}
 # Dictionary to store the list of sockets concerned with a query
 query_sockets = {}
 
+#connect to socket.io which listens to mongo
+mongo_sio = socketio.Client()
+
+@mongo_sio.on('connect')
+def on_connect():
+    print('connected to mongo')
+
+@mongo_sio.on('database_change')
+def on_database_change(data):
+    print('database changed')
+    print(data)
+
+mongo_sio.connect('http://0.0.0.0:5001')
+
+
 #Create socketio server
-sio = socketio.Server()
-app = socketio.WSGIApp(sio, static_files={
+server_sio = socketio.Server()
+app = socketio.WSGIApp(server_sio, static_files={
     '/': {'content_type': 'text/html', 'filename': 'index.html'}
 })
 
@@ -141,7 +156,7 @@ def perform_query(query):
 
     return return_data
 
-@sio.on('query')
+@server_sio.on('query')
 def handle_query(sid, query):
     #pre-process the query to add information about the needed table and such
     GET_TYPE = query['get']
@@ -170,7 +185,7 @@ def handle_query(sid, query):
     cached_result = query_cache.get(str(query))
     if cached_result is not None:
         print("Returning cached result")
-        sio.emit('query_result', {'result': cached_result}, room=sid)
+        server_sio.emit('query_result', {'result': cached_result}, room=sid)
         return
 
     # Add the socket to the pool of sockets for this query
@@ -194,16 +209,16 @@ def handle_query(sid, query):
 
     # Send the result back to the client
     print(f"emmitting to {sid}", {'result': str(result)})
-    sio.emit('query_result', {'result': str(result)}, to=sid)
+    server_sio.emit('query_result', {'result': str(result)}, to=sid)
 
-@sio.event
+@server_sio.event
 def connect(sid, environ):
     print('connect ', sid)
 
 rooms = set()
 
 # Function to handle socket disconnection
-@sio.on('disconnect')
+@server_sio.on('disconnect')
 def handle_disconnect(sid):
     print(f"Client {sid} disconnected")
     # Remove the disconnected socket from the query_sockets pool
@@ -214,4 +229,5 @@ def handle_disconnect(sid):
 
 
 if __name__ == '__main__':
+    mongo_sio.wait()
     eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
