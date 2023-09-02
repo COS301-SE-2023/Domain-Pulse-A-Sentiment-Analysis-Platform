@@ -1,6 +1,5 @@
 import eventlet
 import socketio
-import pymongo
 import os
 from pathlib import Path
 from bson import json_util
@@ -13,43 +12,15 @@ BASE_DIR = Path(__file__).resolve().parent
 DATABASE_ENV_FILE = BASE_DIR.parent / '.postgresql.env'
 load_dotenv(DATABASE_ENV_FILE)
 
-HOST = os.getenv("MONGO_HOST")
-DB_NAME = os.getenv("MONGO_DB_NAME")
-PORT = os.getenv("MONGO_PORT")
-USER = os.getenv("MONGO_USER")
-PASSWORD = os.getenv("MONGO_PASSWORD")
+DOMAINS_SERVICE_ADDRESS = "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT"))
+GET_DOMAIN_ENDPOINT = DOMAINS_SERVICE_ADDRESS + "/domains/get_domain/"
 
-#Setting up the connections to the database
-connection_string_domains = f"mongodb://{USER}:{PASSWORD}@{HOST}:{PORT}/domain_pulse_domains?directConnection=true"
-connection_string_warehouse = f"mongodb://{USER}:{PASSWORD}@{HOST}:{PORT}/domain_pulse_warehouse?directConnection=true"
-
-domains_client = pymongo.MongoClient(connection_string_domains, serverSelectionTimeoutMS=2000)
-domain_db = domains_client["domain_pulse_domains"]
-domains_collection = domain_db["domains"]
-
-warehouse_client = pymongo.MongoClient(connection_string_warehouse, serverSelectionTimeoutMS=2000)
-warehouse_db = warehouse_client["domain_pulse_warehouse"]
-sentiments_collection = warehouse_db["sentiments"]
 
 # Dictionary to store cached query results
 query_cache = {}
 
 # Dictionary to store the list of sockets concerned with a query
 query_sockets = {}
-
-#connect to socket.io which listens to mongo
-mongo_sio = socketio.Client()
-
-@mongo_sio.on('connect')
-def on_connect():
-    print('connected to mongo')
-
-@mongo_sio.on('database_change')
-def on_database_change(data):
-    print('database changed')
-    print(data)
-
-mongo_sio.connect('http://0.0.0.0:5001')
 
 
 #Create socketio server
@@ -83,44 +54,6 @@ app = socketio.WSGIApp(server_sio, static_files={
     'source_ids': [SOURCE_ID, ...]    
 }
 '''
-
-# Function to listen for changes in a specific pipeline
-def listen_to_pipeline(query):
-    pipeline = query.get('pipeline')
-    collection_name = query.get('collection')
-    collection = None
-
-    if collection_name == 'domains_collection':
-        collection = domains_collection
-    elif collection_name == 'sentiments_collection':
-        collection = sentiments_collection
-    else:
-        print(f"Unknown collection: {collection_name}")
-        return
-    
-    cached_result = query_cache.get(str(query))
-    
-    with collection.watch(pipeline) as stream:
-        for change in stream:
-            # Extract relevant data from the change event
-            # You might need to customize this part based on your data structure
-            change_data = change.get('fullDocument')
-            #rerun query
-            # query_result = perform_query(query)
-            print("something changed: ", change_data)
-
-            # # Compare the change data to the cached result
-            # if cached_result is not None and change_data == cached_result:
-            #     # The data hasn't changed, so we skip emitting the event
-            #     continue
-
-            # # Update the cached result
-            # query_cache[str(query)] = change_data
-
-            # # Emit the change event to connected sockets for this query
-            # for sid in query_sockets.get(query):
-            #     sio.emit('query_result', {'query': query, 'change': change_data}, room=sid)
-
 
 # Function to perform a database query based on the query body
 def perform_query(query):
@@ -158,28 +91,27 @@ def perform_query(query):
 
 @server_sio.on('query')
 def handle_query(sid, query):
-    #pre-process the query to add information about the needed table and such
     GET_TYPE = query['get']
-    if GET_TYPE == 'domains' or GET_TYPE == 'domain' or GET_TYPE == 'sources':
-        query['collection'] = 'domains_collection'
+
+    watching_info = {}
+
+    if GET_TYPE == 'domain':
+        # Not implemented
+        watching_info['collection'] = 'domains'
+        watching_info['watching_object_ids'] = [query['domain_id']]
+        watching_info['request_info'] = {
+            # 'url': ,
+            # 'body': 
+        }
+    elif GET_TYPE == 'sources':
+        # Not implemented
+        print("Not implemented")
     elif GET_TYPE == 'comments':
-        query['collection'] = 'sentiments_collection'
+        # Not implemented
+        print("Not implemented")
 
     #preprocess and select the pipeline
     #for now just listen to everything
-    pipeline = [
-        {
-            '$match': {
-                '$or': [
-                    { 'operationType': 'insert' },
-                    { 'operationType': 'update' },
-                    { 'operationType': 'replace' },
-                    { 'operationType': 'delete' }
-                ]
-            }
-        }
-    ]
-    query['pipeline'] = pipeline
 
     # Check if the query is already in the cache
     cached_result = query_cache.get(str(query))
@@ -215,6 +147,22 @@ def handle_query(sid, query):
 def connect(sid, environ):
     print('connect ', sid)
 
+@server_sio.on('database_change')
+def handle_change(sid, data):
+    print(data)
+    # # Compare the change data to the cached result
+    # if cached_result is not None and change_data == cached_result:
+    #     # The data hasn't changed, so we skip emitting the event
+    #     continue
+
+    # # Update the cached result
+    # query_cache[str(query)] = change_data
+
+    # # Emit the change event to connected sockets for this query
+    # for sid in query_sockets.get(query):
+    #     sio.emit('query_result', {'query': query, 'change': change_data}, room=sid)
+
+
 rooms = set()
 
 # Function to handle socket disconnection
@@ -229,5 +177,5 @@ def handle_disconnect(sid):
 
 
 if __name__ == '__main__':
-    mongo_sio.wait()
+    # mongo_sio.wait()
     eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
