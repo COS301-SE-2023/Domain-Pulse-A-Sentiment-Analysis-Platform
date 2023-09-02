@@ -1,0 +1,4 @@
+gevent
+motor
+python-socketio = {extras = ["client"], version = "*"}
+python-dotenv
