@@ -1,15 +1,11 @@
-# import eventlet
-# import eventlet.patcher  # Import eventlet's patcher module
-
-import gevent
-import gevent.monkey
-gevent.monkey.patch_all()
+import pymongo
+import motor.motor_asyncio
+import asyncio
 
 import socketio
 import pymongo
 import os
 from pathlib import Path
-from bson import json_util
 from bson import ObjectId
 from dotenv import load_dotenv
 
@@ -29,27 +25,27 @@ PASSWORD = os.getenv("MONGO_PASSWORD")
 connection_string_domains = f"mongodb://{USER}:{PASSWORD}@{HOST}:{PORT}/domain_pulse_domains?directConnection=true"
 connection_string_warehouse = f"mongodb://{USER}:{PASSWORD}@{HOST}:{PORT}/domain_pulse_warehouse?directConnection=true"
 
-domains_client = pymongo.MongoClient(connection_string_domains, serverSelectionTimeoutMS=2000)
-domain_db = domains_client["domain_pulse_domains"]
-domains_collection = domain_db["domains"]
+# Initialize the Socket.IO client
+sio = socketio.AsyncClient()
 
-warehouse_client = pymongo.MongoClient(connection_string_warehouse, serverSelectionTimeoutMS=2000)
-warehouse_db = warehouse_client["domain_pulse_warehouse"]
-sentiments_collection = warehouse_db["sentiments"]
+async def listen_to_mongodb_changes():
+    domains_client = motor.motor_asyncio.AsyncIOMotorClient(connection_string_domains)
+    domains_db = domains_client.domain_pulse_domains
+    domains_collection = domains_db.domains
 
-# Initialize eventlet
-eventlet.monkey_patch()
+    warehouse_client = motor.motor_asyncio.AsyncIOMotorClient(connection_string_warehouse)
+    warhouse_db = warehouse_client.domain_pulse_warehouse
+    sentiments_collection = warhouse_db.sentiment_records
 
-# Explicitly patch the 'select' module to prevent attribute errors
-eventlet.patcher.monkey_patch(select=True)
+    @sio.on("connect")
+    def on_connect():
+        print("Connected to Socket.IO server")
 
-#Create socketio server
-sio = socketio.Server(cors_allowed_origins="*")
-app = socketio.WSGIApp(sio)
+    @sio.on("disconnect")
+    def on_disconnect():
+        print("Disconnected from Socket.IO server")
 
-def listen_to_pipeline():
-    print("this was never called")
-
+    await sio.connect("http://0.0.0.0:5000")  # Replace with the actual Socket.IO server URL
     pipeline = [
         {
             '$match': {
@@ -62,64 +58,23 @@ def listen_to_pipeline():
             }
         }
     ]
-    
-    # collection_name = query.get('collection')
-    collection_name = 'domains_collection'
-    collection = None
 
-    if collection_name == 'domains_collection':
-        collection = domains_collection
-    elif collection_name == 'sentiments_collection':
-        collection = sentiments_collection
-    else:
-        print(f"Unknown collection: {collection_name}")
-        return
-    
-    # cached_result = query_cache.get(str(query))
-    
-    with collection.watch(pipeline) as stream:
-        for change in stream:
-            # Extract relevant data from the change event
-            # You might need to customize this part based on your data structure
-            changed_object_id = ObjectId(change.get('documentKey').get('_id'))
+    #Send the changes to the Socket.IO server so that they can be processed and forwarded to clients
+    async def emit_changes(collection, collection_name):
+        async with collection.watch(pipeline) as stream:
+            async for change in stream:
+                print(change)
 
-            print(change)
-            sio.emit('database_change', {'changed_object_id': changed_object_id, 'change': change.get('operationType')})
+                changed_object_id = ObjectId(change.get('documentKey').get('_id')).__str__()
+                await sio.emit('database_change', {'changed_object_id': changed_object_id, 'change': change.get('operationType'), 'collection_name': collection_name})
 
 
+    # Use asyncio.gather to concurrently listen to changes from both collections
+    await asyncio.gather(
+        emit_changes(domains_collection, "domains"),
+        emit_changes(sentiments_collection, "sentiments")
+    )
 
-            # # Compare the change data to the cached result
-            # if cached_result is not None and change_data == cached_result:
-            #     # The data hasn't changed, so we skip emitting the event
-            #     continue
-
-            # # Update the cached result
-            # query_cache[str(query)] = change_data
-
-            # # Emit the change event to connected sockets for this query
-            # for sid in query_sockets.get(query):
-            #     sio.emit('query_result', {'query': query, 'change': change_data}, room=sid)
-
-@sio.on('connect')
-def connect(sid, environ):
-    print('connection established')
-
-if __name__ == '__main__':
-    from gevent.pywsgi import WSGIServer
-
-    http_server = WSGIServer(("0.0.0.0", 5001), app)
-    print("Server running on http://localhost:5000")
-
-    # Start the MongoDB change tracking loop
-    gevent.spawn(check_mongodb_changes)
-
-    try:
-        http_server.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        http_server.stop()
-
-    # eventlet.spawn(listen_to_pipeline)
-
-    # eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(listen_to_mongodb_changes())
