@@ -2,7 +2,7 @@ import { Component ,Input } from '@angular/core';
 import {trigger,style,state,transition,animate} from '@angular/animations';
 
 @Component({
-  selector: 'app-accordion-card',
+  selector: 'accordion-card',
   templateUrl: './accordion-card.component.html',
   styleUrls: ['./accordion-card.component.sass'],
   animations: [
@@ -31,6 +31,6 @@ export class AccordionCardComponent {
   getCardClasses(){
     return {
       'custom-class': true,
-    }
+    };
   }
 }

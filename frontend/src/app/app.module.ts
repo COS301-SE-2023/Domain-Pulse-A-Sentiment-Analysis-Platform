@@ -24,6 +24,7 @@ import { SourceSelectorComponent } from './source-selector/source-selector.compo
 import { ApiInterceptor } from './api.interceptor';
 import { HelpPageComponent } from './help-page/help-page.component';
 import { TooltipDirective } from './tooltip.directive';
+import { AccordionCardComponent } from './accordion-card/accordion-card.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { TooltipDirective } from './tooltip.directive';
     SourceSelectorComponent,
     HelpPageComponent,
     TooltipDirective,
+    AccordionCardComponent,
   ],
   imports: [
     BrowserModule,
