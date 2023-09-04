@@ -101,12 +101,16 @@ def make_live_review(request: HttpRequest, source_id, source_name):
 
 @csrf_exempt
 def ingest_CSV_file(request: HttpRequest):
+    ANALYSER_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    )
+    GET_SOURCE_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+    )
     originalRequest = request
     if request.method == "POST":
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
-
-        # 0. Make a request to the domains service to get the info on the source (this also authenticates the request)
 
         headers = {"Content-Type": "application/json"}
 
@@ -119,64 +123,57 @@ def ingest_CSV_file(request: HttpRequest):
         headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         # ------------------------------------------------------------
 
+        data = {"source_id": source_id_raw}
+        response = requests.post(GET_SOURCE_ENDPOINT, json=data, headers=headers)
+
+        if response.status_code != 200:
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Domains Service",
+                }
+            )
+        elif response.json()["status"] == "FAILURE":
+            return JsonResponse(
+                {"status": "FAILURE", "details": response.json()["details"]}
+            )
+
         file = request.FILES["file"]
-        data = csv_connector.handle_request(file)
+        new_data = csv_connector.handle_request(file)
+        if new_data["status"] == "FAILURE":
+            return JsonResponse({"status": "FAILURE", "details": new_data["details"]})
+        raw_new_data = []
+        data_timestamps = []
+        for x in new_data:
+            raw_new_data.append(x["text"])
+            data_timestamps.append(x["timestamp"])
 
-    #     review_text = bleach.clean(original_review_text)
-    #     source_id_raw = request.POST.get("source_id")
-    #     timestamp = datetime.now().timestamp()
+        request_to_engine_body = {"data": raw_new_data}
 
-    #     # ----------- Verifying source is valid ------------
-    #     DOMAINS_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
-    #     request_to_domains_body = {"source_id": source_id_raw}
-    #     response_from_domains = requests.post(
-    #         DOMAINS_ENDPOINT, data=json.dumps(request_to_domains_body)
-    #     )
+        response_from_analyser = requests.post(
+            ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+        )
 
-    #     if response_from_domains.status_code == 200:
-    #         if response_from_domains.json()["status"] != "SUCCESS":
-    #             return render(
-    #                 request,
-    #                 "error.html",
-    #                 {"details": response_from_domains.json()["details"]},
-    #             )
-    #     else:
-    #         return render(
-    #             request,
-    #             "error.html",
-    #             {"details": "Could not verify the source ID"},
-    #         )
-    #     # --------------------------------------------------
+        if response_from_analyser.status_code == 200:
+            pass
+        else:
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Analyser",
+                }
+            )
 
-    #     ANALYSER_ENDPOINT = (
-    #         f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
-    #     )
-    #     request_to_engine_body = {"data": review_text}
-    #     response_from_analyser = requests.post(
-    #         ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
-    #     )
+        new_data_metrics = response_from_analyser.json()["metrics"]
+        data_to_store = []
+        for metrics, stamped in zip(new_data_metrics, new_data):
+            metrics["timestamp"] = int(stamped["timestamp"])
+            metrics["source_id"] = source_id_raw
+            data_to_store.append(metrics)
 
-    #     if response_from_analyser.status_code == 200:
-    #         new_record = response_from_analyser.json()["metrics"][0]
-    #         new_record["timestamp"] = int(timestamp)
-    #         new_record["source_id"] = source_id_raw
+        for x in data_to_store:
+            sentiment_record_model.add_record(x)
 
-    #         sentiment_record_model.add_record(new_record)
-
-    #         return render(
-    #             request,
-    #             "done.html",
-    #             {"review_text": original_review_text},
-    #         )
-    #     else:
-    #         return render(
-    #             request,
-    #             "error.html",
-    #             {"details": "Error communicating with analyser"},
-    #         )
-
-    # return render(
-    #     request,
-    #     "error.html",
-    #     {"details": "Invalid request"},
-    # )
+        return JsonResponse(
+            {"status": "SUCCESS", "details": "Data source refreshed successfully"}
+        )
