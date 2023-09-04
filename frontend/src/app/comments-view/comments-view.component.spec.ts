@@ -201,7 +201,13 @@ describe('CommentsViewComponent', () => {
 
   it('getCategoryColor() function should correctly classify the category', () => {
     expect(component.getCategoryColor('very negative')).toBe('very-negative-color');
+    expect(component.getCategoryColor('negative')).toBe('negative-color');
     expect(component.getCategoryColor('somewhat negative')).toBe('somewhat-negative-color');
+
+    expect(component.getCategoryColor('somewhat positive')).toBe('somewhat-positive-color');
+    expect(component.getCategoryColor('positive')).toBe('positive-color');
+    expect(component.getCategoryColor('very positive')).toBe('very-positive-color');
+
     expect(component.getCategoryColor('neutral')).toBe('neutral-color');
 
   });
