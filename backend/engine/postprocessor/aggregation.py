@@ -5,8 +5,10 @@ def get_overall_timeseries(individual_data: list):
     data_points = []
 
     for record in individual_data:
-        point = record["general"]["score"], record["timestamp"]
+        point = record["general"]["score"], int(record["timestamp"])
         data_points.append(point)
+
+    data_points = sorted(data_points, key=lambda x: x[1])
 
     return data_points
 
@@ -16,9 +18,10 @@ def get_toxic_points(individual_data: list):
 
     for record in individual_data:
         if record["toxicity"]["level_of_toxic"] == "Toxic":
-            point = record["timestamp"]
+            point = int(record["timestamp"])
             data_points.append(point)
 
+    data_points = sorted(data_points)
     return data_points
 
 
@@ -108,7 +111,7 @@ def aggregate_sentiment_data(sentiment_data):
         summed_neutral_ratio += item["ratios"]["neutral"]
         summed_negative_ratio += item["ratios"]["negative"]
 
-        timestamp = float(item["timestamp"])
+        timestamp = int(item["timestamp"])
 
         # Searching for latest date
         if timestamp > latest_timestamp:
