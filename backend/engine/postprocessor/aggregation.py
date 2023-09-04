@@ -13,7 +13,7 @@ def produce_timeseries(individual_data: list):
     overall_data_points = []
     timestamps = []
     toxic_data_points = []
-
+    ratios_time_series = {"pos": [], "neu": [], "neg": []}
     emotions_time_series = {
         "anger": [],
         "sadness": [],
@@ -45,14 +45,25 @@ def produce_timeseries(individual_data: list):
         if record["toxicity"]["level_of_toxic"] == "Toxic":
             toxic_data_points.append(stamp)
 
+        # Ratios
+        ratios_time_series["pos"].append((record["ratios"]["positive"], stamp))
+        ratios_time_series["neu"].append((record["ratios"]["neutral"], stamp))
+        ratios_time_series["neg"].append((record["ratios"]["negative"], stamp))
+
+    # Sorting
     overall_data_points = sorted(overall_data_points, key=lambda x: x[1])
     timestamps = sorted(timestamps)
     toxic_data_points = sorted(toxic_data_points)
+    for e, list_of_scores in emotions_time_series.items():
+        emotions_time_series[e] = sorted(list_of_scores, key=lambda x: x[1])
+    for r, list_of_scores in ratios_time_series.items():
+        ratios_time_series[r] = sorted(list_of_scores, key=lambda x: x[1])
 
     retData["overall"] = overall_data_points
     retData["toxicity"] = toxic_data_points
     retData["num_records"] = timestamps
     retData["emotions"] = emotions_time_series
+    retData["ratios"] = ratios_time_series
 
     return retData
 
