@@ -15,5 +15,12 @@ import {trigger,style,state,transition,animate} from '@angular/animations';
   ]
 })
 export class AccordionCardComponent {
+  @Input() isExpanded: boolean = true;
+  @Input() title: string = '';
 
+  constructor() { }
+
+  toggleExpansion() {
+    this.isExpanded = !this.isExpanded;
+  }
 }
