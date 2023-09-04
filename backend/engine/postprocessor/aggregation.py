@@ -64,6 +64,7 @@ def aggregate_sentiment_data(sentiment_data):
                 "latest_record": "NA",
             },
             "individual_data": [],
+            "timeseries": {},
         }
 
     summed_overall_score = 0
@@ -165,6 +166,8 @@ def aggregate_sentiment_data(sentiment_data):
     earliest = earliest.strftime("%d %B %Y")
     latest = latest.strftime("%d %B %Y")
 
+    timeseries_data = produce_timeseries(sentiment_data)
+
     return {
         "overall": {
             "general": {"category": overall_cat, "score": agg_overall_score},
@@ -182,4 +185,5 @@ def aggregate_sentiment_data(sentiment_data):
             "latest_record": latest,
         },
         "individual_data": sentiment_data,
+        "timeseries": timeseries_data,
     }
