@@ -16,17 +16,21 @@ export class CommentsViewComponent {
   showComment: boolean[] = [];
   constructor() {
     this.sampleData.subscribe((newSampleData) => {
-      if (newSampleData) {
-        this.comments = this.transformComments(newSampleData);
-      }
+      this.reactToNewComents(newSampleData);
     });
     this.initializeShowCommentArray();
   }
 
+  reactToNewComents(newSampleData: any) {
+    if (newSampleData) {
+      this.comments = this.transformComments(newSampleData);
+    }
+  }
+
   initializeShowCommentArray() {
-    if(this.comments){
+    if (this.comments) {
       this.showComment = Array(this.comments.length).fill(false);
-    }else{
+    } else {
       this.showComment = [];
     }
   }
@@ -46,7 +50,7 @@ export class CommentsViewComponent {
         Object.keys(metric.emotions).reduce((a, b) =>
           metric.emotions[a] > metric.emotions[b] ? a : b
         ),
-        metric.toxicity.level_of_toxic
+        metric.toxicity.level_of_toxic,
       ],
     }));
   }
@@ -55,19 +59,15 @@ export class CommentsViewComponent {
     let colorClass = 'neutral-color';
     if (index === 0) {
       colorClass = this.getRatingColor(score);
-    }
-    else if (index===1){
+    } else if (index === 1) {
       colorClass = this.getCategoryColor(score);
-    }
-    else if (index===2){
+    } else if (index === 2) {
       colorClass = this.getEmotionColor(score);
-    }
-    else if(index===3){
+    } else if (index === 3) {
       colorClass = this.getToxicityColor(score);
     }
     return colorClass;
   }
-
 
   getRatingColor(score: string): string {
     let colorClass = '';
@@ -124,7 +124,7 @@ export class CommentsViewComponent {
 
   getEmotionColor(emotion: string): string {
     let colorClass = '';
-  
+
     switch (emotion) {
       case 'anger':
       case 'disgust':
@@ -144,7 +144,7 @@ export class CommentsViewComponent {
       default:
         colorClass = 'neutral-color';
     }
-  
+
     return colorClass;
   }
 
@@ -162,11 +162,7 @@ export class CommentsViewComponent {
       default:
         colorClass = 'neutral-color';
     }
-  
+
     return colorClass;
   }
-  
-
-  
-
 }

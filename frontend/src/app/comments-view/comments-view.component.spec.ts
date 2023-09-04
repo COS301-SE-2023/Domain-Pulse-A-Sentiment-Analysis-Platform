@@ -182,10 +182,10 @@ describe('CommentsViewComponent', () => {
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
   });
 
-  it('should correctly sort the emotions', () => {
-    component.transformComments(mockCommentData);
+  it('should corrently transofmr the comments', () => {
+    component.reactToNewComents(mockCommentData);
 
-    expect(true).toBe(true);
+    expect(component.comments).toEqual(component.transformComments(mockCommentData));
   });
 
   it('getRatingColor() function should correctly classify the rating', () => {
