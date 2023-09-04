@@ -189,9 +189,13 @@ describe('CommentsViewComponent', () => {
   });
 
   it('getRatingColor() function should correctly classify the rating', () => {
+    expect(component.getRatingColor('90%')).toBe('very-positive-color');
     expect(component.getRatingColor('70%')).toBe('positive-color');
+    expect(component.getRatingColor('60%')).toBe('somewhat-positive-color');
     expect(component.getRatingColor('40%')).toBe('neutral-color');
     expect(component.getRatingColor('30%')).toBe('somewhat-negative-color');
+    expect(component.getRatingColor('10%')).toBe('negative-color');
+    expect(component.getRatingColor('1%')).toBe('very-negative-color');
     expect(component.getRatingColor('')).toBe('neutral-color');
   });
 
