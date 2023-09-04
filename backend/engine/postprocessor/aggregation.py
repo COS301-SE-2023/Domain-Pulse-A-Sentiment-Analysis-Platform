@@ -1,34 +1,35 @@
 import datetime
 
 
-def get_overall_timeseries(individual_data: list):
-    data_points = []
+def produce_timeseries(individual_data: list):
+    retData = {
+        "overall": [],
+        "emotions": [],
+        "toxicity": [],
+        "ratios": [],
+        "num_records": [],
+    }
+
+    overall_data_points = []
+    timestamps = []
+    toxic_data_points = []
 
     for record in individual_data:
         point = record["general"]["score"], int(record["timestamp"])
-        data_points.append(point)
+        overall_data_points.append(point)
+        timestamps.append(int(record["timestamp"]))
 
-    data_points = sorted(data_points, key=lambda x: x[1])
-
-    return data_points
-
-
-def get_toxic_points(individual_data: list):
-    data_points = []
-
-    for record in individual_data:
         if record["toxicity"]["level_of_toxic"] == "Toxic":
             point = int(record["timestamp"])
-            data_points.append(point)
+            toxic_data_points.append(point)
 
-    data_points = sorted(data_points)
-    return data_points
+    overall_data_points = sorted(overall_data_points, key=lambda x: x[1])
+    timestamps = sorted(timestamps)
+    toxic_data_points = sorted(toxic_data_points)
 
-
-def produce_timeseries(individual_data: list):
-    retData = {"overall": [], "emotions": [], "toxicity": [], "ratios": []}
-    retData["overall"] = get_overall_timeseries(individual_data)
-    retData["toxicity"] = get_toxic_points(individual_data)
+    retData["overall"] = overall_data_points
+    retData["toxicity"] = toxic_data_points
+    retData["num_records"] = timestamps
 
     return retData
 
