@@ -7,8 +7,7 @@ import csv
 from django.http import JsonResponse, HttpRequest, HttpResponse
 
 
-def handle_request(params):
-    file = params["file"]
+def handle_request(file):
     decoded_file = file.read().decode("utf-8")
     reviews = []
     csv_reader = csv.DictReader(decoded_file)

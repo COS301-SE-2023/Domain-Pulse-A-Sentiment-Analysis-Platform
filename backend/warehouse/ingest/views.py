@@ -7,6 +7,7 @@ import requests
 from authchecker import auth_checks
 import os
 import bleach
+from CSV import csv_connector
 from datetime import datetime
 
 
@@ -96,3 +97,86 @@ def make_live_review(request: HttpRequest, source_id, source_name):
     return render(
         request, "form.html", {"source_id": source_id, "source_name": source_name}
     )
+
+
+@csrf_exempt
+def ingest_CSV_file(request: HttpRequest):
+    originalRequest = request
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        source_id_raw = raw_data["source_id"]
+
+        # 0. Make a request to the domains service to get the info on the source (this also authenticates the request)
+
+        headers = {"Content-Type": "application/json"}
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        # ------------------------------------------------------------
+
+        file = request.FILES["file"]
+        data = csv_connector.handle_request(file)
+
+    #     review_text = bleach.clean(original_review_text)
+    #     source_id_raw = request.POST.get("source_id")
+    #     timestamp = datetime.now().timestamp()
+
+    #     # ----------- Verifying source is valid ------------
+    #     DOMAINS_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
+    #     request_to_domains_body = {"source_id": source_id_raw}
+    #     response_from_domains = requests.post(
+    #         DOMAINS_ENDPOINT, data=json.dumps(request_to_domains_body)
+    #     )
+
+    #     if response_from_domains.status_code == 200:
+    #         if response_from_domains.json()["status"] != "SUCCESS":
+    #             return render(
+    #                 request,
+    #                 "error.html",
+    #                 {"details": response_from_domains.json()["details"]},
+    #             )
+    #     else:
+    #         return render(
+    #             request,
+    #             "error.html",
+    #             {"details": "Could not verify the source ID"},
+    #         )
+    #     # --------------------------------------------------
+
+    #     ANALYSER_ENDPOINT = (
+    #         f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    #     )
+    #     request_to_engine_body = {"data": review_text}
+    #     response_from_analyser = requests.post(
+    #         ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+    #     )
+
+    #     if response_from_analyser.status_code == 200:
+    #         new_record = response_from_analyser.json()["metrics"][0]
+    #         new_record["timestamp"] = int(timestamp)
+    #         new_record["source_id"] = source_id_raw
+
+    #         sentiment_record_model.add_record(new_record)
+
+    #         return render(
+    #             request,
+    #             "done.html",
+    #             {"review_text": original_review_text},
+    #         )
+    #     else:
+    #         return render(
+    #             request,
+    #             "error.html",
+    #             {"details": "Error communicating with analyser"},
+    #         )
+
+    # return render(
+    #     request,
+    #     "error.html",
+    #     {"details": "Invalid request"},
+    # )
