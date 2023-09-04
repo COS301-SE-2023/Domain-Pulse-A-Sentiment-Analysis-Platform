@@ -112,7 +112,7 @@ def get_dashboard_data_domain(request: HttpRequest):
             response["aggregated_metrics"] = agg_response_body["overall"]
             response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
-            response["time_series"] = agg_response_body["time_series"]
+            response["timeseries"] = agg_response_body["timeseries"]
 
             return JsonResponse(response)
         else:
