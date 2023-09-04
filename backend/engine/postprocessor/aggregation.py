@@ -11,9 +11,21 @@ def get_overall_timeseries(individual_data: list):
     return data_points
 
 
+def get_toxic_points(individual_data: list):
+    data_points = []
+
+    for record in individual_data:
+        if record["toxicity"]["level_of_toxic"] == "Toxic":
+            point = record["timestamp"]
+            data_points.append(point)
+
+    return data_points
+
+
 def produce_timeseries(individual_data: list):
     retData = {"overall": [], "emotions": [], "toxicity": [], "ratios": []}
     retData["overall"] = get_overall_timeseries(individual_data)
+    retData["toxicity"] = get_toxic_points(individual_data)
 
     return retData
 
