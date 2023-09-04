@@ -70,6 +70,7 @@ def generate_report(request: HttpRequest):
                 'encoding': "UTF-8",
                 'no-outline': None},
     )
+    
 
     return JsonResponse({"status": "SUCCESS", "url": ""})
 
