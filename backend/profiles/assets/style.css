@@ -11,6 +11,17 @@ body {
 p{
     margin: 0;
     font-family: 'Source Sans 3', sans-serif;
+    font-weight: 300;
+}
+
+.heading{
+    color: white;
+    font-family: 'Open Sans';
+    font-weight: 800;
+    font-size: 40px;
+    text-align: center;
+    font-style: bold;
+    margin: 20px;
 }
 
 .flex-row{
@@ -39,6 +50,23 @@ p{
     margin-bottom: 3%;
 }
 
+.card{
+    background-color: white;
+    border-radius: 30px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+.left-card{
+    margin-right: 2rem;
+}
+
+.up-card{
+    margin-bottom: 2rem;
+}
+
+.up-item{
+    margin-bottom: 1rem;
+}
 .outline{
     border: 0.1px #DFEEFE solid;
 
@@ -135,5 +163,6 @@ p{
     margin-bottom: 1rem;
     margin-right: 2rem;
 }
+
 
 
