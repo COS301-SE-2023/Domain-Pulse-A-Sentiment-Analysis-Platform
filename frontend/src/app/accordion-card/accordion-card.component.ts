@@ -23,4 +23,8 @@ export class AccordionCardComponent {
   toggleExpansion() {
     this.isExpanded = !this.isExpanded;
   }
+
+  getCardState() {
+    return this.isExpanded ? 'expanded' : 'collapsed';
+  }
 }
