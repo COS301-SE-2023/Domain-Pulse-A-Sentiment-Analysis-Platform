@@ -27,4 +27,10 @@ export class AccordionCardComponent {
   getCardState() {
     return this.isExpanded ? 'expanded' : 'collapsed';
   }
+
+  getCardClasses(){
+    return {
+      'custom-class': true,
+    }
+  }
 }
