@@ -217,11 +217,13 @@ describe('CommentsViewComponent', () => {
     expect(component.getEmotionColor('joy')).toBe('positive-color');
     expect(component.getEmotionColor('sadness')).toBe('sad-color');
     expect(component.getEmotionColor('neutral')).toBe('neutral-color');
+    expect(component.getEmotionColor('')).toBe('neutral-color');
   });
 
   it('getToxicityColor() function should correctly classify the toxicity', () => {
     expect(component.getToxicityColor('toxic')).toBe('very-negative-color');
     expect(component.getToxicityColor('non-toxic')).toBe('very-positive-color');
+    expect(component.getToxicityColor('')).toBe('neutral-color');
   });
 
   it('getRatingClass() function should correctly return the color class based on index and score', () => {
