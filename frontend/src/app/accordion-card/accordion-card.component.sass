@@ -1,0 +1,24 @@
+:host
+    border: 6px solid #037fff
+    border-radius: 10px
+    padding: 0.45rem
+
+.accordion-card
+        cursor: pointer
+        overflow: hidden
+        transition: max-height 0.3s ease-in-out
+
+.card-content
+    height: 0
+    opacity: 0
+    transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out
+
+.card-header
+    font-size: 20pt
+
+.accordion-card.expanded
+    heaight: auto
+
+.accordion-card.expanded .card-content
+    height: auto
+    opacity: 1
