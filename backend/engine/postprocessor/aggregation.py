@@ -106,6 +106,7 @@ def produce_timeseries(individual_data: list):
                 toxicity_tracker[day_stamp] = 1
 
         # Ratios
+        # Pos
         new_pos_ema = get_new_ema(
             record["ratios"]["positive"],
             ema_tracker["pos"],
@@ -114,7 +115,7 @@ def produce_timeseries(individual_data: list):
         pos_point = (new_pos_ema, stamp)
         ratios_time_series["pos"].append(pos_point)
         ema_tracker["pos"] = new_pos_ema
-
+        # Neu
         new_neu_ema = get_new_ema(
             record["ratios"]["neutral"],
             ema_tracker["neu"],
@@ -123,7 +124,7 @@ def produce_timeseries(individual_data: list):
         neu_point = (new_neu_ema, stamp)
         ratios_time_series["neu"].append(neu_point)
         ema_tracker["neu"] = new_neu_ema
-
+        # Neg
         new_neg_ema = get_new_ema(
             record["ratios"]["negative"],
             ema_tracker["neg"],
