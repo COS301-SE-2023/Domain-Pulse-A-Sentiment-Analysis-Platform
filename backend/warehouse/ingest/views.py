@@ -109,8 +109,7 @@ def ingest_CSV_file(request: HttpRequest):
     )
     originalRequest = request
     if request.method == "POST":
-        raw_data = json.loads(request.body)
-        source_id_raw = raw_data["source_id"]
+        source_id_raw = request.POST.get("source_id")
 
         headers = {"Content-Type": "application/json"}
 
