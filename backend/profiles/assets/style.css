@@ -154,7 +154,7 @@ p{
     background-color: white;
     overflow: hidden;
     border: solid 2px white;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
     justify-content: center;
     align-items: center;
 }
@@ -202,6 +202,30 @@ p{
     white-space: nowrap;
   }
 
+  .comment {
+    position: relative;
+    padding-top: 1rem;
+  }
+  
+  .comment p {
+    font-size: 0.9rem;
+  }
+  
+  .comment-text {
+    font-size: 16px;
+  }
+
+hr{
+    border: 0;
+    height: 3px;
+    background: #c9c9c9;
+    opacity: 0.5;
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+  
+
 
 .icon-div{
     width: 50px;
@@ -222,5 +246,52 @@ p{
     font-size: 20px;
     font-weight: 100;
 }
+
+.box3 {
+    width: 335px;
+    margin-bottom: 20px;
+    margin-right: 35px;
+    margin-left: 0px;
+    border-radius: 20px;
+    background: #037fff;
+    color: #fff;
+    padding: 15px;
+    text-align: left;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+
+  }
+  
+  
+  /* speech bubble 13 */
+  
+  .sb13:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 15px solid #037fff;
+    border-right: 15px solid transparent;
+    border-top: 20px solid #037fff;
+    border-bottom: 15px solid transparent;
+    right: -12px;
+    top: 0px;
+  }
+  
+  
+  /* speech bubble 14 */
+  
+  .sb14:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 20px solid #037fff;
+    border-bottom: 15px solid transparent;
+    left: -12px;
+    top: 0px;
+  }
 
 

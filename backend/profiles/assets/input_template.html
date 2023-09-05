@@ -81,25 +81,29 @@
       </div>
       <div class="content flex-column center" style="align-items: flex-start">
         <div class="flex-row">
-          <img src="{assets_path}/images/google-logo.png" style="width: 40px; height: 40px; padding-right: 1rem;" />
+          <img
+            src="{assets_path}/images/google-logo.png"
+            style="width: 40px; height: 40px; padding-right: 1rem"
+          />
           <p class="page-heading">What is in your domain?</p>
         </div>
-        <div class="flex-row" style="box-sizing: border-box">
+        <div class="flex-row " style="box-sizing: border-box">
           <div
-            class="flex-column left-card"
+            class="flex-column left-card "
             style="
               align-items: flex-start;
               flex-basis: 40%;
               box-sizing: border-box;
+              overflow: hidden;
             "
           >
             <div
               class="flex-column center card up-card"
-              style="width: 100%; box-sizing: border-box; padding: 1rem"
+              style="width: 100%; height: 25%; box-sizing: border-box; padding: 1rem"
             >
               <div
                 class="circle-wrapper-domain flex-row center up-item"
-                style="width: 150px; height: 150px; box-shadow: none"
+                style="height: 150px; width: 150px; box-shadow: none"
               >
                 <img src="{assets_path}/images/starbucks-logo.png" />
               </div>
@@ -116,10 +120,40 @@
               </p>
             </div>
             <div
-              class="flex-column center card"
-              style="flex-grow: 1; width: 100%"
+              class="flex-column "
+              style="
+                height: 75%;
+                width: 100%;
+                align-items: flex-start;
+                padding: 1rem;
+                box-sizing: border-box;
+                overflow-y: hidden;
+                overflow-x: hidden;
+                flex-wrap: wrap;
+              "
             >
-              <p>Stuff</p>
+              <!-- <div class="flex-row icon-div" style="width: 100%">
+                <img
+                  src="{assets_path}/images/comments.svg"
+                  width="35px"
+                  alt="Positive Icon"
+                  style="padding-right: 1rem"
+                />
+                <p class="card-heading">Sample data</p>
+              </div> -->
+
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb13">This is a longer como etst to see hwo the sce whether or not it is good or bad</div>
+                <div class="box3 sb14">This is a longer comment to etst to see or not it is good or bad</div>
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb13">This is a longer como etst to see hwo the sce whether or not it is good or bad</div>
+                <div class="box3 sb14">This is a longer comment to etst to see or not it is good or bad</div>
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb14">This is a longer comment to etst to or not ier s good or bad er comment to etst to see or not ier s good or bad er comment to etst to see or not ier comment to etst to see or not ier comment to etst to see or not i</div>
+
+
+
             </div>
           </div>
           <div
@@ -311,7 +345,7 @@
                     "
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/graph.svg" width="40px;" />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Overall Score</p>
@@ -331,7 +365,7 @@
                     "
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/analytics.svg" width="40px;" />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Number Analysed</p>
@@ -351,7 +385,7 @@
                     "
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/comments.svg" width="40px;" />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Review Rate</p>
@@ -371,7 +405,7 @@
                     "
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/toxic.svg" width="40px;" />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Toxicity</p>
@@ -398,7 +432,9 @@
                         width: 100%;
                         height: 60px;
                         align-items: flex-start;
-                        padding: 1.8rem;
+                        padding-bottom: 1.8rem;
+                        padding-top: 1.8rem;
+                        padding-left: 1rem;
                         box-sizing: border-box;
                         border-radius: 25px;
                         padding-top: 3rem;
@@ -409,8 +445,8 @@
                         style="height: 100%"
                       >
                         <img
-                          src="{assets_path}/images/anger.svg"
-                          width="50px;"
+                          src="{assets_path}/images/positive.svg"
+                          width="40px;"
                         />
                       </div>
                       <div class="flex-column item-stats">
@@ -424,7 +460,9 @@
                         width: 100%;
                         height: 60px;
                         align-items: flex-start;
-                        padding: 1.8rem;
+                        padding-bottom: 1.8rem;
+                        padding-top: 1.8rem;
+                        padding-left: 1rem;
                         box-sizing: border-box;
                         border-radius: 25px;
                       "
@@ -434,8 +472,8 @@
                         style="height: 100%"
                       >
                         <img
-                          src="{assets_path}/images/anger.svg"
-                          width="50px;"
+                          src="{assets_path}/images/negative.svg"
+                          width="40px;"
                         />
                       </div>
                       <div class="flex-column item-stats">
@@ -449,7 +487,9 @@
                         width: 100%;
                         height: 60px;
                         align-items: flex-start;
-                        padding: 1.8rem;
+                        padding-bottom: 1.8rem;
+                        padding-top: 1.8rem;
+                        padding-left: 1rem;
                         box-sizing: border-box;
                         border-radius: 25px;
                         padding-bottom: 3rem;
@@ -460,8 +500,8 @@
                         style="height: 100%"
                       >
                         <img
-                          src="{assets_path}/images/anger.svg"
-                          width="50px;"
+                          src="{assets_path}/images/neutral-score.svg"
+                          width="40px;"
                         />
                       </div>
                       <div class="flex-column item-stats">
@@ -486,7 +526,8 @@
                       class="flex-column center icon-div"
                       style="height: 100%"
                     >
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/calendar.svg" width="40px;"
+                      />
                     </div>
                     <div
                       style="align-items: flex-start"
@@ -506,24 +547,12 @@
                     style="height: 60px; align-items: flex-start"
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/joy.svg" width="40px;" />
                     </div>
                     <div
                       class="flex-column item-stats"
                       style="align-items: flex-start"
                     >
-                      <p class="card-heading">Anger</p>
-                      <p class="stat-text">60%</p>
-                    </div>
-                  </div>
-                  <div
-                    class="flex-item statistic-item flex-row"
-                    style="height: 60px; align-items: flex-start"
-                  >
-                    <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
-                    </div>
-                    <div class="flex-column item-stats">
                       <p class="card-heading">Joy</p>
                       <p class="stat-text">60%</p>
                     </div>
@@ -533,7 +562,31 @@
                     style="height: 60px; align-items: flex-start"
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/surprise.svg" width="40px;" />
+                    </div>
+                    <div class="flex-column item-stats">
+                      <p class="card-heading">Surprise</p>
+                      <p class="stat-text">60%</p>
+                    </div>
+                  </div>
+                  <div
+                    class="flex-item statistic-item flex-row"
+                    style="height: 60px; align-items: flex-start"
+                  >
+                    <div class="flex-row center icon-div" style="height: 100%">
+                      <img src="{assets_path}/images/fear.svg" width="40px;" />
+                    </div>
+                    <div class="flex-column item-stats">
+                      <p class="card-heading">Fear</p>
+                      <p class="stat-text">60%</p>
+                    </div>
+                  </div>
+                  <div
+                    class="flex-item statistic-item flex-row"
+                    style="height: 60px; align-items: flex-start"
+                  >
+                    <div class="flex-row center icon-div" style="height: 100%">
+                      <img src="{assets_path}/images/anger.svg" width="40px;" />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Anger</p>
@@ -545,10 +598,10 @@
                     style="height: 60px; align-items: flex-start"
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/disgust.svg" width="40px;" />
                     </div>
                     <div class="flex-column item-stats">
-                      <p class="card-heading">Anger</p>
+                      <p class="card-heading">Disgust</p>
                       <p class="stat-text">60%</p>
                     </div>
                   </div>
@@ -557,22 +610,10 @@
                     style="height: 60px; align-items: flex-start"
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
+                      <img src="{assets_path}/images/sadness.svg" width="40px;" />
                     </div>
                     <div class="flex-column item-stats">
-                      <p class="card-heading">Anger</p>
-                      <p class="stat-text">60%</p>
-                    </div>
-                  </div>
-                  <div
-                    class="flex-item statistic-item flex-row"
-                    style="height: 60px; align-items: flex-start"
-                  >
-                    <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/anger.svg" width="50px;" />
-                    </div>
-                    <div class="flex-column item-stats">
-                      <p class="card-heading">Anger</p>
+                      <p class="card-heading">Sadness</p>
                       <p class="stat-text">60%</p>
                     </div>
                   </div>
