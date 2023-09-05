@@ -1,3 +1,4 @@
+from io import StringIO
 import json
 from django.test import TestCase
 from django.shortcuts import render
@@ -11,6 +12,7 @@ from . import views
 from datamanager import sentiment_record_model
 from urllib.parse import urlencode
 from django.core.files.uploadedfile import SimpleUploadedFile
+from CSV import csv_connector
 
 # Create your tests here.
 
@@ -454,3 +456,13 @@ class LiveIngestionTests(TestCase):
             json.loads(response.content),
             {"status": "FAILURE", "details": "Could not connect to Analyser"},
         )
+
+    def test_valid_csv(self):
+        valid_csv_data = (
+            "reviews,time\nReview 1,2023-09-05T12:00:00Z\nReview 2,2023-09-05T13:00:00Z"
+        )
+        file = SimpleUploadedFile("test.csv", valid_csv_data.encode("utf-8"))
+        result = csv_connector.handle_request(file)
+
+        self.assertEqual(result["status"], "SUCCESS")
+        self.assertTrue("latest_retrieval" in result)
