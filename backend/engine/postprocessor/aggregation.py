@@ -63,14 +63,15 @@ def produce_timeseries(individual_data: list):
         day_stamp = timestamp.strftime("%Y-%m-%d")
 
         # Overall
-        new_overall_ema = get_new_ema(
-            record["general"]["score"],
-            ema_tracker["overall"],
-            SMOOTHING_FACTORS["overall"],
-        )
-        point = new_overall_ema, stamp
-        overall_data_points.append(point)
-        ema_tracker["overall"] = new_overall_ema
+        if record["general"]["category"] != "UNDECIDED":
+            new_overall_ema = get_new_ema(
+                record["general"]["score"],
+                ema_tracker["overall"],
+                SMOOTHING_FACTORS["overall"],
+            )
+            point = new_overall_ema, stamp
+            overall_data_points.append(point)
+            ema_tracker["overall"] = new_overall_ema
 
         # Num sentiments
         cumulative_num_sentiments += 1
