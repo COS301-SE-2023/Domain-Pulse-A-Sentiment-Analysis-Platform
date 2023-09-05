@@ -33,8 +33,12 @@ def mocked_analyser_request(dummy1, **kwargs):
     return mock_response
 
 
-def mocked_extract_token(dummy1):
+def mocked_extract_token_true(dummy1):
     return (True, "some token")
+
+
+def mocked_extract_token_false(dummy1):
+    return (False, "some token")
 
 
 def mocked_handle_request(dummy1):
@@ -178,7 +182,7 @@ class LiveIngestionTests(TestCase):
         )
 
     @mock.patch(
-        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token
+        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_true
     )
     @mock.patch("CSV.csv_connector.handle_request", side_effect=mocked_handle_request)
     @mock.patch(
@@ -225,7 +229,7 @@ class LiveIngestionTests(TestCase):
         )
 
     @mock.patch(
-        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token
+        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_true
     )
     @mock.patch("CSV.csv_connector.handle_request", side_effect=mocked_handle_request)
     @mock.patch(
@@ -262,4 +266,44 @@ class LiveIngestionTests(TestCase):
         self.assertEqual(
             json.loads(response.content),
             {"status": "FAILURE", "details": "File must be a CSV"},
+        )
+
+    @mock.patch(
+        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_false
+    )
+    @mock.patch("CSV.csv_connector.handle_request", side_effect=mocked_handle_request)
+    @mock.patch(
+        "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
+    )
+    @patch("requests.post")
+    def test_invalid_jwt_csv_ingestion(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "metrics": [
+                {
+                    "data": "some data",
+                    "general": {},
+                    "ratios": {},
+                    "emotions": {},
+                    "toxicity": {},
+                }
+            ],
+            "status": "SUCCESS",
+        }
+        mock_post.return_value = mock_response
+
+        csv_data = "header1,header2\nvalue1,value2\n"
+        csv_file = SimpleUploadedFile("test.txt", csv_data.encode("utf-8"))
+
+        request = HttpRequest()
+        request.method = "POST"
+        request.FILES["file"] = csv_file
+        request.POST["source_id"] = "1"
+
+        response = views.ingest_CSV_file(request)
+
+        self.assertEqual(
+            json.loads(response.content),
+            {"status": "FAILURE", "details": "JWT not found in header of request"},
         )
