@@ -348,3 +348,43 @@ class LiveIngestionTests(TestCase):
             json.loads(response.content)["status"],
             "FAILURE",
         )
+
+    @mock.patch(
+        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_true
+    )
+    @mock.patch("CSV.csv_connector.handle_request", side_effect=mocked_handle_request)
+    @mock.patch(
+        "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
+    )
+    @patch("requests.post")
+    def test_csv_ingestion_get_request(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "metrics": [
+                {
+                    "data": "some data",
+                    "general": {},
+                    "ratios": {},
+                    "emotions": {},
+                    "toxicity": {},
+                }
+            ],
+            "details": "Some error",
+            "status": "FAILURE",
+        }
+        mock_post.return_value = mock_response
+
+        csv_data = "header1,header2\nvalue1,value2\n"
+        csv_file = SimpleUploadedFile("test.txt", csv_data.encode("utf-8"))
+
+        request = HttpRequest()
+        request.method = "GET"
+        request.FILES["file"] = csv_file
+
+        response = views.ingest_CSV_file(request)
+
+        self.assertEqual(
+            json.loads(response.content),
+            {"status": "FAILURE", "details": "Invalid request"},
+        )
