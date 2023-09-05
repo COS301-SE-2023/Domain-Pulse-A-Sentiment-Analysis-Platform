@@ -49,6 +49,10 @@ def mocked_handle_request(dummy1):
     }
 
 
+def mocked_handle_request_fail(dummy1):
+    return {"status": "FAILURE", "details": "Invalid CSV file provided"}
+
+
 class LiveIngestionTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -370,8 +374,7 @@ class LiveIngestionTests(TestCase):
                     "toxicity": {},
                 }
             ],
-            "details": "Some error",
-            "status": "FAILURE",
+            "status": "SUCCESS",
         }
         mock_post.return_value = mock_response
 
@@ -386,5 +389,47 @@ class LiveIngestionTests(TestCase):
 
         self.assertEqual(
             json.loads(response.content),
-            {"status": "FAILURE", "details": "Invalid request"},
+            {"status": "FAILURE", "details": "Invalid Request"},
+        )
+
+    @mock.patch(
+        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_true
+    )
+    @mock.patch(
+        "CSV.csv_connector.handle_request", side_effect=mocked_handle_request_fail
+    )
+    @mock.patch(
+        "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
+    )
+    @patch("requests.post")
+    def test_csv_ingestion_get_request(self, mock_post):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "metrics": [
+                {
+                    "data": "some data",
+                    "general": {},
+                    "ratios": {},
+                    "emotions": {},
+                    "toxicity": {},
+                }
+            ],
+            "status": "SUCCESS",
+        }
+        mock_post.return_value = mock_response
+
+        csv_data = "header1,header2\nvalue1,value2\n"
+        csv_file = SimpleUploadedFile("test.csv", csv_data.encode("utf-8"))
+
+        request = HttpRequest()
+        request.method = "POST"
+        request.FILES["file"] = csv_file
+        request.POST["source_id"] = "1"
+
+        response = views.ingest_CSV_file(request)
+
+        self.assertEqual(
+            json.loads(response.content),
+            {"status": "FAILURE", "details": "Invalid CSV file provided"},
         )
