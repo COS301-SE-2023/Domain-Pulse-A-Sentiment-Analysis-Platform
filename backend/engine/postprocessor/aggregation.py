@@ -1,6 +1,16 @@
 import datetime
 
 
+def get_new_ema(current, old_ema, smoothing_factor):
+    # Lower = more smooth, less responsive
+    # Higher = more erratic, very responsive
+    SMOOTHING_FACTOR = smoothing_factor
+    if old_ema == -1:
+        return current
+    else:
+        return round(current * SMOOTHING_FACTOR + old_ema * (1 - SMOOTHING_FACTOR), 4)
+
+
 def produce_timeseries(individual_data: list):
     retData = {
         "overall": [],
@@ -23,11 +33,37 @@ def produce_timeseries(individual_data: list):
         "surprise": [],
     }
 
+    ema_tracker = {
+        "overall": -1,
+        "anger": -1,
+        "sadness": -1,
+        "joy": -1,
+        "digust": -1,
+        "fear": -1,
+        "surprise": -1,
+        "pos": -1,
+        "neu": -1,
+        "neg": -1,
+    }
+
+    SMOOTHING_FACTORS = {
+        "overall": 0.6,
+        "emotions_hit": 0.5,
+        "ratios": 0.2,
+        "emotions_miss": 0.2,
+    }
+
     for record in individual_data:
         # Overall
         stamp = int(record["timestamp"])
-        point = record["general"]["score"], stamp
+        new_overall_ema = get_new_ema(
+            record["general"]["score"],
+            ema_tracker["overall"],
+            SMOOTHING_FACTORS["overall"],
+        )
+        point = new_overall_ema, stamp
         overall_data_points.append(point)
+        ema_tracker["overall"] = new_overall_ema
 
         # Num records
         timestamps.append(stamp)
@@ -36,19 +72,55 @@ def produce_timeseries(individual_data: list):
         record_emotions = record["emotions"]
         for emotion in emotions_time_series:
             if emotion in record_emotions:
-                emotion_point = record_emotions[emotion], stamp
+                new_emotion_ema = get_new_ema(
+                    record_emotions[emotion],
+                    ema_tracker[emotion],
+                    SMOOTHING_FACTORS["emotions_hit"],
+                )
+                emotion_point = new_emotion_ema, stamp
                 emotions_time_series[emotion].append(emotion_point)
+                ema_tracker[emotion] = new_emotion_ema
             else:
-                emotions_time_series[emotion].append((0, stamp))
+                new_emotion_ema = get_new_ema(
+                    0,
+                    ema_tracker[emotion],
+                    SMOOTHING_FACTORS["emotions_miss"],
+                )
+                emotion_point = new_emotion_ema, stamp
+                emotions_time_series[emotion].append(emotion_point)
+                ema_tracker[emotion] = new_emotion_ema
 
         # Toxicity
         if record["toxicity"]["level_of_toxic"] == "Toxic":
             toxic_data_points.append(stamp)
 
         # Ratios
-        ratios_time_series["pos"].append((record["ratios"]["positive"], stamp))
-        ratios_time_series["neu"].append((record["ratios"]["neutral"], stamp))
-        ratios_time_series["neg"].append((record["ratios"]["negative"], stamp))
+        new_pos_ema = get_new_ema(
+            record["ratios"]["positive"],
+            ema_tracker["pos"],
+            SMOOTHING_FACTORS["ratios"],
+        )
+        pos_point = (new_pos_ema, stamp)
+        ratios_time_series["pos"].append(pos_point)
+        ema_tracker["pos"] = new_pos_ema
+
+        new_neu_ema = get_new_ema(
+            record["ratios"]["neutral"],
+            ema_tracker["neu"],
+            SMOOTHING_FACTORS["ratios"],
+        )
+        neu_point = (new_neu_ema, stamp)
+        ratios_time_series["neu"].append(neu_point)
+        ema_tracker["neu"] = new_neu_ema
+
+        new_neg_ema = get_new_ema(
+            record["ratios"]["negative"],
+            ema_tracker["neg"],
+            SMOOTHING_FACTORS["ratios"],
+        )
+        neg_point = (new_neg_ema, stamp)
+        ratios_time_series["neg"].append(neg_point)
+        ema_tracker["neg"] = new_neg_ema
 
     # Sorting
     overall_data_points = sorted(overall_data_points, key=lambda x: x[1])
