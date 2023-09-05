@@ -53,15 +53,15 @@ p{
 .card{
     background-color: white;
     border-radius: 30px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .left-card{
-    margin-right: 2rem;
+    margin-right: 1rem;
 }
 
 .up-card{
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .up-item{
@@ -181,6 +181,37 @@ p{
     height: 150px;
   }
   
+  .item-stats {
+    align-self: center;
+    gap: 0.2rem;
+    white-space: nowrap; /* Use white-space instead of text-wrap */
+  }
   
+
+.statistic-item{
+    height: 100%;
+    gap: 0.85rem;
+}
+
+
+.icon-div{
+    width: 50px;
+    padding-right: 1rem;
+    padding-left: 0.5rem;
+}
+
+.card-heading{
+    font-family: 'Open Sans';
+    font-weight: 700;
+    font-size: 18px;
+    text-align: center;
+    color: #17234c;
+
+}
+.stat-text{
+
+    font-size: 20px;
+    font-weight: 100;
+}
 
 
