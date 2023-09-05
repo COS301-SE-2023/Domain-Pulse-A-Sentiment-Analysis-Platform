@@ -24,7 +24,7 @@ import { SourceSelectorComponent } from './source-selector/source-selector.compo
 import { ApiInterceptor } from './api.interceptor';
 import { HelpPageComponent } from './help-page/help-page.component';
 import { TooltipDirective } from './tooltip.directive';
-import { AccordionCardComponent } from './accordion-card/accordion-card.component';
+import { AccordionModule } from './accordion-card/accordion.module';
 
 @NgModule({
   declarations: [
@@ -40,13 +40,13 @@ import { AccordionCardComponent } from './accordion-card/accordion-card.componen
     SourceSelectorComponent,
     HelpPageComponent,
     TooltipDirective,
-    AccordionCardComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
+    AccordionModule,
     HttpClientModule,
     NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({

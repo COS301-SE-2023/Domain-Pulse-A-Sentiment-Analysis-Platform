@@ -1,0 +1,60 @@
+:host {
+  --accordion-header-height: 50px;
+  --accordion-header-bg: hsl(0, 0%, 95%);
+  --accordion-disabled: hsl(0, 0%, 60%);
+  --accordion-border-radius: 8px;
+  width: 100%;
+}
+.accordion {
+  border: 1px solid hsl(0, 0%, 80%);
+  border-radius: var(--accordion-border-radius);
+}
+.accordion__item:first-child .accordion__header {
+  border-radius: var(--accordion-border-radius) var(--accordion-border-radius) 0 0;
+}
+.accordion__item:last-child .accordion__header {
+  border-radius: 0 0 var(--accordion-border-radius) var(--accordion-border-radius);
+}
+/* Accordion default header styles */
+.accordion__header {
+  display: flex;
+  padding: 0 1rem;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid transparent;
+  height: var(--accordion-header-height);
+  cursor: pointer;
+  background: var(--accordion-header-bg);
+}
+
+/* Default toggle button styles */
+.accordion__toggle-btn {
+  border: none;
+  transition: transform 0.3s ease-in;
+  background: none;
+}
+
+ /* Manage disabled state of the Accordion item */
+.accordion__item.disabled .accordion__header {
+  color: var(--accordion-disabled);
+  cursor: not-allowed;
+}
+.accordion__toggle-btn:disabled {
+  cursor: not-allowed;
+}
+.accordion__toggle-btn:disabled svg path:nth-child(2) {
+  fill: var(--accordion-disabled);
+}
+.accordion__item.active .accordion__toggle-btn {
+  transform: rotate(180deg);
+}
+
+/* Highlight the header when focus is on the toggle button */
+.accordion__item .accordion__header:focus-within {
+  border-color: var(--primary);
+  border-radius: var(--accordion-border-radius);
+}
+.accordion__toggle-btn:focus {
+  outline: none;
+}
+

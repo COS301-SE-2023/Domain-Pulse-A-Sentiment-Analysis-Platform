@@ -1,8 +1,0 @@
-<div class ="accordion-class" [ngClass]="getCardClasses()" (click)="toggleExpansion()">
-    <div class="card-header">
-        {{title}}
-    </div>
-    <div class="card-content" [@expandCollapse]="getCardState()">
-        <ng-content></ng-content>
-    </div>    
-</div>

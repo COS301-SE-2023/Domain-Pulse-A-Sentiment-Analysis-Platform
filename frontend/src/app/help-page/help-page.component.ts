@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+//import {AccordionModule} from "ngx-accordion";
+
 
 @Component({
   selector: 'app-help-page',
@@ -6,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./help-page.component.sass']
 })
 export class HelpPageComponent {
-
+  collapsing = true;
 }
