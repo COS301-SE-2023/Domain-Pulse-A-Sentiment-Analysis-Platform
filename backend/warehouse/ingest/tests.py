@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
@@ -9,6 +10,7 @@ import mock
 from . import views
 from datamanager import sentiment_record_model
 from urllib.parse import urlencode
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 # Create your tests here.
 
@@ -29,6 +31,18 @@ def mocked_analyser_request(dummy1, **kwargs):
         "status": "SUCCESS",
     }
     return mock_response
+
+
+def mocked_extract_token(dummy1):
+    return (True, "some token")
+
+
+def mocked_handle_request(dummy1):
+    return {
+        "status": "SUCCESS",
+        "newdata": [{"text": "some text", "timestamp": 1234567890}],
+        "latest_retrieval": "2021-01-01T00:00:00Z",
+    }
 
 
 class LiveIngestionTests(TestCase):
@@ -161,4 +175,51 @@ class LiveIngestionTests(TestCase):
             ).replace(
                 "{{source_id}}", "abcde12345"
             ),
+        )
+
+    @mock.patch(
+        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token
+    )
+    @mock.patch("CSV.csv_connector.handle_request", side_effect=mocked_handle_request)
+    @mock.patch(
+        "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
+    )
+    @patch("requests.post")
+    def test_valid_csv_ingestion(self, mock_post):
+        # Mock the necessary external API calls
+        # Mock the response from the Domains Service
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "metrics": [
+                {
+                    "data": "some data",
+                    "general": {},
+                    "ratios": {},
+                    "emotions": {},
+                    "toxicity": {},
+                }
+            ],
+            "status": "SUCCESS",
+        }
+        mock_post.return_value = mock_response
+
+        # Create a mock CSV file
+        csv_data = "header1,header2\nvalue1,value2\n"
+        csv_file = SimpleUploadedFile("test.csv", csv_data.encode("utf-8"))
+
+        # Create a mock HTTP POST request
+        request = HttpRequest()
+        request.method = "POST"
+        request.FILES["file"] = csv_file
+        request.POST["source_id"] = "1"
+
+        # Call the view function
+        response = views.ingest_CSV_file(request)
+
+        # Assert that the response is as expected
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            json.loads(response.content),
+            {"status": "SUCCESS", "details": "Data source refreshed successfully"},
         )
