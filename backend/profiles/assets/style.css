@@ -24,6 +24,20 @@ p{
     margin: 20px;
 }
 
+.page-heading{
+    color: #037fff;
+    font-family: 'Open Sans';
+    font-weight: 800;
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.heading-div{
+    height: 50px;
+    padding-bottom: 2rem;
+}
+
 .flex-row{
     display: flex;
     flex-direction: row;
@@ -44,9 +58,9 @@ p{
 }
 
 .content{
-    height: 78%;
+    height: 82%;
     width: 90%;
-    margin-top: 8%;
+    margin-top: 4%;
     margin-bottom: 3%;
 }
 
