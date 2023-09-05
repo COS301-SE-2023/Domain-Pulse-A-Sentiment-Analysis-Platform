@@ -474,3 +474,11 @@ class LiveIngestionTests(TestCase):
 
         self.assertEqual(result["status"], "FAILURE")
         self.assertEqual(result["details"], "Invalid CSV file provided")
+
+    def test_empty_csv(self):
+        valid_csv_data = ""
+        file = SimpleUploadedFile("test.csv", valid_csv_data.encode("utf-8"))
+        result = csv_connector.handle_request(file)
+
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "Invalid CSV file provided")
