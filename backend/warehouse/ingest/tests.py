@@ -269,16 +269,16 @@ class LiveIngestionTests(TestCase):
         )
 
     @mock.patch(
-        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_false
+        "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_true
     )
     @mock.patch("CSV.csv_connector.handle_request", side_effect=mocked_handle_request)
     @mock.patch(
         "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
     )
     @patch("requests.post")
-    def test_invalid_jwt_csv_ingestion(self, mock_post):
+    def test_failed_domains_request_csv_ingestion(self, mock_post):
         mock_response = MagicMock()
-        mock_response.status_code = 200
+        mock_response.status_code = 404
         mock_response.json.return_value = {
             "metrics": [
                 {
@@ -305,5 +305,5 @@ class LiveIngestionTests(TestCase):
 
         self.assertEqual(
             json.loads(response.content),
-            {"status": "FAILURE", "details": "JWT not found in header of request"},
+            {"status": "FAILURE", "details": "Could not connect to Domains Service"},
         )
