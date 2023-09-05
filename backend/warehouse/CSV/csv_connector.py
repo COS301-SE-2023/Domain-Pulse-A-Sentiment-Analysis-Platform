@@ -11,13 +11,10 @@ import bleach
 def handle_request(file):
     decoded_file = file.read().decode("utf-8")
     reviews = []
-    csv_reader = csv.DictReader(decoded_file)
-
+    csv_reader = csv.DictReader(decoded_file.splitlines())
     current_time = datetime.now()
-    formatted_current_time = current_time.strptime("%Y-%m-%dT%H:%M:%SZ")
-
+    formatted_current_time = datetime.strftime(current_time, "%Y-%m-%dT%H:%M:%SZ")
     headers = csv_reader.fieldnames
-
     if "reviews" not in headers or "time" not in headers:
         return {"status": "FAILURE", "details": "Invalid CSV file provided"}
 

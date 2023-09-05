@@ -140,9 +140,10 @@ def ingest_CSV_file(request: HttpRequest):
         file = request.FILES["file"]
         if not file.name.endswith(".csv"):
             return JsonResponse({"status": "FAILURE", "details": "File must be a CSV"})
-        new_data = csv_connector.handle_request(file)
-        if new_data["status"] == "FAILURE":
-            return JsonResponse({"status": "FAILURE", "details": new_data["details"]})
+        response = csv_connector.handle_request(file)
+        if response["status"] == "FAILURE":
+            return JsonResponse({"status": "FAILURE", "details": response["details"]})
+        new_data = response["newdata"]
         raw_new_data = []
         data_timestamps = []
         for x in new_data:
