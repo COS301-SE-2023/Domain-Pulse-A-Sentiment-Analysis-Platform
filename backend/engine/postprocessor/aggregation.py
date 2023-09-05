@@ -2,8 +2,6 @@ import datetime
 
 
 def get_new_ema(current, old_ema, smoothing_factor):
-    # Lower = more smooth, less responsive
-    # Higher = more erratic, very responsive
     SMOOTHING_FACTOR = smoothing_factor
     if old_ema == -1:
         return current
@@ -46,6 +44,8 @@ def produce_timeseries(individual_data: list):
         "neg": -1,
     }
 
+    # Lower = more smooth, less responsive
+    # Higher = more erratic, very responsive
     SMOOTHING_FACTORS = {
         "overall": 0.6,
         "emotions_hit": 0.5,
