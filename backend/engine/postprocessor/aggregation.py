@@ -21,7 +21,7 @@ def produce_timeseries(individual_data: list):
     }
 
     overall_data_points = []
-    timestamps = []
+    num_sentiments = []
     toxic_data_points = []
     ratios_time_series = {"pos": [], "neu": [], "neg": []}
     emotions_time_series = {
@@ -52,10 +52,17 @@ def produce_timeseries(individual_data: list):
         "ratios": 0.2,
         "emotions_miss": 0.2,
     }
+    cumulative_num_sentiments = 0
+
+    toxicity_tracker = {}
 
     for record in individual_data:
+        stamp_unix = int(record["timestamp"])
+        timestamp = datetime.datetime.fromtimestamp(stamp_unix)
+        stamp = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
+        day_stamp = timestamp.strftime("%Y-%m-%d")
+
         # Overall
-        stamp = int(record["timestamp"])
         new_overall_ema = get_new_ema(
             record["general"]["score"],
             ema_tracker["overall"],
@@ -65,8 +72,9 @@ def produce_timeseries(individual_data: list):
         overall_data_points.append(point)
         ema_tracker["overall"] = new_overall_ema
 
-        # Num records
-        timestamps.append(stamp)
+        # Num sentiments
+        cumulative_num_sentiments += 1
+        num_sentiments.append((cumulative_num_sentiments, stamp))
 
         # Emotions
         record_emotions = record["emotions"]
@@ -92,7 +100,10 @@ def produce_timeseries(individual_data: list):
 
         # Toxicity
         if record["toxicity"]["level_of_toxic"] == "Toxic":
-            toxic_data_points.append(stamp)
+            if day_stamp in toxicity_tracker:
+                toxicity_tracker[day_stamp] = toxicity_tracker[day_stamp] + 1
+            else:
+                toxicity_tracker[day_stamp] = 1
 
         # Ratios
         new_pos_ema = get_new_ema(
@@ -123,17 +134,40 @@ def produce_timeseries(individual_data: list):
         ema_tracker["neg"] = new_neg_ema
 
     # Sorting
-    overall_data_points = sorted(overall_data_points, key=lambda x: x[1])
-    timestamps = sorted(timestamps)
-    toxic_data_points = sorted(toxic_data_points)
+    overall_data_points = sorted(
+        overall_data_points,
+        key=lambda x: int(
+            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+        ),
+    )
+    num_sentiments = sorted(
+        num_sentiments,
+        key=lambda x: int(
+            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+        ),
+    )
     for e, list_of_scores in emotions_time_series.items():
-        emotions_time_series[e] = sorted(list_of_scores, key=lambda x: x[1])
+        emotions_time_series[e] = sorted(
+            list_of_scores,
+            key=lambda x: int(
+                datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+            ),
+        )
     for r, list_of_scores in ratios_time_series.items():
-        ratios_time_series[r] = sorted(list_of_scores, key=lambda x: x[1])
+        ratios_time_series[r] = sorted(
+            list_of_scores,
+            key=lambda x: int(
+                datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+            ),
+        )
+
+    # Formatting toxicity
+    for day, count in toxicity_tracker.items():
+        toxic_data_points.append((day, count))
 
     retData["overall"] = overall_data_points
     retData["toxicity"] = toxic_data_points
-    retData["num_records"] = timestamps
+    retData["num_records"] = num_sentiments
     retData["emotions"] = emotions_time_series
     retData["ratios"] = ratios_time_series
 
