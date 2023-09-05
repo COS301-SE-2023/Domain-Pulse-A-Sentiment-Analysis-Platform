@@ -137,27 +137,27 @@ def produce_timeseries(individual_data: list):
     overall_data_points = sorted(
         overall_data_points,
         key=lambda x: int(
-            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%S").timestamp()
         ),
     )
     num_sentiments = sorted(
         num_sentiments,
         key=lambda x: int(
-            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%S").timestamp()
         ),
     )
     for e, list_of_scores in emotions_time_series.items():
         emotions_time_series[e] = sorted(
             list_of_scores,
             key=lambda x: int(
-                datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+                datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%S").timestamp()
             ),
         )
     for r, list_of_scores in ratios_time_series.items():
         ratios_time_series[r] = sorted(
             list_of_scores,
             key=lambda x: int(
-                datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%SZ").timestamp()
+                datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%S").timestamp()
             ),
         )
 
