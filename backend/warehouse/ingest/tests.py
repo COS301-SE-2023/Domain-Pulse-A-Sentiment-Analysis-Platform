@@ -15,6 +15,12 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 # Create your tests here.
 
 
+def getAndIncrement(number):
+    temp = number
+    number += 1
+    return temp
+
+
 def mocked_add_record(dummy_record):
     return
 
@@ -31,6 +37,37 @@ def mocked_analyser_request(dummy1, **kwargs):
         "status": "SUCCESS",
     }
     return mock_response
+
+
+def mocked_down_analyser_request(dummy1, json=None, headers=None, data=None):
+    ANALYSER_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    )
+    GET_SOURCE_ENDPOINT = (
+        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+    )
+    if dummy1 == ANALYSER_ENDPOINT:
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {
+            "data": "some data",
+            "general": {},
+            "ratios": {},
+            "emotions": {},
+            "toxicity": {},
+            "status": "SUCCESS",
+        }
+        return mock_response
+    elif dummy1 == GET_SOURCE_ENDPOINT:
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "source_name": "some source name",
+            "source_type": "some source type",
+            "source_id": "some source id",
+            "status": "SUCCESS",
+        }
+        return mock_response
 
 
 def mocked_extract_token_true(dummy1):
@@ -389,36 +426,20 @@ class LiveIngestionTests(TestCase):
 
         self.assertEqual(
             json.loads(response.content),
-            {"status": "FAILURE", "details": "Invalid Request"},
+            {"status": "FAILURE", "details": "Invalid request"},
         )
 
     @mock.patch(
         "authchecker.auth_checks.extract_token", side_effect=mocked_extract_token_true
     )
-    @mock.patch(
-        "CSV.csv_connector.handle_request", side_effect=mocked_handle_request_fail
-    )
+    @mock.patch("CSV.csv_connector.handle_request", side_effect=mocked_handle_request)
     @mock.patch(
         "datamanager.sentiment_record_model.add_record", side_effect=mocked_add_record
     )
-    @patch("requests.post")
-    def test_csv_ingestion_get_request(self, mock_post):
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "metrics": [
-                {
-                    "data": "some data",
-                    "general": {},
-                    "ratios": {},
-                    "emotions": {},
-                    "toxicity": {},
-                }
-            ],
-            "status": "SUCCESS",
-        }
-        mock_post.return_value = mock_response
-
+    @mock.patch("requests.post", side_effect=mocked_down_analyser_request)
+    def test_down_analyzer_csv_ingestion(
+        self, mock_extract_token, mock_handle_request, mock_add_record, mock_post
+    ):
         csv_data = "header1,header2\nvalue1,value2\n"
         csv_file = SimpleUploadedFile("test.csv", csv_data.encode("utf-8"))
 
@@ -431,5 +452,5 @@ class LiveIngestionTests(TestCase):
 
         self.assertEqual(
             json.loads(response.content),
-            {"status": "FAILURE", "details": "Invalid CSV file provided"},
+            {"status": "FAILURE", "details": "Could not connect to Analyser"},
         )
