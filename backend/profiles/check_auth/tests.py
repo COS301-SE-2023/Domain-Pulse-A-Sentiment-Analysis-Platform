@@ -4,6 +4,7 @@ from profileservice import models as profile_models
 from profileservice import views as profile_views
 from check_auth import views as check_views
 from unittest import mock
+from unittest.mock import patch, MagicMock
 from django.http import HttpRequest, JsonResponse
 from utils import profilescrud
 import json
@@ -450,3 +451,17 @@ class ProfileChecksTests(TestCase):
         response = check_views.check_source_ids(request2)
         data = json.loads(response.content)
         self.assertEqual(data["status"], "SUCCESS")
+
+    @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
+    @patch("check_auth.views.get_user_from_token")
+    def test_check_source_ids_none_user(self, mock_get_user, mock_extract_token):
+        MockResponse = None
+        mock_get_user.return_value = MockResponse
+        data = {"source_ids": ["1"]}
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1._body = json.dumps(data)
+        response = check_views.check_source_ids(request1)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Could not verify the user's identity")
