@@ -48,7 +48,7 @@ def check_domain_ids(request):
         user = get_user_from_token(token)
         if user == None:
             return JsonResponse(
-                {"status": "FAILURE", "details": "Could not verify the user's identtfy"}
+                {"status": "FAILURE", "details": "Could not verify the user's identity"}
             )
 
         userID = user.id

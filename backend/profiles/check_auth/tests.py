@@ -465,3 +465,17 @@ class ProfileChecksTests(TestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], "FAILURE")
         self.assertEqual(data["details"], "Could not verify the user's identity")
+
+    @mock.patch("check_auth.views.extract_token", side_effect=mocked_extract_token)
+    @patch("check_auth.views.get_user_from_token")
+    def test_check_domain_ids_none_user(self, mock_get_user, mock_extract_token):
+        MockResponse = None
+        mock_get_user.return_value = MockResponse
+        data = {"domain_ids": ["1"]}
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1._body = json.dumps(data)
+        response = check_views.check_domain_ids(request1)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Could not verify the user's identity")
