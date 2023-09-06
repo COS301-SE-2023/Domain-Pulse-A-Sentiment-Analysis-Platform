@@ -1,4 +1,93 @@
 <html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
+    <script type="text/javascript">
+      "use strict";
+      (function (setLineDash) {
+        CanvasRenderingContext2D.prototype.setLineDash = function () {
+          if (!arguments[0].length) {
+            arguments[0] = [1, 0];
+          }
+          // Now, call the original method
+          return setLineDash.apply(this, arguments);
+        };
+      })(CanvasRenderingContext2D.prototype.setLineDash);
+      Function.prototype.bind =
+        Function.prototype.bind ||
+        function (thisp) {
+          var fn = this;
+          return function () {
+            return fn.apply(thisp, arguments);
+          };
+        };
+
+      function drawGraphs() {
+        new Chart(document.getElementById("canvas1"), {
+          responsive: false,
+          type: "doughnut",
+          data: {
+            labels: ["Overall Score: 75%"],
+            datasets: [
+              {
+                data: [75, 25],
+                backgroundColor: [
+                  "rgba(3, 127, 255, 1)",
+                  "rgba(170, 170, 170, 0.71)",
+                ],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            plugins: {},
+            animation: false,
+            title: { display: true, text: "Overall Score" },
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        });
+
+        new Chart(document.getElementById("canvas2"), {
+          responsive: false,
+          type: "pie",
+          data: {
+            labels: ["Positive", "Negative", "Neutral"],
+            datasets: [
+              {
+                data: [40, 40, 20],
+                backgroundColor: [
+                  "rgba(0, 184, 0, 0.7)",
+                  "rgba(184, 0, 0, 0.7)",
+                  "rgba(231, 215, 65, 0.7)",
+                ],
+                borderColor: [
+                  "rgba(0, 184, 0, 0.8)",
+                  "rgba(184, 0, 0, 0.8)",
+                  "rgba(231, 215, 65, 0.8)",
+                ],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            plugins: {},
+            animation: false,
+            title: { display: true, text: "Sentiment Ratios" },
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        });
+      }
+      window.onload = function () {
+        drawGraphs();
+      };
+    </script>
+  </head>
   <body>
     <div
       class="page flex-column center outline"
@@ -87,9 +176,9 @@
           />
           <p class="page-heading">What is in your domain?</p>
         </div>
-        <div class="flex-row " style="box-sizing: border-box">
+        <div class="flex-row" style="box-sizing: border-box">
           <div
-            class="flex-column left-card "
+            class="flex-column left-card"
             style="
               align-items: flex-start;
               flex-basis: 40%;
@@ -99,7 +188,12 @@
           >
             <div
               class="flex-column center card up-card"
-              style="width: 100%; height: 25%; box-sizing: border-box; padding: 1rem"
+              style="
+                width: 100%;
+                height: 25%;
+                box-sizing: border-box;
+                padding: 1rem;
+              "
             >
               <div
                 class="circle-wrapper-domain flex-row center up-item"
@@ -120,7 +214,7 @@
               </p>
             </div>
             <div
-              class="flex-column "
+              class="flex-column"
               style="
                 height: 75%;
                 width: 100%;
@@ -132,19 +226,30 @@
                 flex-wrap: wrap;
               "
             >
-
-                <div class="box3 sb14">I'm speech bubble</div>
-                <div class="box3 sb13">This is a longer como etst to see hwo the sce whether or not it is good or bad</div>
-                <div class="box3 sb14">This is a longer comment to etst to see or not it is good or bad</div>
-                <div class="box3 sb13">I'm speech bubble</div>
-                <div class="box3 sb14">This is a longer como etst to see hwo the sce whether or not it is good or bad</div>
-                <div class="box3 sb13">This is a longer comment to etst to see or not it is good or bad</div>
-                <div class="box3 sb14">I'm speech bubble</div>
-                <div class="box3 sb13">I'm speech bubble</div>
-                <div class="box3 sb14">This is a longer comment to etst to or not ier s good or bad er comment to etst to see or not ier s good or bad er comment to etst to see or not ier comment to etst to see or not ier comment to etst to see or not i</div>
-
-
-
+              <div class="box3 sb14">I'm speech bubble</div>
+              <div class="box3 sb13">
+                This is a longer como etst to see hwo the sce whether or not it
+                is good or bad
+              </div>
+              <div class="box3 sb14">
+                This is a longer comment to etst to see or not it is good or bad
+              </div>
+              <div class="box3 sb13">I'm speech bubble</div>
+              <div class="box3 sb14">
+                This is a longer como etst to see hwo the sce whether or not it
+                is good or bad
+              </div>
+              <div class="box3 sb13">
+                This is a longer comment to etst to see or not it is good or bad
+              </div>
+              <div class="box3 sb14">I'm speech bubble</div>
+              <div class="box3 sb13">I'm speech bubble</div>
+              <div class="box3 sb14">
+                This is a longer comment to etst to or not ier s good or bad er
+                comment to etst to see or not ier s good or bad er comment to
+                etst to see or not ier comment to etst to see or not ier comment
+                to etst to see or not i
+              </div>
             </div>
           </div>
           <div
@@ -356,7 +461,10 @@
                     "
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/analytics.svg" width="40px;" />
+                      <img
+                        src="{assets_path}/images/analytics.svg"
+                        width="40px;"
+                      />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Number Analysed</p>
@@ -376,7 +484,10 @@
                     "
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/comments.svg" width="40px;" />
+                      <img
+                        src="{assets_path}/images/comments.svg"
+                        width="40px;"
+                      />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Review Rate</p>
@@ -517,7 +628,9 @@
                       class="flex-column center icon-div"
                       style="height: 100%"
                     >
-                      <img src="{assets_path}/images/calendar.svg" width="40px;"
+                      <img
+                        src="{assets_path}/images/calendar.svg"
+                        width="40px;"
                       />
                     </div>
                     <div
@@ -553,7 +666,10 @@
                     style="height: 60px; align-items: flex-start"
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/surprise.svg" width="40px;" />
+                      <img
+                        src="{assets_path}/images/surprise.svg"
+                        width="40px;"
+                      />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Surprise</p>
@@ -589,7 +705,10 @@
                     style="height: 60px; align-items: flex-start"
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/disgust.svg" width="40px;" />
+                      <img
+                        src="{assets_path}/images/disgust.svg"
+                        width="40px;"
+                      />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Disgust</p>
@@ -601,7 +720,10 @@
                     style="height: 60px; align-items: flex-start"
                   >
                     <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/sadness.svg" width="40px;" />
+                      <img
+                        src="{assets_path}/images/sadness.svg"
+                        width="40px;"
+                      />
                     </div>
                     <div class="flex-column item-stats">
                       <p class="card-heading">Sadness</p>
@@ -610,6 +732,60 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p class="pageNum">1</p>
+        <img
+          class="footer-image"
+          src="{assets_path}/images/footer_art.svg"
+          style="width: 100%"
+          alt="Placeholder"
+        />
+      </div>
+    </div>
+
+    <div class="page flex-column center outline">
+      <div class="dp-icon">
+        <img
+          class="outline watermark"
+          src="{assets_path}/images/LogoIconBlue.png"
+        />
+      </div>
+      <div class="content flex-column" style="align-items: flex-start">
+        <div class="flex-row">
+          <img
+            src="{assets_path}/images/allSources.png"
+            style="width: 45px; height: 45px; padding-right: 1rem"
+          />
+          <p class="page-heading">What is in your domain?</p>
+        </div>
+        <div class="flex-column" style="width: 100%; align-items: flex-start">
+          <div class="flex-row" style="width: 100%">
+            <div
+              class="flex-row card center left-card"
+              style="
+                flex-basis: 50%;
+                height: 300px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="canvas1"></canvas>
+            </div>
+            <div
+              class="flex-row card center"
+              style="
+                flex-basis: 50%;
+                height: 300px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="canvas2"></canvas>
             </div>
           </div>
         </div>
