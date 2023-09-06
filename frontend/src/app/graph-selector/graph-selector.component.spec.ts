@@ -116,6 +116,16 @@ describe('GraphSelectorComponent', () => {
     expect(component.currentGraphIndex).toEqual(3);
   });
 
+  it('should not change index if there is no updatedGraphArray', () => {
+    component.updatedGraphArray = undefined;
+
+    component.switchToNextGraph();
+    expect(component.currentGraphIndex).toEqual(0);
+
+    component.switchToPreviousGraph();
+    expect(component.currentGraphIndex).toEqual(0);
+  });
+
 // find out why the ChooseStatistic Test is not firing
   //   it('fire correct "ChooseStatistics" event when switching to previous graph', (done: DoneFn) => {
 //     actions$.pipe(ofActionDispatched(ChooseStatistic)).subscribe((_) => {
