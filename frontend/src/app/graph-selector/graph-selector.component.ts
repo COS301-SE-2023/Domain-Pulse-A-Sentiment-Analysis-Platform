@@ -13,11 +13,15 @@ import {
   ApexDataLabels,
   ApexYAxis,
   ApexLegend,
-  ApexFill
-} from "ng-apexcharts";
+  ApexFill,
+  ApexResponsive,
+  ApexPlotOptions,
+  ApexNonAxisChartSeries,
+} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
+  series2: ApexNonAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   title: ApexTitleSubtitle;
@@ -26,8 +30,10 @@ export type ChartOptions = {
   legend: ApexLegend;
   fill: ApexFill;
   yaxis: ApexYAxis;
-
-
+  responsive: ApexResponsive[];
+  plotOptions: ApexPlotOptions;
+  labels: any;
+  stroke: any;
 };
 
 @Component({
@@ -36,17 +42,13 @@ export type ChartOptions = {
   styleUrls: ['./graph-selector.component.sass'],
 })
 export class GraphSelectorComponent implements OnInit {
-
-  
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
-  @ViewChild("chart")
+  @ViewChild('chart')
   chart!: ChartComponent;
   chartOptions!: Partial<ChartOptions>;
   chartOptionsArray: any[] | Partial<ChartOptions>[] = [];
-
-  
 
   @Select(AppState.sourceOverallSentimentScores)
   sourceOverallSentiment!: Observable<any | null>;
@@ -56,7 +58,7 @@ export class GraphSelectorComponent implements OnInit {
 
   //chart: Chart | undefined;
   //gradient: CanvasGradient | undefined;
- /*  graphs = [
+  /*  graphs = [
     {
       type: 'doughnut',
       fontColor: 'white',
@@ -229,9 +231,7 @@ export class GraphSelectorComponent implements OnInit {
     console.log('Clicked on section:', index);
   }
 
-  constructor(private store: Store) {
-  }
-
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     /* this.sourceOverallSentiment.subscribe((data) => {
@@ -248,7 +248,6 @@ export class GraphSelectorComponent implements OnInit {
         }
       }
     }); */
-    
 
     /* this.statisticIndex.subscribe((statIndex) => {
       if (statIndex !== this.currentGraphIndex && statIndex !== undefined) {
@@ -257,76 +256,11 @@ export class GraphSelectorComponent implements OnInit {
       }
     }); */
 
-      this.chartOptionsArray = [
+    this.chartOptionsArray = [
       {
         series: [
           {
-            name: "My-series",
-            data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-          }
-        ],
-        chart: {
-          height: '100%',
-          type: 'bar'
-        },
-        title: {
-          text: 'Chart 1'
-        },
-        xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-        }
-      },
-      {
-        series: [
-          {
-            name: "My-series",
-            data: [1, 1, 1, 200, 200, 1, 3, 3, 40]
-          }
-        ],
-        chart: {
-          height: '100%',
-          type: 'line'
-        },
-        title: {
-          text: 'Chart 2'
-        },
-        xaxis: {
-          categories: ['A', 'B', 'C', 'D', 'E']
-        }
-      },
-      {
-        series: [
-          {
-            name: "My-series",
-            data: [
-              ['2023-01-01', 10],
-              ['2023-02-01', 41],
-              ['2023-03-01', 35],
-              // ... other data points
-            ]
-          }
-        ],
-        chart: {
-          height: '100%',
-          type: 'line'
-        },
-        title: {
-          text: 'Time Series Chart'
-        },
-        xaxis: {
-          type: 'datetime',
-          categories: [
-            '2023-01-01',
-            '2023-02-01',
-            '2023-03-01',
-            // ... other date strings
-          ]
-        }
-      },
-      {
-        series: [
-          {
-            name: "My-series",
+            name: 'My-series',
             data: [
               ['2023-08-20T00:00', 10],
               ['2023-08-21T03:00', 41],
@@ -344,302 +278,165 @@ export class GraphSelectorComponent implements OnInit {
               ['2023-08-31T03:00', 41],
               ['2023-08-31T06:00', 35],
               // ... other data points
-            ]
-          }
+            ],
+          },
         ],
         chart: {
           height: '100%',
-          type: 'area'
+          type: 'area',
         },
         title: {
-          text: 'Specific Day and Time Series Chart'
-        },
-        xaxis: {
-          type: 'datetime'
-        }
-      },
-      {
-        series: [
-          {
-            name: "Positive",
-            data: [['2023-08-20T00:00', 10],
-            ['2023-08-21T03:00', 10],
-            ['2023-08-22T06:00', 40],
-            ['2023-08-23T00:00', 0],
-            ['2023-08-23T03:00', 10],]
-          },
-          {
-            name: "Negative",
-            data: [['2023-08-20T00:00', 10],
-            ['2023-08-21T03:00', 60],
-            ['2023-08-22T06:00', 40],
-            ['2023-08-23T00:00', 50],
-            ['2023-08-23T03:00', 40],
-  ]
-          },
-          {
-            name: "Neutral",
-            data: [['2023-08-20T00:00', 10],
-            ['2023-08-21T03:00', 30],
-            ['2023-08-22T06:00', 20],
-            ['2023-08-23T00:00', 50],
-            ['2023-08-23T03:00', 40],]
-          }
-        ],
-        chart: {
-          height: '100%',
-          type: 'area'
-        },
-        title: {
-          text: 'Specific Day and Time Series Chart'
+          text: 'Specific Day and Time Series Chart',
         },
         xaxis: {
           type: 'datetime',
-        }
+        },
       },
       {
         series: [
           {
-            name: "Positive",
-            data: [['2023-08-20T00:00', 10],
-            ['2023-08-21T03:00', 10],
-            ['2023-08-22T06:00', 40],
-            ['2023-08-23T00:00', 0],
-            ['2023-08-23T03:00', 10],]
+            name: 'Positive',
+            data: [
+              ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 10],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 0],
+              ['2023-08-23T03:00', 10],
+            ],
           },
           {
-            name: "Negative",
-            data: [['2023-08-20T00:00', 10],
-            ['2023-08-21T03:00', 60],
-            ['2023-08-22T06:00', 40],
-            ['2023-08-23T00:00', 50],
-            ['2023-08-23T03:00', 40],
-  ]
+            name: 'Negative',
+            data: [
+              ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 60],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
           },
           {
-            name: "Neutral",
-            data: [['2023-08-20T00:00', 10],
-            ['2023-08-21T03:00', 30],
-            ['2023-08-22T06:00', 20],
-            ['2023-08-23T00:00', 50],
-            ['2023-08-23T03:00', 40],]
-          }
+            name: 'Neutral',
+            data: [
+              ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 30],
+              ['2023-08-22T06:00', 20],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
+          },
         ],
         chart: {
-          type: "area",
+          height: '100%',
+          type: 'area',
+        },
+        title: {
+          text: 'Specific Day and Time Series Chart',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+      },
+      {
+        series: [
+          {
+            name: 'Positive',
+            data: [
+              ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 10],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 0],
+              ['2023-08-23T03:00', 10],
+            ],
+          },
+          {
+            name: 'Negative',
+            data: [
+              ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 60],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
+          },
+          {
+            name: 'Neutral',
+            data: [
+              ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 30],
+              ['2023-08-22T06:00', 20],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
+          },
+        ],
+        chart: {
+          type: 'area',
           height: 350,
           stacked: true,
           events: {
-            selection: function(chart, e) {
+            selection: function (chart, e) {
               console.log(new Date(e.xaxis.min));
-            }
-          }
+            },
+          },
         },
-        colors: ["#008FFB", "#00E396", "#CED4DC"],
+        colors: ['#008FFB', '#00E396', '#CED4DC'],
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         fill: {
-          type: "gradient",
+          type: 'gradient',
           gradient: {
             opacityFrom: 0.6,
-            opacityTo: 0.8
-          }
+            opacityTo: 0.8,
+          },
         },
         legend: {
-          position: "top",
-          horizontalAlign: "left"
+          position: 'top',
+          horizontalAlign: 'left',
         },
         xaxis: {
-          type: "datetime"
-        }
+          type: 'datetime',
+        },
       },
       {
         series: [
           {
-            name: "Jan",
-            data:[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "Feb",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "Mar",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "Apr",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "May",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "Jun",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "Jul",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "Aug",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          },
-          {
-            name: "Sep",
-            data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50]
-          }
-        ],
-        chart: {
-          height: 350,
-          type: "heatmap"
-        },
-        plotOptions: {
-          heatmap: {
-            shadeIntensity: 0.5,
-            colorScale: {
-              ranges: [
-                {
-                  from: -30,
-                  to: 5,
-                  name: "low",
-                  color: "#00A100"
-                },
-                {
-                  from: 6,
-                  to: 20,
-                  name: "medium",
-                  color: "#128FD9"
-                },
-                {
-                  from: 21,
-                  to: 45,
-                  name: "high",
-                  color: "#FFB200"
-                },
-                {
-                  from: 46,
-                  to: 55,
-                  name: "extreme",
-                  color: "#FF0000"
-                }
-              ]
-            }
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        title: {
-          text: "HeatMap Chart with Color Range"
-        }
-      },
-      {
-        series: [
-          {
-            name: "Jun",
-            data: [{x:"1", y:20},{x:"2", y:60}, {x:"3", y:20}, {x:"4", y:10}, {x:"5", y:80},{x:"6", y:10}]
-
-          },
-          {
-            name: "Apr",
-            data: [{x:"1", y:20},{x:"2", y:60}, {x:"3", y:20}, {x:"4", y:10}, {x:"5", y:80},{x:"6", y:10}]
-
-          },
-          {
-            name: "Mar",
-            data: [{x:"1", y:20},{x:"2", y:60}, {x:"3", y:20}, {x:"4", y:10}, {x:"5", y:80},{x:"6", y:10}]
-
-          },
-          {
-            name: "Feb",
-            data: [{x:"1", y:20},{x:"2", y:60}, {x:"3", y:20}, {x:"4", y:10}, {x:"5", y:80},{x:"6", y:10}]
-
-          },
-          {
-            name: "Jan",
-            data: [{x:"1", y:100},{x:"2", y:60}, {x:"3", y:20}, {x:"4", y:10}, {x:"5", y:80},{x:"6", y:10}]
-          },
-          
-          
-          
-        ],
-        chart: {
-          height: 350,
-          type: "heatmap"
-        },
-        dataLabels: {
-          enabled: false
-        },
-        colors: ["#aa0606"],
-        title: {
-          text: "HeatMap Chart (Single color)"
-        }
-      },
-      {
-        series: [
-          {
-            name: "toxicity",
-            type: "column",
+            name: 'toxicity',
+            type: 'column',
             data: [
-              {x:'2023-01-20', y:10},
-              {x:'2023-01-23', y:35},
-              {x:'2023-01-24', y:10},
-              {x:'2023-01-25', y:41},
-              {x:'2023-08-20', y:5},
-              {x:'2023-08-21', y:6},
-              {x:'2023-08-22', y:20},
-              {x:'2023-08-27', y:10},
-              {x:'2023-01-21', y:41},
-              {x:'2023-01-22', y:35},
-              {x:'2023-01-23', y:10},
-              {x:'2023-01-23', y:41},
-              
-              {x:'2023-08-31', y:2},
-              {x:'2023-08-31', y:1},
-            ]
+
+              { x: '2023-08-20', y: 5 },
+              { x: '2023-08-21', y: 6 },
+              { x: '2023-08-22', y: 20 },
+              { x: '2023-08-27', y: 10 },
+
+
+              { x: '2023-08-31', y: 2 },
+              { x: '2023-08-31', y: 1 },
+            ],
           },
           {
-            name: "Overall Score",
-            type: "line",
+            name: 'Overall Score',
+            type: 'line',
             data: [
-              {x:'2023-01-20T00:00', y:10},
-              {x:'2023-01-21T03:00', y:41},
-              {x:'2023-01-22T06:00', y:35},
-              {x:'2023-01-23T00:00', y:10},
-              {x:'2023-01-23T03:00', y:41},
-              {x:'2023-01-23T06:00', y:35},
-              {x:'2023-01-24T00:00', y:10},
-              {x:'2023-01-25T03:00', y:41},
-              {x:'2023-01-25T06:00', y:35},
-              {x:'2023-01-26T00:00', y:10},
-              {x:'2023-01-26T03:00', y:41},
-              {x:'2023-01-26T06:00', y:35},
-              {x:'2023-01-27T00:00', y:10},
-              {x:'2023-01-31T03:00', y:41},
-              {x:'2023-01-31T06:00', y:35},
-              {x:'2023-08-20T00:00', y:10},
-              {x:'2023-08-21T03:00', y:41},
-              {x:'2023-08-22T06:00', y:35},
-              {x:'2023-08-23T00:00', y:10},
-              {x:'2023-08-23T03:00', y:41},
-              {x:'2023-08-23T06:00', y:35},
-              {x:'2023-08-24T00:00', y:10},
-              {x:'2023-08-25T03:00', y:41},
-              {x:'2023-08-25T06:00', y:35},
-              {x:'2023-08-26T00:00', y:10},
-              {x:'2023-08-26T03:00', y:41},
-              {x:'2023-08-26T06:00', y:35},
-              {x:'2023-08-27T00:00', y:10},
-              {x:'2023-08-31T03:00', y:41},
-              {x:'2023-08-31T06:00', y:35},
+              { x: '2023-08-20T00:00', y: 10 },
+              { x: '2023-08-21T03:00', y: 41 },
+              { x: '2023-08-22T06:00', y: 35 },
+              { x: '2023-08-23T00:00', y: 10 },
+              { x: '2023-08-23T03:00', y: 41 },
+              { x: '2023-08-23T06:00', y: 35 },
+              { x: '2023-08-24T00:00', y: 10 },
+              { x: '2023-08-25T03:00', y: 41 },
+              { x: '2023-08-25T06:00', y: 35 },
+              { x: '2023-08-26T00:00', y: 10 },
+              { x: '2023-08-26T03:00', y: 41 },
+              { x: '2023-08-26T06:00', y: 35 },
+              { x: '2023-08-27T00:00', y: 10 },
+              { x: '2023-08-31T03:00', y: 41 },
+              { x: '2023-08-31T06:00', y: 35 },
               // ... other data points
-            ]
+            ],
           },
-          
         ],
         chart: {
           height: '100%',
@@ -647,289 +444,279 @@ export class GraphSelectorComponent implements OnInit {
           colors: ['#fb2600', '#30a800'],
         },
         all_series_config: {
-          stroke_width: 10 
+          stroke_width: 10,
         },
         plotOptions: {
           bar: {
             columnWidth: '70%', // Adjust the column width as needed
           },
         },
-        colors: ["#fb2600", "#30a800"], // Specify the colors for the line and columns
+        colors: ['#fb2600', '#30a800'], // Specify the colors for the line and columns
         stroke: {
-          width: [60, 60], // Adjust the line width as needed
+          curve: 'smooth',
+          lineCap: "round",
+
         },
         title: {
-          text: 'Specific Day and Time Series Chart'
+          text: 'Specific Day and Time Series Chart',
         },
         xaxis: {
-          type: 'datetime'
+          type: 'datetime',
         },
+        
         yaxis: [
           {
-            seriesName: "toxicity",
+            seriesName: 'toxicity',
             axisTicks: {
-              show: true
+              show: true,
             },
             axisBorder: {
               show: true,
-              color: "#fb3200"
+              color: '#fb3200',
             },
             labels: {
               style: {
-                color: "#fb2600"
-              }
+                color: '#fb2600',
+              },
             },
             title: {
-              text: "Number of Toxic Comments",
+              text: 'Number of Toxic Comments',
               style: {
-                color: "#fb2600"
-              }
+                color: '#fb2600',
+              },
             },
             tooltip: {
-              enabled: true
-            }
+              enabled: true,
+            },
           },
           {
-            seriesName: "Overall Score",
+            seriesName: 'Overall Score',
             opposite: true,
             axisTicks: {
-              show: true
+              show: true,
             },
             axisBorder: {
               show: true,
-              color: "#30a800"
+              color: '#30a800',
             },
             labels: {
               style: {
-                color: "#30a800"
-              }
+                color: '#30a800',
+              },
             },
             title: {
-              text: "Overall Score",
+              text: 'Overall Score',
               style: {
-                color: "#30a800"
-              }
-            }
-          }
+                color: '#30a800',
+              },
+            },
+          },
         ],
       },
-      {
-        series: [{
-        name: 'Website Blog',
-        type: 'column',
-        data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
-      }, {
-        name: 'Social Media',
-        type: 'line',
-        data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16]
-      }],
-        chart: {
-        height: 350,
-        type: 'line',
-      },
-      stroke: {
-        width: [0, 4]
-      },
-      title: {
-        text: 'Traffic Sources'
-      },
-      dataLabels: {
-        enabled: true,
-        enabledOnSeries: [1]
-      },
-      labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
-      xaxis: {
-        type: 'datetime'
-      },
-      yaxis: [
-        {
-          axisTicks: {
-            show: true
-          },
-          axisBorder: {
-            show: true,
-            color: "#fb3200"
-          },
-          labels: {
-            style: {
-              color: "#fb2600"
-            }
-          },
-          title: {
-            text: "Number of Toxic Comments",
-            style: {
-              color: "#fb2600"
-            }
-          },
-          tooltip: {
-            enabled: true
-          }
-        },
-        {
-          seriesName: "Revenue",
-          opposite: true,
-          axisTicks: {
-            show: true
-          },
-          axisBorder: {
-            show: true,
-            color: "#FEB019"
-          },
-          labels: {
-            style: {
-              color: "#FEB019"
-            }
-          },
-          title: {
-            text: "Revenue (thousand crores)",
-            style: {
-              color: "#FEB019"
-            }
-          }
-        }
-      ],
-      },
+      
+      
       {
         series: [
           {
-            name: "Overall Score",
-            type: "column",
-            data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6]
+            name: 'Emotion Ratings',
+            data: [0.05, 0.1, 0.15, 0.35, 0.25, 0.15],
           },
-          {
-            name: "Cashflow",
-            type: "column",
-            data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5]
-          },
-          {
-            name: "Revenue",
-            type: "line",
-            data: [20, 29, 37, 36, 44, 45, 50, 58]
-          }
         ],
         chart: {
           height: 350,
-          type: "line",
-          stacked: false
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          width: [1, 1, 4]
+          type: 'radar',
         },
         title: {
-          text: "XYZ - Stock Analysis (2009 - 2016)",
-          align: "left",
-          offsetX: 110
+          text: 'Emotions Radar Chart',
         },
         xaxis: {
-          categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+          categories: [
+            'anger',
+            'disgust',
+            'fear',
+            'joy',
+            'surprise',
+            'sadness',
+          ],
         },
-        yaxis: [
-          {
-            axisTicks: {
-              show: true
-            },
-            axisBorder: {
-              show: true,
-              color: "#008FFB"
-            },
-            labels: {
-              style: {
-                color: "#008FFB"
-              }
-            },
-            title: {
-              text: "Income (thousand crores)",
-              style: {
-                color: "#008FFB"
-              }
-            },
-            tooltip: {
-              enabled: true
-            }
-          },
-          {
-            seriesName: "Income",
-            opposite: true,
-            axisTicks: {
-              show: true
-            },
-            axisBorder: {
-              show: true,
-              color: "#00E396"
-            },
-            labels: {
-              style: {
-                color: "#00E396"
-              }
-            },
-            title: {
-              text: "Operating Cashflow (thousand crores)",
-              style: {
-                color: "#00E396"
-              }
-            }
-          },
-          {
-            seriesName: "Revenue",
-            opposite: true,
-            axisTicks: {
-              show: true
-            },
-            axisBorder: {
-              show: true,
-              color: "#FEB019"
-            },
-            labels: {
-              style: {
-                color: "#FEB019"
-              }
-            },
-            title: {
-              text: "Revenue (thousand crores)",
-              style: {
-                color: "#FEB019"
-              }
-            }
-          }
-        ],
-        tooltip: {
-          fixed: {
-            enabled: true,
-            position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
-            offsetY: 30,
-            offsetX: 60
-          }
+        yaxis: {
+          show: false,
         },
-        legend: {
-          horizontalAlign: "left",
-          offsetX: 40
-        }
-      }
+        plotOptions: {
+          radar: {
+            polygons: {
+              strokeColor: '#e8e8e8',
+              fill: {
+                colors: ['#f8f8f8', '#fff'],
+              },
+            },
+          },
+        },
+      },
       
-    
-    
+      {
+        series: [20, 30, 50],
+        chart: {
+          height: 350,
+          type: 'donut',
+          toolbar: {
+            show: true,
+          },
+        },
+        labels: ['Postive', 'Negative', 'Neutral'],
+        colors: [
+          'rgba(63, 231, 133, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(255, 229, 84, 0.8)',
+        ],
+        legend: {
+          show: true,
+          position: 'bottom',
+
+        },
+        title: {
+          text: 'Postive - Negative - Neutral Ratios',
+        },
+        dataLabels: {
+          enabled: false,
+          
+        },
+        
+      },
+      {
+          series: [
+            {
+              name: "Proportion of emotions",
+              data: [20, 30, 10, 5, 8, 27]
+            }
+          ],
+          chart: {
+            type: "bar",
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              distributed: true,
+              horizontal: true,
+              borderRadius: 3,
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          xaxis: {
+            title: {
+              text: "Percentage",
+            },
+            categories: [
+              'anger',
+          'disgust',
+          'fear',
+          'joy',
+          'sadness',
+          'surprise',
+            ]
+          },
+          title: {
+            text: "Proportion of emotions",
+          },
+          colors: ['rgba(3, 127, 255, 0.8)',
+          'rgba(145, 44, 246, 0.8)',
+          'rgba(23, 35, 76, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 206, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',],
+        },
+        {
+          series: [70],
+          chart: {
+          height: 350,
+          type: 'radialBar',
+          toolbar: {
+            show: true,
+          },
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            },
+            track: {
+              background: '#dadada',
+            },
+            dataLabels: {
+              showOn: "always",
+              name: {
+                show: true,
+                color: "rgba(3, 127, 255, 0.8)",
+              },
+            }
+          },
+        },
+        fill: {
+          type: 'solid',
+          colors: ['#61d478'],
+
+        },
+        stroke: {
+          lineCap: "round",
+        },
+        labels: ['Overall Score'],
+        },
+        {
+          series: [3],
+          chart: {
+          height: 350,
+          type: 'radialBar',
+          toolbar: {
+            show: true,
+          },
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            },
+            track: {
+              background: '#dadada',
+            },
+            dataLabels: {
+              showOn: "always",
+              name: {
+                show: true,
+                color: "#cf5050",
+              },
+            }
+          },
+        },
+        fill: {
+          type: 'solid',
+          colors: ['#cf5050'],
+
+        },
+        stroke: {
+          lineCap: "round",
+        },
+        labels: ['Toxicity'],
+        },
       // Add more chartOptions as needed
     ];
 
     this.chartOptions = this.chartOptionsArray[0];
-
-    
   }
 
-  public generateData(count: number, yrange: { max: number; min: number; }) {
+  public generateData(count: number, yrange: { max: number; min: number }) {
     var i = 0;
     var series = [];
     while (i < count) {
-      var x = "w" + (i + 1).toString();
+      var x = 'w' + (i + 1).toString();
       var y =
         Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
 
       series.push({
         x: x,
-        y: y
+        y: y,
       });
       i++;
     }
@@ -938,7 +725,11 @@ export class GraphSelectorComponent implements OnInit {
     return series;
   }
 
-  public generateDayWiseTimeSeries = function(baseval: number, count: number, yrange: { min: any; max: any; }) {
+  public generateDayWiseTimeSeries = function (
+    baseval: number,
+    count: number,
+    yrange: { min: any; max: any }
+  ) {
     var i = 0;
     var series = [];
     while (i < count) {
@@ -954,8 +745,7 @@ export class GraphSelectorComponent implements OnInit {
   };
 
   ngAfterViewInit() {
-
-    console.log('after view init')
+    console.log('after view init');
     // Access and manipulate the DOM element in ngAfterViewInit
     setTimeout(() => {
       this.renderGraph();
@@ -1030,23 +820,26 @@ export class GraphSelectorComponent implements OnInit {
     if (!this.chartOptionsArray || !this.chartOptionsArray.length) {
       return;
     }
-  
-    this.currentGraphIndex = (this.currentGraphIndex - 1 + this.chartOptionsArray.length) % this.chartOptionsArray.length;
-  
+
+    this.currentGraphIndex =
+      (this.currentGraphIndex - 1 + this.chartOptionsArray.length) %
+      this.chartOptionsArray.length;
+
     this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
-  
+
     this.renderGraph();
   }
-  
+
   switchToNextGraph() {
     if (!this.chartOptionsArray || !this.chartOptionsArray.length) {
       return;
     }
-  
-    this.currentGraphIndex = (this.currentGraphIndex + 1) % this.chartOptionsArray.length;
-  
+
+    this.currentGraphIndex =
+      (this.currentGraphIndex + 1) % this.chartOptionsArray.length;
+
     this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
-  
+
     this.renderGraph();
   }
 
@@ -1061,17 +854,16 @@ export class GraphSelectorComponent implements OnInit {
     const containerHeight = container.offsetHeight;
 
     // Update chart height based on container's height
-    if(this.chartOptionsArray[this.currentGraphIndex].chart?.height){
-      this.chartOptionsArray[this.currentGraphIndex].chart.height = containerHeight;
+    if (this.chartOptionsArray[this.currentGraphIndex].chart?.height) {
+      this.chartOptionsArray[this.currentGraphIndex].chart.height =
+        containerHeight;
     }
 
-  
     this.chartOptions = this.chartOptionsArray[this.currentGraphIndex];
-  
+
     // Render the chart with the updated options
     // Replace 'apexchart' with the appropriate chart component and attributes
     //this.chart.updateOptions(this.chartOptions);
-
 
     if (!this.myChart || !this.chartContainer) {
       return;
@@ -1113,6 +905,5 @@ export class GraphSelectorComponent implements OnInit {
     } else {
       this.myChart.nativeElement.style.transform = `translateY(0px)`;
     }*/
-  } 
-  
+  }
 }

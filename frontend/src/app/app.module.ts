@@ -22,7 +22,7 @@ import { AppApi } from './app.api';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
 import { ApiInterceptor } from './api.interceptor';
-import { NgApexchartsModule } from 'ng-apexcharts'; // Import the module
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 
 @NgModule({
