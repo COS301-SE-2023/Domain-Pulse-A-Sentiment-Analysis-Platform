@@ -370,10 +370,10 @@ class ProfileChecksTests(TestCase):
         "check_auth.views.get_user_from_token", side_effect=mocked_get_user_from_token
     )
     @mock.patch(
-        "utils.profilescrud.get_sources_for_user_internal",
-        side_effect=mocked_get_sources_for_user_internal,
+        "utils.profilescrud.get_domains_for_user_internal",
+        side_effect=mocked_get_domains_for_user_internal,
     )
-    def test_check_source_ids(
+    def test_check_domain_ids(
         self,
         mock_create_profile,
         mock_login,
@@ -397,13 +397,13 @@ class ProfileChecksTests(TestCase):
 
         profilescrud.add_domain_to_profile(response["id"], "1")
 
-        data = {"source_ids": ["1"], "item": {"id": "1", "source_id": "1"}}
+        data = {"domain_ids": ["1"]}
         request2.user = MockUserLoggedIn()
         request2._body = json.dumps(data)
         jwt = response["JWT"]
         headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
         request2.headers = headers
-        response = check_views.check_source_ids(request2)
+        response = check_views.check_domain_ids(request2)
         data = json.loads(response.content)
         self.assertEqual(data["status"], "SUCCESS")
 
