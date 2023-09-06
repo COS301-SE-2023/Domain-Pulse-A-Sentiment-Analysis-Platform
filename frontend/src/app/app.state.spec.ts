@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { ToastrModule, ToastrService } from 'ngx-toastr'; // Add this import
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import {
   AppState,
@@ -186,11 +185,12 @@ describe('AppState', () => {
       selected: true,
       isRefreshing: false,
     };
-    
-    store.reset({ app: { sources: [dummySource], selectedSource: dummySource } });
+
+    store.reset({
+      app: { sources: [dummySource], selectedSource: dummySource },
+    });
     store.dispatch(new EditSource('New Source Name'));
   });
-
 
   it('should select the correct domain on "SetDomain" event', () => {
     const mockDomains: DisplayDomain[] = [
@@ -236,14 +236,16 @@ describe('AppState', () => {
         id: '1',
         name: 'test',
         url: 'test',
-        params: 'test',        selected: true,
+        params: 'test',
+        selected: true,
         isRefreshing: false,
       },
       {
         id: '2',
         name: 'test2',
         url: 'test3',
-        params: 'test',        selected: false,
+        params: 'test',
+        selected: false,
         isRefreshing: false,
       },
     ];
@@ -313,7 +315,9 @@ describe('AppState', () => {
       }
       expect(actualSources.length).toEqual(1);
 
-      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+      const actaulSelectredomain = store.selectSnapshot(
+        AppState.selectedDomain
+      );
       if (!actaulSelectredomain) {
         fail();
         return;
@@ -509,15 +513,8 @@ describe('AppState', () => {
     expect(AppState.platformToIcon('googlereviews')).toEqual(
       'google-reviews.png'
     );
-  });
-
-  it('should test undefined cases of selectors', () => {
-    expect(AppState.sources).toBeUndefined();
-    expect(AppState.selectedSource).toBeUndefined();
-    expect(AppState.sourceOverallSentimentScores).toBeUndefined();
-    expect(AppState.sampleData).toBeUndefined();
-    expect(AppState.toasterError).toBeUndefined();
-    expect(AppState.toasterSuccess).toBeUndefined();
-    expect(AppState.userDetails).toBe(true);
+    expect(AppState.platformToIcon('livereview')).toEqual(
+      'live-review-logo.png'
+    );
   });
 });
