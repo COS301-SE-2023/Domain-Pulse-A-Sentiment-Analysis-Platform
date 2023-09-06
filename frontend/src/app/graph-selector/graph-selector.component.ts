@@ -241,26 +241,34 @@ export class GraphSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.sourceOverallSentiment.subscribe((data) => {
+      this.processOverallSentiment(data);
       console.log(data);
-      if (data) {
-        if (data.aggregated_metrics.general.category != 'No data') {
-          this.updatedGraphArray = this.assignGraphData(
-            data.aggregated_metrics,
-            this.graphs
-          );
-          setTimeout(() => {
-            this.renderGraph();
-          }, 300);
-        }
-      }
     });
 
     this.statisticIndex.subscribe((statIndex) => {
-      if (statIndex !== this.currentGraphIndex && statIndex !== undefined) {
-        this.currentGraphIndex = statIndex;
-        this.renderGraph();
-      }
+      this.processStatisticIndexChange(statIndex);
     });
+  }
+
+  processOverallSentiment(data: any) {
+    if (data) {
+      if (data.aggregated_metrics.general.category != 'No data') {
+        this.updatedGraphArray = this.assignGraphData(
+          data.aggregated_metrics,
+          this.graphs
+        );
+        setTimeout(() => {
+          this.renderGraph();
+        }, 300);
+      }
+    }
+  }
+
+  processStatisticIndexChange(statIndex: any) {
+    if (statIndex !== this.currentGraphIndex && statIndex !== undefined) {
+      this.currentGraphIndex = statIndex;
+      this.renderGraph();
+    }
   }
 
   ngAfterViewInit() {
@@ -361,7 +369,6 @@ export class GraphSelectorComponent implements OnInit {
     }
 
     this.myChart.nativeElement.setAttribute('data-cy', this.currentGraphIndex);
-
 
     const currentGraph = this.updatedGraphArray[this.currentGraphIndex];
 

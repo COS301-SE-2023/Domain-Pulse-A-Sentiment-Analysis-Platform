@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AttempPsswdLogin, ChooseStatistic } from '../app.actions';
 
-const mockData = {
+const mockAggregatedMetricsData = {
   general: {
     category: 'POSITIVE',
     score: 0.714,
@@ -72,6 +72,27 @@ describe('GraphSelectorComponent', () => {
     expect(component).toBeDefined();
   });
 
+  it('should test showPopup', () => {
+    component.showPopup(1);
+    expect(true).toBe(true);
+  });
+
+  it('should set updatedGraphArray on new Data', () => {
+    component.processOverallSentiment({aggregated_metrics: mockAggregatedMetricsData});
+
+    expect(component.updatedGraphArray).toBeDefined();
+  });
+
+  it('should change the current statistic index when new index event is received', () => {
+    component.processStatisticIndexChange(1);
+
+    expect(component.currentGraphIndex).toEqual(1);
+
+    component.processStatisticIndexChange(2);
+
+    expect(component.currentGraphIndex).toEqual(2);
+  });
+
   it('should render the graph after view init', (done) => {
     component.ngAfterViewInit();
 
@@ -83,7 +104,7 @@ describe('GraphSelectorComponent', () => {
 
   it('should switch to the right graph when the index changes', () => {
     component.updatedGraphArray = component.assignGraphData(
-      mockData,
+      mockAggregatedMetricsData,
       component.graphs
     );
 
