@@ -538,6 +538,29 @@ describe('AppState', () => {
     store.dispatch(new ChangePassword('test_pass', 'test_pass2'));
   });
 
+  it('should react correctly to successful "ChangePassword" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+      const navigateSpy = router.navigate as jasmine.Spy;
+      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+      done();
+    });
+
+    apiSpy.changePassword.and.returnValue(of({ status: 'SUCCESS' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'pp@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new ChangePassword('test_pass', 'test_pass2'));
+  });
+
   it('should react correctly do Successfull "DeleteUser" event', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
       const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
