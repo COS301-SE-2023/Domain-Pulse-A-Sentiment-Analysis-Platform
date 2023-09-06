@@ -1238,4 +1238,13 @@ class ProfilesTests(TestCase):
         self.assertEqual(result["domain_id"], testDomainID)
         self.assertIn(testSourceID, result["source_ids"])
 
+    def test_get_sources_for_domain_view_invalid(self):
+        request2 = HttpRequest()
+        request2.method = "GET"
+        result = json.loads(
+            profile_views.get_sources_for_domain(request2).content.decode()
+        )
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "Invalid Request")
+
     # ----------------------------------------------------------------
