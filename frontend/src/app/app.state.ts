@@ -1012,11 +1012,6 @@ export class AppState {
 
     const { profileIcon } = state;
 
-    if (profileIcon === undefined) {
-      console.error('profileIcon must be provided.');
-      return;
-    }
-
     return this.appApi.changeProfileIcon(profileId, profileIcon).pipe(
       switchMap((res) => {
         if (res.status === 'SUCCESS') {
