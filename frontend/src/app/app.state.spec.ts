@@ -4,11 +4,13 @@ import {
   AppState,
   DisplayDomain,
   DisplaySource,
+  ProfileDetails,
   UserDetails,
 } from './app.state';
 import {
   AddNewSource,
   AttempPsswdLogin,
+  ChangeProfileIcon,
   CheckAuthenticate,
   ChooseStatistic,
   DeleteSource,
@@ -48,6 +50,7 @@ describe('AppState', () => {
       'editSource',
       'deleteSource',
       'setIsActive',
+      'changeProfileIcon',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -501,6 +504,29 @@ describe('AppState', () => {
     store.reset({ app: { selectedSource: mockSource, sources: [mockSource] } });
 
     store.dispatch(new SetIsActive(true));
+  });
+
+  it('should react correclty to successfull ChangeProfileICon event', (done: DoneFn) => {
+    apiSpy.changeProfileIcon.and.returnValue(of({ status: 'SUCCESS', profileIcon: 'https://not_a_real_icon2.png', mode: false, profileId: 1 }));
+
+    // set the profile
+    const mockProfile: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfile } });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const newProfileDetails = store.selectSnapshot(AppState.profileDetails);
+      expect(newProfileDetails?.profileIcon).toEqual('https://not_a_real_icon2.png');
+
+      done();
+    });
+
+
+    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png")).subscribe();
+
   });
 
   it('Set the selected Statistic Index', () => {
