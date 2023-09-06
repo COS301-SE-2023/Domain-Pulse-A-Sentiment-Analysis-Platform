@@ -232,7 +232,7 @@ describe('AppState', () => {
     expect(actualDomains[1].selected).toEqual(true);
   });
 
-  it('should select the correct source on "SetSource" event', () => {
+  it('should select the correct source on "SetSource" event', (done: DoneFn) => {
     const mockSources: DisplaySource[] = [
       {
         id: '1',
@@ -257,17 +257,20 @@ describe('AppState', () => {
 
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'SUCCESS' }));
 
-    store.dispatch(new SetSource(mockSources[1]));
-
-    const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
-    expect(actualSelectedSource).toEqual(mockSources[1]);
-    const actualSources = store.selectSnapshot(AppState.sources);
-    if (!actualSources) {
-      fail();
-      return;
-    }
-    expect(actualSources[0].selected).toEqual(false);
-    expect(actualSources[1].selected).toEqual(true);
+    store.dispatch(new SetSource(mockSources[1])).subscribe(() => {
+      const actualSelectedSource = store.selectSnapshot(
+        AppState.selectedSource
+      );
+      expect(actualSelectedSource).toEqual(mockSources[1]);
+      const actualSources = store.selectSnapshot(AppState.sources);
+      if (!actualSources) {
+        fail();
+        return;
+      }
+      expect(actualSources[0].selected).toEqual(false);
+      expect(actualSources[1].selected).toEqual(true);
+      done()
+    });
   });
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
