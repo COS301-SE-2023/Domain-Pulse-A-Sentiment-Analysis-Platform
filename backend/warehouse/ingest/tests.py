@@ -48,6 +48,7 @@ def mocked_down_analyser_request(dummy1, json=None, headers=None, data=None):
     GET_SOURCE_ENDPOINT = (
         f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     )
+    DOMAINS_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
     if dummy1 == ANALYSER_ENDPOINT:
         mock_response = MagicMock()
         mock_response.status_code = 404
@@ -67,6 +68,13 @@ def mocked_down_analyser_request(dummy1, json=None, headers=None, data=None):
             "source_name": "some source name",
             "source_type": "some source type",
             "source_id": "some source id",
+            "status": "SUCCESS",
+        }
+        return mock_response
+    elif dummy1 == DOMAINS_ENDPOINT:
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
             "status": "SUCCESS",
         }
         return mock_response
@@ -174,6 +182,29 @@ class LiveIngestionTests(TestCase):
     <h2>Details: {{details}}</h2>
 </body>""".replace(
                 "{{details}}", "Could not verify the source ID"
+            ),
+        )
+
+    @mock.patch("requests.post", side_effect=mocked_down_analyser_request)
+    def test_analyser_service_down_case(self, mocked_post):
+        response: HttpResponse = self.client.post(
+            path="/ingest/live_review/",
+            data=urlencode(
+                {
+                    "review_text": "some data",
+                    "source_id": "some source id",
+                }
+            ),
+            content_type="application/x-www-form-urlencoded",
+        )
+
+        self.assertContains(
+            response,
+            """<body>
+    <h1>There was an error submitting your review!</h1>
+    <h2>Details: {{details}}</h2>
+</body>""".replace(
+                "{{details}}", "Error communicating with analyser"
             ),
         )
 
