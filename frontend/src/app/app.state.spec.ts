@@ -11,6 +11,7 @@ import {
   AddNewSource,
   AttempPsswdLogin,
   ChangeMode,
+  ChangePassword,
   ChangeProfileIcon,
   CheckAuthenticate,
   ChooseStatistic,
@@ -60,6 +61,7 @@ describe('AppState', () => {
       'changeProfileIcon',
       'deleteUser',
       'changeMode',
+      'changePassword',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -513,6 +515,27 @@ describe('AppState', () => {
     store.reset({ app: { profileDetails: mockProfileDetails } });
 
     store.dispatch(new ChangeMode);
+  });
+
+  it('should react correctly to failed "ChangePassword" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.changePassword.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'pp@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new ChangePassword('test_pass', 'test_pass2'));
   });
 
   it('should react correctly do Successfull "DeleteUser" event', (done: DoneFn) => {
