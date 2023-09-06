@@ -940,7 +940,7 @@ export class AppState {
   }
 
   @Action(ChangePassword)
-  changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {
+  changePassword(ctx: StateContext<AppStateModel>, state: ChangePassword) {
     //check UserDetails
 
     const userId = ctx.getState().userDetails?.userId;
@@ -951,11 +951,6 @@ export class AppState {
     }
 
     const { oldPassword, newPassword } = state;
-
-    if (oldPassword === undefined || newPassword === undefined) {
-      console.error('oldPassword and newPassword must be provided.');
-      return;
-    }
 
     this.appApi
       .changePassword(userId, oldPassword, newPassword)
@@ -974,19 +969,8 @@ export class AppState {
   }
 
   @Action(DeleteUser)
-  deleteUser(ctx: StateContext<AppStateModel>, state: UserDetails) {
-    const { password } = state;
-    const username = ctx.getState().userDetails?.username;
-
-    if (!username) {
-      console.error('Username is not available in the state.');
-      return;
-    }
-
-    if (password === undefined) {
-      console.error('password must be provided.');
-      return;
-    }
+  deleteUser(ctx: StateContext<AppStateModel>, state: DeleteUser) {
+    const { password, username } = state;
 
     this.appApi.deleteUser(username, password).subscribe((res) => {
       if (res.status == 'SUCCESS') {
@@ -1002,7 +986,7 @@ export class AppState {
   }
 
   @Action(ChangeProfileIcon)
-  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ChangeProfileIcon) {
     const profileId = ctx.getState().profileDetails?.profileId;
 
     if (!profileId) {
