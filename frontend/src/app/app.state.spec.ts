@@ -510,4 +510,14 @@ describe('AppState', () => {
       'google-reviews.png'
     );
   });
+
+  it('should test undefined cases of selectors', () => {
+    expect(AppState.sources).toBeUndefined();
+    expect(AppState.selectedSource).toBeUndefined();
+    expect(AppState.sourceOverallSentimentScores).toBeUndefined();
+    expect(AppState.sampleData).toBeUndefined();
+    expect(AppState.toasterError).toBeUndefined();
+    expect(AppState.toasterSuccess).toBeUndefined();
+    expect(AppState.userDetails).toBe(true);
+  });
 });
