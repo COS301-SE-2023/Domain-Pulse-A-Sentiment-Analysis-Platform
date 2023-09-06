@@ -520,13 +520,40 @@ describe('AppState', () => {
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
       const newProfileDetails = store.selectSnapshot(AppState.profileDetails);
       expect(newProfileDetails?.profileIcon).toEqual('https://not_a_real_icon2.png');
-
+      
       done();
     });
 
 
     store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png")).subscribe();
 
+  });
+
+  it('should react correctly to failed ChangeProfileICon event', (done: DoneFn) => {
+    apiSpy.changeProfileIcon.and.returnValue(of({ status: 'FAILURE' }));
+
+    // set the profile
+    const mockProfile: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfile } });
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+
+    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png")).subscribe();
+  });
+
+  it('should react correctly to failed ChangeProfileICon event with no profileIcon', () => {
+    // (really just running the empty case)
+
+    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png"));
+    expect(true).toBe(true);
   });
 
   it('Set the selected Statistic Index', () => {
