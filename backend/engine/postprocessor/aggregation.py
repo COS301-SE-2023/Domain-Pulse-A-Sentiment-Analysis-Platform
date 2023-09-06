@@ -52,7 +52,7 @@ def produce_timeseries(individual_data: list):
     SMOOTHING_FACTORS = {
         "overall": 0.6,
         "emotions_hit": 0.5,
-        "ratios": 0.2,
+        "ratios": 0.3,
         "emotions_miss": 0.2,
     }
     cumulative_num_sentiments = 0
