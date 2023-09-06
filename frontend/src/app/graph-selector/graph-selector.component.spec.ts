@@ -126,6 +126,12 @@ describe('GraphSelectorComponent', () => {
     expect(component.currentGraphIndex).toEqual(0);
   });
 
+  it('should not render graph if no \'myChar\' or \'chartContainer\'', () => {
+    component.renderGraph();
+
+    expect(component.chart).toBeUndefined();
+  });
+
 // find out why the ChooseStatistic Test is not firing
   //   it('fire correct "ChooseStatistics" event when switching to previous graph', (done: DoneFn) => {
 //     actions$.pipe(ofActionDispatched(ChooseStatistic)).subscribe((_) => {
