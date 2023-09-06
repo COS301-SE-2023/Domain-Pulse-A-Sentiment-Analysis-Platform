@@ -1180,4 +1180,11 @@ class ProfilesTests(TestCase):
         self.assertEqual(result["status"], "SUCCESS")
         self.assertEqual(result["id"], user["profileID"])
 
+    def test_get_profile_view(self):
+        request2 = HttpRequest()
+        request2.method = "GET"
+        result = json.loads(profile_views.get_profile(request2).content.decode())
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "Invalid Request")
+
     # ----------------------------------------------------------------
