@@ -532,3 +532,11 @@ class ProfileChecksTests(TestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], "FAILURE")
         self.assertEqual(data["details"], "Invalid request to Profiles service")
+
+    def test_check_source_ids_invalid_req(self):
+        request1 = HttpRequest()
+        request1.method = "GET"
+        response = check_views.check_source_ids(request1)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Invalid request to Profiles service")
