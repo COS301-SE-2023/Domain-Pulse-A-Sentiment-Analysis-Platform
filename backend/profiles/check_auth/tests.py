@@ -589,3 +589,10 @@ class ProfileChecksTests(TestCase):
     def test_invalid_get_user_from_token(self):
         response = check_views.get_user_from_token("token")
         self.assertEqual(response, None)
+
+    def test_missing_header_extract_token(self):
+        request2 = HttpRequest()
+        request2.method = "POST"
+        flag, token = check_views.extract_token(request2)
+        self.assertEqual(flag, False)
+        self.assertEqual(token, "Authorization header missing")
