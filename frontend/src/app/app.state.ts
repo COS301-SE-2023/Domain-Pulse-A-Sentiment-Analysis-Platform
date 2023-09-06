@@ -920,23 +920,15 @@ export class AppState {
 
   @Action(Logout)
   logout(ctx: StateContext<AppStateModel>) {
-    return this.appApi.logOut().pipe(
-      switchMap((res) => {
-        if (res.status === 'SUCCESS') {
-          this.store.dispatch(new ToastSuccess('You have been logged out'));
-          localStorage.removeItem('JWT');
-          this.router.navigate(['/login']);
-
-          return of();
-        } else {
-          return throwError(() => new Error());
-        }
-      }),
-      catchError((error: any) => {
+    this.appApi.logOut().subscribe((res) => {
+      if (res.status === 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('You have been logged out'));
+        localStorage.removeItem('JWT');
+        this.router.navigate(['/login']);
+      } else {
         this.store.dispatch(new ToastError('You could not be logged out'));
-        return of(error);
-      })
-    );
+      }
+    });
   }
 
   @Action(ChangePassword)

@@ -20,6 +20,7 @@ import {
   EditSource,
   GetDomains,
   GetSourceDashBoardInfo,
+  Logout,
   RefreshSourceData,
   RegisterUser,
   SetDomain,
@@ -62,6 +63,7 @@ describe('AppState', () => {
       'deleteUser',
       'changeMode',
       'changePassword',
+      'logOut',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -468,6 +470,30 @@ describe('AppState', () => {
     expect(apiSpy.registerUser).toHaveBeenCalled();
   });
 
+  it('should react correctly to failed "Logout" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.logOut.and.returnValue(of({ status: 'FAILURE' }));
+
+    store.dispatch(new Logout());
+  });
+
+  it('should react correctly to successful "Logout" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+      const navigateSpy = router.navigate as jasmine.Spy;
+      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+      done();
+    });
+
+    apiSpy.logOut.and.returnValue(of({ status: 'SUCCESS' }));
+
+    store.dispatch(new Logout());
+  });
+
   it('should show toast on no selected source', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
       expect(true).toBe(true);
@@ -475,7 +501,7 @@ describe('AppState', () => {
     });
 
     store.dispatch(new SetIsActive(false));
-  });  
+  });
 
   it('should react correctly to failed "ChangeMode" event', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
