@@ -1,6 +1,8 @@
 <html>
   <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
     <script type="text/javascript">
       "use strict";
@@ -27,7 +29,7 @@
           responsive: false,
           type: "doughnut",
           data: {
-            labels: ["Overall Score: 75%"],
+            labels: ["Overall Score"],
             datasets: [
               {
                 data: [75, 25],
@@ -40,7 +42,17 @@
             ],
           },
           options: {
-            plugins: {},
+            plugins: {
+              datalabels: {
+                color: "rgba(3, 127, 255, 1)",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                borderRadius: 4,
+                font: {
+                  size: 9,
+                  weight: "bold",
+                },
+              },
+            },
             animation: false,
             title: { display: true, text: "Overall Score" },
             legend: {
@@ -73,12 +85,178 @@
             ],
           },
           options: {
-            plugins: {},
+            plugins: {
+              datalabels: {
+                color: "rgba(3, 127, 255, 1)",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                borderRadius: 4,
+                font: {
+                  size: 9,
+                  weight: "bold",
+                },
+              },
+            },
             animation: false,
             title: { display: true, text: "Sentiment Ratios" },
             legend: {
               display: true,
               position: "bottom",
+            },
+          },
+        });
+
+        new Chart(document.getElementById("canvas3"), {
+          responsive: true,
+          type: "bar",
+          data: {
+            labels: ["anger", "disgust", "fear", "joy", "sadness", "surprise"],
+            datasets: [
+              {
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                  "rgba(3, 127, 255, 0.8)",
+                  "rgba(145, 44, 246, 0.8)",
+                  "rgba(23, 35, 76, 0.8)",
+                  "rgba(255, 99, 132, 0.8)",
+                  "rgba(255, 206, 86, 0.8)",
+                  "rgba(75, 192, 192, 0.8)",
+                ],
+
+                borderColor: [
+                  "rgba(3, 127, 255, 1)",
+                  "rgba(145, 44, 246, 1)",
+                  "rgba(23, 35, 76, 1)",
+                  "rgba(255, 99, 132, 1)",
+                  "rgba(255, 206, 86, 1)",
+                  "rgba(75, 192, 192, 1)",
+                ],
+
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(255, 255, 255, 0)",
+              },
+            },
+            animation: false,
+            title: { display: true, text: "Emotion Ratios" },
+            legend: {
+              display: false,
+            },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+            maintainAspectRatio: false,
+          },
+        });
+        new Chart(document.getElementById("canvas4"), {
+          responsive: true,
+          type: "bar",
+          data: {
+            labels: [
+              "source1",
+              "source2",
+              "source3",
+              "source4",
+              "source5",
+              "source6",
+              "sourc7",
+              "source8",
+              "source9",
+              "source10",
+              "source11",
+              "source12",
+            ],
+            datasets: [
+              {
+                data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                  "rgba(220,60,42,0.8)", //youtube
+                  "rgba(233,175,0,0.8)", //google
+                  "rgba(52,224,161,0.8)", //tripadvisor
+                  "rgba(0,0,50,0.8)", //trustpilot
+                  "rgba(157,80,246,0.8)", //live review,
+                  "rgba(28,109,66, 0.8)", //csv
+                  "rgba(220,60,42,0.8)", //youtube
+                  "rgba(233,175,0,0.8)", //google
+                  "rgba(52,224,161,0.8)", //tripadvisor
+                  "rgba(0,0,50,0.8)", //trustpilot
+                  "rgba(157,80,246,0.8)", //live review,
+                  "rgba(28,109,66, 0.8)", //csv
+                ],
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(255, 255, 255, 0)",
+              },
+            },
+            animation: false,
+            title: { display: true, text: "Number of Sentiments per Source" },
+            legend: {
+              display: false,
+            },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+            maintainAspectRatio: false,
+          },
+        });
+
+        new Chart(document.getElementById("canvas5"), {
+          responsive: true,
+          type: "line",
+          data: {
+            datasets: [
+              {
+                data: [
+                  { x: "2020-02-15 18:37:39", y: 2 },
+                  { x: "2020-02-16 18:37:39", y: 3 },
+                  { x: "2020-02-17 18:37:39", y: 1 },
+                  { x: "2020-02-23 18:37:39", y: 8 },
+                  { x: "2020-02-26 18:37:39", y: 10 },
+                ],
+                borderColor: "rgba(3, 127, 255, 1)", // Line color
+                borderWidth: 2, // Line width
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(255, 255, 255, 0)",
+              },
+            },
+            animation: false,
+            title: { display: true, text: "Overall Score over time" },
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            scales: {
+              xAxes: [
+                {
+                  type: "time",
+                },
+              ],
             },
           },
         });
@@ -764,12 +942,12 @@
           <p class="page-heading">What is in your domain?</p>
         </div>
         <div class="flex-column" style="width: 100%; align-items: flex-start">
-          <div class="flex-row" style="width: 100%">
+          <div class="flex-row up-card" style="width: 100%">
             <div
               class="flex-row card center left-card"
               style="
                 flex-basis: 50%;
-                height: 300px;
+                height: 250px;
                 padding: 1rem;
                 box-sizing: border-box;
               "
@@ -780,12 +958,51 @@
               class="flex-row card center"
               style="
                 flex-basis: 50%;
-                height: 300px;
+                height: 250px;
                 padding: 1rem;
                 box-sizing: border-box;
               "
             >
               <canvas id="canvas2"></canvas>
+            </div>
+          </div>
+          <div class="flex-row up-card" style="width: 100%">
+            <div
+              class="flex-row card center"
+              style="
+                flex-basis: 100%;
+                height: 280px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="canvas3"></canvas>
+            </div>
+          </div>
+          <div class="flex-row up-card" style="width: 100%">
+            <div
+              class="flex-row card center"
+              style="
+                flex-basis: 100%;
+                height: 280px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="canvas4"></canvas>
+            </div>
+          </div>
+          <div class="flex-row up-card" style="width: 100%">
+            <div
+              class="flex-row card center"
+              style="
+                flex-basis: 100%;
+                height: 280px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="canvas5"></canvas>
             </div>
           </div>
         </div>
