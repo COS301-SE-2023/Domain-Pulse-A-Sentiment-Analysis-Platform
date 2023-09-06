@@ -473,7 +473,27 @@ describe('AppState', () => {
         last_refresh_timestamp: 1689936239.0,
         params: {
           source_type: 'youtube',
-          video_id: 'RGZFb2PlPlo',
+          maps_url: 'RGZFb2PlPlo',
+        },
+      },
+      {
+        source_id: '64ba5fb1303c5fdb91cc4c5e',
+        source_name: 'Primeagen 3',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689936239.0,
+        params: {
+          source_type: 'youtube',
+          tripadvisor_url: 'RGZFb2PlPlo',
+        },
+      },
+      {
+        source_id: '64b940ec9bbccdb7731b81f9',
+        source_name: 'Primegen survey',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689878247.0,
+        params: {
+          source_type: 'livereview',
+          is_active: true,
         },
       },
     ];
@@ -492,6 +512,22 @@ describe('AppState', () => {
         name: 'Linus 1',
         url: 'youtube-logo.png',
         params: 'RGZFb2PlPlo',
+        selected: false,
+        isRefreshing: false,
+      },
+      {
+        id: '64ba5fb1303c5fdb91cc4c5e',
+        name: 'Primeagen 3',
+        url: 'youtube-logo.png',
+        params: 'RGZFb2PlPlo',
+        selected: false,
+        isRefreshing: false,
+      },
+      {
+        id: '64b940ec9bbccdb7731b81f9',
+        name: 'Primegen survey',
+        url: 'youtube-logo.png',
+        params: true,
         selected: false,
         isRefreshing: false,
       },

@@ -1155,8 +1155,7 @@ export class AppState {
         sourceUrl = responseSource.params.maps_url;
       } else if (responseSource.params.tripadvisor_url) {
         sourceUrl = responseSource.params.tripadvisor_url;
-      }
-      else if (responseSource.params.is_active){
+      } else if (responseSource.params.is_active){
         sourceUrl = responseSource.params.is_active;
       }
 
