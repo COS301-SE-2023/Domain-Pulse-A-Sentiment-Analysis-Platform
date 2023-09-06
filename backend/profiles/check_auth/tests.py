@@ -585,3 +585,7 @@ class ProfileChecksTests(TestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], "FAILURE")
         self.assertEqual(data["details"], "Invalid request to Profiles service")
+
+    def test_invalid_get_user_from_token(self):
+        response = check_views.get_user_from_token("token")
+        self.assertEqual(response, None)
