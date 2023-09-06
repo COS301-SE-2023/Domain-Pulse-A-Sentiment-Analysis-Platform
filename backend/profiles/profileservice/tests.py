@@ -1212,4 +1212,30 @@ class ProfilesTests(TestCase):
         self.assertEqual(result["status"], "FAILURE")
         self.assertEqual(result["details"], "Invalid Request")
 
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_sources_for_domain_view(self, mocked_login, mocked_create_profile):
+        class MockUser:
+            is_authenticated = True
+
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testDomainID = "3"
+
+        profilescrud.add_domain_to_profile(user["id"], testDomainID)
+        testSourceID = "5"
+        profilescrud.add_source_to_domain(user["id"], testDomainID, testSourceID)
+        request2 = HttpRequest()
+        request2.method = "POST"
+        request2._body = json.dumps({"id": user["id"], "domain_id": testDomainID})
+        result = json.loads(
+            profile_views.get_sources_for_domain(request2).content.decode()
+        )
+        self.assertEqual(result["status"], "SUCCESS")
+        self.assertEqual(result["id"], user["id"])
+        self.assertEqual(result["domain_id"], testDomainID)
+        self.assertIn(testSourceID, result["source_ids"])
+
     # ----------------------------------------------------------------
