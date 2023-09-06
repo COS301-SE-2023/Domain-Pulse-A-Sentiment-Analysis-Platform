@@ -52,6 +52,7 @@ class QueryEngineTests(TestCase):
             "overall": {},
             "metadata": {},
             "individual_data": {},
+            "timeseries": {},
         }
         mocked_response.return_value = mock_response
 
@@ -123,6 +124,7 @@ class QueryEngineTests(TestCase):
             "overall": {},
             "metadata": {},
             "individual_data": {},
+            "timeseries": {},
         }
         mocked_response.return_value = mock_response
 
