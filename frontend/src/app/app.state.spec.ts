@@ -14,6 +14,7 @@ import {
   CheckAuthenticate,
   ChooseStatistic,
   DeleteSource,
+  DeleteUser,
   EditSource,
   GetDomains,
   GetSourceDashBoardInfo,
@@ -29,6 +30,11 @@ import {
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+
+class MockRouter {
+  navigate = jasmine.createSpy('navigate');
+}
 
 describe('AppState', () => {
   let store: Store;
@@ -51,6 +57,7 @@ describe('AppState', () => {
       'deleteSource',
       'setIsActive',
       'changeProfileIcon',
+      'deleteUser',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -60,7 +67,9 @@ describe('AppState', () => {
 
     await TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule, NgxsModule.forRoot([AppState])],
-      providers: [{ provide: AppApi, useValue: apiSpy }],
+      providers: [{ provide: AppApi, useValue: apiSpy },
+        { provide: Router, useClass: MockRouter },
+      ],
     }).compileComponents();
 
     store = TestBed.inject(Store);
@@ -462,6 +471,29 @@ describe('AppState', () => {
     });
 
     store.dispatch(new SetIsActive(false));
+  });  
+
+  it('should react correctly do Successfull "DeleteUser" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+      const navigateSpy = router.navigate as jasmine.Spy;
+      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+      done();
+    });
+
+    apiSpy.deleteUser.and.returnValue(of({ status: 'SUCCESS' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'mandem@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new DeleteUser('test', 'test_pass'));
   });
 
   it('should show toast on fialed "SetIsActive"', (done: DoneFn) => {

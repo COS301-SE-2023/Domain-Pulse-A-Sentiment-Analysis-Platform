@@ -1034,13 +1034,6 @@ export class AppState {
             new ToastError('Your profile icon could not be changed')
           );
         }
-      }),
-      catchError((error: any) => {
-        console.error(
-          'An error occurred during the profile icon change:',
-          error
-        );
-        return throwError(() => error);
       })
     );
   }
