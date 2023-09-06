@@ -493,6 +493,28 @@ describe('AppState', () => {
     store.dispatch(new ChangeMode);
   });
 
+    it('should react correctly to successfull "ChangeMode" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const currentProfileDetails = store.selectSnapshot(AppState.profileDetails);
+      expect(currentProfileDetails?.mode).toEqual(false);
+      expect(currentProfileDetails?.profileIcon).toEqual('test');
+      expect(currentProfileDetails?.profileId).toEqual(1);
+
+      done();
+    });
+
+    apiSpy.changeMode.and.returnValue(of({ status: 'SUCCESS', profileIcon: 'test', mode: false, id: 1 }));
+
+    const mockProfileDetails: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfileDetails } });
+
+    store.dispatch(new ChangeMode);
+  });
+
   it('should react correctly do Successfull "DeleteUser" event', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
       const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
