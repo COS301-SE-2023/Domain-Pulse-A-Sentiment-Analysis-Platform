@@ -496,6 +496,27 @@ describe('AppState', () => {
     store.dispatch(new DeleteUser('test', 'test_pass'));
   });
 
+  it('should react correctly do failed "DeleteUser" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.deleteUser.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'mandem@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new DeleteUser('test', 'test_pass'));
+  });
+
   it('should show toast on fialed "SetIsActive"', (done: DoneFn) => {
     apiSpy.setIsActive.and.returnValue(of({ status: 'FAILURE' }));
 
