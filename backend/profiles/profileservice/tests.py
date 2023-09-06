@@ -1180,11 +1180,29 @@ class ProfilesTests(TestCase):
         self.assertEqual(result["status"], "SUCCESS")
         self.assertEqual(result["id"], user["profileID"])
 
-    def test_get_profile_view(self):
+    def test_get_profile_view_invalid(self):
         request2 = HttpRequest()
         request2.method = "GET"
         result = json.loads(profile_views.get_profile(request2).content.decode())
         self.assertEqual(result["status"], "FAILURE")
         self.assertEqual(result["details"], "Invalid Request")
+
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    def test_get_user_by_id_view(self, mocked_create_profile, mocked_login):
+        class MockUser:
+            is_authenticated = True
+
+        request1 = HttpRequest()
+        request1.method = "POST"
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        data = {"id": user["profileID"]}
+        request2 = HttpRequest()
+        request2.method = "POST"
+        request2._body = json.dumps(data)
+        request2.user = MockUser()
+        result = json.loads(profile_views.get_user_by_id(request2).content.decode())
+        self.assertEqual(result["status"], "SUCCESS")
+        self.assertEqual(result["id"], user["id"])
 
     # ----------------------------------------------------------------
