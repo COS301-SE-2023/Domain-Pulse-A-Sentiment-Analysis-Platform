@@ -458,6 +458,27 @@ describe('AppState', () => {
     store.dispatch(new SetIsActive(false));
   });
 
+  it('should show toast on fialed "SetIsActive"', (done: DoneFn) => {
+    apiSpy.setIsActive.and.returnValue(of({ status: 'FAILURE' }));
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    store.dispatch(new SetIsActive(true));
+  });
+
   it('Set the selected Statistic Index', () => {
     store.dispatch(new ChooseStatistic(1));
 
