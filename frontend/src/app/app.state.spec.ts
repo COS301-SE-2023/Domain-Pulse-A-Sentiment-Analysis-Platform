@@ -10,6 +10,7 @@ import {
 import {
   AddNewSource,
   AttempPsswdLogin,
+  ChangeMode,
   ChangeProfileIcon,
   CheckAuthenticate,
   ChooseStatistic,
@@ -58,6 +59,7 @@ describe('AppState', () => {
       'setIsActive',
       'changeProfileIcon',
       'deleteUser',
+      'changeMode',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -472,6 +474,24 @@ describe('AppState', () => {
 
     store.dispatch(new SetIsActive(false));
   });  
+
+  it('should react correctly to failed "ChangeMode" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.changeMode.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockProfileDetails: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfileDetails } });
+
+    store.dispatch(new ChangeMode);
+  });
 
   it('should react correctly do Successfull "DeleteUser" event', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
