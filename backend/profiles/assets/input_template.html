@@ -63,7 +63,7 @@
         });
 
         new Chart(document.getElementById("canvas2"), {
-          responsive: false,
+          responsive: true,
           type: "pie",
           data: {
             labels: ["Positive", "Negative", "Neutral"],
@@ -96,7 +96,7 @@
                 },
               },
             },
-            animation: false,
+            animation: true,
             title: { display: true, text: "Sentiment Ratios" },
             legend: {
               display: true,
@@ -260,6 +260,248 @@
             },
           },
         });
+
+        new Chart(document.getElementById("source1chart1"), {
+          responsive: false,
+          type: "doughnut",
+          data: {
+            labels: ["Overall Score"],
+            datasets: [
+              {
+                data: [75, 25],
+                backgroundColor: [
+                  "rgba(3, 127, 255, 1)",
+                  "rgba(170, 170, 170, 0.71)",
+                ],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(3, 127, 255, 1)",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                borderRadius: 4,
+                font: {
+                  size: 9,
+                  weight: "bold",
+                },
+              },
+            },
+            animation: false,
+            title: { display: true, text: "Overall Score" },
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        });
+
+        new Chart(document.getElementById("source1chart2"), {
+          responsive: true,
+          type: "pie",
+          data: {
+            labels: ["Positive", "Negative", "Neutral"],
+            datasets: [
+              {
+                data: [40, 40, 20],
+                backgroundColor: [
+                  "rgba(0, 184, 0, 0.7)",
+                  "rgba(184, 0, 0, 0.7)",
+                  "rgba(231, 215, 65, 0.7)",
+                ],
+                borderColor: [
+                  "rgba(0, 184, 0, 0.8)",
+                  "rgba(184, 0, 0, 0.8)",
+                  "rgba(231, 215, 65, 0.8)",
+                ],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(3, 127, 255, 1)",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                borderRadius: 4,
+                font: {
+                  size: 9,
+                  weight: "bold",
+                },
+              },
+            },
+            animation: true,
+            title: { display: true, text: "Sentiment Ratios" },
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        });
+
+        new Chart(document.getElementById("source1chart3"), {
+          responsive: true,
+          type: "radar",
+          data: {
+            labels: ["anger", "disgust", "fear", "joy", "sadness", "surprise"],
+            datasets: [
+              {
+                data: [12, 19, 3, 5, 2, 3],
+                fill: true,
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgb(255, 99, 132)",
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(255, 255, 255, 0)",
+              },
+            },
+            maintainAspectRatio: false,
+            animation: false,
+            title: { display: true, text: "Emotion Ratios" },
+            legend: {
+              display: false,
+            },
+          },
+        });
+
+        new Chart(document.getElementById("source1chart4"), {
+          responsive: false,
+          type: "doughnut",
+          data: {
+            labels: ["Toxicity"],
+            datasets: [
+              {
+                data: [6, 94],
+                backgroundColor: [
+                  "rgba(184, 0, 0, 0.7)",
+                  "rgba(170, 170, 170, 0.7)",
+                ],
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(3, 127, 255, 1)",
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                borderRadius: 4,
+                font: {
+                  size: 9,
+                  weight: "bold",
+                },
+              },
+            },
+            animation: false,
+            maintainAspectRatio: false,
+            title: { display: true, text: "Toxicity" },
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        });
+
+        new Chart(document.getElementById("source1chart5"), {
+          responsive: true,
+          type: "bar",
+          data: {
+            labels: ["anger", "disgust", "fear", "joy", "sadness", "surprise"],
+            datasets: [
+              {
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                  "rgba(3, 127, 255, 0.8)",
+                  "rgba(145, 44, 246, 0.8)",
+                  "rgba(23, 35, 76, 0.8)",
+                  "rgba(255, 99, 132, 0.8)",
+                  "rgba(255, 206, 86, 0.8)",
+                  "rgba(75, 192, 192, 0.8)",
+                ],
+
+                borderColor: [
+                  "rgba(3, 127, 255, 1)",
+                  "rgba(145, 44, 246, 1)",
+                  "rgba(23, 35, 76, 1)",
+                  "rgba(255, 99, 132, 1)",
+                  "rgba(255, 206, 86, 1)",
+                  "rgba(75, 192, 192, 1)",
+                ],
+
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(255, 255, 255, 0)",
+              },
+            },
+            animation: false,
+            title: { display: true, text: "Emotion Ratios" },
+            legend: {
+              display: false,
+            },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
+            maintainAspectRatio: false,
+          },
+        });
+
+        new Chart(document.getElementById("source1chart6"), {
+          responsive: true,
+          type: "line",
+          data: {
+            datasets: [
+              {
+                data: [
+                  { x: "2020-02-15 18:37:39", y: 2 },
+                  { x: "2020-02-16 18:37:39", y: 3 },
+                  { x: "2020-02-17 18:37:39", y: 1 },
+                  { x: "2020-02-23 18:37:39", y: 8 },
+                  { x: "2020-02-26 18:37:39", y: 10 },
+                ],
+                borderColor: "rgba(3, 127, 255, 1)", // Line color
+                borderWidth: 2, // Line width
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              datalabels: {
+                color: "rgba(255, 255, 255, 0)",
+              },
+            },
+            animation: false,
+            title: { display: true, text: "Overall Score Over Time" },
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            scales: {
+              xAxes: [
+                {
+                  type: "time",
+                },
+              ],
+            },
+          },
+        });
       }
       window.onload = function () {
         drawGraphs();
@@ -279,7 +521,7 @@
           alt="Placeholder"
         />
       </div>
-      <div class="content center flex-column" style="height: 68%">
+      <div class="content center flex-column" style="height: 72%">
         <div class="flex-column center" style="width: 70%">
           <img
             src="{assets_path}/images/dp-logo-blue.png"
@@ -1009,26 +1251,6 @@
       </div>
 
       <div class="footer">
-        <p class="pageNum">1</p>
-        <img
-          class="footer-image"
-          src="{assets_path}/images/footer_art.svg"
-          style="width: 100%"
-          alt="Placeholder"
-        />
-      </div>
-    </div>
-
-    <div class="page flex-column center outline">
-      <div class="dp-icon">
-        <img
-          class="outline watermark"
-          src="{assets_path}/images/LogoIconBlue.png"
-        />
-      </div>
-      <div class="content"></div>
-
-      <div class="footer">
         <p class="pageNum">2</p>
         <img
           class="footer-image"
@@ -1046,7 +1268,524 @@
           src="{assets_path}/images/LogoIconBlue.png"
         />
       </div>
-      <div class="content"></div>
+      <div class="content flex-column center" style="align-items: flex-start">
+        <div class="flex-row">
+          <img
+            src="{assets_path}/images/google-logo.png"
+            style="width: 45px; height: 45px; padding-right: 1rem"
+          />
+          <p class="page-heading">Source 1</p>
+        </div>
+        <div class="flex-column" style="width: 100%">
+          <div class="flex-row" style="box-sizing: border-box">
+            <div
+              class="flex-column left-card"
+              style="height: 100%; flex-basis: 60%; align-items: flex-start"
+            >
+              <div
+                class="flex-row card up-card"
+                style="
+                  width: 100%;
+                  height: 50px;
+                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <div
+                  class="flex-row center"
+                  style="height: 100%; margin-left: 1rem"
+                >
+                  <img
+                    src="{assets_path}/images/link-solid.svg"
+                    style="width: 30px; margin-right: 1rem"
+                  />
+                  <a
+                    style="
+                      max-width: 500px;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                      overflow: hidden;
+                    "
+                    href="https://www.youtube.com/watch?v=xpN394MAhPA"
+                    >https://www.youtube.ssssssssssssssssssssssssssssssssssssssssscom/watch?v=xpN394MAhPA</a
+                  >
+                </div>
+              </div>
+
+              <div
+                class="flex-column up-card"
+                style="display: flex; align-items: flex-start; width: 100%"
+              >
+                <div
+                  class="flex-row stats-grid"
+                  style="display: flex; width: 100%; align-items: flex-start"
+                >
+                  <div
+                    class="flex-column"
+                    style="
+                      flex: 1;
+                      align-items: flex-start;
+                      padding-right: 0.5rem;
+                    "
+                  >
+                    <div
+                      class="statistic-item flex-row card up-item"
+                      style="
+                        width: 100%;
+                        height: 80px;
+                        align-items: flex-start;
+                        padding: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                      "
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/graph.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Overall Score</p>
+                        <p class="stat-text">20%</p>
+                      </div>
+                    </div>
+                    <div
+                      class="statistic-item flex-row card up-item"
+                      style="
+                        width: 100%;
+                        height: 80px;
+                        align-items: flex-start;
+                        padding: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                      "
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/analytics.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Number Analysed</p>
+                        <p class="stat-text">102 sentiments</p>
+                      </div>
+                    </div>
+                    <div
+                      class="statistic-item flex-row card up-item"
+                      style="
+                        width: 100%;
+                        height: 80px;
+                        align-items: flex-start;
+                        padding: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                      "
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/comments.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Review Rate</p>
+                        <p class="stat-text">12 reviews/day</p>
+                      </div>
+                    </div>
+                    <div
+                      class="statistic-item flex-row card up-item"
+                      style="
+                        width: 100%;
+                        height: 80px;
+                        align-items: flex-start;
+                        padding: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                      "
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/toxic.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Toxicity</p>
+                        <p class="stat-text">5%</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="flex-column"
+                    style="
+                      flex: 1;
+                      align-items: flex-start;
+                      padding-left: 0.5rem;
+                    "
+                  >
+                    <div
+                      class="statistic-item flex-column card up-item"
+                      style="
+                        width: 100%;
+                        height: auto;
+                        align-items: flex-start;
+                        border-radius: 25px;
+                      "
+                    >
+                      <div
+                        class="statistic-item flex-row up-item"
+                        style="
+                          width: 100%;
+                          height: 60px;
+                          align-items: flex-start;
+                          padding-bottom: 1.8rem;
+                          padding-top: 1.8rem;
+                          padding-left: 1rem;
+                          box-sizing: border-box;
+                          border-radius: 25px;
+                          padding-top: 3rem;
+                        "
+                      >
+                        <div
+                          class="flex-row center icon-div"
+                          style="height: 100%"
+                        >
+                          <img
+                            src="{assets_path}/images/positive.svg"
+                            width="40px;"
+                          />
+                        </div>
+                        <div class="flex-column item-stats">
+                          <p class="card-heading">Positive</p>
+                          <p class="stat-text">20%</p>
+                        </div>
+                      </div>
+                      <div
+                        class="statistic-item flex-row up-item"
+                        style="
+                          width: 100%;
+                          height: 60px;
+                          align-items: flex-start;
+                          padding-bottom: 1.8rem;
+                          padding-top: 1.8rem;
+                          padding-left: 1rem;
+                          box-sizing: border-box;
+                          border-radius: 25px;
+                        "
+                      >
+                        <div
+                          class="flex-row center icon-div"
+                          style="height: 100%"
+                        >
+                          <img
+                            src="{assets_path}/images/negative.svg"
+                            width="40px;"
+                          />
+                        </div>
+                        <div class="flex-column item-stats">
+                          <p class="card-heading">Negative</p>
+                          <p class="stat-text">60%</p>
+                        </div>
+                      </div>
+                      <div
+                        class="statistic-item flex-row"
+                        style="
+                          width: 100%;
+                          height: 60px;
+                          align-items: flex-start;
+                          padding-bottom: 1.8rem;
+                          padding-top: 1.8rem;
+                          padding-left: 1rem;
+                          box-sizing: border-box;
+                          border-radius: 25px;
+                          padding-bottom: 3rem;
+                        "
+                      >
+                        <div
+                          class="flex-row center icon-div"
+                          style="height: 100%"
+                        >
+                          <img
+                            src="{assets_path}/images/neutral-score.svg"
+                            width="40px;"
+                          />
+                        </div>
+                        <div class="flex-column item-stats">
+                          <p class="card-heading">Neutral</p>
+                          <p class="stat-text">20%</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="flex-row card up-item"
+                      style="
+                        width: 100%;
+                        height: 108px;
+                        align-items: flex-start;
+                        padding: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                      "
+                    >
+                      <div
+                        class="flex-column center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/calendar.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div
+                        style="align-items: flex-start"
+                        class="flex-column item-stats"
+                      >
+                        <p class="card-heading">Timeline</p>
+                        <p class="stat-text">13 January 2022 -</p>
+                        <p class="stat-text">15 January 2022</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card center" style="width: 100%">
+                  <div class="flex-container" style="width: 100%">
+                    <div
+                      class="flex-item statistic-item flex-row"
+                      style="height: 60px; align-items: flex-start"
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img src="{assets_path}/images/joy.svg" width="40px;" />
+                      </div>
+                      <div
+                        class="flex-column item-stats"
+                        style="align-items: flex-start"
+                      >
+                        <p class="card-heading">Joy</p>
+                        <p class="stat-text">60%</p>
+                      </div>
+                    </div>
+                    <div
+                      class="flex-item statistic-item flex-row"
+                      style="height: 60px; align-items: flex-start"
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/surprise.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Surprise</p>
+                        <p class="stat-text">60%</p>
+                      </div>
+                    </div>
+                    <div
+                      class="flex-item statistic-item flex-row"
+                      style="height: 60px; align-items: flex-start"
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/fear.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Fear</p>
+                        <p class="stat-text">60%</p>
+                      </div>
+                    </div>
+                    <div
+                      class="flex-item statistic-item flex-row"
+                      style="height: 60px; align-items: flex-start"
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/anger.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Anger</p>
+                        <p class="stat-text">60%</p>
+                      </div>
+                    </div>
+                    <div
+                      class="flex-item statistic-item flex-row"
+                      style="height: 60px; align-items: flex-start"
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/disgust.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Disgust</p>
+                        <p class="stat-text">60%</p>
+                      </div>
+                    </div>
+                    <div
+                      class="flex-item statistic-item flex-row"
+                      style="height: 60px; align-items: flex-start"
+                    >
+                      <div
+                        class="flex-row center icon-div"
+                        style="height: 100%"
+                      >
+                        <img
+                          src="{assets_path}/images/sadness.svg"
+                          width="40px;"
+                        />
+                      </div>
+                      <div class="flex-column item-stats">
+                        <p class="card-heading">Sadness</p>
+                        <p class="stat-text">60%</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex-row up-card" style="width: 100%">
+                <div
+                  class="flex-row card center"
+                  style="
+                    flex-basis: 100%;
+                    height: 300px;
+                    padding: 2rem;
+                    box-sizing: border-box;
+                  "
+                >
+                  <canvas id="source1chart1"></canvas>
+                </div>
+              </div>
+              <div class="flex-row up-card" style="width: 100%">
+                <div
+                  class="flex-row card center"
+                  style="
+                    flex-basis: 100%;
+                    height: 300px;
+                    padding: 2rem;
+                    box-sizing: border-box;
+                  "
+                >
+                  <canvas id="source1chart2"></canvas>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex-column"
+              style="
+                align-items: flex-start;
+                flex-basis: 40%;
+                box-sizing: border-box;
+                overflow: hidden;
+              "
+            >
+              <div
+                class="flex-column"
+                style="
+                  height: 100%;
+                  width: 100%;
+                  align-items: flex-start;
+                  padding: 1rem;
+                  padding-top: 0rem;
+                  box-sizing: border-box;
+                  overflow-y: hidden;
+                  overflow-x: hidden;
+                  flex-wrap: wrap;
+                "
+              >
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb13">
+                  This is a longer como etst to see hwo the sce whether or not
+                  it is good or bad
+                </div>
+                <div class="box3 sb14">
+                  This is a longer comment to etst to see or not it is good or
+                  bad
+                </div>
+                <div class="box3 sb13">I'm speech bubble</div>
+                <div class="box3 sb14">
+                  This is a longer como etst to see hwo the sce whether or not
+                  it is good or bad
+                </div>
+                <div class="box3 sb13">
+                  This is a longer comment to etst to see or not it is good or
+                  bad
+                </div>
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb13">I'm speech bubble</div>
+                <div class="box3 sb14">
+                  This is a longer comment to etst to or not ier s good or bad
+                  er comment to etst to see or not ier s good or bad er comment
+                  to etst to see or not ier comment to etst to see or not ier
+                  comment to etst to see or not i
+                </div>
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb13">
+                  This is a longer como etst to see hwo the sce whether or not
+                  it is good or bad
+                </div>
+                <div class="box3 sb14">
+                  This is a longer comment to etst to see or not it is good or
+                  bad
+                </div>
+                <div class="box3 sb13">I'm speech bubble</div>
+                <div class="box3 sb14">
+                  This is a longer como etst to see hwo the sce whether or not
+                  it is good or bad
+                </div>
+                <div class="box3 sb13">
+                  This is a longer comment to etst to see or not it is good or
+                  bad
+                </div>
+                <div class="box3 sb14">I'm speech bubble</div>
+                <div class="box3 sb13">I'm speech bubble</div>
+                <div class="box3 sb14">
+                  This is a longer comment to etst to or not ier s good or bad
+                  er comment to etst to see or not ier s good or bad er comment
+                  to etst to see or not ier comment to etst to see or not ier
+                  comment to etst to see or not i
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="footer">
         <p class="pageNum">3</p>
@@ -1058,5 +1797,106 @@
         />
       </div>
     </div>
+
+    <div class="page flex-column center outline">
+      <div class="dp-icon">
+        <img
+          class="outline watermark"
+          src="{assets_path}/images/LogoIconBlue.png"
+        />
+      </div>
+      <div class="content flex-column" style="align-items: flex-start">
+        <div class="flex-row">
+          <img
+            src="{assets_path}/images/google-logo.png"
+            style="width: 45px; height: 45px; padding-right: 1rem"
+          />
+          <p class="page-heading">Source 1</p>
+        </div>
+        <div class="flex-column" style="width: 100%; align-items: flex-start">
+          <div class="flex-row up-card" style="width: 100%">
+            <div
+              class="flex-row card center left-card"
+              style="
+                flex-basis: 50%;
+                height: 400px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas width="60%" height="60%" id="source1chart3"></canvas>
+            </div>
+            <div
+              class="flex-row card center"
+              style="
+                flex-basis: 50%;
+                height: 400px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="source1chart4"></canvas>
+            </div>
+          </div>
+          <div class="flex-row up-card" style="width: 100%">
+            <div
+              class="flex-row card center"
+              style="
+                flex-basis: 100%;
+                height: 350px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="source1chart5"></canvas>
+            </div>
+          </div>
+          <div class="flex-row up-card" style="width: 100%">
+            <div
+              class="flex-row card center"
+              style="
+                flex-basis: 100%;
+                height: 350px;
+                padding: 1rem;
+                box-sizing: border-box;
+              "
+            >
+              <canvas id="source1chart6"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p class="pageNum">4</p>
+        <img
+          class="footer-image"
+          src="{assets_path}/images/footer_art.svg"
+          style="width: 100%"
+          alt="Placeholder"
+        />
+      </div>
+    </div>
+
+    <div class="page flex-column center outline">
+      <div class="dp-icon">
+        <img
+          class="outline watermark"
+          src="{assets_path}/images/LogoIconBlue.png"
+        />
+      </div>
+      <div class="content"></div>
+
+      <div class="footer">
+        <p class="pageNum">5</p>
+        <img
+          class="footer-image"
+          src="{assets_path}/images/footer_art.svg"
+          style="width: 100%"
+          alt="Placeholder"
+        />
+      </div>
+    </div>
+
   </body>
 </html>
