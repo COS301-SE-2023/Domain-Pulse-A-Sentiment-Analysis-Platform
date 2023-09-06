@@ -18,6 +18,7 @@ import {
   RefreshSourceData,
   RegisterUser,
   SetDomain,
+  SetIsActive,
   SetSource,
   SetUserDetails,
   ToastError,
@@ -46,6 +47,7 @@ describe('AppState', () => {
       'getAggregatedDomainData',
       'editSource',
       'deleteSource',
+      'setIsActive',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -445,6 +447,15 @@ describe('AppState', () => {
     apiSpy.registerUser.and.returnValue(of({ status: 'FAILURE' }));
     store.dispatch(new RegisterUser('test', 'test', 'test@test.com'));
     expect(apiSpy.registerUser).toHaveBeenCalled();
+  });
+
+  it('should show toast on no selected source', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    store.dispatch(new SetIsActive(false));
   });
 
   it('Set the selected Statistic Index', () => {
