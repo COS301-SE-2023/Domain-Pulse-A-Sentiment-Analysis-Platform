@@ -609,3 +609,16 @@ class ProfileChecksTests(TestCase):
         flag, token = check_views.extract_token(request2)
         self.assertEqual(flag, False)
         self.assertEqual(token, "Authorization header - Missing Bearer")
+
+    def test_empty_bearer_extract_token(self):
+        request2 = HttpRequest()
+        request2.method = "POST"
+        jwt = "123456"
+        headers = {
+            "Authorization": "Bearer",
+            "Content-Type": "application/json",
+        }
+        request2.headers = headers
+        flag, token = check_views.extract_token(request2)
+        self.assertEqual(flag, False)
+        self.assertEqual(token, "Invalid token format")
