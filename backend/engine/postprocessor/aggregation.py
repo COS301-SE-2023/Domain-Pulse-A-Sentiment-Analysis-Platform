@@ -69,13 +69,13 @@ def produce_timeseries(individual_data: list):
                 ema_tracker["overall"],
                 SMOOTHING_FACTORS["overall"],
             )
-            point = new_overall_ema, stamp
+            point = [stamp, new_emotion_ema]
             overall_data_points.append(point)
             ema_tracker["overall"] = new_overall_ema
 
         # Num sentiments
         cumulative_num_sentiments += 1
-        num_sentiments.append((cumulative_num_sentiments, stamp))
+        num_sentiments.append([stamp, cumulative_num_sentiments])
 
         # Emotions
         record_emotions = record["emotions"]
@@ -86,7 +86,7 @@ def produce_timeseries(individual_data: list):
                     ema_tracker[emotion],
                     SMOOTHING_FACTORS["emotions_hit"],
                 )
-                emotion_point = new_emotion_ema, stamp
+                emotion_point = [stamp, new_emotion_ema]
                 emotions_time_series[emotion].append(emotion_point)
                 ema_tracker[emotion] = new_emotion_ema
             else:
@@ -95,7 +95,7 @@ def produce_timeseries(individual_data: list):
                     ema_tracker[emotion],
                     SMOOTHING_FACTORS["emotions_miss"],
                 )
-                emotion_point = new_emotion_ema, stamp
+                emotion_point = [stamp, new_emotion_ema]
                 emotions_time_series[emotion].append(emotion_point)
                 ema_tracker[emotion] = new_emotion_ema
 
@@ -113,7 +113,7 @@ def produce_timeseries(individual_data: list):
             ema_tracker["pos"],
             SMOOTHING_FACTORS["ratios"],
         )
-        pos_point = (new_pos_ema, stamp)
+        pos_point = [stamp, new_pos_ema]
         ratios_time_series["pos"].append(pos_point)
         ema_tracker["pos"] = new_pos_ema
         # Neu
@@ -122,7 +122,7 @@ def produce_timeseries(individual_data: list):
             ema_tracker["neu"],
             SMOOTHING_FACTORS["ratios"],
         )
-        neu_point = (new_neu_ema, stamp)
+        neu_point = [stamp, new_neu_ema]
         ratios_time_series["neu"].append(neu_point)
         ema_tracker["neu"] = new_neu_ema
         # Neg
@@ -131,7 +131,7 @@ def produce_timeseries(individual_data: list):
             ema_tracker["neg"],
             SMOOTHING_FACTORS["ratios"],
         )
-        neg_point = (new_neg_ema, stamp)
+        neg_point = [stamp, new_neg_ema]
         ratios_time_series["neg"].append(neg_point)
         ema_tracker["neg"] = new_neg_ema
 
@@ -139,20 +139,20 @@ def produce_timeseries(individual_data: list):
     overall_data_points = sorted(
         overall_data_points,
         key=lambda x: int(
-            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%S").timestamp()
+            datetime.datetime.strptime(x[0], "%Y-%m-%dT%H:%M:%S").timestamp()
         ),
     )
     num_sentiments = sorted(
         num_sentiments,
         key=lambda x: int(
-            datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%S").timestamp()
+            datetime.datetime.strptime(x[0], "%Y-%m-%dT%H:%M:%S").timestamp()
         ),
     )
     for e, list_of_scores in emotions_time_series.items():
         emotions_time_series[e] = sorted(
             list_of_scores,
             key=lambda x: int(
-                datetime.datetime.strptime(x[1], "%Y-%m-%dT%H:%M:%S").timestamp()
+                datetime.datetime.strptime(x[0], "%Y-%m-%dT%H:%M:%S").timestamp()
             ),
         )
     for r, list_of_scores in ratios_time_series.items():
@@ -165,7 +165,7 @@ def produce_timeseries(individual_data: list):
 
     # Formatting toxicity
     for day, count in toxicity_tracker.items():
-        toxic_data_points.append((day, count))
+        toxic_data_points.append({"x": day, "y": count})
 
     retData["overall"] = overall_data_points
     retData["toxicity"] = toxic_data_points
