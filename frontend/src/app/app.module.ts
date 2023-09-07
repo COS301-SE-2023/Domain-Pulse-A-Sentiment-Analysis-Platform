@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { UiSwitchModule } from 'ngx-ui-switch';
+
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -50,7 +52,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
       collapsed: false,
       // disabled: ENVIRONMENT == 'production',
     }),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    UiSwitchModule,
   ],
   providers: [
     AppApi,

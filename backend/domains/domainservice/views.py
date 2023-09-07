@@ -162,6 +162,31 @@ def edit_source(request: HttpRequest):
 
 
 @csrf_exempt
+def toggle_active(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+
+        # ------------------- VERIFYING ACCESS -----------------------
+        check_passed, details = auth_checks.verify_user_owns_source_ids(
+            original_request=request, source_id_list=[raw_data["source_id"]]
+        )
+        if not check_passed:
+            return JsonResponse({"status": "FAILURE", "details": details})
+        # ------------------------------------------------------------
+        domain = domainscrud.set_source_active(
+            raw_data["source_id"], raw_data["is_active"]
+        )
+        return JsonResponse(
+            {
+                "status": "SUCCESS",
+                "domain": domain,
+            }
+        )
+
+    return JsonResponse({"status": "FAILURE"})
+
+
+@csrf_exempt
 def delete_domain(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)

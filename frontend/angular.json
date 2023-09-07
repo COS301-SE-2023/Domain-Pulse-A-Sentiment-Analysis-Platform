@@ -37,7 +37,12 @@
                 "src"
               ]
             },
-            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
+            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "apexcharts",
+              "chart.js"
+           ]
           },
           "configurations": {
             "production": {
@@ -69,7 +74,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "proxyConfig": "src/proxy.config.json",
+            "proxyConfig": "src/proxy.config.json"
           },
           "configurations": {
             "production": {
