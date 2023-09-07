@@ -1,10 +1,12 @@
 import requests
 from datetime import datetime
+import pytz
 import calendar
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
+import random
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -54,7 +56,14 @@ def get_timestamp_from_date(date_str: str):
         month = month_long_name_to_number(month_name)
         year = int(year)
 
-        return datetime(year, month, day, 0, 0, 0).timestamp()
+        return datetime(
+            year,
+            month,
+            day,
+            random.randint(0, 23),
+            random.randint(0, 59),
+            random.randint(0, 59),
+        ).timestamp()
 
     if "," in date_str:
         month_name, day_with_comma, year = date_str.split(" ")
@@ -64,17 +73,34 @@ def get_timestamp_from_date(date_str: str):
         month = month_long_name_to_number(month_name)
         year = int(year)
 
-        return datetime(year, month, day, 0, 0, 0).timestamp()
+        return datetime(
+            year,
+            month,
+            day,
+            random.randint(0, 23),
+            random.randint(0, 59),
+            random.randint(0, 59),
+        ).timestamp()
 
     first, second = date_str.split(" ")
 
     if first.isnumeric():
         return datetime(
-            datetime.now().year, month_name_to_number(second), int(first), 0, 0, 0
+            datetime.now().year,
+            month_name_to_number(second),
+            int(first),
+            random.randint(0, 23),
+            random.randint(0, 59),
+            random.randint(0, 59),
         ).timestamp()
     else:
         return datetime(
-            int(second), month_name_to_number(first), 1, 0, 0, 0
+            int(second),
+            month_name_to_number(first),
+            1,
+            random.randint(0, 23),
+            random.randint(0, 59),
+            random.randint(0, 59),
         ).timestamp()
 
 
