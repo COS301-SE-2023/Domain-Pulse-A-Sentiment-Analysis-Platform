@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -8,6 +9,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+import socket
 
 
 # Create your views here.
@@ -18,7 +20,7 @@ def check_source_ids(request):
         user = get_user_from_token(token)
         if user == None:
             return JsonResponse(
-                {"status": "FAILURE", "details": "Could not verify the user's identtfy"}
+                {"status": "FAILURE", "details": "Could not verify the user's identity"}
             )
 
         userID = user.id
@@ -46,7 +48,7 @@ def check_domain_ids(request):
         user = get_user_from_token(token)
         if user == None:
             return JsonResponse(
-                {"status": "FAILURE", "details": "Could not verify the user's identtfy"}
+                {"status": "FAILURE", "details": "Could not verify the user's identity"}
             )
 
         userID = user.id
@@ -106,7 +108,9 @@ def validate_token(request):
 
 @csrf_exempt
 def check_source_ids_and_remove_source(request):
-    if get_address(request) == "127.0.0.1":
+    raw_data = json.loads(request.body)
+
+    if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
         if request.method == "POST":
             flag, token = extract_token(request)
             user = get_user_from_token(token)
@@ -122,7 +126,6 @@ def check_source_ids_and_remove_source(request):
 
             sources = (profilescrud.get_sources_for_user_internal(userID))["source_ids"]
 
-            raw_data = json.loads(request.body)
             source_ids = list(raw_data["source_ids"])
             for i in source_ids:
                 if i not in sources:
@@ -151,7 +154,9 @@ def check_source_ids_and_remove_source(request):
 
 @csrf_exempt
 def add_domain(request):
-    if get_address(request) == "127.0.0.1":
+    raw_data = json.loads(request.body)
+
+    if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
         if request.method == "POST":
             flag, token = extract_token(request)
 
@@ -166,7 +171,6 @@ def add_domain(request):
 
             userID = user.id
 
-            raw_data = json.loads(request.body)
             response = profilescrud.add_domain_to_profile(userID, raw_data["id"])
             if response["status"] == "SUCCESS":
                 return JsonResponse({"status": "SUCCESS", "details": "Valid access"})
@@ -183,7 +187,9 @@ def add_domain(request):
 
 @csrf_exempt
 def add_source(request):
-    if get_address(request) == "127.0.0.1":
+    raw_data = json.loads(request.body)
+
+    if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
         if request.method == "POST":
             flag, token = extract_token(request)
 
@@ -198,7 +204,6 @@ def add_source(request):
 
             userID = user.id
 
-            raw_data = json.loads(request.body)
             response = profilescrud.add_source_to_domain(
                 userID, raw_data["domain_id"], raw_data["source_id"]
             )
@@ -217,7 +222,9 @@ def add_source(request):
 
 @csrf_exempt
 def check_domain_ids_and_remove_domain(request):
-    if get_address(request) == "127.0.0.1":
+    raw_data = json.loads(request.body)
+
+    if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
         if request.method == "POST":
             flag, token = extract_token(request)
             user = get_user_from_token(token)
@@ -233,7 +240,6 @@ def check_domain_ids_and_remove_domain(request):
 
             domains = (profilescrud.get_domains_for_user_internal(userID))["domainIDs"]
 
-            raw_data = json.loads(request.body)
             domain_ids = list(raw_data["domain_ids"])
             for i in domain_ids:
                 if i not in domains:

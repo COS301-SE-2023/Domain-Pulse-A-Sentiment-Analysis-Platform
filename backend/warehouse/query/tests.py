@@ -354,6 +354,7 @@ class QueryEngineTests(TestCase):
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
 
+
     # @patch("utils.db_connection.get_db_handle")
     # def test_add_record_sentiment_model(self, mock_get_db_handle):
     #     mock_db_handle = MagicMock()
@@ -368,6 +369,7 @@ class QueryEngineTests(TestCase):
 
     #     mock_db_handle.__getitem__.assert_called_once_with("sentiment_records")
     #     mock_insert_one.assert_called_once_with(dummy_record)
+
 
     # @patch("pymongo.MongoClient")
     # def test_get_records_sentiment_model(self, mock_mongo_client):

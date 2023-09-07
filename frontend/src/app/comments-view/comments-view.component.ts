@@ -42,7 +42,7 @@ export class CommentsViewComponent {
   transformComments(jsonData: any): any[] {
     const individualMetrics = jsonData;
 
-    return individualMetrics.map((metric: any) => ({
+    const temp = individualMetrics.map((metric: any) => ({
       comment: metric.data,
       ratings: [
         `${Math.floor(metric.general.score * 100)}%`,
@@ -52,7 +52,16 @@ export class CommentsViewComponent {
         ),
         metric.toxicity.level_of_toxic,
       ],
+      ratingColour: [],
     }));
+
+    return temp.map((comment: any) => {
+      comment['ratingCssClass'] = [];
+      for (let i = 0; i < comment.ratings.length; i++) {
+        comment.ratingCssClass.push(this.getRatingClass(i, comment.ratings[i]));
+      }
+      return comment;
+    });
   }
 
   getRatingClass(index: number, score: string): string {

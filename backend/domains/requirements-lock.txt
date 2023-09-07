@@ -1,0 +1,15 @@
+asgiref==3.7.2
+backports.zoneinfo==0.2.1
+certifi==2023.7.22
+charset-normalizer==3.2.0
+Django==4.2.4
+django-cors-headers==4.2.0
+dnspython==2.4.2
+idna==3.4
+outscraper==3.0.3
+pymongo==4.4.1
+python-dotenv==1.0.0
+requests==2.31.0
+sqlparse==0.4.4
+typing-extensions==4.7.1
+urllib3==2.0.4
