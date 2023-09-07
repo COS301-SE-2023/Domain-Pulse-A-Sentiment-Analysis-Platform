@@ -109,10 +109,7 @@ class LiveIngestionTests(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertContains(
             response,
-            """<body>
-    <h1>There was an error submitting your review!</h1>
-    <h2>Details: {{details}}</h2>
-</body>""".replace(
+            """<p class = "message" style="font-size: 1em;">Details: {{details}}</p>""".replace(
                 "{{details}}", "Invalid request"
             ),
         )
@@ -151,9 +148,7 @@ class LiveIngestionTests(TestCase):
 
         self.assertContains(
             response,
-            """<body>
-    <p>You successfully submitted the review: {{review_text}}</p>
-</body>""".replace(
+            """<p class = "message">Your review was submitted successfully!</p>""".replace(
                 "{{review_text}}", "some data"
             ),
         )
@@ -177,10 +172,7 @@ class LiveIngestionTests(TestCase):
 
         self.assertContains(
             response,
-            """<body>
-    <h1>There was an error submitting your review!</h1>
-    <h2>Details: {{details}}</h2>
-</body>""".replace(
+            """ <p class = "message" style="font-size: 1em;">Details: {{details}}</p>""".replace(
                 "{{details}}", "Could not verify the source ID"
             ),
         )
@@ -225,12 +217,10 @@ class LiveIngestionTests(TestCase):
             ),
             content_type="application/x-www-form-urlencoded",
         )
+
         self.assertContains(
             response,
-            """<body>
-    <h1>There was an error submitting your review!</h1>
-    <h2>Details: {{details}}</h2>
-</body>""".replace(
+            """<p class = "message" style="font-size: 1em;">Details: {{details}}</p>""".replace(
                 "{{details}}", "Some error"
             ),
         )
@@ -242,13 +232,28 @@ class LiveIngestionTests(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertContains(
             response,
-            """<form method="post", action="/ingest/live_review/">
-        <label for="review_text">Please provide your review for {{source_name}}:</label>
-        <input type="text" name="review_text" id="review_text">
-        <input type="hidden" name="source_id" value={{source_id}}>
-        <br>
-        <input type="submit" value="Submit">
-    </form>""".replace(
+            """<div class="title">
+          <p>What do you think about</p>
+          <p class="domain-name">{{source_name}}?</p>
+        </div>
+        <form
+          class="form flex-column center"
+          method="post"
+          ,
+          action="/ingest/live_review/"
+        >
+          <textarea
+            name="review_text"
+            id="review_text"
+            class="textbox"
+            placeholder="Write your review here..."
+          ></textarea>
+          <input type="hidden" name="source_id" value="{{source_id}}" />
+          <button type="submit" value="Submit" class="button center clickable-item">
+            submit
+            <div class="button-spinner"></div>
+          </button>
+        </form>""".replace(
                 "{{source_name}}", "somesourcename"
             ).replace(
                 "{{source_id}}", "abcde12345"

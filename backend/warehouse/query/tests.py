@@ -52,6 +52,7 @@ class QueryEngineTests(TestCase):
             "overall": {},
             "metadata": {},
             "individual_data": {},
+            "timeseries": {},
         }
         mocked_response.return_value = mock_response
 
@@ -123,6 +124,7 @@ class QueryEngineTests(TestCase):
             "overall": {},
             "metadata": {},
             "individual_data": {},
+            "timeseries": {},
         }
         mocked_response.return_value = mock_response
 
@@ -352,18 +354,22 @@ class QueryEngineTests(TestCase):
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
 
-    # @patch("pymongo.MongoClient")
-    # def test_add_record_sentiment_model(self, mock_mongo_client):
-    #     mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
-    #         "sentiment_records"
-    #     ]
-    #     mocked_insert_one = mocked_collection.insert_one
+
+    # @patch("utils.db_connection.get_db_handle")
+    # def test_add_record_sentiment_model(self, mock_get_db_handle):
+    #     mock_db_handle = MagicMock()
+    #     mock_get_db_handle.return_value = mock_db_handle
+    #     mock_collection = MagicMock()
+    #     mock_db_handle.__getitem__.return_value = mock_collection
+    #     mock_insert_one = MagicMock()
+    #     mock_collection.insert_one = mock_insert_one
 
     #     dummy_record = {"text": "this is some review", "timestamp": 123456789}
     #     sentiment_record_model.add_record(dummy_record)
-    #     mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
-    #     mocked_insert_one.assert_called_once_with(dummy_record)
-    #     mock_mongo_client.return_value.close.assert_called_once()
+
+    #     mock_db_handle.__getitem__.assert_called_once_with("sentiment_records")
+    #     mock_insert_one.assert_called_once_with(dummy_record)
+
 
     # @patch("pymongo.MongoClient")
     # def test_get_records_sentiment_model(self, mock_mongo_client):

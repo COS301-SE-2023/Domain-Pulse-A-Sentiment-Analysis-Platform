@@ -1,4 +1,156 @@
 import datetime
+import pytz
+
+
+def get_new_ema(current, old_ema, smoothing_factor):
+    SMOOTHING_FACTOR = smoothing_factor
+    if old_ema == -1:
+        return current
+    else:
+        return round(current * SMOOTHING_FACTOR + old_ema * (1 - SMOOTHING_FACTOR), 4)
+
+
+def produce_timeseries(individual_data: list):
+    # Sorting the incoming individual data
+    individual_data = sorted(individual_data, key=lambda x: int(x["timestamp"]))
+
+    retData = {
+        "overall": [],
+        "emotions": [],
+        "toxicity": [],
+        "ratios": [],
+        "num_records": [],
+    }
+
+    overall_data_points = []
+    num_sentiments = []
+    toxic_data_points = []
+    ratios_time_series = {"pos": [], "neu": [], "neg": []}
+    emotions_time_series = {
+        "anger": [],
+        "sadness": [],
+        "joy": [],
+        "digust": [],
+        "fear": [],
+        "surprise": [],
+    }
+
+    ema_tracker = {
+        "overall": -1,
+        "anger": -1,
+        "sadness": -1,
+        "joy": -1,
+        "digust": -1,
+        "fear": -1,
+        "surprise": -1,
+        "pos": -1,
+        "neu": -1,
+        "neg": -1,
+    }
+
+    # Lower = more smooth, less responsive
+    # Higher = more erratic, very responsive
+    SMOOTHING_FACTORS = {
+        "overall": 0.3,
+        "emotions_hit": 0.5,
+        "ratios": 0.3,
+        "emotions_miss": 0.2,
+    }
+    cumulative_num_sentiments = 0
+
+    toxicity_tracker = {}
+
+    for record in individual_data:
+        stamp_unix = int(record["timestamp"])
+        timestamp = datetime.datetime.fromtimestamp(stamp_unix)
+        timestamp = timestamp.astimezone(pytz.timezone("Africa/Johannesburg"))
+        stamp = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
+        day_stamp = timestamp.strftime("%Y-%m-%d")
+
+        # Overall
+        if record["general"]["category"] != "UNDECIDED":
+            new_overall_ema = get_new_ema(
+                record["general"]["score"],
+                ema_tracker["overall"],
+                SMOOTHING_FACTORS["overall"],
+            )
+            point = [stamp, new_overall_ema]
+            overall_data_points.append(point)
+            ema_tracker["overall"] = new_overall_ema
+
+        # Num sentiments
+        cumulative_num_sentiments += 1
+        num_sentiments.append([stamp, cumulative_num_sentiments])
+
+        # Emotions
+        record_emotions = record["emotions"]
+        for emotion in emotions_time_series:
+            if emotion in record_emotions:
+                new_emotion_ema = get_new_ema(
+                    record_emotions[emotion],
+                    ema_tracker[emotion],
+                    SMOOTHING_FACTORS["emotions_hit"],
+                )
+                emotion_point = [stamp, new_emotion_ema]
+                emotions_time_series[emotion].append(emotion_point)
+                ema_tracker[emotion] = new_emotion_ema
+            else:
+                new_emotion_ema = get_new_ema(
+                    0,
+                    ema_tracker[emotion],
+                    SMOOTHING_FACTORS["emotions_miss"],
+                )
+                emotion_point = [stamp, new_emotion_ema]
+                emotions_time_series[emotion].append(emotion_point)
+                ema_tracker[emotion] = new_emotion_ema
+
+        # Toxicity
+        if record["toxicity"]["level_of_toxic"] == "Toxic":
+            if day_stamp in toxicity_tracker:
+                toxicity_tracker[day_stamp] = toxicity_tracker[day_stamp] + 1
+            else:
+                toxicity_tracker[day_stamp] = 1
+
+        # Ratios
+        # Pos
+        new_pos_ema = get_new_ema(
+            record["ratios"]["positive"],
+            ema_tracker["pos"],
+            SMOOTHING_FACTORS["ratios"],
+        )
+        pos_point = [stamp, new_pos_ema]
+        ratios_time_series["pos"].append(pos_point)
+        ema_tracker["pos"] = new_pos_ema
+        # Neu
+        new_neu_ema = get_new_ema(
+            record["ratios"]["neutral"],
+            ema_tracker["neu"],
+            SMOOTHING_FACTORS["ratios"],
+        )
+        neu_point = [stamp, new_neu_ema]
+        ratios_time_series["neu"].append(neu_point)
+        ema_tracker["neu"] = new_neu_ema
+        # Neg
+        new_neg_ema = get_new_ema(
+            record["ratios"]["negative"],
+            ema_tracker["neg"],
+            SMOOTHING_FACTORS["ratios"],
+        )
+        neg_point = [stamp, new_neg_ema]
+        ratios_time_series["neg"].append(neg_point)
+        ema_tracker["neg"] = new_neg_ema
+
+    # Formatting toxicity
+    for day, count in toxicity_tracker.items():
+        toxic_data_points.append({"x": day, "y": count})
+
+    retData["overall"] = overall_data_points
+    retData["toxicity"] = toxic_data_points
+    retData["num_records"] = num_sentiments
+    retData["emotions"] = emotions_time_series
+    retData["ratios"] = ratios_time_series
+
+    return retData
 
 
 def aggregate_sentiment_data(sentiment_data):
@@ -35,6 +187,7 @@ def aggregate_sentiment_data(sentiment_data):
                 "latest_record": "NA",
             },
             "individual_data": [],
+            "timeseries": {},
         }
 
     summed_overall_score = 0
@@ -78,7 +231,7 @@ def aggregate_sentiment_data(sentiment_data):
         summed_neutral_ratio += item["ratios"]["neutral"]
         summed_negative_ratio += item["ratios"]["negative"]
 
-        timestamp = float(item["timestamp"])
+        timestamp = int(item["timestamp"])
 
         # Searching for latest date
         if timestamp > latest_timestamp:
@@ -136,6 +289,8 @@ def aggregate_sentiment_data(sentiment_data):
     earliest = earliest.strftime("%d %B %Y")
     latest = latest.strftime("%d %B %Y")
 
+    timeseries_data = produce_timeseries(sentiment_data)
+
     return {
         "overall": {
             "general": {"category": overall_cat, "score": agg_overall_score},
@@ -153,4 +308,5 @@ def aggregate_sentiment_data(sentiment_data):
             "latest_record": latest,
         },
         "individual_data": sentiment_data,
+        "timeseries": timeseries_data,
     }

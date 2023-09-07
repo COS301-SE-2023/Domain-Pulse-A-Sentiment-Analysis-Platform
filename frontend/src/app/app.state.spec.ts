@@ -1,24 +1,30 @@
 import { TestBed } from '@angular/core/testing';
-import { ToastrModule, ToastrService } from 'ngx-toastr'; // Add this import
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import {
   AppState,
   DisplayDomain,
   DisplaySource,
+  ProfileDetails,
   UserDetails,
 } from './app.state';
 import {
   AddNewSource,
   AttempPsswdLogin,
+  ChangeMode,
+  ChangePassword,
+  ChangeProfileIcon,
   CheckAuthenticate,
   ChooseStatistic,
   DeleteSource,
+  DeleteUser,
   EditSource,
   GetDomains,
   GetSourceDashBoardInfo,
+  Logout,
   RefreshSourceData,
   RegisterUser,
   SetDomain,
+  SetIsActive,
   SetSource,
   SetUserDetails,
   ToastError,
@@ -27,6 +33,11 @@ import {
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+
+class MockRouter {
+  navigate = jasmine.createSpy('navigate');
+}
 
 describe('AppState', () => {
   let store: Store;
@@ -47,6 +58,12 @@ describe('AppState', () => {
       'getAggregatedDomainData',
       'editSource',
       'deleteSource',
+      'setIsActive',
+      'changeProfileIcon',
+      'deleteUser',
+      'changeMode',
+      'changePassword',
+      'logOut',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -56,7 +73,9 @@ describe('AppState', () => {
 
     await TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule, NgxsModule.forRoot([AppState])],
-      providers: [{ provide: AppApi, useValue: apiSpy }],
+      providers: [{ provide: AppApi, useValue: apiSpy },
+        { provide: Router, useClass: MockRouter },
+      ],
     }).compileComponents();
 
     store = TestBed.inject(Store);
@@ -186,11 +205,12 @@ describe('AppState', () => {
       selected: true,
       isRefreshing: false,
     };
-    
-    store.reset({ app: { sources: [dummySource], selectedSource: dummySource } });
+
+    store.reset({
+      app: { sources: [dummySource], selectedSource: dummySource },
+    });
     store.dispatch(new EditSource('New Source Name'));
   });
-
 
   it('should select the correct domain on "SetDomain" event', () => {
     const mockDomains: DisplayDomain[] = [
@@ -230,20 +250,22 @@ describe('AppState', () => {
     expect(actualDomains[1].selected).toEqual(true);
   });
 
-  it('should select the correct source on "SetSource" event', () => {
+  it('should select the correct source on "SetSource" event', (done: DoneFn) => {
     const mockSources: DisplaySource[] = [
       {
         id: '1',
         name: 'test',
         url: 'test',
-        params: 'test',        selected: true,
+        params: 'test',
+        selected: true,
         isRefreshing: false,
       },
       {
         id: '2',
         name: 'test2',
         url: 'test3',
-        params: 'test',        selected: false,
+        params: 'test',
+        selected: false,
         isRefreshing: false,
       },
     ];
@@ -253,17 +275,20 @@ describe('AppState', () => {
 
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'SUCCESS' }));
 
-    store.dispatch(new SetSource(mockSources[1]));
-
-    const actualSelectedSource = store.selectSnapshot(AppState.selectedSource);
-    expect(actualSelectedSource).toEqual(mockSources[1]);
-    const actualSources = store.selectSnapshot(AppState.sources);
-    if (!actualSources) {
-      fail();
-      return;
-    }
-    expect(actualSources[0].selected).toEqual(false);
-    expect(actualSources[1].selected).toEqual(true);
+    store.dispatch(new SetSource(mockSources[1])).subscribe(() => {
+      const actualSelectedSource = store.selectSnapshot(
+        AppState.selectedSource
+      );
+      expect(actualSelectedSource).toEqual(mockSources[1]);
+      const actualSources = store.selectSnapshot(AppState.sources);
+      if (!actualSources) {
+        fail();
+        return;
+      }
+      expect(actualSources[0].selected).toEqual(false);
+      expect(actualSources[1].selected).toEqual(true);
+      done()
+    });
   });
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
@@ -313,7 +338,9 @@ describe('AppState', () => {
       }
       expect(actualSources.length).toEqual(1);
 
-      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+      const actaulSelectredomain = store.selectSnapshot(
+        AppState.selectedDomain
+      );
       if (!actaulSelectredomain) {
         fail();
         return;
@@ -443,6 +470,259 @@ describe('AppState', () => {
     expect(apiSpy.registerUser).toHaveBeenCalled();
   });
 
+  it('should react correctly to failed "Logout" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.logOut.and.returnValue(of({ status: 'FAILURE' }));
+
+    store.dispatch(new Logout());
+  });
+
+  it('should react correctly to successful "Logout" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+      const navigateSpy = router.navigate as jasmine.Spy;
+      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+      done();
+    });
+
+    apiSpy.logOut.and.returnValue(of({ status: 'SUCCESS' }));
+
+    store.dispatch(new Logout());
+  });
+
+  it('should show toast on no selected source', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    store.dispatch(new SetIsActive(false));
+  });
+
+  it('should react correctly to failed "ChangeMode" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.changeMode.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockProfileDetails: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfileDetails } });
+
+    store.dispatch(new ChangeMode);
+  });
+
+    it('should react correctly to successfull "ChangeMode" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const currentProfileDetails = store.selectSnapshot(AppState.profileDetails);
+      expect(currentProfileDetails?.mode).toEqual(false);
+      expect(currentProfileDetails?.profileIcon).toEqual('test');
+      expect(currentProfileDetails?.profileId).toEqual(1);
+
+      done();
+    });
+
+    apiSpy.changeMode.and.returnValue(of({ status: 'SUCCESS', profileIcon: 'test', mode: false, id: 1 }));
+
+    const mockProfileDetails: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfileDetails } });
+
+    store.dispatch(new ChangeMode);
+  });
+
+  it('should react correctly to failed "ChangePassword" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.changePassword.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'pp@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new ChangePassword('test_pass', 'test_pass2'));
+  });
+
+  it('should react correctly to successful "ChangePassword" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+      const navigateSpy = router.navigate as jasmine.Spy;
+      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+      done();
+    });
+
+    apiSpy.changePassword.and.returnValue(of({ status: 'SUCCESS' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'pp@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new ChangePassword('test_pass', 'test_pass2'));
+  });
+
+  it('should react correctly do Successfull "DeleteUser" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+      const navigateSpy = router.navigate as jasmine.Spy;
+      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+      done();
+    });
+
+    apiSpy.deleteUser.and.returnValue(of({ status: 'SUCCESS' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'mandem@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new DeleteUser('test', 'test_pass'));
+  });
+
+  it('should react correctly do failed "DeleteUser" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.deleteUser.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockUserDetails: UserDetails = {
+      userId: 1,
+      username: 'test',
+      email: 'mandem@gmail.com',
+      profileIconUrl: 'test',
+      password: 'test_pass',
+    };
+
+    store.reset({ app: { userDetails: mockUserDetails } });
+
+    store.dispatch(new DeleteUser('test', 'test_pass'));
+  });
+
+  it('should show toast on fialed "SetIsActive"', (done: DoneFn) => {
+    apiSpy.setIsActive.and.returnValue(of({ status: 'FAILURE' }));
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    store.dispatch(new SetIsActive(true));
+  });
+
+  it('should show toast on success "SetIsActive"', (done: DoneFn) => {
+    apiSpy.setIsActive.and.returnValue(of({ status: 'SUCCESS' }));
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource, sources: [mockSource] } });
+
+    store.dispatch(new SetIsActive(true));
+  });
+
+  it('should react correclty to successfull ChangeProfileICon event', (done: DoneFn) => {
+    apiSpy.changeProfileIcon.and.returnValue(of({ status: 'SUCCESS', profileIcon: 'https://not_a_real_icon2.png', mode: false, profileId: 1 }));
+
+    // set the profile
+    const mockProfile: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfile } });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const newProfileDetails = store.selectSnapshot(AppState.profileDetails);
+      expect(newProfileDetails?.profileIcon).toEqual('https://not_a_real_icon2.png');
+      
+      done();
+    });
+
+
+    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png")).subscribe();
+
+  });
+
+  it('should react correctly to failed ChangeProfileICon event', (done: DoneFn) => {
+    apiSpy.changeProfileIcon.and.returnValue(of({ status: 'FAILURE' }));
+
+    // set the profile
+    const mockProfile: ProfileDetails = {
+      profileId: 1,
+      mode: true,
+      profileIcon: 'test',
+    };
+    store.reset({ app: { profileDetails: mockProfile } });
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+
+    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png")).subscribe();
+  });
+
+  it('should react correctly to failed ChangeProfileICon event with no profileIcon', () => {
+    // (really just running the empty case)
+
+    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png"));
+    expect(true).toBe(true);
+  });
+
   it('Set the selected Statistic Index', () => {
     store.dispatch(new ChooseStatistic(1));
 
@@ -469,7 +749,27 @@ describe('AppState', () => {
         last_refresh_timestamp: 1689936239.0,
         params: {
           source_type: 'youtube',
-          video_id: 'RGZFb2PlPlo',
+          maps_url: 'RGZFb2PlPlo',
+        },
+      },
+      {
+        source_id: '64ba5fb1303c5fdb91cc4c5e',
+        source_name: 'Primeagen 3',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689936239.0,
+        params: {
+          source_type: 'youtube',
+          tripadvisor_url: 'RGZFb2PlPlo',
+        },
+      },
+      {
+        source_id: '64b940ec9bbccdb7731b81f9',
+        source_name: 'Primegen survey',
+        source_icon: 'youtube-logo.png',
+        last_refresh_timestamp: 1689878247.0,
+        params: {
+          source_type: 'livereview',
+          is_active: true,
         },
       },
     ];
@@ -491,6 +791,22 @@ describe('AppState', () => {
         selected: false,
         isRefreshing: false,
       },
+      {
+        id: '64ba5fb1303c5fdb91cc4c5e',
+        name: 'Primeagen 3',
+        url: 'youtube-logo.png',
+        params: 'RGZFb2PlPlo',
+        selected: false,
+        isRefreshing: false,
+      },
+      {
+        id: '64b940ec9bbccdb7731b81f9',
+        name: 'Primegen survey',
+        url: 'youtube-logo.png',
+        params: true,
+        selected: false,
+        isRefreshing: false,
+      },
     ];
 
     let actual = AppState.formatResponseSources(mockResponseSources);
@@ -508,6 +824,9 @@ describe('AppState', () => {
     expect(AppState.platformToIcon('youtube')).toEqual('youtube-logo.png');
     expect(AppState.platformToIcon('googlereviews')).toEqual(
       'google-reviews.png'
+    );
+    expect(AppState.platformToIcon('livereview')).toEqual(
+      'live-review-logo.png'
     );
   });
 });

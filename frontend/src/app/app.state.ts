@@ -29,6 +29,7 @@ import {
   Logout,
   EditSource,
   SetAllSourcesSelected,
+  SetIsActive,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -443,10 +444,19 @@ export class AppState {
 
         let lastSource =
           selectedDomain.sources[selectedDomain.sources.length - 1];
-        lastSource.isRefreshing = true;
+        
         this.store.dispatch(new SetSourceIsLoading(true));
         this.store.dispatch(new SetSource(lastSource));
-        this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
+        console.log("identifier3: " + state.platform)
+        if(state.platform == "livereview"){
+          console.log("live review here")
+          this.store.dispatch(new GetSourceDashBoardInfo());
+        }
+        else{
+          lastSource.isRefreshing = true;
+          this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
+
+        }
       });
   }
 
@@ -577,6 +587,32 @@ export class AppState {
     state: RefreshSourceData
   ) {
     let selectedSource = ctx.getState().selectedSource;
+    console.log(selectedSource)
+    console.log(selectedSource?.params)
+    console.log(selectedSource?.params?.source_type)
+    if(selectedSource?.url == "live-review-logo.png"){
+      console.log("live review here")
+      if (!selectedSource) return;
+
+      selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
+
+      this.store.dispatch(new GetSourceDashBoardInfo());
+
+      if (selectedSource) {
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+      }
+      this.store.dispatch(
+        new ToastSuccess('Your source has been refreshed')
+      );
+
+      return;
+    }
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
@@ -884,27 +920,19 @@ export class AppState {
 
   @Action(Logout)
   logout(ctx: StateContext<AppStateModel>) {
-    return this.appApi.logOut().pipe(
-      switchMap((res) => {
-        if (res.status === 'SUCCESS') {
-          this.store.dispatch(new ToastSuccess('You have been logged out'));
-          localStorage.removeItem('JWT');
-          this.router.navigate(['/login']);
-
-          return of();
-        } else {
-          return throwError(() => new Error());
-        }
-      }),
-      catchError((error: any) => {
+    this.appApi.logOut().subscribe((res) => {
+      if (res.status === 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('You have been logged out'));
+        localStorage.removeItem('JWT');
+        this.router.navigate(['/login']);
+      } else {
         this.store.dispatch(new ToastError('You could not be logged out'));
-        return of(error);
-      })
-    );
+      }
+    });
   }
 
   @Action(ChangePassword)
-  changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {
+  changePassword(ctx: StateContext<AppStateModel>, state: ChangePassword) {
     //check UserDetails
 
     const userId = ctx.getState().userDetails?.userId;
@@ -915,11 +943,6 @@ export class AppState {
     }
 
     const { oldPassword, newPassword } = state;
-
-    if (oldPassword === undefined || newPassword === undefined) {
-      console.error('oldPassword and newPassword must be provided.');
-      return;
-    }
 
     this.appApi
       .changePassword(userId, oldPassword, newPassword)
@@ -938,19 +961,8 @@ export class AppState {
   }
 
   @Action(DeleteUser)
-  deleteUser(ctx: StateContext<AppStateModel>, state: UserDetails) {
-    const { password } = state;
-    const username = ctx.getState().userDetails?.username;
-
-    if (!username) {
-      console.error('Username is not available in the state.');
-      return;
-    }
-
-    if (password === undefined) {
-      console.error('password must be provided.');
-      return;
-    }
+  deleteUser(ctx: StateContext<AppStateModel>, state: DeleteUser) {
+    const { password, username } = state;
 
     this.appApi.deleteUser(username, password).subscribe((res) => {
       if (res.status == 'SUCCESS') {
@@ -966,7 +978,7 @@ export class AppState {
   }
 
   @Action(ChangeProfileIcon)
-  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ChangeProfileIcon) {
     const profileId = ctx.getState().profileDetails?.profileId;
 
     if (!profileId) {
@@ -975,11 +987,6 @@ export class AppState {
     }
 
     const { profileIcon } = state;
-
-    if (profileIcon === undefined) {
-      console.error('profileIcon must be provided.');
-      return;
-    }
 
     return this.appApi.changeProfileIcon(profileId, profileIcon).pipe(
       switchMap((res) => {
@@ -1003,13 +1010,6 @@ export class AppState {
             new ToastError('Your profile icon could not be changed')
           );
         }
-      }),
-      catchError((error: any) => {
-        console.error(
-          'An error occurred during the profile icon change:',
-          error
-        );
-        return throwError(() => error);
       })
     );
   }
@@ -1068,17 +1068,59 @@ export class AppState {
     });
   }
 
+  @Action(SetIsActive)
+  setIsActive(ctx: StateContext<AppStateModel>, state: SetIsActive) {
+
+    const currentState = ctx.getState();
+    const selectedSource = currentState.selectedSource;
+    const sources = currentState.sources || [];
+
+    if (!selectedSource) {
+      this.store.dispatch(new ToastError('No selected source to toggle'));
+      return;
+    }
+
+    const sourceID = selectedSource.id;
+    const activeVal = state.isActive;
+
+    this.appApi.setIsActive(sourceID, activeVal).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your live review source could not be toggled'));
+        return;
+      } else if (res.status === 'SUCCESS') {
+
+        this.store.dispatch(new ToastSuccess('Your live review source access has been toggled'));
+
+        const updatedSources = sources.map((source) => {
+          if (source.id === sourceID) {
+            return { ...source, params: activeVal };
+          }
+          return source;
+        });
+
+        ctx.patchState({
+          sources: updatedSources,
+          selectedSource: { ...selectedSource, params: activeVal },
+        });
+
+      }
+    });
+    
+  }
+
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
 
     for (let responseSource of responseSources) {
-      let sourceUrl = '';
+      let sourceUrl: any = '';
       if (responseSource.params.video_id) {
         sourceUrl = responseSource.params.video_id;
       } else if (responseSource.params.maps_url) {
-        sourceUrl = responseSource.params.maps_ur;
+        sourceUrl = responseSource.params.maps_url;
       } else if (responseSource.params.tripadvisor_url) {
         sourceUrl = responseSource.params.tripadvisor_url;
+      } else if (responseSource.params.is_active){
+        sourceUrl = responseSource.params.is_active;
       }
 
       console.log(responseSource);
@@ -1118,6 +1160,9 @@ export class AppState {
         break;
       case 'googlereviews':
         source_image_name = 'google-reviews.png';
+        break;
+      case 'livereview':
+        source_image_name = 'live-review-logo.png';
         break;
     }
     return source_image_name;

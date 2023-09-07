@@ -62,7 +62,7 @@ def ingest_live_review(request: HttpRequest):
         ANALYSER_ENDPOINT = (
             f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
         )
-        request_to_engine_body = {"data": review_text}
+        request_to_engine_body = {"data": [review_text]}
         response_from_analyser = requests.post(
             ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
         )
