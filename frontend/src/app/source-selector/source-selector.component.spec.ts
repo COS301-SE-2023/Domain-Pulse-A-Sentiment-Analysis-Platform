@@ -289,5 +289,48 @@ it('should dispatch RefreshSourceData action', () => {
 	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSourceIsLoading(true));
 	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSource(null));
   });
-  
+
+
+ it('should subscribe to selectedSource$', () => {
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    spyOn(component['store'], 'select').and.returnValue(of(dummyDisplaySource));
+
+    component.ngOnInit();
+
+    expect(component.selectedSource).toEqual(dummyDisplaySource);
+});
+
+  it('should add a click event listener to copyIcon', () => {
+    const mockCopyIcon = document.createElement('div');
+    mockCopyIcon.id = 'copyIcon';
+    document.body.appendChild(mockCopyIcon);
+
+    const addEventListenerSpy = spyOn(mockCopyIcon, 'addEventListener');
+
+    component.ngOnInit();
+
+    expect(addEventListenerSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
+  });
+
+  it('should copy the text to clipboard when copyToClipboard is called', () => {
+    const mockLiveReviewLink = document.createElement('a');
+    mockLiveReviewLink.id = 'liveReviewLink';
+    mockLiveReviewLink.setAttribute('href', 'https://example.com');
+    document.body.appendChild(mockLiveReviewLink);
+
+    const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.resolve());
+
+    component.copyToClipboard();
+
+    expect(writeTextSpy).toHaveBeenCalledWith('https://example.com');
+  });
+
 });
