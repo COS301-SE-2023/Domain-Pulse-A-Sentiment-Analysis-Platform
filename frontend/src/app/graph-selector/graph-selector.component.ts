@@ -132,16 +132,6 @@ export class GraphSelectorComponent implements OnInit {
         xaxis: {
           type: 'datetime',
         },
-        annotations: {
-          // Add this section to hide data point labels
-          points: [
-            {
-              marker: {
-                size: 0, // Set the size to 0 to hide the label
-              },
-            },
-          ],
-        },
         dataLabels: {
           enabled: false,
         },
@@ -240,51 +230,7 @@ export class GraphSelectorComponent implements OnInit {
           type: 'datetime',
         },
       },
-      {
-        //2.3 positive negative neutral time series
-        series: [
-          {
-            name: 'Positive',
-            data: [
-              /*               ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 10],
-              ['2023-08-22T06:00', 40],
-              ['2023-08-23T00:00', 0],
-              ['2023-08-23T03:00', 10], */
-            ],
-          },
-          {
-            name: 'Negative',
-            data: [
-              /*               ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 60],
-              ['2023-08-22T06:00', 40],
-              ['2023-08-23T00:00', 50],
-              ['2023-08-23T03:00', 40], */
-            ],
-          },
-          {
-            name: 'Neutral',
-            data: [
-              /*               ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 30],
-              ['2023-08-22T06:00', 20],
-              ['2023-08-23T00:00', 50],
-              ['2023-08-23T03:00', 40], */
-            ],
-          },
-        ],
-        chart: {
-          height: '100%',
-          type: 'area',
-        },
-        title: {
-          text: 'Specific Day and Time Series Chart',
-        },
-        xaxis: {
-          type: 'datetime',
-        },
-      },
+      
     ],
     [
       //3.1 emotion ratings
@@ -339,7 +285,103 @@ export class GraphSelectorComponent implements OnInit {
         ],
       },
       {
-        //3.2 radar emotions
+        //3.2emotional ratios time series
+        series: [
+          {
+            name: 'Anger',
+            data: [
+                            /* ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 10],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 0],
+              ['2023-08-23T03:00', 10],*/
+            ], 
+          },
+          {
+            name: 'Disgust',
+            data: [
+                            ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 60],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
+          },
+          {
+            name: 'Fear',
+            data: [
+                            ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 30],
+              ['2023-08-22T06:00', 20],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
+          },
+          {
+            name: 'Joy',
+            data: [
+                            ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 10],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 0],
+              ['2023-08-23T03:00', 10],
+            ],
+          },
+          {
+            name: 'Surprise',
+            data: [
+                            ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 60],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
+          },
+          {
+            name: 'Sadness',
+            data: [
+                            ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 30],
+              ['2023-08-22T06:00', 20],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40],
+            ],
+          },
+        ],
+        chart: {
+          height: '100%',
+          type: 'area',
+        },
+        title: {
+          text: 'Emotions over time',
+        },
+        colors: ['rgba(3, 127, 255, 0.8)',
+        'rgba(145, 44, 246, 0.8)',
+        'rgba(23, 35, 76, 0.8)',
+        'rgba(255, 99, 132, 0.8)',
+        'rgba(54, 162, 235, 0.8)',
+        'rgba(255, 206, 86, 0.8)',
+        'rgba(75, 192, 192, 0.8)',],
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            opacityFrom: 0.6,
+            opacityTo: 0.8,
+          },
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'left',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+      },
+      {
+        //3.3 radar emotions
         series: [
           {
             name: 'Emotion Ratings',
@@ -441,7 +483,7 @@ export class GraphSelectorComponent implements OnInit {
             name: 'Overall Score',
             type: 'line',
             data: [
-              /*               { x: '2023-08-20T00:00', y: 10 },
+                            { x: '2023-08-20T00:00', y: 10 },
               { x: '2023-08-21T03:00', y: 41 },
               { x: '2023-08-22T06:00', y: 35 },
               { x: '2023-08-23T00:00', y: 10 },
@@ -456,7 +498,7 @@ export class GraphSelectorComponent implements OnInit {
               { x: '2023-08-27T00:00', y: 10 },
               { x: '2023-08-31T03:00', y: 41 },
               { x: '2023-08-31T06:00', y: 35 },
-              // ... other data points */
+              // ... other data points
             ],
           },
         ],
@@ -533,6 +575,47 @@ export class GraphSelectorComponent implements OnInit {
             },
           },
         ],
+      },
+    ],
+    [
+      {
+        //1.2 overall score time series
+        series: [
+          {
+            name: 'Number of Reviews',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 41],
+              ['2023-08-22T06:00', 35],
+              ['2023-08-23T00:00', 10],
+              ['2023-08-23T03:00', 41],
+              ['2023-08-23T06:00', 35],
+              ['2023-08-24T00:00', 10],
+              ['2023-08-25T03:00', 41],
+              ['2023-08-25T06:00', 35],
+              ['2023-08-26T00:00', 10],
+              ['2023-08-26T03:00', 41],
+              ['2023-08-26T06:00', 35],
+              ['2023-08-27T00:00', 10],
+              ['2023-08-31T03:00', 41],
+              ['2023-08-31T06:00', 35],
+              // ... other data points */
+            ],
+          },
+        ],
+        chart: {
+          height: '100%',
+          type: 'area',
+        },
+        title: {
+          text: 'Number of Reviews over time',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+        dataLabels: {
+          enabled: false,
+        },
       },
     ],
 
@@ -819,7 +902,7 @@ export class GraphSelectorComponent implements OnInit {
       Math.floor(aggregatedMetrics.emotions.sadness * 100),
     ];
 
-    graphArray[2][1].series[0].data = [
+    graphArray[2][2].series[0].data = [
       Math.floor(aggregatedMetrics.emotions.anger * 100),
       Math.floor(aggregatedMetrics.emotions.disgust * 100),
       Math.floor(aggregatedMetrics.emotions.fear * 100),
@@ -832,11 +915,30 @@ export class GraphSelectorComponent implements OnInit {
     graphArray[3][0].series = [
       Math.floor(aggregatedMetrics.toxicity.score * 100),
     ];
+    
 
     console.log('time series');
     console.log(timeseriesData);
 
     graphArray[0][1].series[0].data = timeseriesData.overall;
+
+    graphArray[1][1].series[0].data = timeseriesData.ratios.pos;
+    graphArray[1][1].series[1].data = timeseriesData.ratios.neg;
+    graphArray[1][1].series[2].data = timeseriesData.ratios.neu;
+
+    console.log('emotions');
+    console.log(timeseriesData.emotions.anger);
+    graphArray[2][1].series[0].data = timeseriesData.emotions.anger;
+    graphArray[2][1].series[1].data = timeseriesData.emotions.digust;
+    graphArray[2][1].series[2].data = timeseriesData.emotions.fear;
+    graphArray[2][1].series[3].data = timeseriesData.emotions.joy;
+    graphArray[2][1].series[4].data = timeseriesData.emotions.surprise;
+    graphArray[2][1].series[5].data = timeseriesData.emotions.sadness;
+ 
+    graphArray[3][1].series[0].data = timeseriesData.toxicity;
+    //graphArray[3][1].series[1].data = timeseriesData.overall;
+
+    graphArray[4][0].series[0].data = timeseriesData.num_records;
 
     return graphArray;
   }
