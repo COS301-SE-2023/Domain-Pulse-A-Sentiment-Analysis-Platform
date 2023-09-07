@@ -1017,6 +1017,10 @@ export class GraphSelectorComponent implements OnInit {
     const container = this.chartContainer.nativeElement;
     const containerHeight = container.offsetHeight;
 
+    if(this.currentGraphIndex > this.chartOptionsArray[this.currentStatisticIndex].length-1){
+      this.currentGraphIndex = this.chartOptionsArray[this.currentStatisticIndex].length-1;
+    }
+
     // Update chart height based on container's height
     if (
       this.chartOptionsArray[this.currentStatisticIndex][this.currentGraphIndex]
