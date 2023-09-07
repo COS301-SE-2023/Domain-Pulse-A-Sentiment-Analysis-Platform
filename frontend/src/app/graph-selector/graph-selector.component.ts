@@ -83,7 +83,7 @@ export class GraphSelectorComponent implements OnInit {
               showOn: 'always',
               name: {
                 show: true,
-                color: 'rgba(3, 127, 255, 0.8)',
+                color: '#61d478',
               },
             },
           },
@@ -211,7 +211,11 @@ export class GraphSelectorComponent implements OnInit {
             },
           },
         },
-        colors: ['#008FFB', '#00E396', '#CED4DC'],
+        colors: [
+          'rgba(63, 231, 133, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(255, 229, 84, 0.8)',
+        ],
         dataLabels: {
           enabled: false,
         },
@@ -228,11 +232,10 @@ export class GraphSelectorComponent implements OnInit {
         xaxis: {
           type: 'datetime',
         },
-        title : {
+        title: {
           text: 'Positive - Negative - Neutral Ratios over time',
-        }
+        },
       },
-      
     ],
     [
       //3.1 emotion ratings
@@ -277,13 +280,12 @@ export class GraphSelectorComponent implements OnInit {
           text: 'Bar Chart of Emotion Ratings',
         },
         colors: [
-          'rgba(3, 127, 255, 0.8)',
-          'rgba(145, 44, 246, 0.8)',
-          'rgba(23, 35, 76, 0.8)',
-          'rgba(255, 99, 132, 0.8)',
-          'rgba(54, 162, 235, 0.8)',
-          'rgba(255, 206, 86, 0.8)',
-          'rgba(75, 192, 192, 0.8)',
+          'rgba(255, 88, 88, 0.8)',
+          'rgba(212, 116, 78, 0.8)',
+          'rgba(42, 45, 54, 0.8)',
+          'rgba(119, 228, 105, 0.8)',
+          'rgba(224, 101, 187, 0.8)',
+          'rgba(60, 113, 211, 0.8)',
         ],
       },
       {
@@ -292,17 +294,17 @@ export class GraphSelectorComponent implements OnInit {
           {
             name: 'Anger',
             data: [
-                            /* ['2023-08-20T00:00', 10],
+              /* ['2023-08-20T00:00', 10],
               ['2023-08-21T03:00', 10],
               ['2023-08-22T06:00', 40],
               ['2023-08-23T00:00', 0],
               ['2023-08-23T03:00', 10],*/
-            ], 
+            ],
           },
           {
             name: 'Disgust',
             data: [
-                            ['2023-08-20T00:00', 10],
+              ['2023-08-20T00:00', 10],
               ['2023-08-21T03:00', 60],
               ['2023-08-22T06:00', 40],
               ['2023-08-23T00:00', 50],
@@ -312,7 +314,7 @@ export class GraphSelectorComponent implements OnInit {
           {
             name: 'Fear',
             data: [
-                            ['2023-08-20T00:00', 10],
+              ['2023-08-20T00:00', 10],
               ['2023-08-21T03:00', 30],
               ['2023-08-22T06:00', 20],
               ['2023-08-23T00:00', 50],
@@ -322,7 +324,7 @@ export class GraphSelectorComponent implements OnInit {
           {
             name: 'Joy',
             data: [
-                            ['2023-08-20T00:00', 10],
+              ['2023-08-20T00:00', 10],
               ['2023-08-21T03:00', 10],
               ['2023-08-22T06:00', 40],
               ['2023-08-23T00:00', 0],
@@ -332,7 +334,7 @@ export class GraphSelectorComponent implements OnInit {
           {
             name: 'Surprise',
             data: [
-                            ['2023-08-20T00:00', 10],
+              ['2023-08-20T00:00', 10],
               ['2023-08-21T03:00', 60],
               ['2023-08-22T06:00', 40],
               ['2023-08-23T00:00', 50],
@@ -342,7 +344,7 @@ export class GraphSelectorComponent implements OnInit {
           {
             name: 'Sadness',
             data: [
-                            ['2023-08-20T00:00', 10],
+              ['2023-08-20T00:00', 10],
               ['2023-08-21T03:00', 30],
               ['2023-08-22T06:00', 20],
               ['2023-08-23T00:00', 50],
@@ -357,13 +359,14 @@ export class GraphSelectorComponent implements OnInit {
         title: {
           text: 'Emotion Ratings over time',
         },
-        colors: ['rgba(3, 127, 255, 0.8)',
-        'rgba(145, 44, 246, 0.8)',
-        'rgba(23, 35, 76, 0.8)',
-        'rgba(255, 99, 132, 0.8)',
-        'rgba(54, 162, 235, 0.8)',
-        'rgba(255, 206, 86, 0.8)',
-        'rgba(75, 192, 192, 0.8)',],
+        colors: [
+          'rgba(255, 88, 88, 0.8)',
+          'rgba(212, 116, 78, 0.8)',
+          'rgba(42, 45, 54, 0.8)',
+          'rgba(119, 228, 105, 0.8)',
+          'rgba(224, 101, 187, 0.8)',
+          'rgba(60, 113, 211, 0.8)',
+        ],
         dataLabels: {
           enabled: false,
         },
@@ -421,6 +424,7 @@ export class GraphSelectorComponent implements OnInit {
             },
           },
         },
+        colors: ['rgba(255, 99, 133, 0.57)'],
       },
     ],
     [
@@ -484,7 +488,7 @@ export class GraphSelectorComponent implements OnInit {
             name: 'Overall Score',
             type: 'line',
             data: [
-                            { x: '2023-08-20T00:00', y: 10 },
+              { x: '2023-08-20T00:00', y: 10 },
               { x: '2023-08-21T03:00', y: 41 },
               { x: '2023-08-22T06:00', y: 35 },
               { x: '2023-08-23T00:00', y: 10 },
@@ -604,6 +608,7 @@ export class GraphSelectorComponent implements OnInit {
             ],
           },
         ],
+        colors: ['#61d478'],
         chart: {
           height: '100%',
           type: 'area',
@@ -799,6 +804,32 @@ export class GraphSelectorComponent implements OnInit {
 
   constructor(private store: Store) {}
 
+  getColor(value: number): string {
+    if (value < 10) {
+      return 'rgba(255, 56, 56, 0.8)'; // Dark Red
+    } else if (value < 20) {
+      return 'rgba(219, 85, 85, 0.8)'; // Red
+    } else if (value < 30) {
+      return 'rgba(255, 136, 100, 0.8)'; // Red-Orange
+    } else if (value < 40) {
+      return 'rgba(255, 204, 108, 0.8)'; // Orange
+    } else if (value < 50) {
+      return 'rgba(255, 232, 101, 0.8)'; // Gold
+    } else if (value < 60) {
+      return 'rgba(214, 255, 101, 0.8)'; // Light Blue
+    } else if (value < 70) {
+      return 'rgba(186, 255, 122, 0.8)'; // Green
+    } else if (value < 80) {
+      return 'rgba(141, 255, 113, 0.8)'; // Lime Green
+    } else if (value < 90) {
+      return 'rgba(60, 253, 85, 0.8)'; // Cyan
+    } else {
+      return 'rgba(29, 207, 44, 0.8)'; // Blue
+    }
+  }
+  
+  
+
   ngOnInit(): void {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
@@ -916,7 +947,6 @@ export class GraphSelectorComponent implements OnInit {
     graphArray[3][0].series = [
       Math.floor(aggregatedMetrics.toxicity.score * 100),
     ];
-    
 
     console.log('time series');
     console.log(timeseriesData);
@@ -935,7 +965,7 @@ export class GraphSelectorComponent implements OnInit {
     graphArray[2][1].series[3].data = timeseriesData.emotions.joy;
     graphArray[2][1].series[4].data = timeseriesData.emotions.surprise;
     graphArray[2][1].series[5].data = timeseriesData.emotions.sadness;
- 
+
     graphArray[3][1].series[0].data = timeseriesData.toxicity;
     //graphArray[3][1].series[1].data = timeseriesData.overall;
 
@@ -1018,8 +1048,12 @@ export class GraphSelectorComponent implements OnInit {
     const container = this.chartContainer.nativeElement;
     const containerHeight = container.offsetHeight;
 
-    if(this.currentGraphIndex > this.chartOptionsArray[this.currentStatisticIndex].length-1){
-      this.currentGraphIndex = this.chartOptionsArray[this.currentStatisticIndex].length-1;
+    if (
+      this.currentGraphIndex >
+      this.chartOptionsArray[this.currentStatisticIndex].length - 1
+    ) {
+      this.currentGraphIndex =
+        this.chartOptionsArray[this.currentStatisticIndex].length - 1;
     }
 
     // Update chart height based on container's height
