@@ -127,7 +127,7 @@ export class GraphSelectorComponent implements OnInit {
           type: 'area',
         },
         title: {
-          text: 'Specific Day and Time Series Chart',
+          text: 'Overall Score over time',
         },
         xaxis: {
           type: 'datetime',
@@ -223,12 +223,14 @@ export class GraphSelectorComponent implements OnInit {
           },
         },
         legend: {
-          position: 'top',
-          horizontalAlign: 'left',
+          position: 'bottom',
         },
         xaxis: {
           type: 'datetime',
         },
+        title : {
+          text: 'Positive - Negative - Neutral Ratios over time',
+        }
       },
       
     ],
@@ -272,7 +274,7 @@ export class GraphSelectorComponent implements OnInit {
           ],
         },
         title: {
-          text: 'Proportion of emotions',
+          text: 'Bar Chart of Emotion Ratings',
         },
         colors: [
           'rgba(3, 127, 255, 0.8)',
@@ -353,7 +355,7 @@ export class GraphSelectorComponent implements OnInit {
           type: 'area',
         },
         title: {
-          text: 'Emotions over time',
+          text: 'Emotion Ratings over time',
         },
         colors: ['rgba(3, 127, 255, 0.8)',
         'rgba(145, 44, 246, 0.8)',
@@ -373,8 +375,7 @@ export class GraphSelectorComponent implements OnInit {
           },
         },
         legend: {
-          position: 'top',
-          horizontalAlign: 'left',
+          position: 'bottom',
         },
         xaxis: {
           type: 'datetime',
@@ -521,7 +522,7 @@ export class GraphSelectorComponent implements OnInit {
           lineCap: 'round',
         },
         title: {
-          text: 'Specific Day and Time Series Chart',
+          text: 'Toxicity over time',
         },
         xaxis: {
           type: 'datetime',
