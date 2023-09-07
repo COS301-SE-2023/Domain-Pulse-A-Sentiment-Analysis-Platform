@@ -34,6 +34,7 @@ export type ChartOptions = {
   plotOptions: ApexPlotOptions;
   labels: any;
   stroke: any;
+  annotations: any;
 };
 
 @Component({
@@ -48,14 +49,495 @@ export class GraphSelectorComponent implements OnInit {
   @ViewChild('chart')
   chart!: ChartComponent;
   chartOptions!: Partial<ChartOptions>;
-  chartOptionsArray: any[] | Partial<ChartOptions>[] = [];
 
   @Select(AppState.sourceOverallSentimentScores)
   sourceOverallSentiment!: Observable<any | null>;
   @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
   currentGraphIndex: number = 0;
+  currentStatisticIndex: number = 0;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
+  chartOptionsArray: any[] | Partial<ChartOptions>[] = [
+    [
+      {
+        //1.1 overall score
+        series: [
+          /* 70 */
+        ],
+        chart: {
+          height: '100%',
+          type: 'radialBar',
+          toolbar: {
+            show: true,
+          },
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            },
+            track: {
+              background: '#dadada',
+            },
+            dataLabels: {
+              showOn: 'always',
+              name: {
+                show: true,
+                color: 'rgba(3, 127, 255, 0.8)',
+              },
+            },
+          },
+        },
+        fill: {
+          type: 'solid',
+          colors: ['#61d478'],
+        },
+        stroke: {
+          lineCap: 'round',
+        },
+        labels: ['Overall Score'],
+      },
+      {
+        //1.2 overall score time series
+        series: [
+          {
+            name: 'Overall Score',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 41],
+              ['2023-08-22T06:00', 35],
+              ['2023-08-23T00:00', 10],
+              ['2023-08-23T03:00', 41],
+              ['2023-08-23T06:00', 35],
+              ['2023-08-24T00:00', 10],
+              ['2023-08-25T03:00', 41],
+              ['2023-08-25T06:00', 35],
+              ['2023-08-26T00:00', 10],
+              ['2023-08-26T03:00', 41],
+              ['2023-08-26T06:00', 35],
+              ['2023-08-27T00:00', 10],
+              ['2023-08-31T03:00', 41],
+              ['2023-08-31T06:00', 35],
+              // ... other data points */
+            ],
+          },
+        ],
+        chart: {
+          height: '100%',
+          type: 'area',
+        },
+        title: {
+          text: 'Specific Day and Time Series Chart',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+        annotations: {
+          // Add this section to hide data point labels
+          points: [
+            {
+              marker: {
+                size: 0, // Set the size to 0 to hide the label
+              },
+            },
+          ],
+        },
+        dataLabels: {
+          enabled: false,
+        },
+      },
+    ],
+    [
+      {
+        //2.1 ratios pie
+        series: [
+          /* 20, 30, 50 */
+        ],
+        chart: {
+          height: 350,
+          type: 'donut',
+          toolbar: {
+            show: true,
+          },
+        },
+        labels: ['Postive', 'Negative', 'Neutral'],
+        colors: [
+          'rgba(63, 231, 133, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(255, 229, 84, 0.8)',
+        ],
+        legend: {
+          show: true,
+          position: 'bottom',
+        },
+        title: {
+          text: 'Postive - Negative - Neutral Ratios',
+        },
+        dataLabels: {
+          enabled: false,
+        },
+      },
+      {
+        //2.2pos-neg-neu ratio
+        series: [
+          {
+            name: 'Positive',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 10],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 0],
+              ['2023-08-23T03:00', 10], */
+            ],
+          },
+          {
+            name: 'Negative',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 60],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40], */
+            ],
+          },
+          {
+            name: 'Neutral',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 30],
+              ['2023-08-22T06:00', 20],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40], */
+            ],
+          },
+        ],
+        chart: {
+          type: 'area',
+          height: '100%',
+          stacked: true,
+          events: {
+            selection: function (chart: any, e: any) {
+              console.log(new Date(e.xaxis.min));
+            },
+          },
+        },
+        colors: ['#008FFB', '#00E396', '#CED4DC'],
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            opacityFrom: 0.6,
+            opacityTo: 0.8,
+          },
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'left',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+      },
+      {
+        //2.3 positive negative neutral time series
+        series: [
+          {
+            name: 'Positive',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 10],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 0],
+              ['2023-08-23T03:00', 10], */
+            ],
+          },
+          {
+            name: 'Negative',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 60],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40], */
+            ],
+          },
+          {
+            name: 'Neutral',
+            data: [
+              /*               ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 30],
+              ['2023-08-22T06:00', 20],
+              ['2023-08-23T00:00', 50],
+              ['2023-08-23T03:00', 40], */
+            ],
+          },
+        ],
+        chart: {
+          height: '100%',
+          type: 'area',
+        },
+        title: {
+          text: 'Specific Day and Time Series Chart',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+      },
+    ],
+    [
+      //3.1 emotion ratings
+
+      {
+        series: [
+          {
+            name: 'Proportion of emotions',
+            data: [
+              /* 20, 30, 10, 5, 8, 27 */
+            ],
+          },
+        ],
+        chart: {
+          type: 'bar',
+          height: '100%',
+        },
+        plotOptions: {
+          bar: {
+            distributed: true,
+            horizontal: true,
+            borderRadius: 3,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        xaxis: {
+          title: {
+            text: 'Percentage',
+          },
+          categories: [
+            'anger',
+            'disgust',
+            'fear',
+            'joy',
+            'surprise',
+            'sadness',
+          ],
+        },
+        title: {
+          text: 'Proportion of emotions',
+        },
+        colors: [
+          'rgba(3, 127, 255, 0.8)',
+          'rgba(145, 44, 246, 0.8)',
+          'rgba(23, 35, 76, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 206, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+        ],
+      },
+      {
+        //3.2 radar emotions
+        series: [
+          {
+            name: 'Emotion Ratings',
+            data: [
+              /* 0.05, 0.1, 0.15, 0.35, 0.25, 0.15 */
+            ],
+          },
+        ],
+        chart: {
+          height: '100%',
+          type: 'radar',
+        },
+        title: {
+          text: 'Emotions Radar Chart',
+        },
+        xaxis: {
+          categories: [
+            'anger',
+            'disgust',
+            'fear',
+            'joy',
+            'surprise',
+            'sadness',
+          ],
+        },
+        yaxis: {
+          show: false,
+        },
+        plotOptions: {
+          radar: {
+            polygons: {
+              strokeColor: '#e8e8e8',
+              fill: {
+                colors: ['#f8f8f8', '#fff'],
+              },
+            },
+          },
+        },
+      },
+    ],
+    [
+      //4.1 toxicity pie
+      {
+        series: [
+          /* 3 */
+        ],
+        chart: {
+          height: '100%',
+          type: 'radialBar',
+          toolbar: {
+            show: true,
+          },
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            },
+            track: {
+              background: '#dadada',
+            },
+            dataLabels: {
+              showOn: 'always',
+              name: {
+                show: true,
+                color: '#cf5050',
+              },
+            },
+          },
+        },
+        fill: {
+          type: 'solid',
+          colors: ['#cf5050'],
+        },
+        stroke: {
+          lineCap: 'round',
+        },
+        labels: ['Toxicity'],
+      },
+
+      {
+        series: [
+          {
+            name: 'toxicity',
+            type: 'column',
+            data: [
+              /* 
+              { x: '2023-08-20', y: 5 },
+              { x: '2023-08-21', y: 6 },
+              { x: '2023-08-22', y: 20 },
+              { x: '2023-08-27', y: 10 },
+  
+  
+              { x: '2023-08-31', y: 2 },
+              { x: '2023-08-31', y: 1 }, */
+            ],
+          },
+          {
+            name: 'Overall Score',
+            type: 'line',
+            data: [
+              /*               { x: '2023-08-20T00:00', y: 10 },
+              { x: '2023-08-21T03:00', y: 41 },
+              { x: '2023-08-22T06:00', y: 35 },
+              { x: '2023-08-23T00:00', y: 10 },
+              { x: '2023-08-23T03:00', y: 41 },
+              { x: '2023-08-23T06:00', y: 35 },
+              { x: '2023-08-24T00:00', y: 10 },
+              { x: '2023-08-25T03:00', y: 41 },
+              { x: '2023-08-25T06:00', y: 35 },
+              { x: '2023-08-26T00:00', y: 10 },
+              { x: '2023-08-26T03:00', y: 41 },
+              { x: '2023-08-26T06:00', y: 35 },
+              { x: '2023-08-27T00:00', y: 10 },
+              { x: '2023-08-31T03:00', y: 41 },
+              { x: '2023-08-31T06:00', y: 35 },
+              // ... other data points */
+            ],
+          },
+        ],
+        chart: {
+          height: '100%',
+          type: 'line',
+          colors: ['#fb2600', '#30a800'],
+        },
+        all_series_config: {
+          stroke_width: 10,
+        },
+        plotOptions: {
+          bar: {
+            columnWidth: '70%', // Adjust the column width as needed
+          },
+        },
+        colors: ['#fb2600', '#30a800'], // Specify the colors for the line and columns
+        stroke: {
+          curve: 'smooth',
+          lineCap: 'round',
+        },
+        title: {
+          text: 'Specific Day and Time Series Chart',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+
+        yaxis: [
+          {
+            seriesName: 'toxicity',
+            axisTicks: {
+              show: true,
+            },
+            axisBorder: {
+              show: true,
+              color: '#fb3200',
+            },
+            labels: {
+              style: {
+                color: '#fb2600',
+              },
+            },
+            title: {
+              text: 'Number of Toxic Comments',
+              style: {
+                color: '#fb2600',
+              },
+            },
+            tooltip: {
+              enabled: true,
+            },
+          },
+          {
+            seriesName: 'Overall Score',
+            opposite: true,
+            axisTicks: {
+              show: true,
+            },
+            axisBorder: {
+              show: true,
+              color: '#30a800',
+            },
+            labels: {
+              style: {
+                color: '#30a800',
+              },
+            },
+            title: {
+              text: 'Overall Score',
+              style: {
+                color: '#30a800',
+              },
+            },
+          },
+        ],
+      },
+    ],
+
+    // Add more chartOptions as needed
+  ];
   //chart: Chart | undefined;
   //gradient: CanvasGradient | undefined;
   /*  graphs = [
@@ -234,474 +716,30 @@ export class GraphSelectorComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    /* this.sourceOverallSentiment.subscribe((data) => {
+    this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
         if (data.aggregated_metrics.general.category != 'No data') {
           this.updatedGraphArray = this.assignGraphData(
             data.aggregated_metrics,
-            this.graphs
+            data.timeseries,
+            this.chartOptionsArray
           );
           setTimeout(() => {
+            console.log('rendering graph after fetching data');
             this.renderGraph();
           }, 300);
         }
       }
-    }); */
+    });
 
-    /* this.statisticIndex.subscribe((statIndex) => {
-      if (statIndex !== this.currentGraphIndex && statIndex !== undefined) {
-        this.currentGraphIndex = statIndex;
+    this.statisticIndex.subscribe((statIndex) => {
+      if (statIndex !== this.currentStatisticIndex && statIndex !== undefined) {
+        this.currentStatisticIndex = statIndex;
+
         this.renderGraph();
       }
-    }); */
-
-    this.chartOptionsArray = [
-      {
-        series: [
-          {
-            name: 'My-series',
-            data: [
-              ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 41],
-              ['2023-08-22T06:00', 35],
-              ['2023-08-23T00:00', 10],
-              ['2023-08-23T03:00', 41],
-              ['2023-08-23T06:00', 35],
-              ['2023-08-24T00:00', 10],
-              ['2023-08-25T03:00', 41],
-              ['2023-08-25T06:00', 35],
-              ['2023-08-26T00:00', 10],
-              ['2023-08-26T03:00', 41],
-              ['2023-08-26T06:00', 35],
-              ['2023-08-27T00:00', 10],
-              ['2023-08-31T03:00', 41],
-              ['2023-08-31T06:00', 35],
-              // ... other data points
-            ],
-          },
-        ],
-        chart: {
-          height: '100%',
-          type: 'area',
-        },
-        title: {
-          text: 'Specific Day and Time Series Chart',
-        },
-        xaxis: {
-          type: 'datetime',
-        },
-      },
-      {
-        series: [
-          {
-            name: 'Positive',
-            data: [
-              ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 10],
-              ['2023-08-22T06:00', 40],
-              ['2023-08-23T00:00', 0],
-              ['2023-08-23T03:00', 10],
-            ],
-          },
-          {
-            name: 'Negative',
-            data: [
-              ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 60],
-              ['2023-08-22T06:00', 40],
-              ['2023-08-23T00:00', 50],
-              ['2023-08-23T03:00', 40],
-            ],
-          },
-          {
-            name: 'Neutral',
-            data: [
-              ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 30],
-              ['2023-08-22T06:00', 20],
-              ['2023-08-23T00:00', 50],
-              ['2023-08-23T03:00', 40],
-            ],
-          },
-        ],
-        chart: {
-          height: '100%',
-          type: 'area',
-        },
-        title: {
-          text: 'Specific Day and Time Series Chart',
-        },
-        xaxis: {
-          type: 'datetime',
-        },
-      },
-      {
-        series: [
-          {
-            name: 'Positive',
-            data: [
-              ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 10],
-              ['2023-08-22T06:00', 40],
-              ['2023-08-23T00:00', 0],
-              ['2023-08-23T03:00', 10],
-            ],
-          },
-          {
-            name: 'Negative',
-            data: [
-              ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 60],
-              ['2023-08-22T06:00', 40],
-              ['2023-08-23T00:00', 50],
-              ['2023-08-23T03:00', 40],
-            ],
-          },
-          {
-            name: 'Neutral',
-            data: [
-              ['2023-08-20T00:00', 10],
-              ['2023-08-21T03:00', 30],
-              ['2023-08-22T06:00', 20],
-              ['2023-08-23T00:00', 50],
-              ['2023-08-23T03:00', 40],
-            ],
-          },
-        ],
-        chart: {
-          type: 'area',
-          height: 350,
-          stacked: true,
-          events: {
-            selection: function (chart, e) {
-              console.log(new Date(e.xaxis.min));
-            },
-          },
-        },
-        colors: ['#008FFB', '#00E396', '#CED4DC'],
-        dataLabels: {
-          enabled: false,
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            opacityFrom: 0.6,
-            opacityTo: 0.8,
-          },
-        },
-        legend: {
-          position: 'top',
-          horizontalAlign: 'left',
-        },
-        xaxis: {
-          type: 'datetime',
-        },
-      },
-      {
-        series: [
-          {
-            name: 'toxicity',
-            type: 'column',
-            data: [
-
-              { x: '2023-08-20', y: 5 },
-              { x: '2023-08-21', y: 6 },
-              { x: '2023-08-22', y: 20 },
-              { x: '2023-08-27', y: 10 },
-
-
-              { x: '2023-08-31', y: 2 },
-              { x: '2023-08-31', y: 1 },
-            ],
-          },
-          {
-            name: 'Overall Score',
-            type: 'line',
-            data: [
-              { x: '2023-08-20T00:00', y: 10 },
-              { x: '2023-08-21T03:00', y: 41 },
-              { x: '2023-08-22T06:00', y: 35 },
-              { x: '2023-08-23T00:00', y: 10 },
-              { x: '2023-08-23T03:00', y: 41 },
-              { x: '2023-08-23T06:00', y: 35 },
-              { x: '2023-08-24T00:00', y: 10 },
-              { x: '2023-08-25T03:00', y: 41 },
-              { x: '2023-08-25T06:00', y: 35 },
-              { x: '2023-08-26T00:00', y: 10 },
-              { x: '2023-08-26T03:00', y: 41 },
-              { x: '2023-08-26T06:00', y: 35 },
-              { x: '2023-08-27T00:00', y: 10 },
-              { x: '2023-08-31T03:00', y: 41 },
-              { x: '2023-08-31T06:00', y: 35 },
-              // ... other data points
-            ],
-          },
-        ],
-        chart: {
-          height: '100%',
-          type: 'line',
-          colors: ['#fb2600', '#30a800'],
-        },
-        all_series_config: {
-          stroke_width: 10,
-        },
-        plotOptions: {
-          bar: {
-            columnWidth: '70%', // Adjust the column width as needed
-          },
-        },
-        colors: ['#fb2600', '#30a800'], // Specify the colors for the line and columns
-        stroke: {
-          curve: 'smooth',
-          lineCap: "round",
-
-        },
-        title: {
-          text: 'Specific Day and Time Series Chart',
-        },
-        xaxis: {
-          type: 'datetime',
-        },
-        
-        yaxis: [
-          {
-            seriesName: 'toxicity',
-            axisTicks: {
-              show: true,
-            },
-            axisBorder: {
-              show: true,
-              color: '#fb3200',
-            },
-            labels: {
-              style: {
-                color: '#fb2600',
-              },
-            },
-            title: {
-              text: 'Number of Toxic Comments',
-              style: {
-                color: '#fb2600',
-              },
-            },
-            tooltip: {
-              enabled: true,
-            },
-          },
-          {
-            seriesName: 'Overall Score',
-            opposite: true,
-            axisTicks: {
-              show: true,
-            },
-            axisBorder: {
-              show: true,
-              color: '#30a800',
-            },
-            labels: {
-              style: {
-                color: '#30a800',
-              },
-            },
-            title: {
-              text: 'Overall Score',
-              style: {
-                color: '#30a800',
-              },
-            },
-          },
-        ],
-      },
-      
-      
-      {
-        series: [
-          {
-            name: 'Emotion Ratings',
-            data: [0.05, 0.1, 0.15, 0.35, 0.25, 0.15],
-          },
-        ],
-        chart: {
-          height: 350,
-          type: 'radar',
-        },
-        title: {
-          text: 'Emotions Radar Chart',
-        },
-        xaxis: {
-          categories: [
-            'anger',
-            'disgust',
-            'fear',
-            'joy',
-            'surprise',
-            'sadness',
-          ],
-        },
-        yaxis: {
-          show: false,
-        },
-        plotOptions: {
-          radar: {
-            polygons: {
-              strokeColor: '#e8e8e8',
-              fill: {
-                colors: ['#f8f8f8', '#fff'],
-              },
-            },
-          },
-        },
-      },
-      
-      {
-        series: [20, 30, 50],
-        chart: {
-          height: 350,
-          type: 'donut',
-          toolbar: {
-            show: true,
-          },
-        },
-        labels: ['Postive', 'Negative', 'Neutral'],
-        colors: [
-          'rgba(63, 231, 133, 0.8)',
-          'rgba(255, 99, 132, 0.8)',
-          'rgba(255, 229, 84, 0.8)',
-        ],
-        legend: {
-          show: true,
-          position: 'bottom',
-
-        },
-        title: {
-          text: 'Postive - Negative - Neutral Ratios',
-        },
-        dataLabels: {
-          enabled: false,
-          
-        },
-        
-      },
-      {
-          series: [
-            {
-              name: "Proportion of emotions",
-              data: [20, 30, 10, 5, 8, 27]
-            }
-          ],
-          chart: {
-            type: "bar",
-            height: 350
-          },
-          plotOptions: {
-            bar: {
-              distributed: true,
-              horizontal: true,
-              borderRadius: 3,
-            }
-          },
-          dataLabels: {
-            enabled: false
-          },
-          xaxis: {
-            title: {
-              text: "Percentage",
-            },
-            categories: [
-              'anger',
-          'disgust',
-          'fear',
-          'joy',
-          'sadness',
-          'surprise',
-            ]
-          },
-          title: {
-            text: "Proportion of emotions",
-          },
-          colors: ['rgba(3, 127, 255, 0.8)',
-          'rgba(145, 44, 246, 0.8)',
-          'rgba(23, 35, 76, 0.8)',
-          'rgba(255, 99, 132, 0.8)',
-          'rgba(54, 162, 235, 0.8)',
-          'rgba(255, 206, 86, 0.8)',
-          'rgba(75, 192, 192, 0.8)',],
-        },
-        {
-          series: [70],
-          chart: {
-          height: 350,
-          type: 'radialBar',
-          toolbar: {
-            show: true,
-          },
-        },
-        plotOptions: {
-          radialBar: {
-            hollow: {
-              size: '70%',
-            },
-            track: {
-              background: '#dadada',
-            },
-            dataLabels: {
-              showOn: "always",
-              name: {
-                show: true,
-                color: "rgba(3, 127, 255, 0.8)",
-              },
-            }
-          },
-        },
-        fill: {
-          type: 'solid',
-          colors: ['#61d478'],
-
-        },
-        stroke: {
-          lineCap: "round",
-        },
-        labels: ['Overall Score'],
-        },
-        {
-          series: [3],
-          chart: {
-          height: 350,
-          type: 'radialBar',
-          toolbar: {
-            show: true,
-          },
-        },
-        plotOptions: {
-          radialBar: {
-            hollow: {
-              size: '70%',
-            },
-            track: {
-              background: '#dadada',
-            },
-            dataLabels: {
-              showOn: "always",
-              name: {
-                show: true,
-                color: "#cf5050",
-              },
-            }
-          },
-        },
-        fill: {
-          type: 'solid',
-          colors: ['#cf5050'],
-
-        },
-        stroke: {
-          lineCap: "round",
-        },
-        labels: ['Toxicity'],
-        },
-      // Add more chartOptions as needed
-    ];
+    });
 
     this.chartOptions = this.chartOptionsArray[0];
   }
@@ -745,44 +783,60 @@ export class GraphSelectorComponent implements OnInit {
   };
 
   ngAfterViewInit() {
-    console.log('after view init');
+    /*    console.log('after view init');
     // Access and manipulate the DOM element in ngAfterViewInit
     setTimeout(() => {
       this.renderGraph();
-    });
+    }); */
   }
 
-  assignGraphData(mockData: any, graphArray: any[]): any[] {
-    const aggregatedMetrics = mockData;
+  assignGraphData(
+    aggregated_metrics: any,
+    timeseries: any,
+    graphArray: any[]
+  ): any[] {
+    const aggregatedMetrics = aggregated_metrics;
+    const timeseriesData = timeseries;
 
     // Update the first graph (doughnut)
-    const score = Math.floor(aggregatedMetrics.general.score * 100) / 2;
-    const otherScore = 50 - score;
-    graphArray[0].data.datasets[0].data = [score, otherScore, 50];
+    const score = aggregatedMetrics.general.score * 100;
+    graphArray[0][0].series = [score];
 
     // Update the second graph (pie)
-    graphArray[1].data.datasets[0].data = [
+    graphArray[1][0].series = [
       Math.floor(aggregatedMetrics.ratios.positive * 100),
       Math.floor(aggregatedMetrics.ratios.negative * 100),
       Math.floor(aggregatedMetrics.ratios.neutral * 100),
     ];
 
     // Update the third graph (bar)
-    graphArray[2].data.datasets[0].data = [
+    graphArray[2][0].series[0].data = [
       Math.floor(aggregatedMetrics.emotions.anger * 100),
       Math.floor(aggregatedMetrics.emotions.disgust * 100),
       Math.floor(aggregatedMetrics.emotions.fear * 100),
       Math.floor(aggregatedMetrics.emotions.joy * 100),
-      Math.floor(aggregatedMetrics.emotions.neutral * 100),
-      Math.floor(aggregatedMetrics.emotions.sadness * 100),
       Math.floor(aggregatedMetrics.emotions.surprise * 100),
+      Math.floor(aggregatedMetrics.emotions.sadness * 100),
+    ];
+
+    graphArray[2][1].series[0].data = [
+      Math.floor(aggregatedMetrics.emotions.anger * 100),
+      Math.floor(aggregatedMetrics.emotions.disgust * 100),
+      Math.floor(aggregatedMetrics.emotions.fear * 100),
+      Math.floor(aggregatedMetrics.emotions.joy * 100),
+      Math.floor(aggregatedMetrics.emotions.surprise * 100),
+      Math.floor(aggregatedMetrics.emotions.sadness * 100),
     ];
 
     // Update the fourth graph (pie)
-    graphArray[3].data.datasets[0].data = [
+    graphArray[3][0].series = [
       Math.floor(aggregatedMetrics.toxicity.score * 100),
-      Math.floor((1 - aggregatedMetrics.toxicity.score) * 100),
     ];
+
+    console.log('time series');
+    console.log(timeseriesData);
+
+    graphArray[0][1].series[0].data = timeseriesData.overall;
 
     return graphArray;
   }
@@ -822,10 +876,12 @@ export class GraphSelectorComponent implements OnInit {
     }
 
     this.currentGraphIndex =
-      (this.currentGraphIndex - 1 + this.chartOptionsArray.length) %
-      this.chartOptionsArray.length;
+      (this.currentGraphIndex -
+        1 +
+        this.chartOptionsArray[this.currentStatisticIndex].length) %
+      this.chartOptionsArray[this.currentStatisticIndex].length;
 
-    this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
+    this.store.dispatch(new ChooseStatistic(this.currentStatisticIndex));
 
     this.renderGraph();
   }
@@ -836,15 +892,21 @@ export class GraphSelectorComponent implements OnInit {
     }
 
     this.currentGraphIndex =
-      (this.currentGraphIndex + 1) % this.chartOptionsArray.length;
+      (this.currentGraphIndex + 1) %
+      this.chartOptionsArray[this.currentStatisticIndex].length;
 
-    this.store.dispatch(new ChooseStatistic(this.currentGraphIndex));
+    this.store.dispatch(new ChooseStatistic(this.currentStatisticIndex));
 
     this.renderGraph();
   }
 
   renderGraph() {
-    console.log('rendering graph at index: ' + this.currentGraphIndex);
+    console.log(
+      'rendering graph at stat index: ' +
+        this.currentStatisticIndex +
+        ' and graph index: ' +
+        this.currentGraphIndex
+    );
 
     /* if (!this.updatedGraphArray || !this.chartOptionsArray[this.currentGraphIndex]) {
       return;
@@ -854,12 +916,19 @@ export class GraphSelectorComponent implements OnInit {
     const containerHeight = container.offsetHeight;
 
     // Update chart height based on container's height
-    if (this.chartOptionsArray[this.currentGraphIndex].chart?.height) {
-      this.chartOptionsArray[this.currentGraphIndex].chart.height =
-        containerHeight;
+    if (
+      this.chartOptionsArray[this.currentStatisticIndex][this.currentGraphIndex]
+        .chart?.height
+    ) {
+      this.chartOptionsArray[this.currentStatisticIndex][
+        this.currentGraphIndex
+      ].chart.height = containerHeight;
     }
 
-    this.chartOptions = this.chartOptionsArray[this.currentGraphIndex];
+    this.chartOptions =
+      this.chartOptionsArray[this.currentStatisticIndex][
+        this.currentGraphIndex
+      ];
 
     // Render the chart with the updated options
     // Replace 'apexchart' with the appropriate chart component and attributes

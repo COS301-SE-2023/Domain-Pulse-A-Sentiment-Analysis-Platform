@@ -27,7 +27,7 @@
       style="text-align: center"
     >
       <!-- <canvas #myChart data-cy="canvas-element"></canvas> -->
-      <apx-chart
+      <apx-chart style="z-index: 0;"
         [series]="chartOptions.series!"
         [chart]="chartOptions.chart!"
         [xaxis]="chartOptions.xaxis!"
@@ -41,6 +41,7 @@
         [labels]="chartOptions.labels!"
         [responsive]="chartOptions.responsive!"
         [stroke]="chartOptions.stroke!"
+        [annotations]="chartOptions.annotations!"
       ></apx-chart>
     </div>
 

@@ -789,6 +789,7 @@ export class AppState {
             overallSentimentScores: {
               aggregated_metrics: res.aggregated_metrics,
               meta_data: res.meta_data,
+              timeseries: res.timeseries,
             },
             sampleData: res.individual_metrics,
             sourceIsLoading: false,
@@ -813,6 +814,8 @@ export class AppState {
             overallSentimentScores: {
               aggregated_metrics: res.aggregated_metrics,
               meta_data: res.meta_data,
+              timeseries: res.timeseries,
+
             },
             sampleData: res.individual_metrics,
             sourceIsLoading: false,
