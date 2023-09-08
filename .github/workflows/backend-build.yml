@@ -27,13 +27,15 @@ jobs:
     needs: [test_domains, test_engine, test_profiles, test_sourceconnector, test-warehouse]
     runs-on: ubuntu-latest
     steps:
+      - name: setup
+        uses: actions/checkout@v3
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
       - name: install coverage
-        working-directory: ./backend
         run: |
           python -m pip install --upgrade pip
           pip install coverage
@@ -44,9 +46,8 @@ jobs:
           path: ~/downloaded-coverages
 
       - name: Merge Coverage
-        working-directory: ./backend
         run: |
-          coverage combine ~/downloaded-coverages
+          coverage combine ~/downloaded-coverages/backend-domains-test/.coverage ~/downloaded-coverages/backend-engine-test/.coverage ~/downloaded-coverages/backend-profiles-test/.coverage ~/downloaded-coverages/backend-sourceconnector-test/.coverage ~/downloaded-coverages/backend-warehouse-test/.coverage
           coverage report -m
           coverage lcov -o coverage.lcov
         
@@ -54,4 +55,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: backend-test
-          path: backend/coverage.lcov
+          path: coverage.lcov

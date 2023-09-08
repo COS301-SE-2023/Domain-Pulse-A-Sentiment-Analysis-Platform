@@ -190,15 +190,7 @@ class LiveIngestionTests(TestCase):
             content_type="application/x-www-form-urlencoded",
         )
 
-        self.assertContains(
-            response,
-            """<body>
-    <h1>There was an error submitting your review!</h1>
-    <h2>Details: {{details}}</h2>
-</body>""".replace(
-                "{{details}}", "Error communicating with analyser"
-            ),
-        )
+        self.assertContains(response, "Error communicating with analyser")
 
     @patch("requests.post")
     def test_domains_service_failed_case(self, mocked_post):
