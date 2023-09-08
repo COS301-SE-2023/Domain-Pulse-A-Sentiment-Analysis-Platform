@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: pip-deps_cache-${{ hashFiles('backend/domains/requirements.txt') }}}
+          key: pip-deps_cache-${{ hashFiles('backend/domains/requirements.txt') }}
 
       - name: install dependencies
         working-directory: ./backend/domains

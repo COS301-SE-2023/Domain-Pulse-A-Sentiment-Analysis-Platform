@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local/lib/python3.8/site-packages
-          key: pip-deps_cache-${{ hashFiles('backend/warehouse/requirements.lock') }}}
+          key: pip-deps_cache-${{ hashFiles('backend/warehouse/requirements.lock') }}
 
       - name: install dependencies
         working-directory: ./backend/warehouse
