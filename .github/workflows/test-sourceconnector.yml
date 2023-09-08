@@ -53,13 +53,13 @@ jobs:
           venv/bin/python -m coverage run --source='.' manage.py test
           venv/bin/python -m coverage report -m
 
-      - name: Push to DockerHub
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend/sourceconnector
-          file: ./backend/sourceconnector/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-sourceconnector:latest
+      # - name: Push to DockerHub
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: ./backend/sourceconnector
+      #     file: ./backend/sourceconnector/Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-sourceconnector:latest
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2

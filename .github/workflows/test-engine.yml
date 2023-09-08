@@ -60,13 +60,13 @@ jobs:
           coverage run --source='.' manage.py test
           coverage report -m
 
-      - name: Push to DockerHub
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend/engine
-          file: ./backend/engine/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-engine:latest
+      # - name: Push to DockerHub
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: ./backend/engine
+      #     file: ./backend/engine/Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-engine:latest
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2

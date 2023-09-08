@@ -52,7 +52,7 @@ jobs:
         run: |
           venv/bin/python -m coverage run --source='.' manage.py test
           venv/bin/python -m coverage report -m
-          
+
       - name: install dependencies
         working-directory: ./backend/warehouse
         if: steps.cache-deps.outputs.cache-hit != 'true'
@@ -67,13 +67,13 @@ jobs:
           coverage run --source='.' manage.py test
           coverage report -m
 
-      - name: Push to DockerHub
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend/warehouse
-          file: ./backend/warehouse/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:latest
+      # - name: Push to DockerHub
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: ./backend/warehouse
+      #     file: ./backend/warehouse/Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:latest
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
