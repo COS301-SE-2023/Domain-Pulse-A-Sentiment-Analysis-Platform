@@ -971,14 +971,15 @@ export class GraphSelectorComponent implements OnInit {
     console.log('emotions');
     console.log(timeseriesData.emotions.anger);
     graphArray[2][1].series[0].data = timeseriesData.emotions.anger;
-    graphArray[2][1].series[1].data = timeseriesData.emotions.digust;
+    graphArray[2][1].series[1].data = timeseriesData.emotions.disgust;
     graphArray[2][1].series[2].data = timeseriesData.emotions.fear;
     graphArray[2][1].series[3].data = timeseriesData.emotions.joy;
     graphArray[2][1].series[4].data = timeseriesData.emotions.surprise;
     graphArray[2][1].series[5].data = timeseriesData.emotions.sadness;
 
-    graphArray[3][1].series[0].data = timeseriesData.toxicity;
-    //graphArray[3][1].series[1].data = timeseriesData.overall;
+    graphArray[3][1].series[0].data = timeseriesData.toxicity.toxic_count;
+    graphArray[3][1].series[1].data = timeseriesData.toxicity.overall_helper;
+
 
     graphArray[4][0].series[0].data = timeseriesData.num_records;
 
