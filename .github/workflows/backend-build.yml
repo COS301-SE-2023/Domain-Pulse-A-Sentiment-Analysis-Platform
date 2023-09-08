@@ -27,6 +27,9 @@ jobs:
     needs: [test_domains, test_engine, test_profiles, test_sourceconnector, test-warehouse]
     runs-on: ubuntu-latest
     steps:
+      - name: setup
+        uses: actions/checkout@v3
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
