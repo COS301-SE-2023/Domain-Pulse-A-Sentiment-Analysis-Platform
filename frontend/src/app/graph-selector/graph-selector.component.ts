@@ -70,6 +70,7 @@ export class GraphSelectorComponent implements OnInit {
           toolbar: {
             show: true,
           },
+          
         },
         plotOptions: {
           radialBar: {
@@ -125,6 +126,7 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'area',
+          
         },
         title: {
           text: 'Overall Score over time',
@@ -135,6 +137,7 @@ export class GraphSelectorComponent implements OnInit {
         dataLabels: {
           enabled: false,
         },
+
       },
     ],
     [
@@ -149,6 +152,7 @@ export class GraphSelectorComponent implements OnInit {
           toolbar: {
             show: true,
           },
+          
         },
         labels: ['Postive', 'Negative', 'Neutral'],
         colors: [
@@ -210,6 +214,7 @@ export class GraphSelectorComponent implements OnInit {
               console.log(new Date(e.xaxis.min));
             },
           },
+          
         },
         colors: [
           'rgba(63, 231, 133, 0.8)',
@@ -252,6 +257,7 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           type: 'bar',
           height: '100%',
+          
         },
         plotOptions: {
           bar: {
@@ -355,6 +361,7 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'area',
+          
         },
         title: {
           text: 'Emotion Ratings over time',
@@ -397,6 +404,7 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'radar',
+          
         },
         title: {
           text: 'Emotions Radar Chart',
@@ -439,6 +447,7 @@ export class GraphSelectorComponent implements OnInit {
           toolbar: {
             show: true,
           },
+          
         },
         plotOptions: {
           radialBar: {
@@ -511,6 +520,7 @@ export class GraphSelectorComponent implements OnInit {
           height: '100%',
           type: 'line',
           colors: ['#fb2600', '#30a800'],
+          
         },
         all_series_config: {
           stroke_width: 10,
@@ -612,6 +622,7 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'area',
+          
         },
         title: {
           text: 'Number of Reviews over time',
@@ -1045,6 +1056,11 @@ export class GraphSelectorComponent implements OnInit {
       return;
     } */
 
+    /* if (!this.updatedGraphArray || !this.chartOptionsArray[this.currentGraphIndex]) {
+      return;
+    } */
+    
+
     const container = this.chartContainer.nativeElement;
     const containerHeight = container.offsetHeight;
 
@@ -1070,6 +1086,8 @@ export class GraphSelectorComponent implements OnInit {
       this.chartOptionsArray[this.currentStatisticIndex][
         this.currentGraphIndex
       ];
+
+      Chart.defaults['color'] = '#a11111';
 
     // Render the chart with the updated options
     // Replace 'apexchart' with the appropriate chart component and attributes
