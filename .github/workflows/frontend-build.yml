@@ -41,7 +41,19 @@ jobs:
           npm link @angular/cli
           npm run build:dev
 
+      - name: Check for in Website source code changes
+        id: check-changes
+        run: |
+          if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 'frontend') ]]; then
+            echo "Changes detected in source directory. Building and pushing Docker image."
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes detected in source directory. Skipping Docker build and push."
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Push to DockerHub
+        if: steps.check-changes.outputs.changes == 'true'
         uses: docker/build-push-action@v4
         with:
           context: .
