@@ -53,20 +53,6 @@ jobs:
           venv/bin/python -m coverage run --source='.' manage.py test
           venv/bin/python -m coverage report -m
 
-      - name: install dependencies
-        working-directory: ./backend/warehouse
-        if: steps.cache-deps.outputs.cache-hit != 'true'
-        env:
-          PIPENV_VENV_IN_PROJECT: 1
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run Tests
-        working-directory: ./backend/warehouse
-        run: |
-          coverage run --source='.' manage.py test
-          coverage report -m
-
       - name: Check for in Warehouse source code changes
         id: check-changes
         run: |
