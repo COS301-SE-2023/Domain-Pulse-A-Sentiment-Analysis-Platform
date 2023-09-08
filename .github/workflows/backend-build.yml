@@ -3,56 +3,52 @@ on:
   workflow_call:
 
 jobs:
-  build:
+  test_domains:
+    uses: ./.github/workflows/test-domains.yml
+    secrets: inherit
+  
+  test_engine:
+    uses: ./.github/workflows/test-engine.yml
+    secrets: inherit
+
+  test_profiles:
+    uses: ./.github/workflows/test-profiles.yml
+    secrets: inherit
+
+  test_sourceconnector:
+    uses: ./.github/workflows/test-sourceconnector.yml
+    secrets: inherit
+
+  test-warehouse:
+    uses: ./.github/workflows/test-warehouse.yml
+    secrets: inherit
+
+  collect_coverage:
+    needs: [test_domains, test_engine, test_profiles, test_sourceconnector, test-warehouse]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
-      - name: setup .envs
-        working-directory: ./backend
-        run: |
-          echo "$PROD_DJANGO_PORTS" > .env
-          echo "$POSTGRES_CONFIG" > .postgresql.env
-          mkdir ~/.ssh
-          echo "$POSTGRES_USER_PRIV_KEY" >> ~/.ssh/posgresql-user-priv_key
-        env:
-          PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
-          POSTGRES_CONFIG: ${{ secrets.POSTGRES_CONFIG }}
-          POSTGRES_USER_PRIV_KEY: ${{ secrets.POSTGRES_USER_PRIV_KEY }}
-
-      - name: install pipenv
+      - name: install coverage
         working-directory: ./backend
         run: |
           python -m pip install --upgrade pip
-          pip install pipenv
+          pip install coverage
 
-      - name: cache pipenv
-        id: cache-pipenv
-        uses: actions/cache@v3
+      - name: Download Test Artifacts
+        uses: actions/download-artifact@v3
         with:
-          path: backend/.venv
-          key: venv_cache-${{ hashFiles('backend/Pipfile.lock') }}
+          path: ~/downloaded-coverages
 
-      - name: install dependencies
-        working-directory: ./backend
-        if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        env:
-          PIPENV_VENV_IN_PROJECT: 1
-        run: |
-          pipenv sync
-
-      - name: Check all django projects
+      - name: Merge Coverage
         working-directory: ./backend
         run: |
-          pipenv run check_all
-
-      - name: Run Tests
-        working-directory: ./backend
-        run: pipenv run coverage_gen
+          coverage combine ~/downloaded-coverages
+          coverage report -m
+          coverage lcov -o coverage.lcov
         
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
