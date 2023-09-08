@@ -1,4 +1,4 @@
-#the packages for most
+# the packages for most
 django
 django-cors-headers
 python-dotenv
@@ -6,3 +6,4 @@ python-dotenv
 # app specific packages
 requests
 outscraper
+pytz
