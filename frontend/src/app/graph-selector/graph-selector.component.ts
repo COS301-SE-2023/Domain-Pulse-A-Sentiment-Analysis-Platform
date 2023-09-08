@@ -86,6 +86,11 @@ export class GraphSelectorComponent implements OnInit {
                 show: true,
                 color: '#61d478',
               },
+              value: {
+                formatter: function(val:any) {
+                  return parseInt(val.toFixed(2)) + "%";
+                },
+              }
             },
           },
         },
@@ -137,6 +142,15 @@ export class GraphSelectorComponent implements OnInit {
         dataLabels: {
           enabled: false,
         },
+        yaxis: [
+          {
+            labels: {
+              formatter: function(val:any) {
+                return val.toFixed(0);
+              }
+            }
+          }
+        ]
 
       },
     ],
@@ -170,6 +184,15 @@ export class GraphSelectorComponent implements OnInit {
         dataLabels: {
           enabled: false,
         },
+        yaxis: [
+          {
+            labels: {
+              formatter: function(val:any) {
+                return val.toFixed(0);
+              }
+            }
+          }
+        ]
       },
       {
         //2.2pos-neg-neu ratio
@@ -240,6 +263,15 @@ export class GraphSelectorComponent implements OnInit {
         title: {
           text: 'Positive - Negative - Neutral Ratios over time',
         },
+        yaxis: [
+          {
+            labels: {
+              formatter: function(val:any) {
+                return val.toFixed(0);
+              }
+            }
+          }
+        ]
       },
     ],
     [
@@ -390,6 +422,15 @@ export class GraphSelectorComponent implements OnInit {
         xaxis: {
           type: 'datetime',
         },
+        yaxis: [
+          {
+            labels: {
+              formatter: function(val:any) {
+                return val.toFixed(0);
+              }
+            }
+          }
+        ]
       },
       {
         //3.3 radar emotions
@@ -421,6 +462,14 @@ export class GraphSelectorComponent implements OnInit {
         },
         yaxis: {
           show: false,
+ 
+          labels: {
+            formatter: function(val:any) {
+              return val.toFixed(0);
+            }
+          }
+            
+
         },
         plotOptions: {
           radar: {
@@ -463,6 +512,11 @@ export class GraphSelectorComponent implements OnInit {
                 show: true,
                 color: '#cf5050',
               },
+              value: {
+                formatter: function(val:any) {
+                  return parseInt(val.toFixed(2)) + "%";
+                },
+              }
             },
           },
         },
@@ -556,6 +610,9 @@ export class GraphSelectorComponent implements OnInit {
               style: {
                 color: '#fb2600',
               },
+              formatter: function(val:any) {
+                return val.toFixed(0);
+              }
             },
             title: {
               text: 'Number of Toxic Comments',
@@ -581,6 +638,9 @@ export class GraphSelectorComponent implements OnInit {
               style: {
                 color: '#30a800',
               },
+              formatter: function(val:any) {
+                return val.toFixed(0);
+              }
             },
             title: {
               text: 'Overall Score',
