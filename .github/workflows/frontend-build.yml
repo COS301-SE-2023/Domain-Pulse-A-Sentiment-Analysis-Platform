@@ -9,6 +9,12 @@ jobs:
       - name: setup
         uses: actions/checkout@v3
 
+      - name: Login to Docker HHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME  }}
+          password: ${{ secrets.DOCKERHUB_TOKEN  }}
+
       - name: setup port .env
         working-directory: ./backend
         run: |
@@ -34,6 +40,14 @@ jobs:
         run: |
           npm link @angular/cli
           npm run build:dev
+
+      - name: Push to DockerHub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-webserver:latest
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
