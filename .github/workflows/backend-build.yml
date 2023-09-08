@@ -44,7 +44,7 @@ jobs:
 
       - name: Merge Coverage
         run: |
-          coverage combine ~/downloaded-coverages
+          coverage combine ~/downloaded-coverages/backend-domains-test/.coverage ~/downloaded-coverages/backend-engine-test/.coverage ~/downloaded-coverages/backend-profiles-test/.coverage ~/downloaded-coverages/backend-sourceconnector-test/.coverage ~/downloaded-coverages/backend-warehouse-test/.coverage
           coverage report -m
           coverage lcov -o coverage.lcov
         
