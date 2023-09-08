@@ -25,7 +25,6 @@ jobs:
           echo "$POSTGRES_CONFIG" > .postgresql.env
           mkdir ~/.ssh
           echo "$POSTGRES_USER_PRIV_KEY" >> ~/.ssh/posgresql-user-priv_key
-          echo "PYTHONUSERBASE=$HOME/python_packages" >> $GITHUB_ENV
         env:
           PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
           POSTGRES_CONFIG: ${{ secrets.POSTGRES_CONFIG }}
@@ -36,12 +35,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install coverage mock
-          
+
       - name: cache deps
         id: cache-deps
         uses: actions/cache@v3
         with:
-          path: ~/python_packages
+          path: ~/.local
           key: pip-deps_cache-${{ hashFiles('backend/domains/requirements.lock') }}}
 
       - name: install dependencies
@@ -58,13 +57,13 @@ jobs:
           coverage run --source='.' manage.py test
           coverage report -m
 
-      - name: Push to DockerHub
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend/domains
-          file: ./backend/domains/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-domains:latest
+      # - name: Push to DockerHub
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: ./backend/domains
+      #     file: ./backend/domains/Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-domains:latest
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
