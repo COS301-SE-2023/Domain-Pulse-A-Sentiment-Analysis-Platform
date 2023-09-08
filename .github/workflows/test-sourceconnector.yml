@@ -53,13 +53,25 @@ jobs:
           venv/bin/python -m coverage run --source='.' manage.py test
           venv/bin/python -m coverage report -m
 
-      # - name: Push to DockerHub
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     context: ./backend/sourceconnector
-      #     file: ./backend/sourceconnector/Dockerfile
-      #     push: true
-      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-sourceconnector:latest
+      - name: Check for in Sourceconnector source code changes
+        id: check-changes
+        run: |
+          if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 'backend/sourceconnector') ]]; then
+            echo "Changes detected in source directory. Building and pushing Docker image."
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes detected in source directory. Skipping Docker build and push."
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push to DockerHub
+        if: steps.check-changes.outputs.changes == 'true'
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend/sourceconnector
+          file: ./backend/sourceconnector/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-sourceconnector:latest
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2

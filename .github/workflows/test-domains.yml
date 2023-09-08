@@ -53,7 +53,7 @@ jobs:
           venv/bin/python -m coverage run --source='.' manage.py test
           venv/bin/python -m coverage report -m
 
-      - name: Check for changes
+      - name: Check for in Domains source code changes
         id: check-changes
         run: |
           if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 'backend/domains') ]]; then
