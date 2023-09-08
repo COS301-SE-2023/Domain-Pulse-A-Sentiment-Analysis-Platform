@@ -25,6 +25,7 @@ jobs:
           echo "$POSTGRES_CONFIG" > .postgresql.env
           mkdir ~/.ssh
           echo "$POSTGRES_USER_PRIV_KEY" >> ~/.ssh/posgresql-user-priv_key
+          echo "PYTHONUSERBASE=$HOME/python_packages" >> $GITHUB_ENV
         env:
           PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
           POSTGRES_CONFIG: ${{ secrets.POSTGRES_CONFIG }}
@@ -35,14 +36,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install coverage mock
-          echo "=========="
-          ls -R / | grep mock
-
+          
       - name: cache deps
         id: cache-deps
         uses: actions/cache@v3
         with:
-          path: ~/.local/lib/python3.8/site-packages
+          path: ~/python_packages
           key: pip-deps_cache-${{ hashFiles('backend/domains/requirements.lock') }}}
 
       - name: install dependencies
