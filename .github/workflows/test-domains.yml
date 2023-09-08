@@ -35,6 +35,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install coverage mock
+          ls -R /
+          echo "=========="
+          ls -R | grep mock
 
       - name: cache deps
         id: cache-deps
