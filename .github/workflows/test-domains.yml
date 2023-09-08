@@ -58,10 +58,10 @@ jobs:
         run: |
           if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 'backend/domains') ]]; then
             echo "Changes detected in source directory. Building and pushing Docker image."
-            echo "::set-output name=changes::true"
+            echo "changes=true" >> $GITHUB_OUTPUT
           else
             echo "No changes detected in source directory. Skipping Docker build and push."
-            echo "::set-output name=changes::false"
+            echo "changes=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Push to DockerHub
