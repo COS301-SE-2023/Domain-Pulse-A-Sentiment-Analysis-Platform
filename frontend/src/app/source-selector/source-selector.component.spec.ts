@@ -12,6 +12,7 @@ import {
   EditSource,
   RefreshSourceData,
   SetAllSourcesSelected,
+  SetIsActive,
   SetSource,
   SetSourceIsLoading,
 } from '../app.actions';
@@ -78,6 +79,9 @@ describe('SourceSelectorComponent', () => {
 
     component.newSourcePlatform = 'test';
     expect(component.determinePlatformFromNewSourcePlatform()).toBe('');
+
+    component.newSourcePlatform = 'livereview';
+    expect(component.determinePlatformFromNewSourcePlatform()).toBe('livereview');
   });
 
   it('should fire the "SetSource" action when selectSource function called', (done) => {
@@ -217,13 +221,41 @@ describe('SourceSelectorComponent', () => {
 	  video_id: 'scWj1BMRHUA',
 	});
   
-  
+  /* case 'livereview':
+        return {
+          source_type: 'livereview',
+          is_active: true,
+        }
+      case 'youtube':
+
+        const url = this.newSourceUrl;
+        if (!url.includes('youtube')) {
+          return {
+            source_type: 'youtube',
+            video_id: url,
+          };
+        } */
 	component.newSourcePlatform = 'youtube';
 	component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
 	expect(component.determineSourceParams()).toEqual({
 	  source_type: 'youtube',
 	  video_id: 'scWj1BMRHUA',
 	});
+
+  component.newSourcePlatform = 'youtube';
+	component.newSourceUrl = 'scWj1BMRHUA';
+	expect(component.determineSourceParams()).toEqual({
+	  source_type: 'youtube',
+	  video_id: 'scWj1BMRHUA',
+	});
+
+  component.newSourcePlatform = 'livereview';
+  expect(component.determineSourceParams()).toEqual({
+	  source_type: 'livereview',
+	  is_active: true,
+	});
+
+
 
   // component.newSourcePlatform = 'youtube';
 	// component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
@@ -289,5 +321,81 @@ it('should dispatch RefreshSourceData action', () => {
 	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSourceIsLoading(true));
 	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSource(null));
   });
-  
+
+
+ it('should subscribe to selectedSource$', () => {
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    spyOn(component['store'], 'select').and.returnValue(of(dummyDisplaySource));
+
+    component.ngOnInit();
+
+    expect(component.selectedSource).toEqual(dummyDisplaySource);
+});
+
+  it('should add a click event listener to copyIcon', () => {
+    const mockCopyIcon = document.createElement('div');
+    mockCopyIcon.id = 'copyIcon';
+    document.body.appendChild(mockCopyIcon);
+
+    const addEventListenerSpy = spyOn(mockCopyIcon, 'addEventListener');
+
+    component.ngOnInit();
+
+    expect(addEventListenerSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
+  });
+
+  it('should copy the text to clipboard when copyToClipboard is called', () => {
+    const mockLiveReviewLink = document.createElement('a');
+    mockLiveReviewLink.id = 'liveReviewLink';
+    mockLiveReviewLink.setAttribute('href', 'https://example.com');
+    document.body.appendChild(mockLiveReviewLink);
+
+    const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.resolve());
+
+    component.copyToClipboard();
+
+    expect(writeTextSpy).toHaveBeenCalledWith('https://example.com');
+  });
+
+  it('should toggle info modal', () => {
+    component.showInfoModal = false;
+    component.toggleInfoModal();
+    expect(component.showInfoModal).toBe(true);
+
+    component.showInfoModal = true;
+    component.toggleInfoModal();
+    expect(component.showInfoModal).toBe(false);
+  });
+
+  it('should stop event propagation and toggle info modal', () => {
+    const event = new Event('click');
+    const stopPropagationSpy = spyOn(event, 'stopPropagation');
+    const toggleInfoModalSpy = spyOn(component, 'toggleInfoModal');
+
+    component.showInfo(event);
+
+    expect(stopPropagationSpy).toHaveBeenCalled();
+    expect(toggleInfoModalSpy).toHaveBeenCalled();
+  });
+
+  it('should toggle active and dispatch SetIsActive action', () => {
+    const selectedSource = { params: true };
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(selectedSource);
+
+    component.toggleActive(event);
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new SetIsActive(!selectedSource.params));
+  });
+
 });

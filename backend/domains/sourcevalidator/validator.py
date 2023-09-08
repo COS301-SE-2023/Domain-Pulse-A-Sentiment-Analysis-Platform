@@ -36,6 +36,9 @@ def handler(params):
             return False, "maps_url is invalid"
         return True, "Source details are valid"
 
+    elif type_of_source.lower() == "csv":
+        return True, "Source details are valid"
+
     elif type_of_source.lower() == "tripadvisor":
         if "tripadvisor_url" not in params:
             return False, "Missing parameter: tripadvisor_url"

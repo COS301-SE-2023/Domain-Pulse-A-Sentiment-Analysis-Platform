@@ -17,13 +17,16 @@
         [ngClass]="{ 'source-cat-selected': source.selected }"
         data-cy="source"
       >
-        <img
-          [src]="'../assets/' + source.url"
-          height="60%"
-          style="border-radius: 50%"
-        />
+        <img [src]="'../assets/' + source.url" height="60%" />
 
         <p class="source-name">{{ source.name }}</p>
+        <ng-container *ngIf="source.selected">
+          <img
+            src="../assets/icons/info-white.svg"
+            class="info-icon clickable-item"
+            (click)="showInfo($event)"
+          />
+        </ng-container>
         <ng-container *ngIf="source.isRefreshing">
           <div data-cy="sourceRefresh" class="loading-spinner"></div>
           <!-- <img src="../../assets/Blue-Loading.gif" style="width:40px;height:40px;position: absolute;
@@ -176,6 +179,18 @@
                   />
                   <p class="source-type-title">Youtube</p>
                 </div>
+                <div
+                  class="platform-logo clickable-item"
+                  (click)="selectPlatform('livereview')"
+                  data-cy="selectLiveReviewPlatform"
+                >
+                  <img
+                    src="../assets/live-review-logo.png"
+                    [ngClass]="{ selected: newSourcePlatform === 'livereview' }"
+                    alt="Live Review"
+                  />
+                  <p class="source-type-title">Live Review</p>
+                </div>
               </div>
             </div>
           </div>
@@ -244,7 +259,7 @@
         </div>
 
         <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">3</p>
+          <p class="modal-step-tag">2</p>
           <div class="flex-column" style="width: 100%">
             <p class="step-heading">Source url:</p>
             <input
@@ -269,6 +284,129 @@
     </div>
 
     <div class="picture"></div>
+  </div>
+</dp-modal-container>
+
+<dp-modal-container
+  [modalDisplay]="showInfoModal"
+  (close)="toggleInfoModal()"
+  data-cy="infoModal"
+>
+  <div class="flex-row modal" style="width: 20vw; height: fit-content; color: black; margin-bottom: 1rem; margin-top: 1rem;">
+    <div
+      class="flex-column center modal-contents"
+      style="width: 100%; max-width: none"
+    >
+      <div class="heading-container" style="padding-bottom: 1rem;">
+        <img
+          src="../assets/icons/back-arrow-right-light.svg"
+          alt="Back Arrow"
+          class="back-arrow clickable-item"
+          (click)="toggleInfoModal()"
+        />
+      </div>
+      <div class="flex-column content" style="width: 80%; gap: 1rem">
+        <!-- id: string;
+  name: string;
+  url: string;
+  params: any;
+  selected: boolean;
+  isRefreshing: boolean; -->
+        <ng-container *ngIf="selectedSource?.url === 'live-review-logo.png'">
+          <div class="flex-row left">
+            <div class="tag flex-row center">Name</div>
+            <p class="info-data">{{ selectedSource?.name }}</p>
+          </div>
+          <div class="flex-row left">
+            <div class="tag flex-row center">Live Reviewing</div>
+            <ui-switch
+              [checked]="selectedSource?.params"
+              (valueChange)="toggleActive($event)"
+              checkedLabel="enabled"
+              uncheckedLabel="disabled"
+              size="small"
+            ></ui-switch>
+          </div>
+          <div class="flex-row left">
+            <div class="tag flex-row center">URL</div>
+            <a
+              id="liveReviewLink"
+              href="http://localhost:8004/ingest/post-review/{{
+                selectedSource?.id || ''
+              }}/{{ selectedSource?.name || '' }}/"
+              target="_blank"
+            >
+              Live Review Link
+            </a>
+            <img id="copyIcon" src="../assets/icons/copy.svg" alt="copy live review link" class="copy-icon clickable-item" (click)="copyToClipboard()"/>
+          </div>
+          <div class="flex-column left" style="gap:1rem;">
+            <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:8004/ingest/post-review/{{
+                selectedSource?.id || ''
+              }}/{{ selectedSource?.name || '' }}/"
+              alt="Source Image"
+              style="width: 80%;"
+            />
+          </div>
+          
+        </ng-container>
+        <ng-container *ngIf="selectedSource?.url === 'youtube-logo.png'">
+          <div class="flex-row left">
+            <div class="tag flex-row center">Name</div>
+            <p class="info-data">{{ selectedSource?.name }}</p>
+          </div>
+          <div class="flex-row left">
+            <div class="tag flex-row center">URL</div>
+            <a
+              id="youtube video link"
+              href="https://www.youtube.com/watch?v={{ selectedSource?.params }}"
+              target="_blank"
+            >
+              Youtube Video Link
+            </a>
+          </div>
+          <div class="flex-column left" style="gap:1rem;">
+            <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.youtube.com/watch?v={{ selectedSource?.params }}"
+              alt="Source Image"
+              style="width: 80%;"
+            />
+          </div>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            selectedSource?.url !== 'live-review-logo.png' &&
+            selectedSource?.url !== 'youtube-logo.png'
+          "
+        >
+        <div class="flex-row left">
+          <div class="tag flex-row center">Name</div>
+          <p class="info-data">{{ selectedSource?.name }}</p>
+        </div>
+        <div class="flex-row left">
+          <div class="tag flex-row center">URL</div>
+          <a
+            id="source link"
+            href="{{ selectedSource?.params }}"
+            target="_blank"
+          >
+            Link to Source
+          </a>
+        </div>
+        <div class="flex-column left" style="gap:1rem;">
+          <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ selectedSource?.params }}"
+            alt="Source Image"
+            style="width: 80%;"
+          />
+        </div>
+        </ng-container>
+      </div>
+    </div>
   </div>
 </dp-modal-container>
 

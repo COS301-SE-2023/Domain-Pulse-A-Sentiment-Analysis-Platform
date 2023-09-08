@@ -267,4 +267,14 @@ export class AppApi {
     });
   }
 
+  setIsActive(sourceID: string, isActive: boolean): Observable<any> {
+    const setIsActiveUrl = this.domainBaseUrl + 'domains/toggle_is_active';
+    console.log("log here: " + isActive)
+    const body = {
+      source_id: sourceID,
+      is_active: isActive,
+    };
+    return this.http.post(setIsActiveUrl, body, { withCredentials: true });
+  }
+
 }
