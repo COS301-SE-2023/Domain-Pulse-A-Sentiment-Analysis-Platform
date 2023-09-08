@@ -58,7 +58,9 @@ jobs:
           coverage report -m
 
       - name: Push to DockerHub
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
+        env:
+          DOCKER_BUILDKIT: 0
         with:
           context: .
           file: ./backend/domains/Dockerfile
