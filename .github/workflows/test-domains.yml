@@ -60,8 +60,8 @@ jobs:
       - name: Push to DockerHub
         uses: docker/build-push-action@v4
         with:
-          context: ./backend/domains
-          file: ./Dockerfile
+          context: .
+          file: ./backend/domains/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-domains:latest
 
