@@ -54,6 +54,7 @@ jobs:
       - name: Run Tests
         working-directory: ./backend/engine
         run: |
+          echo "d" | python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet')"
           coverage run --source='.' manage.py test
           coverage report -m
 
