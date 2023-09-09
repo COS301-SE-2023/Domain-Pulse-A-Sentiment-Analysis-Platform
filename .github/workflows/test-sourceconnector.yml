@@ -69,7 +69,7 @@ jobs:
         run: |
           if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
             echo "IMAGE-TAG=latest" >> $GITHUB_OUTPUT
-          else if [[ ${{ github.ref == 'refs/heads/dev'}} ]]; then
+          elif [[ ${{ github.ref == 'refs/heads/dev'}} ]]; then
             echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
           else
             echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
