@@ -8,6 +8,14 @@ jobs:
     steps:
       - name: setup
         uses: actions/checkout@v3
+        with:
+            fetch-depth: 2
+
+      - name: Login to Docker HHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME  }}
+          password: ${{ secrets.DOCKERHUB_TOKEN  }}
 
       - name: setup port .env
         working-directory: ./backend
@@ -35,6 +43,37 @@ jobs:
           npm link @angular/cli
           npm run build:dev
 
+      - name: Check for in Website source code changes
+        id: check-changes
+        run: |
+          if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 'frontend') ]]; then
+            echo "Changes detected in source directory. Building and pushing Docker image."
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes detected in source directory. Skipping Docker build and push."
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine Docker Tag
+        id: set-image-tag
+        run: |
+          if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
+            echo "IMAGE-TAG=latest" >> $GITHUB_OUTPUT
+          elif [[ ${{ github.ref == 'refs/heads/dev'}} ]]; then
+            echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
+          else
+            echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push to DockerHub
+        if: steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:${{ env.IMAGE-TAG }}
+          
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
