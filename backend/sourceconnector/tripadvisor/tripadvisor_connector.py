@@ -147,7 +147,7 @@ def get_tripadvisor_reviews(url, last_refresh_timestamp):
 
 def handle_request(params):
     tripadvisor_url = params["tripadvisor_url"]
-    last_refresh_timestamp = float(params["last_refresh_timestamp"])
+    last_refresh_timestamp = int(params["last_refresh_timestamp"])
 
     reviews, latest_retrieval = get_tripadvisor_reviews(
         tripadvisor_url, last_refresh_timestamp
