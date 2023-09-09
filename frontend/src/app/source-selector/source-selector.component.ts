@@ -99,9 +99,21 @@ export class SourceSelectorComponent implements OnInit {
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
       case 'trustpilot':
+        const tpurl = this.newSourceUrl;
+        if (!tpurl.includes('trustpilot')) {
+          return {
+            source_type: 'trustpilot',
+            query_url: tpurl,
+          };
+        }
+
+        const urlParts = tpurl.split('/');
+        const indexOfReviews = urlParts.indexOf('review');
+        const tpID = urlParts[indexOfReviews + 1];
+
         return {
           source_type: 'trustpilot',
-          trustpilot_url: this.newSourceUrl,
+          query_url: tpID,
         }
       case 'googlereviews':
         return {
