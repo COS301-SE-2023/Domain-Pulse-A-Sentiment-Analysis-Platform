@@ -98,6 +98,11 @@ export class SourceSelectorComponent implements OnInit {
  */
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
+      case 'trustpilot':
+        return {
+          source_type: 'trustpilot',
+          trustpilot_url: this.newSourceUrl,
+        }
       case 'googlereviews':
         return {
           source_type: 'googlereviews',
