@@ -28,11 +28,23 @@
       </accordion>
 
       <accordion [collapsing]="collapsing">
-        <accordion-item title="">
+        <accordion-item title="How to register for an account">
           <ng-template accordionContent>
             <div class="accord-container">
-              A simple and customizable accordion component made with functionalities provided by angular without having
-              to use any 3rd party libraries. Ideal when you want custom basic accordion.
+              <ol type="1">
+                <h3>How to Register?</h3>
+                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
+                <h3>To register for an account the following information will be required:</h3>
+                <ul style="margin-bottom: 1rem;">
+                  <li>Username</li>
+                  <li>Email Adress</li>
+                  <li>Password</li>
+                  <li>Confirmation of password</li>
+                </ul>
+                <li>Please enter the required information specified above in the relevant fields.</li>
+                <li>Click on the blue 'Register' button</li>
+                <li>If you already have an account, click on the 'Already have an account?' link and login with your registered details.</li>
+              </ol>
             </div>
           </ng-template>
         </accordion-item>
