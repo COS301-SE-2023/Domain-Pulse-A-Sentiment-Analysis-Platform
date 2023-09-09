@@ -1,6 +1,6 @@
 name: Test Warehouse
 on:
-    workflow_call:
+  workflow_call:
 
 jobs:
   test:
@@ -36,7 +36,7 @@ jobs:
         with:
           path: backend/warehouse/venv
           key: pip-deps_cache-${{ hashFiles('backend/warehouse/requirements.txt') }}
-  
+
       - name: install dependencies
         working-directory: ./backend/warehouse
         if: steps.cache-deps.outputs.cache-hit != 'true'
@@ -64,14 +64,24 @@ jobs:
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Determine Docker Tag
+        id: set-image-tag
+        run: |
+          if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
+            echo "IMAGE-TAG=latest" >> $GITHUB_OUTPUT
+          else if [[ ${{ github.ref == 'refs/heads/dev'}} ]]; then
+            echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
+          else
+            echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
+
       - name: Push to DockerHub
-        if: steps.check-changes.outputs.changes == 'true'
+        if: steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none'
         uses: docker/build-push-action@v4
         with:
           context: ./backend/warehouse
           file: ./backend/warehouse/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:${{ env.IMAGE-TAG }}
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2

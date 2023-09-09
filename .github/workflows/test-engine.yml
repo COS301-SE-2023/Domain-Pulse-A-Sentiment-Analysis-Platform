@@ -65,14 +65,24 @@ jobs:
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Determine Docker Tag
+        id: set-image-tag
+        run: |
+          if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
+            echo "IMAGE-TAG=latest" >> $GITHUB_OUTPUT
+          else if [[ ${{ github.ref == 'refs/heads/dev'}} ]]; then
+            echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
+          else
+            echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
+
       - name: Push to DockerHub
-        if: steps.check-changes.outputs.changes == 'true'
+        if: steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none'
         uses: docker/build-push-action@v4
         with:
           context: ./backend/engine
           file: ./backend/engine/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-engine:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-engine:${{ env.IMAGE-TAG }}
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
