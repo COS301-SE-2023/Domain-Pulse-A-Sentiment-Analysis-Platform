@@ -84,7 +84,7 @@ jobs:
           context: ./backend/domains
           file: ./backend/domains/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-domains:${{ env.IMAGE-TAG }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-domains:${{ steps.set-image-tag.outputs.IMAGE-TAG }}
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2

@@ -72,7 +72,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:${{ env.IMAGE-TAG }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:${{ steps.set-image-tag.outputs.IMAGE-TAG }}
           
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
