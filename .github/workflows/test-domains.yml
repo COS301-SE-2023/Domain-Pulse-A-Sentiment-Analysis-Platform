@@ -73,6 +73,7 @@ jobs:
             echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
           else
             echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
+          fi
 
       - name: Push to DockerHub
         if: steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none'
