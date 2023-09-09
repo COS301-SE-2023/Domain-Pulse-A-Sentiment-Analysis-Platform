@@ -183,7 +183,7 @@ class TestingRefreshHandler(TestCase):
     def test_handle_request_youtube(self):
         params = {
             "video_id": "test_video_id",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         comments = [
@@ -213,7 +213,7 @@ class TestingRefreshHandler(TestCase):
     def test_handle_request_google_reviews(self):
         params = {
             "maps_url": "test url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [
@@ -243,7 +243,7 @@ class TestingRefreshHandler(TestCase):
     def test_handle_request_tripadvisor(self):
         params = {
             "tripadvisor_url": "test_url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [
@@ -273,7 +273,7 @@ class TestingRefreshHandler(TestCase):
     def test_handle_request_trustpilot(self):
         params = {
             "query_url": "test_url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [
@@ -310,7 +310,7 @@ class TestingRefreshHandler(TestCase):
     def test_get_google_reviews(self):
         params = {
             "maps_url": "test_url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [
