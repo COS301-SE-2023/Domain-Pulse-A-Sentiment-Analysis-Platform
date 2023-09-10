@@ -1,0 +1,235 @@
+new Chart(document.getElementById("source1chart1"), {
+        responsive: false,
+        type: "doughnut",
+        data: {
+          labels: ["Overall Score"],
+          datasets: [
+            {
+              data: %source_overall_data_points%,
+              backgroundColor: [
+                "rgba(3, 127, 255, 1)",
+                "rgba(170, 170, 170, 0.71)",
+              ],
+              borderWidth: 0,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              color: "rgba(3, 127, 255, 1)",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: 4,
+              font: {
+                size: 9,
+                weight: "bold",
+              },
+            },
+          },
+          animation: false,
+          title: { display: true, text: "Overall Score" },
+          legend: {
+            display: true,
+            position: "bottom",
+          },
+        },
+      });
+
+      new Chart(document.getElementById("source1chart2"), {
+        responsive: true,
+        type: "pie",
+        data: {
+          labels: ["Positive", "Negative", "Neutral"],
+          datasets: [
+            {
+              data: %source_ratios%,
+              backgroundColor: [
+                "rgba(0, 184, 0, 0.7)",
+                "rgba(184, 0, 0, 0.7)",
+                "rgba(231, 215, 65, 0.7)",
+              ],
+              borderColor: [
+                "rgba(0, 184, 0, 0.8)",
+                "rgba(184, 0, 0, 0.8)",
+                "rgba(231, 215, 65, 0.8)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              color: "rgba(3, 127, 255, 1)",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: 4,
+              font: {
+                size: 9,
+                weight: "bold",
+              },
+            },
+          },
+          animation: true,
+          title: { display: true, text: "Sentiment Ratios" },
+          legend: {
+            display: true,
+            position: "bottom",
+          },
+        },
+      });
+
+      new Chart(document.getElementById("source1chart3"), {
+        responsive: true,
+        type: "radar",
+        data: {
+          labels: ["anger", "disgust", "fear", "joy", "sadness", "surprise"],
+          datasets: [
+            {
+              data: %source_emotions%,
+              fill: true,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgb(255, 99, 132)",
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              color: "rgba(255, 255, 255, 0)",
+            },
+          },
+          maintainAspectRatio: false,
+          animation: false,
+          title: { display: true, text: "Emotion Ratios" },
+          legend: {
+            display: false,
+          },
+        },
+      });
+
+      new Chart(document.getElementById("source1chart4"), {
+        responsive: false,
+        type: "doughnut",
+        data: {
+          labels: ["Toxicity"],
+          datasets: [
+            {
+              data: %source_toxicity_data_points%,
+              backgroundColor: [
+                "rgba(184, 0, 0, 0.7)",
+                "rgba(170, 170, 170, 0.7)",
+              ],
+              borderWidth: 0,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              color: "rgba(3, 127, 255, 1)",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: 4,
+              font: {
+                size: 9,
+                weight: "bold",
+              },
+            },
+          },
+          animation: false,
+          maintainAspectRatio: false,
+          title: { display: true, text: "Toxicity" },
+          legend: {
+            display: true,
+            position: "bottom",
+          },
+        },
+      });
+
+      new Chart(document.getElementById("source1chart5"), {
+        responsive: true,
+        type: "bar",
+        data: {
+          labels: ["anger", "disgust", "fear", "joy", "sadness", "surprise"],
+          datasets: [
+            {
+              data: %source_emotions%,
+              backgroundColor: [
+                "rgba(3, 127, 255, 0.8)",
+                "rgba(145, 44, 246, 0.8)",
+                "rgba(23, 35, 76, 0.8)",
+                "rgba(255, 99, 132, 0.8)",
+                "rgba(255, 206, 86, 0.8)",
+                "rgba(75, 192, 192, 0.8)",
+              ],
+
+              borderColor: [
+                "rgba(3, 127, 255, 1)",
+                "rgba(145, 44, 246, 1)",
+                "rgba(23, 35, 76, 1)",
+                "rgba(255, 99, 132, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+              ],
+
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              color: "rgba(255, 255, 255, 0)",
+            },
+          },
+          animation: false,
+          title: { display: true, text: "Emotion Ratios" },
+          legend: {
+            display: false,
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+          },
+          maintainAspectRatio: false,
+        },
+      });
+
+      new Chart(document.getElementById("source1chart6"), {
+        responsive: true,
+        type: "line",
+        data: {
+          datasets: [
+            {
+              data: %source_timeseries%,
+              borderColor: "rgba(3, 127, 255, 1)", // Line color
+              borderWidth: 2, // Line width
+              fill: false,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              color: "rgba(255, 255, 255, 0)",
+            },
+          },
+          animation: false,
+          title: { display: true, text: "Overall Score Over Time" },
+          maintainAspectRatio: false,
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [
+              {
+                type: "time",
+              },
+            ],
+          },
+        },
+      });
