@@ -17,8 +17,6 @@ export class SourceSelectorComponent implements OnInit {
   @Select(AppState.allSourcesSelected) allSources$!: Observable<number>;
   selectedSource?: DisplaySource;
 
-
-
   showAddSourcesModal = false;
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
