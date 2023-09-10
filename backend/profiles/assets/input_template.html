@@ -27,45 +27,45 @@
       };
 
     function drawGraphs() {
-      
-      % domain_graphs_js_string %
 
-        new Chart(document.getElementById("source1chart1"), {
-          responsive: false,
-          type: "doughnut",
-          data: {
-            labels: ["Overall Score"],
-            datasets: [
-              {
-                data: [75, 25],
-                backgroundColor: [
-                  "rgba(3, 127, 255, 1)",
-                  "rgba(170, 170, 170, 0.71)",
-                ],
-                borderWidth: 0,
-              },
-            ],
-          },
-          options: {
-            plugins: {
-              datalabels: {
-                color: "rgba(3, 127, 255, 1)",
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                borderRadius: 4,
-                font: {
-                  size: 9,
-                  weight: "bold",
-                },
+      { domain_graphs_js_string }
+
+      new Chart(document.getElementById("source1chart1"), {
+        responsive: false,
+        type: "doughnut",
+        data: {
+          labels: ["Overall Score"],
+          datasets: [
+            {
+              data: [75, 25],
+              backgroundColor: [
+                "rgba(3, 127, 255, 1)",
+                "rgba(170, 170, 170, 0.71)",
+              ],
+              borderWidth: 0,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              color: "rgba(3, 127, 255, 1)",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: 4,
+              font: {
+                size: 9,
+                weight: "bold",
               },
             },
-            animation: false,
-            title: { display: true, text: "Overall Score" },
-            legend: {
-              display: true,
-              position: "bottom",
-            },
           },
-        });
+          animation: false,
+          title: { display: true, text: "Overall Score" },
+          legend: {
+            display: true,
+            position: "bottom",
+          },
+        },
+      });
 
       new Chart(document.getElementById("source1chart2"), {
         responsive: true,
@@ -336,397 +336,7 @@
         <img src="{assets_path}/images/allSources.png" style="width: 45px; height: 45px; padding-right: 1rem" />
         <p class="page-heading">What is in your domain?</p>
       </div>
-      <div class="flex-row" style="box-sizing: border-box">
-        <div class="flex-column left-card" style="
-              align-items: flex-start;
-              flex-basis: 40%;
-              box-sizing: border-box;
-              overflow: hidden;
-            ">
-          <div class="flex-column center card up-card" style="
-                width: 100%;
-                height: 30%;
-                box-sizing: border-box;
-                padding: 1rem;
-              ">
-            <div class="circle-wrapper-domain flex-row center up-item"
-              style="height: 150px; width: 150px; box-shadow: none">
-              <img src="{assets_path}/images/starbucks-logo.png" />
-            </div>
-            <p style="
-                  text-align: center;
-                  max-height: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                ">
-              Starbucks Rosebank is a premier copy shop located in a bustling
-              city environment that serves the best coffee. Starbucks Rosebank is a premier copy shop located in a
-              bustling
-              city environment that serves the best coffee.osebank is a premier copy shop located in a bustling
-              city environment that serves the best coffee. Starbucks Rosebank is a premier copy shop located in a
-              bustling
-              city environment that serves the bes helloo
-            </p>
-          </div>
-          <div class="flex-column" style="
-                height: 75%;
-                width: 100%;
-                align-items: flex-start;
-                padding: 1rem;
-                box-sizing: border-box;
-                overflow-y: hidden;
-                overflow-x: hidden;
-                flex-wrap: wrap;
-              ">
-            <div class="box3 sb14">I'm speech bubble</div>
-            <div class="box3 sb13">
-              This is a longer como etst to see hwo the sce whether or not it
-              is good or bad
-            </div>
-            <div class="box3 sb14">
-              This is a longer comment to etst to see or not it is good or bad
-            </div>
-            <div class="box3 sb13">I'm speech bubble</div>
-            <div class="box3 sb14">
-              This is a longer como etst to see hwo the sce whether or not it
-              is good or bad
-            </div>
-            <div class="box3 sb13">
-              This is a longer comment to etst to see or not it is good or bad
-            </div>
-            <div class="box3 sb14">I'm speech bubble</div>
-            <div class="box3 sb13">I'm speech bubble</div>
-            <div class="box3 sb14">
-              This is a longer comment to etst to or not ier s good or bad er
-              comment to etst to see or not ier s good or bad er comment to
-              etst to see or not ier comment to etst to see or not ier comment
-              to etst to see or not i
-            </div>
-          </div>
-        </div>
-        <div class="flex-column" style="height: 100%; flex-basis: 60%; align-items: flex-start">
-          <div class="center card up-item" style="width: 100%; max-height: 620px; overflow: hidden">
-            <div class="flex-container" style="width: 100%">
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/google-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 1</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/youtube-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 2</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/live-review-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 3</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/google-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 4</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/google-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 5</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/live-review-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 6</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/tripadvisor-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 7</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/live-review-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 4</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/youtube-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 5</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/google-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 6</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/tripadvisor-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 7</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/youtube-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 6</p>
-                </div>
-              </div>
-              <div class="flex-item flex-column center">
-                <div>
-                  <img src="{assets_path}/images/google-logo.png" class="up-item" style="width: 40%" />
-
-                  <p>Source 7</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex-column" style="
-                display: flex;
-                flex-grow: 1;
-                align-items: flex-start;
-                width: 100%;
-              ">
-            <div class="flex-row stats-grid" style="display: flex; width: 100%; align-items: flex-start">
-              <div class="flex-column" style="
-                    flex: 1;
-                    align-items: flex-start;
-                    padding-right: 0.5rem;
-                  ">
-                <div class="statistic-item flex-row card up-item" style="
-                      width: 100%;
-                      height: 80px;
-                      align-items: flex-start;
-                      padding: 1rem;
-                      box-sizing: border-box;
-                      border-radius: 25px;
-                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    ">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/graph.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Overall Score</p>
-                    <p class="stat-text">20%</p>
-                  </div>
-                </div>
-                <div class="statistic-item flex-row card up-item" style="
-                      width: 100%;
-                      height: 80px;
-                      align-items: flex-start;
-                      padding: 1rem;
-                      box-sizing: border-box;
-                      border-radius: 25px;
-                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    ">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/analytics.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Number Analysed</p>
-                    <p class="stat-text">102 sentiments</p>
-                  </div>
-                </div>
-                <div class="statistic-item flex-row card up-item" style="
-                      width: 100%;
-                      height: 80px;
-                      align-items: flex-start;
-                      padding: 1rem;
-                      box-sizing: border-box;
-                      border-radius: 25px;
-                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    ">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/comments.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Review Rate</p>
-                    <p class="stat-text">12 reviews/day</p>
-                  </div>
-                </div>
-                <div class="statistic-item flex-row card up-item" style="
-                      width: 100%;
-                      height: 80px;
-                      align-items: flex-start;
-                      padding: 1rem;
-                      box-sizing: border-box;
-                      border-radius: 25px;
-                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    ">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/toxic.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Toxicity</p>
-                    <p class="stat-text">5%</p>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-column" style="flex: 1; align-items: flex-start; padding-left: 0.5rem">
-                <div class="statistic-item flex-column card up-item" style="
-                      width: 100%;
-                      height: auto;
-                      align-items: flex-start;
-                      border-radius: 25px;
-                    ">
-                  <div class="statistic-item flex-row up-item" style="
-                        width: 100%;
-                        height: 60px;
-                        align-items: flex-start;
-                        padding-bottom: 1.8rem;
-                        padding-top: 1.8rem;
-                        padding-left: 1rem;
-                        box-sizing: border-box;
-                        border-radius: 25px;
-                        padding-top: 3rem;
-                      ">
-                    <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/positive.png" width="40px;" />
-                    </div>
-                    <div class="flex-column item-stats">
-                      <p class="card-heading">Positive</p>
-                      <p class="stat-text">20%</p>
-                    </div>
-                  </div>
-                  <div class="statistic-item flex-row up-item" style="
-                        width: 100%;
-                        height: 60px;
-                        align-items: flex-start;
-                        padding-bottom: 1.8rem;
-                        padding-top: 1.8rem;
-                        padding-left: 1rem;
-                        box-sizing: border-box;
-                        border-radius: 25px;
-                      ">
-                    <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/negative.png" width="40px;" />
-                    </div>
-                    <div class="flex-column item-stats">
-                      <p class="card-heading">Negative</p>
-                      <p class="stat-text">60%</p>
-                    </div>
-                  </div>
-                  <div class="statistic-item flex-row" style="
-                        width: 100%;
-                        height: 60px;
-                        align-items: flex-start;
-                        padding-bottom: 1.8rem;
-                        padding-top: 1.8rem;
-                        padding-left: 1rem;
-                        box-sizing: border-box;
-                        border-radius: 25px;
-                        padding-bottom: 3rem;
-                      ">
-                    <div class="flex-row center icon-div" style="height: 100%">
-                      <img src="{assets_path}/images/neutral-score.png" width="40px;" />
-                    </div>
-                    <div class="flex-column item-stats">
-                      <p class="card-heading">Neutral</p>
-                      <p class="stat-text">20%</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex-row card up-item" style="
-                      width: 100%;
-                      height: 108px;
-                      align-items: flex-start;
-                      padding: 1rem;
-                      box-sizing: border-box;
-                      border-radius: 25px;
-                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-                    ">
-                  <div class="flex-column center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/calendar.png" width="40px;" />
-                  </div>
-                  <div style="align-items: flex-start" class="flex-column item-stats">
-                    <p class="card-heading">Timeline</p>
-                    <p class="stat-text">13 January 2022 -</p>
-                    <p class="stat-text">15 January 2022</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card center" style="width: 100%">
-              <div class="flex-container" style="width: 100%">
-                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/joy.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats" style="align-items: flex-start">
-                    <p class="card-heading">Joy</p>
-                    <p class="stat-text">60%</p>
-                  </div>
-                </div>
-                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/surprise.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Surprise</p>
-                    <p class="stat-text">60%</p>
-                  </div>
-                </div>
-                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/fear.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Fear</p>
-                    <p class="stat-text">60%</p>
-                  </div>
-                </div>
-                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/anger.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Anger</p>
-                    <p class="stat-text">60%</p>
-                  </div>
-                </div>
-                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/disgust.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Disgust</p>
-                    <p class="stat-text">60%</p>
-                  </div>
-                </div>
-                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
-                  <div class="flex-row center icon-div" style="height: 100%">
-                    <img src="{assets_path}/images/sadness.png" width="40px;" />
-                  </div>
-                  <div class="flex-column item-stats">
-                    <p class="card-heading">Sadness</p>
-                    <p class="stat-text">60%</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {domain_html_string}
     </div>
 
     <div class="footer">

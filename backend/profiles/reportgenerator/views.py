@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -51,6 +52,51 @@ def generate_domain_graphs_js(
     return result
 
 
+def generate_domain_html(
+    domain_icon,
+    domain_description,
+    domain_overall_score,
+    domain_num_analysed,
+    domain_reviews_per_day,
+    domain_toxicity,
+    domain_positive,
+    domain_negative,
+    domain_neutral,
+    domain_anger,
+    domain_disgust,
+    domain_fear,
+    domain_joy,
+    domain_sadness,
+    domain_surprise,
+    domain_start_date,
+    domain_end_date,
+):
+    f = open("assets/domain_html.txt", "r")
+    default_js = f.read()
+    f.close()
+    result = default_js.replace("{domain_icon}", domain_icon)
+    result = result.replace("{domain_description}", domain_description)
+    result = result.replace("{domain_overall_score}", str(domain_overall_score))
+    result = result.replace("{domain_num_analysed}", str(domain_num_analysed))
+    result = result.replace(
+        "{domain_reviews_per_day}", str(round(domain_reviews_per_day, 2))
+    )
+    result = result.replace("{domain_toxicity}", str(domain_toxicity))
+    result = result.replace("{domain_positive}", str(domain_positive))
+    result = result.replace("{domain_negative}", str(domain_negative))
+    result = result.replace("{domain_neutral}", str(domain_neutral))
+    result = result.replace("{domain_anger}", str(domain_anger))
+    result = result.replace("{domain_disgust}", str(domain_disgust))
+    result = result.replace("{domain_fear}", str(domain_fear))
+    result = result.replace("{domain_joy}", str(domain_joy))
+    result = result.replace("{domain_sadness}", str(domain_sadness))
+    result = result.replace("{domain_surprise}", str(domain_surprise))
+    result = result.replace("{domain_start_date}", str(domain_start_date))
+    result = result.replace("{domain_end_date}", str(domain_end_date))
+
+    return result
+
+
 @csrf_exempt
 def generate_report(request: HttpRequest):
     assets_path = os.getenv("ASSETS_PATH")
@@ -74,7 +120,7 @@ def generate_report(request: HttpRequest):
         raw_data = json.loads(request.body)
         domain_id = raw_data["domain_id"]
         data = {"id": domain_id}
-
+        # Fetching domains
         response = requests.post(
             GET_DOMAINS_ENDPOINT, json=data, headers=request.headers
         )
@@ -91,7 +137,7 @@ def generate_report(request: HttpRequest):
 
         id = shortuuid.ShortUUID().random(length=12)
         url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
-
+        # Fetching data from warehouse
         data = {"source_ids": source_ids, "local_key": str(os.getenv("LOCAL_KEY"))}
         response = requests.post(url, json=data)
         if response.status_code != 200:
@@ -103,12 +149,16 @@ def generate_report(request: HttpRequest):
             return JsonResponse(
                 {"status": "FAILURE", "details": response_data["details"]}
             )
+        # Replacing source_id with source_name
         named_sources = {}
         for key in response_data:
             if key != "domain":
                 for i in domain["sources"]:
                     if (i["source_id"]) == key:
                         named_sources[i["source_name"]] = response_data[key]
+                        named_sources[i["source_name"]]["source_type"] = i["params"][
+                            "source_type"
+                        ]
 
             else:
                 named_sources["domain"] = response_data[key]
@@ -120,9 +170,6 @@ def generate_report(request: HttpRequest):
             100 - int(domain_data["aggregated_metrics"]["general"]["score"] * 100),
         ]
 
-        domain_overall_score = int(
-            domain_data["aggregated_metrics"]["general"]["score"] * 100
-        )
         domain_ratios = [
             int(domain_data["aggregated_metrics"]["ratios"]["positive"] * 100),
             int(domain_data["aggregated_metrics"]["ratios"]["negative"] * 100),
@@ -136,6 +183,8 @@ def generate_report(request: HttpRequest):
             int(domain_data["aggregated_metrics"]["emotions"]["sadness"] * 100),
             int(domain_data["aggregated_metrics"]["emotions"]["surprise"] * 100),
         ]
+
+        # Getting number of reviews per source
         domain_num_per_source = []
         for key in named_sources:
             if key != "domain":
@@ -154,10 +203,74 @@ def generate_report(request: HttpRequest):
             domain_time_series,
         )
 
+        domain_icon = domain["icon"]
+        domain_description = domain["description"]
+
+        domain_overall_score = int(
+            domain_data["aggregated_metrics"]["general"]["score"] * 100
+        )
+        domain_num_analysed = domain_data["meta_data"]["num_analysed"]
+
+        # calculating difference between earliest and latest record
+        date_format = "%d %B %Y"
+        start = time.mktime(
+            time.strptime(domain_data["meta_data"]["earliest_record"], date_format)
+        )
+        end = time.mktime(
+            time.strptime(domain_data["meta_data"]["latest_record"], date_format)
+        )
+        domain_reviews_per_day = ((end - start) / 86400) / domain_num_analysed
+        domain_toxicity = int(
+            domain_data["aggregated_metrics"]["toxicity"]["score"] * 100
+        )
+
+        domain_positive = int(
+            domain_data["aggregated_metrics"]["ratios"]["positive"] * 100
+        )
+        domain_negative = int(
+            domain_data["aggregated_metrics"]["ratios"]["negative"] * 100
+        )
+        domain_neutral = int(
+            domain_data["aggregated_metrics"]["ratios"]["neutral"] * 100
+        )
+        domain_anger = int(domain_data["aggregated_metrics"]["emotions"]["anger"] * 100)
+        domain_disgust = int(
+            domain_data["aggregated_metrics"]["emotions"]["disgust"] * 100
+        )
+        domain_fear = int(domain_data["aggregated_metrics"]["emotions"]["fear"] * 100)
+        domain_joy = int(domain_data["aggregated_metrics"]["emotions"]["joy"] * 100)
+        domain_sadness = int(
+            domain_data["aggregated_metrics"]["emotions"]["sadness"] * 100
+        )
+        domain_surprise = int(
+            domain_data["aggregated_metrics"]["emotions"]["surprise"] * 100
+        )
+
+        domain_html_string = generate_domain_html(
+            domain_icon,
+            domain_description,
+            domain_overall_score,
+            domain_num_analysed,
+            domain_reviews_per_day,
+            domain_toxicity,
+            domain_positive,
+            domain_negative,
+            domain_neutral,
+            domain_anger,
+            domain_disgust,
+            domain_fear,
+            domain_joy,
+            domain_sadness,
+            domain_surprise,
+            domain_data["meta_data"]["earliest_record"],
+            domain_data["meta_data"]["latest_record"],
+        )
+
         File = open("assets/input_template.html", "r")
         content = File.read()
         File.close()
-        result = content.replace("% domain_graphs_js_string %", domain_graphs_js_string)
+        result = content.replace("{ domain_graphs_js_string }", domain_graphs_js_string)
+        result = result.replace("{domain_html_string}", domain_html_string)
         html_template = result.replace("{assets_path}", assets_path)
 
         # Format the html_template string.
