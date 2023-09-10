@@ -78,7 +78,7 @@ jobs:
           fi
 
       - name: Push to DockerHub
-        if: steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none'
+        if: ${{ steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none' }}
         uses: docker/build-push-action@v4
         with:
           context: ./backend/domains
