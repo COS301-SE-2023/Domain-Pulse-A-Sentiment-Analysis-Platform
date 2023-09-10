@@ -17,8 +17,6 @@ export class SourceSelectorComponent implements OnInit {
   @Select(AppState.allSourcesSelected) allSources$!: Observable<number>;
   selectedSource?: DisplaySource;
 
-
-
   showAddSourcesModal = false;
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
@@ -98,6 +96,23 @@ export class SourceSelectorComponent implements OnInit {
  */
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
+      case 'trustpilot':
+        const tpurl = this.newSourceUrl;
+        if (!tpurl.includes('trustpilot')) {
+          return {
+            source_type: 'trustpilot',
+            query_url: tpurl,
+          };
+        }
+
+        const urlParts = tpurl.split('/');
+        const indexOfReviews = urlParts.indexOf('review');
+        const tpID = urlParts[indexOfReviews + 1];
+
+        return {
+          source_type: 'trustpilot',
+          query_url: tpID,
+        }
       case 'googlereviews':
         return {
           source_type: 'googlereviews',
@@ -169,6 +184,8 @@ export class SourceSelectorComponent implements OnInit {
         return 'YouTube';
       case 'livereview':
         return 'livereview';
+      case 'trustpilot':
+        return 'trustpilot';
     }
     return '';
   }
@@ -233,7 +250,5 @@ export class SourceSelectorComponent implements OnInit {
 
 
     this.store.dispatch(new SetIsActive(!selectedSource?.params));
-
-
   }
 }

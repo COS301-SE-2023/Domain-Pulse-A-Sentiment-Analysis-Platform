@@ -183,7 +183,7 @@ class TestingRefreshHandler(TestCase):
     def test_handle_request_youtube(self):
         params = {
             "video_id": "test_video_id",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         comments = [
@@ -207,13 +207,13 @@ class TestingRefreshHandler(TestCase):
             self.assertEqual(content["latest_retrieval"], latest_retrieval)
 
             mock_get_comments.assert_called_once_with(
-                params["video_id"], float(params["last_refresh_timestamp"])
+                params["video_id"], int(params["last_refresh_timestamp"])
             )
 
     def test_handle_request_google_reviews(self):
         params = {
             "maps_url": "test url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [
@@ -237,13 +237,13 @@ class TestingRefreshHandler(TestCase):
             self.assertEqual(content["latest_retrieval"], latest_retrieval)
 
             mock_get_reviews.assert_called_once_with(
-                params["maps_url"], float(params["last_refresh_timestamp"])
+                params["maps_url"], int(params["last_refresh_timestamp"])
             )
 
     def test_handle_request_tripadvisor(self):
         params = {
             "tripadvisor_url": "test_url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [
@@ -267,13 +267,13 @@ class TestingRefreshHandler(TestCase):
             self.assertEqual(content["latest_retrieval"], latest_retrieval)
 
             mock_get_reviews.assert_called_once_with(
-                params["tripadvisor_url"], float(params["last_refresh_timestamp"])
+                params["tripadvisor_url"], int(params["last_refresh_timestamp"])
             )
 
     def test_handle_request_trustpilot(self):
         params = {
             "query_url": "test_url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [
@@ -297,7 +297,7 @@ class TestingRefreshHandler(TestCase):
             self.assertEqual(content["latest_retrieval"], latest_retrieval)
 
             mock_get_reviews.assert_called_once_with(
-                params["query_url"], float(params["last_refresh_timestamp"])
+                params["query_url"], int(params["last_refresh_timestamp"])
             )
 
     # ---------------------------------------------------
@@ -310,7 +310,7 @@ class TestingRefreshHandler(TestCase):
     def test_get_google_reviews(self):
         params = {
             "maps_url": "test_url",
-            "last_refresh_timestamp": "1234567890.0",
+            "last_refresh_timestamp": "1234567890",
         }
 
         reviews = [

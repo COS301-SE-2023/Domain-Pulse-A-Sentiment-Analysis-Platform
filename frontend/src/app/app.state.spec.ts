@@ -815,6 +815,7 @@ describe('AppState', () => {
   });
 
   it('should choose the correct source icon for the platform', () => {
+    expect(AppState.platformToIcon('trustpilot')).toEqual('trustpilot-logo.png');
     expect(AppState.platformToIcon('facebook')).toEqual('facebook-logo.png');
     expect(AppState.platformToIcon('instagram')).toEqual('instagram-Icon.png');
     expect(AppState.platformToIcon('reddit')).toEqual('reddit-logo.png');

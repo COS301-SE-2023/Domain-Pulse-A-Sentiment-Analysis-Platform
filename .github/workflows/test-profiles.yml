@@ -78,13 +78,13 @@ jobs:
           fi
 
       - name: Push to DockerHub
-        if: steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none'
+        if: ${{ steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none' }}
         uses: docker/build-push-action@v4
         with:
           context: ./backend/profiles
           file: ./backend/profiles/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-profiles:${{ env.IMAGE-TAG }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-profiles:${{ steps.set-image-tag.outputs.IMAGE-TAG }}
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
