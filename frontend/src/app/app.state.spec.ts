@@ -275,7 +275,9 @@ describe('AppState', () => {
 
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'SUCCESS' }));
 
-    store.dispatch(new SetSource(mockSources[1])).subscribe(() => {
+    store.dispatch(new SetSource(mockSources[1]));
+
+    setTimeout(() => {
       const actualSelectedSource = store.selectSnapshot(
         AppState.selectedSource
       );
@@ -288,7 +290,7 @@ describe('AppState', () => {
       expect(actualSources[0].selected).toEqual(false);
       expect(actualSources[1].selected).toEqual(true);
       done()
-    });
+    }, 500);
   });
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
