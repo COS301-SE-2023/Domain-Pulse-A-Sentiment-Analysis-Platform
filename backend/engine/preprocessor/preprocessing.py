@@ -3,9 +3,11 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import re
 
+
 # Removal of whitespace
 def remove_whitespace(data: str):
     return " ".join(data.split())
+
 
 # Remove urls
 def remove_urls(text):
