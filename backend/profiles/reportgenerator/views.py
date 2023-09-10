@@ -94,6 +94,10 @@ def generate_report(request: HttpRequest):
 
         data = {"source_ids": source_ids, "local_key": str(os.getenv("LOCAL_KEY"))}
         response = requests.post(url, json=data)
+        if response.status_code != 200:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "Error in warehouse request"}
+            )
         response_data = response.json()
         if response_data["status"] == "FAILURE":
             return JsonResponse(
@@ -103,7 +107,7 @@ def generate_report(request: HttpRequest):
         for key in response_data:
             if key != "domain":
                 for i in domain["sources"]:
-                    if i["source_id"] == key:
+                    if (i["source_id"]) == key:
                         named_sources[i["source_name"]] = response_data[key]
 
             else:
@@ -185,8 +189,8 @@ def generate_report(request: HttpRequest):
             },
         )
 
-        pdf_url = upload_pdf_to_azure(
-            pdf_path, domain["name"] + "Report" + str(id) + ".pdf"
-        )
+        # pdf_url = upload_pdf_to_azure(
+        #     pdf_path, domain["name"] + "Report" + str(id) + ".pdf"
+        # )
         # os.unlink(pdf_path)
-        return JsonResponse({"status": "SUCCESS", "url": pdf_url})
+        return JsonResponse({"status": "SUCCESS", "url": "testing"})

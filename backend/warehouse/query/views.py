@@ -170,6 +170,8 @@ def get_report_data_internal(request: HttpRequest):
                 return JsonResponse({"status": "FAILURE"})
 
             for source in records_by_source:
+                for record in records_by_source[source]:
+                    record["_id"] = str(record["_id"])
                 request_to_engine_body = {"metrics": records_by_source[source]}
                 response_from_aggregator = requests.post(
                     url, data=json.dumps(request_to_engine_body)
