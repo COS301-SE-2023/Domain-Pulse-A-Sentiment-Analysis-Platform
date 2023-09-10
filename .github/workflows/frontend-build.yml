@@ -43,6 +43,11 @@ jobs:
           npm link @angular/cli
           npm run build:dev
 
+      - name: Test
+        working-directory: ./frontend
+        run: |
+          npm run actions:test
+
       - name: Check for in Website source code changes
         id: check-changes
         run: |
@@ -82,11 +87,6 @@ jobs:
         with:
           name: frontend-build
           path: frontend/dist
-
-      - name: Test
-        working-directory: ./frontend
-        run: |
-          npm run actions:test
 
       - name: Upload test artifacts
         uses: actions/upload-artifact@v3
