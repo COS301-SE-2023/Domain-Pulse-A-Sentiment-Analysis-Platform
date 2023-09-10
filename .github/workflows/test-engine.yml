@@ -70,10 +70,10 @@ jobs:
       - name: Determine Docker Tag
         id: set-image-tag
         run: |
-          if [[ $(${{ github.ref == 'refs/heads/main' }}) ]]; then
+          if [[ ${{ github.ref == 'refs/heads/main' }} == true ]]; then
             echo "Setting image tag to 'latest'"
             echo "IMAGE-TAG=latest" >> $GITHUB_OUTPUT
-          elif [[ $(${{ github.ref == 'refs/heads/dev'}}) ]]; then
+          elif [[ ${{ github.ref == 'refs/heads/dev'}} == true ]]; then
             echo "Setting image tag to 'dev-latest'"
             echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
           else
