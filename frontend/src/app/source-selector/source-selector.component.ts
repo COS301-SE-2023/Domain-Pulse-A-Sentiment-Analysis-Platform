@@ -186,6 +186,8 @@ export class SourceSelectorComponent implements OnInit {
         return 'YouTube';
       case 'livereview':
         return 'livereview';
+      case 'trustpilot':
+        return 'trustpilot';
     }
     return '';
   }
