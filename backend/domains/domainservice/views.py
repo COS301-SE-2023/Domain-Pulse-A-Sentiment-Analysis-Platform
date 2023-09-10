@@ -250,7 +250,7 @@ def get_domain(request: HttpRequest):
         return JsonResponse(
             {"status": "SUCCESS", "domain": domainscrud.get_domain(raw_data["id"])}
         )
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE"}) 
 
 
 @csrf_exempt

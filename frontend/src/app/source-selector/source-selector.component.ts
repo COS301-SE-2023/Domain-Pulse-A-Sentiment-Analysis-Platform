@@ -244,11 +244,8 @@ export class SourceSelectorComponent implements OnInit {
 
   toggleActive(event: any) {
     console.log('onValueChange', event);
-
     const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
     
-
-
     this.store.dispatch(new SetIsActive(!selectedSource?.params));
   }
 }
