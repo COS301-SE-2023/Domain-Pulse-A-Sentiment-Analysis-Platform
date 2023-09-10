@@ -65,7 +65,7 @@ jobs:
             echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
           else
             echo "Not on main or dev branch. Skipping Docker build and push."
-            echo "IMAGE-TAG='none'" >> $GITHUB_OUTPUT
+            echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
           fi
 
       - name: Push to DockerHub
