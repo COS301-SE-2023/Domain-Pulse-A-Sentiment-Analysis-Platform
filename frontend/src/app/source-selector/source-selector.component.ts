@@ -252,7 +252,5 @@ export class SourceSelectorComponent implements OnInit {
 
 
     this.store.dispatch(new SetIsActive(!selectedSource?.params));
-
-
   }
 }
