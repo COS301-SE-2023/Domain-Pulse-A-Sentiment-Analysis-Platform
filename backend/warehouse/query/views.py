@@ -127,16 +127,17 @@ def get_report_data_internal(request: HttpRequest):
     # 2. Determine the meta-data
     # 3. Send that data to the aggregator (engine) to get cumulative metrics
     # 4. Return data from the response from 3, as well as meta-data and an other status codes, etc
-    if get_address(request) == "127.0.0.1":
+    raw_data = json.loads(request.body)
+
+    if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
         if request.method == "POST":
-            raw_data = json.loads(request.body)
             source_ids_raw = raw_data["source_ids"]
 
             all_individual_records = []
             records_by_source = {}
             for source_id in source_ids_raw:
                 records_by_source[
-                    source_id
+                    source_id  # Need to make a request to make this source_name instead of source id
                 ] = sentiment_record_model.get_records_by_source_id(source_id)
 
                 all_individual_records += (
@@ -164,6 +165,7 @@ def get_report_data_internal(request: HttpRequest):
                 response["domain"]["individual_metrics"] = agg_response_body[
                     "individual_data"
                 ]
+                response["domain"]["timeseries"] = agg_response_body["timeseries"]
             else:
                 return JsonResponse({"status": "FAILURE"})
 
@@ -184,6 +186,7 @@ def get_report_data_internal(request: HttpRequest):
                     response[source]["individual_metrics"] = agg_response_body[
                         "individual_data"
                     ]
+                    response[source]["timeseries"] = agg_response_body["timeseries"]
                 else:
                     return JsonResponse({"status": "FAILURE"})
 

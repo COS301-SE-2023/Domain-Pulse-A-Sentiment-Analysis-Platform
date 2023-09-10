@@ -30,49 +30,45 @@ def upload_pdf_to_azure(file_path, file_name):
     return pdf_url
 
 
+def generate_domain_graphs_js(
+    domain_overall_data_points,
+    domain_ratios,
+    domain_emotions,
+    domain_num_per_source,
+    domain_timeseries,
+):
+    f = open("assets/domain_js.txt", "r")
+    default_js = f.read()
+    f.close()
+    result = default_js.replace(
+        "%domain_overall_data_points%", str(domain_overall_data_points)
+    )
+    result = result.replace("%domain_ratios%", str(domain_ratios))
+    result = result.replace("%domain_emotions%", str(domain_emotions))
+    result = result.replace("%domain_num_per_source%", str(domain_num_per_source))
+    result = result.replace("%domain_timeseries%", str(domain_timeseries))
+
+    return result
+
+
 @csrf_exempt
 def generate_report(request: HttpRequest):
-
     assets_path = os.getenv("ASSETS_PATH")
 
-    #html_template = f'<div class="header"><h1>Hello World</h1> <img src="{assets_path}/images/google-logo.png"></div>'
+    # html_template = f'<div class="header"><h1>Hello World</h1> <img src="{assets_path}/images/google-logo.png"></div>'
 
+    # with open(assets_path + "/input_template.html", "r") as html_template_file:
+    #     html_template = html_template_file.read()
 
-    with open(assets_path + "/input_template.html", "r") as html_template_file:
-        html_template = html_template_file.read()
+    # html_template = html_template.replace("{assets_path}", assets_path)
 
-    html_template = html_template.replace('{assets_path}', assets_path)
+    # # Format the html_template string.
+    # html_template = format(html_template)
 
-    # Format the html_template string.
-    html_template = format(html_template)
+    # output = f"<html>{html_template}</html>"
 
-    output = f'<html>{html_template}</html>'
-
-    config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
-    output_pdf = "Report"
-    temp_file = tempfile.NamedTemporaryFile(
-        prefix=output_pdf,
-        suffix=".pdf",
-        dir= assets_path,
-        delete=False,
-    )
-    pdf_path = temp_file.name
-    pdfkit.from_string(
-        output,
-        pdf_path,
-        configuration=config,
-        css= assets_path + "/style.css",
-        options={"enable-local-file-access": "",
-                'margin-top': '0in',
-                'margin-right': '0in',
-                'margin-bottom': '0in',
-                'margin-left': '0in',
-                'encoding': "UTF-8",
-                'no-outline': None},
-    )
-    
-
-    return JsonResponse({"status": "SUCCESS", "url": ""})
+    # config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
+    # output_pdf = "Report"
 
     if request.method == "POST":
         raw_data = json.loads(request.body)
@@ -96,98 +92,80 @@ def generate_report(request: HttpRequest):
         id = shortuuid.ShortUUID().random(length=12)
         url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
 
-        data = {"source_ids": source_ids}
+        data = {"source_ids": source_ids, "local_key": str(os.getenv("LOCAL_KEY"))}
         response = requests.post(url, json=data)
         response_data = response.json()
         if response_data["status"] == "FAILURE":
             return JsonResponse(
                 {"status": "FAILURE", "details": response_data["details"]}
             )
-        domain_data = response_data["domain"]
+        named_sources = {}
+        for key in response_data:
+            if key != "domain":
+                for i in domain["sources"]:
+                    if i["source_id"] == key:
+                        named_sources[i["source_name"]] = response_data[key]
 
-        overall_score = 0.8
-        val = [1 - overall_score, overall_score]
-        val.append(sum(val))
-        colors = ["grey", "blue", "white"]
-        fig = plt.figure(figsize=(1.8, 1), dpi=200)
-        ax = fig.add_subplot(1, 1, 1)
-        ax.pie(val, colors=colors)
-        ax.add_artist(plt.Circle((0, 0), 0.6, color="white"))
-        plt.subplots_adjust(left=-0.2, right=1.2, top=1.1, bottom=-1)
-        temp_file = tempfile.NamedTemporaryFile(
-            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
+            else:
+                named_sources["domain"] = response_data[key]
+
+        domain_data = named_sources["domain"]
+
+        domain_overall_data_points = [
+            int(domain_data["aggregated_metrics"]["general"]["score"] * 100),
+            100 - int(domain_data["aggregated_metrics"]["general"]["score"] * 100),
+        ]
+
+        domain_overall_score = int(
+            domain_data["aggregated_metrics"]["general"]["score"] * 100
         )
-        generalSent_file = temp_file.name
-        plt.savefig(generalSent_file)
-        plt.close()
-        positive = 0.6
-        neutral = 0.3
-        negative = 0.1
-        y = np.array([positive, neutral, negative])
-        mylabels = ["Positive", "Neutral", "Negative"]
-        plt.figure(figsize=(2.5, 2), dpi=200)
-        plt.pie(y, labels=mylabels, colors=["royalblue", "grey", "firebrick"])
-        plt.subplots_adjust(left=-0.2, right=1, top=1, bottom=0)
-        temp_file = tempfile.NamedTemporaryFile(
-            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
+        domain_ratios = [
+            int(domain_data["aggregated_metrics"]["ratios"]["positive"] * 100),
+            int(domain_data["aggregated_metrics"]["ratios"]["negative"] * 100),
+            int(domain_data["aggregated_metrics"]["ratios"]["neutral"] * 100),
+        ]
+        domain_emotions = [
+            int(domain_data["aggregated_metrics"]["emotions"]["anger"] * 100),
+            int(domain_data["aggregated_metrics"]["emotions"]["disgust"] * 100),
+            int(domain_data["aggregated_metrics"]["emotions"]["fear"] * 100),
+            int(domain_data["aggregated_metrics"]["emotions"]["joy"] * 100),
+            int(domain_data["aggregated_metrics"]["emotions"]["sadness"] * 100),
+            int(domain_data["aggregated_metrics"]["emotions"]["surprise"] * 100),
+        ]
+        domain_num_per_source = []
+        for key in named_sources:
+            if key != "domain":
+                domain_num_per_source.append(
+                    {key: named_sources[key]["meta_data"]["num_analysed"]}
+                )
+
+        # change this to use the data from the database
+        domain_time_series = '[{ x: "2020-02-15 18:37:39", y: 2 },{ x: "2020-02-16 18:37:39", y: 3 },{ x: "2020-02-17 18:37:39", y: 1 },{ x: "2020-02-23 18:37:39", y: 8 },{ x: "2020-02-26 18:37:39", y: 10 },]'
+
+        domain_graphs_js_string = generate_domain_graphs_js(
+            domain_overall_data_points,
+            domain_ratios,
+            domain_emotions,
+            domain_num_per_source,
+            domain_time_series,
         )
-        positivity_file = temp_file.name
-        plt.savefig(positivity_file)
-        plt.close()
-        data = {
-            "Joy": 36,
-            "Sadness": 2,
-            "Anger": 3,
-            "Fear": 1,
-            "Disgust": 2,
-            "Surprise": 20,
-        }
-        emotions = list(data.keys())
-        values = list(data.values())
-        plt.figure(figsize=(5.7, 4.4), dpi=200)
-        plt.bar(
-            emotions,
-            values,
-            color=(
-                "springgreen",
-                "darkblue",
-                "maroon",
-                "slategray",
-                "darkgreen",
-                "gold",
-            ),
-            width=0.4,
-        )
-        plt.xlabel("Emotions")
-        plt.ylabel("Number of Reviews")
-        plt.subplots_adjust(left=0.11, right=0.99, top=0.98, bottom=0.11)
-        temp_file = tempfile.NamedTemporaryFile(
-            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
-        )
-        emotion_file = temp_file.name
-        plt.savefig(emotion_file)
-        plt.close()
-        toxic = 0.05
-        nontoxic = 0.95
-        y = np.array([toxic, nontoxic])
-        mylabels = ["Toxic", "Non-Toxic"]
-        plt.figure(figsize=(2.8, 2), dpi=200)
-        plt.pie(y, labels=mylabels, colors=["gray", "royalblue"])
-        plt.subplots_adjust(left=0, right=1.1, top=1, bottom=0)
-        temp_file = tempfile.NamedTemporaryFile(
-            suffix=".png", dir=str(os.getenv("TEMP_PATH")), delete=False
-        )
-        toxicity_file = temp_file.name
-        plt.savefig(toxicity_file)
-        plt.close()
-        output = f'<html>{html_template}<div> <h1>All Sources</h1> </div> <div> <img src="{generalSent_file}"> </div> <div> <img src="{emotion_file}"> </div><div> <img src="{positivity_file}"> </div><div> <img src="{toxicity_file}"> </div></html>'
+
+        File = open("assets/input_template.html", "r")
+        content = File.read()
+        File.close()
+        result = content.replace("% domain_graphs_js_string %", domain_graphs_js_string)
+        html_template = result.replace("{assets_path}", assets_path)
+
+        # Format the html_template string.
+        html_template = format(html_template)
+        output = f"<html>{html_template}</html>"
 
         config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
         output_pdf = domain["name"] + "Report" + str(id)
         temp_file = tempfile.NamedTemporaryFile(
             prefix=output_pdf,
             suffix=".pdf",
-            dir=str(os.getenv("TEMP_PATH")),
+            dir=assets_path,
             delete=False,
         )
         pdf_path = temp_file.name
@@ -195,16 +173,20 @@ def generate_report(request: HttpRequest):
             output,
             pdf_path,
             configuration=config,
-            css="css/style.css",
-            options={"enable-local-file-access": ""},
+            css=assets_path + "/style.css",
+            options={
+                "enable-local-file-access": "",
+                "margin-top": "0in",
+                "margin-right": "0in",
+                "margin-bottom": "0in",
+                "margin-left": "0in",
+                "encoding": "UTF-8",
+                "no-outline": None,
+            },
         )
 
         pdf_url = upload_pdf_to_azure(
             pdf_path, domain["name"] + "Report" + str(id) + ".pdf"
         )
-        os.unlink(generalSent_file)
-        os.unlink(emotion_file)
-        os.unlink(positivity_file)
-        os.unlink(toxicity_file)
-        os.unlink(pdf_path)
+        # os.unlink(pdf_path)
         return JsonResponse({"status": "SUCCESS", "url": pdf_url})
