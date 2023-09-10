@@ -56,6 +56,12 @@ jobs:
           venv/bin/python -m coverage run --source='.' manage.py test
           venv/bin/python -m coverage report -m
 
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-engine-test
+          path: backend/engine/.coverage
+
       - name: Check for in Engine source code changes
         id: check-changes
         run: |
@@ -66,57 +72,6 @@ jobs:
             echo "No changes detected in source directory. Skipping Docker build and push."
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
-
-      - 
-          name: Check disk space
-          run: df -h
-      - 
-          name: Free disk space
-          run: |
-            sudo docker rmi $(docker image ls -aq) >/dev/null 2>&1 || true
-            sudo rm -rf \
-              /usr/share/dotnet /usr/local/lib/android /opt/ghc \
-              /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup \
-              /usr/lib/jvm || true
-            echo "some directories deleted"
-            sudo apt install aptitude -y >/dev/null 2>&1
-            sudo aptitude purge aria2 ansible azure-cli shellcheck rpm xorriso zsync \
-              esl-erlang firefox gfortran-8 gfortran-9 google-chrome-stable \
-              google-cloud-sdk imagemagick \
-              libmagickcore-dev libmagickwand-dev libmagic-dev ant ant-optional kubectl \
-              mercurial apt-transport-https mono-complete libmysqlclient \
-              unixodbc-dev yarn chrpath libssl-dev libxft-dev \
-              libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev \
-              snmp pollinate libpq-dev postgresql-client powershell ruby-full \
-              sphinxsearch subversion mongodb-org azure-cli microsoft-edge-stable \
-              -y -f >/dev/null 2>&1
-            sudo aptitude purge google-cloud-sdk -f -y >/dev/null 2>&1
-            sudo aptitude purge microsoft-edge-stable -f -y >/dev/null 2>&1 || true
-            sudo apt purge microsoft-edge-stable -f -y >/dev/null 2>&1 || true
-            sudo aptitude purge '~n ^mysql' -f -y >/dev/null 2>&1
-            sudo aptitude purge '~n ^php' -f -y >/dev/null 2>&1
-            sudo aptitude purge '~n ^dotnet' -f -y >/dev/null 2>&1
-            sudo apt-get autoremove -y >/dev/null 2>&1
-            sudo apt-get autoclean -y >/dev/null 2>&1
-            echo "some packages purged"
-      - 
-        name: Check disk space
-        run: |
-          sudo dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head
-          df . -h
-          sudo du /usr/ -hx -d 4 --threshold=1G | sort -hr | head
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      - 
-        name: Check working space directory
-        run: du ${GITHUB_WORKSPACE} -h -d 1
-      - 
-        name: Get more space
-        run: |
-          df . -h
-          sudo rm -rf ${GITHUB_WORKSPACE}/.git
-          df . -h
 
       - name: Determine Docker Tag
         id: set-image-tag
@@ -131,6 +86,36 @@ jobs:
             echo "Not on main or dev branch. Skipping Docker build and push."
             echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
           fi
+      - 
+        name: Free disk space (for docker build)
+        if: ${{ steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none' }}
+        run: |
+          sudo docker rmi $(docker image ls -aq) >/dev/null 2>&1 || true
+          sudo rm -rf \
+            /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup \
+            /usr/lib/jvm || true
+          echo "some directories deleted"
+          sudo apt install aptitude -y >/dev/null 2>&1
+          sudo aptitude purge aria2 ansible azure-cli shellcheck rpm xorriso zsync \
+            esl-erlang firefox gfortran-8 gfortran-9 google-chrome-stable \
+            google-cloud-sdk imagemagick \
+            libmagickcore-dev libmagickwand-dev libmagic-dev ant ant-optional kubectl \
+            mercurial apt-transport-https mono-complete libmysqlclient \
+            unixodbc-dev yarn chrpath libssl-dev libxft-dev \
+            libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev \
+            snmp pollinate libpq-dev postgresql-client powershell ruby-full \
+            sphinxsearch subversion mongodb-org azure-cli microsoft-edge-stable \
+            -y -f >/dev/null 2>&1
+          sudo aptitude purge google-cloud-sdk -f -y >/dev/null 2>&1
+          sudo aptitude purge microsoft-edge-stable -f -y >/dev/null 2>&1 || true
+          sudo apt purge microsoft-edge-stable -f -y >/dev/null 2>&1 || true
+          sudo aptitude purge '~n ^mysql' -f -y >/dev/null 2>&1
+          sudo aptitude purge '~n ^php' -f -y >/dev/null 2>&1
+          sudo aptitude purge '~n ^dotnet' -f -y >/dev/null 2>&1
+          sudo apt-get autoremove -y >/dev/null 2>&1
+          sudo apt-get autoclean -y >/dev/null 2>&1
+          echo "some packages purged"
 
       - name: Push to DockerHub
         if: ${{ steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none' }}
@@ -140,9 +125,3 @@ jobs:
           file: ./backend/engine/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-engine:${{ steps.set-image-tag.outputs.IMAGE-TAG }}
-
-      - name: Upload Test Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: backend-engine-test
-          path: backend/engine/.coverage
