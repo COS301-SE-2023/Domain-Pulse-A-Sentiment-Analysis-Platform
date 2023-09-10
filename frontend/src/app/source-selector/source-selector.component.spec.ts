@@ -214,6 +214,13 @@ describe('SourceSelectorComponent', () => {
       query_url: 'www.spotify.com',
     });
     
+    component.newSourcePlatform = 'trustpilot';
+    component.newSourceUrl = 'www.spotify.com';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'trustpilot',
+      query_url: 'www.spotify.com',
+    });
+
     component.newSourcePlatform = 'googlereviews';
     component.newSourceUrl = 'https://maps.google.com/';
     expect(component.determineSourceParams()).toEqual({
