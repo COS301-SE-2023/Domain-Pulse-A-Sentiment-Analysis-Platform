@@ -89,8 +89,8 @@ export class TooltipDirective {
 
   private showTooltip() {
     clearTimeout(this.tooltipTimeout);
-    this.hoverTimeout = setTimeout(() => {
-      this.renderer.setStyle(this.tooltip, 'background-color', 'rgba(3, 127, 255, 0.7)');
+
+      this.renderer.setStyle(this.tooltip, 'background-color', 'rgba(3, 127, 255, 0.9)');
       this.renderer.setStyle(this.tooltip, 'color', '#e0efff');
       this.renderer.setStyle(this.tooltip, 'padding', '20px');
       //create shadow behind the tooltip
@@ -119,18 +119,22 @@ export class TooltipDirective {
         this.hideTooltip();
       });
   
-      // Append the icon and link to the tooltip
   
       this.renderer.appendChild(this.tooltip, link);
       this.renderer.appendChild(document.body, this.tooltip);
       this.updateTooltipPosition();
-  
-      }, 1000);
 
-    // Add a mouseleave event listener to the tooltip
+      this.renderer.addClass(this.tooltip, 'show');
+
+
     this.renderer.listen(this.tooltip, 'mouseleave', () => {
       this.hideTooltip();
     });
+
+    this.renderer.listen(this.tooltip, 'mouseenter', () => {
+      this.isMouseInsideTooltip = true;
+    });
+
   }
 
   @HostListener('mouseenter', ['$event']) onMouseEnter(event: MouseEvent) {
@@ -139,7 +143,22 @@ export class TooltipDirective {
     }, 1000);
   }
 
+  @HostListener('mouseleave', ['$event']) onMouseLeave(event: MouseEvent) {
+    clearTimeout(this.tooltipTimeout);
+    this.isMouseInsideTooltip = false;
+    setTimeout(() => {
+      if(!this.isMouseInsideTooltip){
+        this.hideTooltip();
+      }
+  }, 0);
+  }
+
+
   private hideTooltip() {
+
+    this.renderer.removeClass(this.tooltip, 'show');
+
+
     this.renderer.setStyle(this.tooltip, 'opacity', '0');
     this.renderer.setStyle(this.tooltip, 'transform', 'translateX(-20px)');
     this.tooltip.textContent = '';
