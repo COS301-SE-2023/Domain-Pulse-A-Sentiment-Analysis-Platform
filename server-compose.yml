@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   dev_domains:
-    image: thuthuka111/domain-pulse-domain:dev-latest
+    image: thuthuka111/domain-pulse-domains:dev-latest
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
@@ -17,7 +17,7 @@ services:
       - dev_network
 
   prod_domains:
-    image: thuthuka111/domain-pulse-domain:latest
+    image: thuthuka111/domain-pulse-domains:latest
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
