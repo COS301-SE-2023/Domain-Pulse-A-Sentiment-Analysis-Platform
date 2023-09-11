@@ -31,25 +31,25 @@ echo Building from current branch and pushing to %tag% to repository %namespace%
 docker compose build
 
 echo Tagging and pushing webserver
-docker tag domain-pulse-webserver %namespace%.me/domain-pulse-webserver:%tag%
-docker push %namespace%.me/domain-pulse-webserver:%tag%
+docker tag domain-pulse-webserver %namespace%/domain-pulse-webserver:%tag%
+docker push %namespace%/domain-pulse-webserver:%tag%
 
 echo Tagging and pushing domains
-docker tag domain-pulse-domains %namespace%.me/domain-pulse-domain:%tag%
-docker push %namespace%.me/domain-pulse-domain:%tag%
+docker tag domain-pulse-domains %namespace%/domain-pulse-domain:%tag%
+docker push %namespace%/domain-pulse-domain:%tag%
 
 echo Tagging and pushing engine
-docker tag domain-pulse-engine %namespace%.me/domain-pulse-engine:%tag%
-docker push %namespace%.me/domain-pulse-engine:%tag%
+docker tag domain-pulse-engine %namespace%/domain-pulse-engine:%tag%
+docker push %namespace%/domain-pulse-engine:%tag%
 
 echo Tagging and pushing profiles
-docker tag domain-pulse-profiles %namespace%.me/domain-pulse-profiles:%tag%
-docker push %namespace%.me/domain-pulse-profiles:%tag%
+docker tag domain-pulse-profiles %namespace%/domain-pulse-profiles:%tag%
+docker push %namespace%/domain-pulse-profiles:%tag%
 
 echo Tagging and pushing sourceconnector
-docker tag domain-pulse-sourceconnector %namespace%.me/domain-pulse-sourceconnector:%tag%
-docker push %namespace%.me/domain-pulse-sourceconnector:%tag%
+docker tag domain-pulse-sourceconnector %namespace%/domain-pulse-sourceconnector:%tag%
+docker push %namespace%/domain-pulse-sourceconnector:%tag%
 
 echo Tagging and pushing warehouse
-docker tag domain-pulse-warehouse %namespace%.me/domain-pulse-warehouse:%tag%
-docker push %namespace%.me/domain-pulse-warehouse:%tag%
+docker tag domain-pulse-warehouse %namespace%/domain-pulse-warehouse:%tag%
+docker push %namespace%/domain-pulse-warehouse:%tag%
