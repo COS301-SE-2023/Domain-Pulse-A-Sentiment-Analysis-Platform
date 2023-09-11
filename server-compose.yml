@@ -1,0 +1,195 @@
+version: "3.9"
+
+services:
+  dev_domains:
+    image: thuthuka111/domain-pulse-domain:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports: 
+      - "7000:8000"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini domains.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev_network
+
+  prod_domains:
+    image: thuthuka111/domain-pulse-domain:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports: 
+      - "8000:8000"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini domains.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod_network
+
+  dev_engine:
+    image: thuthuka111/domain-pulse-engine:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "7001:8001"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini engine.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev_network
+
+  prod_engine:
+    image: thuthuka111/domain-pulse-engine:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "8001:8001"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini engine.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod_network
+
+  dev_profiles:
+    image: thuthuka111/domain-pulse-profiles:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "7002:8002"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini profiles.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev_network
+
+  prod_profiles:
+    image: thuthuka111/domain-pulse-profiles:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "8002:8002"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini profiles.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod_network
+
+  dev_sourceconnector:
+    image: thuthuka111/domain-pulse-sourceconnector:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "7003:8003"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini sourceconnector.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev_network
+
+  prod_sourceconnector:
+    image: thuthuka111/domain-pulse-sourceconnector:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "8003:8003"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini sourceconnector.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod_network
+
+  dev_warehouse:
+    image: thuthuka111/domain-pulse-warehouse:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "7004:8004"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini warehouse.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev_network
+
+  prod_warehouse:
+    image: thuthuka111/domain-pulse-warehouse:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "8004:8004"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini warehouse.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod_network
+
+  dev_webserver:
+    image: thuthuka111/domain-pulse-webserver:dev-latest
+    environment:
+      - NGINX_CONF=dev-domainpulse.app.conf
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    ports:
+      - "5000:80"
+    depends_on:
+      - dev_engine
+      - dev_domains
+      - dev_profiles
+      - dev_sourceconnector
+      - dev_warehouse
+    networks:
+      - dev_network
+
+  prod_webserver:
+    image: thuthuka111/domain-pulse-webserver:latest
+    environment:
+      - NGINX_CONF=prod-domainpulse.app.conf
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    ports:
+      - "6000:80"
+    depends_on:
+      - prod_engine
+      - prod_domains
+      - prod_profiles
+      - prod_sourceconnector
+      - prod_warehouse
+    networks:
+      - prod_network
+
+volumes:
+  uwsgi_data:
+
+networks:
+  prod_network:
+  dev_network:
