@@ -1,11 +1,17 @@
 version: "3.9"
 
 services:
-  dev_domains:
+  dev-domains:
     image: thuthuka111/domain-pulse-domains:dev-latest
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
     ports: 
       - "7000:8000"
     restart: always
@@ -14,9 +20,9 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - dev_network
+      - dev-network
 
-  prod_domains:
+  prod-domains:
     image: thuthuka111/domain-pulse-domains:latest
     env_file:
       - ./backend/.env
@@ -29,13 +35,19 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - prod_network
+      - prod-network
 
-  dev_engine:
+  dev-engine:
     image: thuthuka111/domain-pulse-engine:dev-latest
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
     ports:
       - "7001:8001"
     restart: always
@@ -44,9 +56,9 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - dev_network
+      - dev-network
 
-  prod_engine:
+  prod-engine:
     image: thuthuka111/domain-pulse-engine:latest
     env_file:
       - ./backend/.env
@@ -59,13 +71,19 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - prod_network
+      - prod-network
 
-  dev_profiles:
+  dev-profiles:
     image: thuthuka111/domain-pulse-profiles:dev-latest
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
     ports:
       - "7002:8002"
     restart: always
@@ -74,9 +92,9 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - dev_network
+      - dev-network
 
-  prod_profiles:
+  prod-profiles:
     image: thuthuka111/domain-pulse-profiles:latest
     env_file:
       - ./backend/.env
@@ -89,13 +107,19 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - prod_network
+      - prod-network
 
-  dev_sourceconnector:
+  dev-sourceconnector:
     image: thuthuka111/domain-pulse-sourceconnector:dev-latest
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
     ports:
       - "7003:8003"
     restart: always
@@ -104,9 +128,9 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - dev_network
+      - dev-network
 
-  prod_sourceconnector:
+  prod-sourceconnector:
     image: thuthuka111/domain-pulse-sourceconnector:latest
     env_file:
       - ./backend/.env
@@ -119,13 +143,19 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - prod_network
+      - prod-network
 
-  dev_warehouse:
+  dev-warehouse:
     image: thuthuka111/domain-pulse-warehouse:dev-latest
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
     ports:
       - "7004:8004"
     restart: always
@@ -134,9 +164,9 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - dev_network
+      - dev-network
 
-  prod_warehouse:
+  prod-warehouse:
     image: thuthuka111/domain-pulse-warehouse:latest
     env_file:
       - ./backend/.env
@@ -149,27 +179,32 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
-      - prod_network
+      - prod-network
 
-  dev_webserver:
+  dev-webserver:
     image: thuthuka111/domain-pulse-webserver:dev-latest
     environment:
       - NGINX_CONF=dev-domainpulse.app.conf
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
     restart: always
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     ports:
       - "5000:80"
     depends_on:
-      - dev_engine
-      - dev_domains
-      - dev_profiles
-      - dev_sourceconnector
-      - dev_warehouse
+      - dev-engine
+      - dev-domains
+      - dev-profiles
+      - dev-sourceconnector
+      - dev-warehouse
     networks:
-      - dev_network
+      - dev-network
 
-  prod_webserver:
+  prod-webserver:
     image: thuthuka111/domain-pulse-webserver:latest
     environment:
       - NGINX_CONF=prod-domainpulse.app.conf
@@ -179,17 +214,17 @@ services:
     ports:
       - "6000:80"
     depends_on:
-      - prod_engine
-      - prod_domains
-      - prod_profiles
-      - prod_sourceconnector
-      - prod_warehouse
+      - prod-engine
+      - prod-domains
+      - prod-profiles
+      - prod-sourceconnector
+      - prod-warehouse
     networks:
-      - prod_network
+      - prod-network
 
 volumes:
   uwsgi_data:
 
 networks:
-  prod_network:
-  dev_network:
+  prod-network:
+  dev-network:
