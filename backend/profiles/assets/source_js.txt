@@ -1,4 +1,4 @@
-new Chart(document.getElementById("source1chart1"), {
+new Chart(document.getElementById("source%source_number%chart1"), {
         responsive: false,
         type: "doughnut",
         data: {
@@ -35,7 +35,7 @@ new Chart(document.getElementById("source1chart1"), {
         },
       });
 
-      new Chart(document.getElementById("source1chart2"), {
+      new Chart(document.getElementById("source%source_number%chart2"), {
         responsive: true,
         type: "pie",
         data: {
@@ -78,7 +78,7 @@ new Chart(document.getElementById("source1chart1"), {
         },
       });
 
-      new Chart(document.getElementById("source1chart3"), {
+      new Chart(document.getElementById("source%source_number%chart3"), {
         responsive: true,
         type: "radar",
         data: {
@@ -107,7 +107,7 @@ new Chart(document.getElementById("source1chart1"), {
         },
       });
 
-      new Chart(document.getElementById("source1chart4"), {
+      new Chart(document.getElementById("source%source_number%chart4"), {
         responsive: false,
         type: "doughnut",
         data: {
@@ -145,7 +145,7 @@ new Chart(document.getElementById("source1chart1"), {
         },
       });
 
-      new Chart(document.getElementById("source1chart5"), {
+      new Chart(document.getElementById("source%source_number%chart5"), {
         responsive: true,
         type: "bar",
         data: {
@@ -199,7 +199,7 @@ new Chart(document.getElementById("source1chart1"), {
         },
       });
 
-      new Chart(document.getElementById("source1chart6"), {
+      new Chart(document.getElementById("source%source_number%chart6"), {
         responsive: true,
         type: "line",
         data: {

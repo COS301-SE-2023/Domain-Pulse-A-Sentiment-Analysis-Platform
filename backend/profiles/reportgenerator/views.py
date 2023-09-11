@@ -41,6 +41,7 @@ def generate_domain_graphs_js(
     f = open("assets/domain_js.txt", "r")
     default_js = f.read()
     f.close()
+
     result = default_js.replace(
         "%domain_overall_data_points%", str(domain_overall_data_points)
     )
@@ -97,6 +98,91 @@ def generate_domain_html(
     return result
 
 
+def generate_source_graph_js(source_data):
+    f = open("assets/source_js.txt", "r")
+    default_js = f.read()
+    f.close()
+    source_num = 1
+    result = ""
+    for source in source_data:
+        if source != "domain":
+            source_overall_data_points = [
+                int(
+                    source_data[source]["aggregated_metrics"]["general"]["score"] * 100
+                ),
+                100
+                - int(
+                    source_data[source]["aggregated_metrics"]["general"]["score"] * 100
+                ),
+            ]
+            source_ratios = [
+                int(
+                    source_data[source]["aggregated_metrics"]["ratios"]["positive"]
+                    * 100
+                ),
+                int(
+                    source_data[source]["aggregated_metrics"]["ratios"]["negative"]
+                    * 100
+                ),
+                int(
+                    source_data[source]["aggregated_metrics"]["ratios"]["neutral"] * 100
+                ),
+            ]
+            source_emotions = [
+                int(
+                    source_data[source]["aggregated_metrics"]["emotions"]["anger"] * 100
+                ),
+                int(
+                    source_data[source]["aggregated_metrics"]["emotions"]["disgust"]
+                    * 100
+                ),
+                int(
+                    source_data[source]["aggregated_metrics"]["emotions"]["fear"] * 100
+                ),
+                int(source_data[source]["aggregated_metrics"]["emotions"]["joy"] * 100),
+                int(
+                    source_data[source]["aggregated_metrics"]["emotions"]["sadness"]
+                    * 100
+                ),
+                int(
+                    source_data[source]["aggregated_metrics"]["emotions"]["surprise"]
+                    * 100
+                ),
+            ]
+            source_toxicity = [
+                int(
+                    source_data[source]["aggregated_metrics"]["toxicity"]["score"] * 100
+                ),
+                100
+                - int(
+                    source_data[source]["aggregated_metrics"]["toxicity"]["score"] * 100
+                ),
+            ]
+
+            source_timeseries = []
+            for i in source_data[source]["timeseries"]["overall"]:
+                source_timeseries.append({"x": i[0], "y": i[1]})
+            tempResult = default_js.replace(
+                "%source_overall_data_points%", str(source_overall_data_points)
+            )
+            tempResult = tempResult.replace("%source_number%", str(source_num))
+            tempResult = tempResult.replace("%source_ratios%", str(source_ratios))
+            tempResult = tempResult.replace("%source_emotions%", str(source_emotions))
+            tempResult = tempResult.replace(
+                "%source_toxicity_data_points%", str(source_toxicity)
+            )
+
+            tempResult = tempResult.replace(
+                "%source_timeseries%", str(source_timeseries)
+            )
+
+            tempResult = tempResult.replace("%source_num%", str(source_num))
+            source_num += 1
+            result += tempResult + "\n"
+
+    return result
+
+
 @csrf_exempt
 def generate_report(request: HttpRequest):
     assets_path = os.getenv("ASSETS_PATH")
@@ -149,21 +235,16 @@ def generate_report(request: HttpRequest):
             return JsonResponse(
                 {"status": "FAILURE", "details": response_data["details"]}
             )
+        response_data.pop("status")
         # Replacing source_id with source_name
-        named_sources = {}
         for key in response_data:
             if key != "domain":
                 for i in domain["sources"]:
                     if (i["source_id"]) == key:
-                        named_sources[i["source_name"]] = response_data[key]
-                        named_sources[i["source_name"]]["source_type"] = i["params"][
-                            "source_type"
-                        ]
+                        response_data[key]["source_name"] = i["source_name"]
+                        response_data[key]["source_type"] = i["params"]["source_type"]
 
-            else:
-                named_sources["domain"] = response_data[key]
-
-        domain_data = named_sources["domain"]
+        domain_data = response_data["domain"]
 
         domain_overall_data_points = [
             int(domain_data["aggregated_metrics"]["general"]["score"] * 100),
@@ -186,21 +267,26 @@ def generate_report(request: HttpRequest):
 
         # Getting number of reviews per source
         domain_num_per_source = []
-        for key in named_sources:
+        for key in response_data:
             if key != "domain":
                 domain_num_per_source.append(
-                    {key: named_sources[key]["meta_data"]["num_analysed"]}
+                    {
+                        response_data[key]["source_name"]: response_data[key][
+                            "meta_data"
+                        ]["num_analysed"]
+                    }
                 )
 
-        # change this to use the data from the database
-        domain_time_series = '[{ x: "2020-02-15 18:37:39", y: 2 },{ x: "2020-02-16 18:37:39", y: 3 },{ x: "2020-02-17 18:37:39", y: 1 },{ x: "2020-02-23 18:37:39", y: 8 },{ x: "2020-02-26 18:37:39", y: 10 },]'
+        domain_timeseries = []
+        for i in domain_data["timeseries"]["overall"]:
+            domain_timeseries.append({"x": i[0], "y": i[1]})
 
         domain_graphs_js_string = generate_domain_graphs_js(
             domain_overall_data_points,
             domain_ratios,
             domain_emotions,
             domain_num_per_source,
-            domain_time_series,
+            domain_timeseries,
         )
 
         domain_icon = domain["icon"]
@@ -266,11 +352,14 @@ def generate_report(request: HttpRequest):
             domain_data["meta_data"]["latest_record"],
         )
 
+        source_graph_js = generate_source_graph_js(response_data)
+
         File = open("assets/input_template.html", "r")
         content = File.read()
         File.close()
         result = content.replace("{ domain_graphs_js_string }", domain_graphs_js_string)
         result = result.replace("{domain_html_string}", domain_html_string)
+        result = result.replace("{ source_graph_js_string }", source_graph_js)
         html_template = result.replace("{assets_path}", assets_path)
 
         # Format the html_template string.
