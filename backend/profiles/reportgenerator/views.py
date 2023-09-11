@@ -18,6 +18,13 @@ GET_DOMAINS_ENDPOINT = (
     "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
 )
 
+IMAGE_PATHS = {
+    "googlereviews": "{assets_path}/images/google-logo.png",
+    "youtube": "{assets_path}/images/youtube-logo.png",
+    "tripadvisor": "{assets_path}/images/tripadvisor-logo.png",
+    "livereview": "{assets_path}/images/live-review-logo.png",
+}
+
 
 def upload_pdf_to_azure(file_path, file_name):
     sas_url = f"{os.getenv('BLOB_URL')}{file_name}{os.getenv('BLOB_SAS_KEY')}"
@@ -59,15 +66,13 @@ def generate_domain_graphs_js(response_data):
     ]
 
     # Getting number of reviews per source
+    source_names = []
     domain_num_per_source = []
     for key in response_data:
         if key != "domain":
+            source_names.append(response_data[key]["source_name"])
             domain_num_per_source.append(
-                {
-                    response_data[key]["source_name"]: response_data[key]["meta_data"][
-                        "num_analysed"
-                    ]
-                }
+                response_data[key]["meta_data"]["num_analysed"]
             )
 
     domain_timeseries = []
@@ -79,6 +84,7 @@ def generate_domain_graphs_js(response_data):
     )
     result = result.replace("%domain_ratios%", str(domain_ratios))
     result = result.replace("%domain_emotions%", str(domain_emotions))
+    result = result.replace("%source_names%", str(source_names))
     result = result.replace("%domain_num_per_source%", str(domain_num_per_source))
     result = result.replace("%domain_timeseries%", str(domain_timeseries))
 
@@ -94,6 +100,24 @@ def generate_domain_html(domain_icon, domain_description, response_data):
         domain_data["aggregated_metrics"]["general"]["score"] * 100
     )
     domain_num_analysed = domain_data["meta_data"]["num_analysed"]
+
+    domain_sources = []
+    for key in response_data:
+        if key != "domain":
+            domain_sources.append(
+                {response_data[key]["source_name"]: response_data[key]["source_type"]}
+            )
+
+    source_list = ""
+    for i in domain_sources:
+        source_list += '<div class="flex-item flex-column center"><div>'
+        source_list += (
+            '<img src="'
+            + IMAGE_PATHS[list(i.values())[0]]
+            + '"class="up-item" style="width: 40%" />'
+        )
+        source_list += "<p>" + list(i.keys())[0] + "</p>"
+        source_list += "</div></div>"
 
     # calculating difference between earliest and latest record
     date_format = "%d %B %Y"
@@ -141,6 +165,7 @@ def generate_domain_html(domain_icon, domain_description, response_data):
     result = result.replace(
         "{domain_end_date}", str(domain_data["meta_data"]["latest_record"])
     )
+    result = result.replace("{domain_sources}", source_list)
 
     return result
 

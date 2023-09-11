@@ -135,20 +135,7 @@ new Chart(document.getElementById("canvas1"), {
           responsive: true,
           type: "bar",
           data: {
-            labels: [
-              "source1",
-              "source2",
-              "source3",
-              "source4",
-              "source5",
-              "source6",
-              "sourc7",
-              "source8",
-              "source9",
-              "source10",
-              "source11",
-              "source12",
-            ],
+            labels: %source_names%,
             datasets: [
               {
                 data: %domain_num_per_source%,
