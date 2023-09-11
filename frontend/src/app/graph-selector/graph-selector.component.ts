@@ -55,6 +55,8 @@ export class GraphSelectorComponent implements OnInit {
   @Select(AppState.statisticIndex) statisticIndex!: Observable<number>;
   currentGraphIndex: number = 0;
   currentStatisticIndex: number = 0;
+  dots = [2, 2, 3, 2, 1];
+  selectedDotIndex = this.currentGraphIndex;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   chartOptionsArray: any[] | Partial<ChartOptions>[] = [
@@ -928,6 +930,23 @@ export class GraphSelectorComponent implements OnInit {
     });
 
     this.chartOptions = this.chartOptionsArray[0];
+
+    this.statisticIndex.subscribe(index => {
+      this.updateDots(index);
+    });
+  }
+
+  private updateDots(selectedIndex: number) {
+    // Replace this with logic to get the dots array from your state or data source
+    // For now, we'll use a dummy array to represent the dots
+    const dotsArray = [2, 2, 3, 2, 1]; // Replace with your data source or state
+
+    // Ensure the selectedIndex is within bounds
+    if (selectedIndex >= 0 && selectedIndex < dotsArray.length) {
+      this.dots = new Array(dotsArray[selectedIndex]).fill(0);
+    } else {
+      this.dots = []; // Handle invalid selectedIndex
+    }
   }
 
   public generateData(count: number, yrange: { max: number; min: number }) {
@@ -1086,7 +1105,9 @@ export class GraphSelectorComponent implements OnInit {
         this.chartOptionsArray[this.currentStatisticIndex].length) %
       this.chartOptionsArray[this.currentStatisticIndex].length;
 
-    this.store.dispatch(new ChooseStatistic(this.currentStatisticIndex));
+      this.selectedDotIndex = this.currentGraphIndex;
+
+    //this.store.dispatch(new ChooseStatistic(this.currentStatisticIndex));
 
     this.renderGraph();
   }
@@ -1100,7 +1121,10 @@ export class GraphSelectorComponent implements OnInit {
       (this.currentGraphIndex + 1) %
       this.chartOptionsArray[this.currentStatisticIndex].length;
 
-    this.store.dispatch(new ChooseStatistic(this.currentStatisticIndex));
+    this.selectedDotIndex = this.currentGraphIndex;
+
+
+    //this.store.dispatch(new ChooseStatistic(this.currentStatisticIndex));
 
     this.renderGraph();
   }
@@ -1131,6 +1155,7 @@ export class GraphSelectorComponent implements OnInit {
     ) {
       this.currentGraphIndex =
         this.chartOptionsArray[this.currentStatisticIndex].length - 1;
+        this.selectedDotIndex = this.currentGraphIndex;
     }
 
     // Update chart height based on container's height
@@ -1193,5 +1218,18 @@ export class GraphSelectorComponent implements OnInit {
     } else {
       this.myChart.nativeElement.style.transform = `translateY(0px)`;
     }*/
+  }
+
+  getSelectedDots(): number[] {
+    const selectedDotsCount = this.dots[this.selectedDotIndex];
+    return Array(selectedDotsCount).fill(0);
+  }
+
+  selectDot(index: number) {
+    this.selectedDotIndex = index;
+    this.currentGraphIndex = index;
+
+    this.renderGraph();
+
   }
 }
