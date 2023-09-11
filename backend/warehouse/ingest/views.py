@@ -38,7 +38,7 @@ def ingest_live_review(request: HttpRequest):
         timestamp = datetime.now().timestamp()
 
         # ----------- Verifying source is valid ------------
-        DOMAINS_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
+        DOMAINS_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
         request_to_domains_body = {"source_id": source_id_raw}
         response_from_domains = requests.post(
             DOMAINS_ENDPOINT, data=json.dumps(request_to_domains_body)
@@ -60,7 +60,7 @@ def ingest_live_review(request: HttpRequest):
         # --------------------------------------------------
 
         ANALYSER_ENDPOINT = (
-            f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+            f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
         )
         request_to_engine_body = {"data": [review_text]}
         response_from_analyser = requests.post(
@@ -102,10 +102,10 @@ def make_live_review(request: HttpRequest, source_id, source_name):
 @csrf_exempt
 def ingest_CSV_file(request: HttpRequest):
     ANALYSER_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
     )
     GET_SOURCE_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     )
     originalRequest = request
     if request.method == "POST":

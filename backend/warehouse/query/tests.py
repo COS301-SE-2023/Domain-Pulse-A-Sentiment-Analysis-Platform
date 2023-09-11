@@ -72,7 +72,7 @@ class QueryEngineTests(TestCase):
         )
         mock_get_records.assert_called_once_with(source_id)
         mocked_response.assert_called_once_with(
-            f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/",
+            f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/",
             data=json.dumps({"metrics": mock_records}),
         )
 
