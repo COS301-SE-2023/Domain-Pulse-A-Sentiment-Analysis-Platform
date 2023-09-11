@@ -3,15 +3,54 @@
 :host
     display: flex
     justify-content: center
+    align-items: flex-start
     height: inherit
     width: inherit
     background-color: var(--background)
-    padding-top: 1.3rem
+    overflow: hidden
 
 .dp-logo
     height: 8rem
-    background-image: url('../../assets/dp-logo-blue.png')
+    width: 100%
+    background-image: url('../../assets/dp-logo-white.png')
     background-size: contain
     background-repeat: no-repeat
     background-position: center
+    margin-top: 1rem
 
+.accord-container
+    padding: 1rem
+    display: flex
+    flex-direction: column
+    align-items: center
+
+.top-bar
+    height: 260px
+    width: 100vw
+    margin-bottom: 1rem
+    background-color: #037fff
+    border-bottom-left-radius: 80px
+    border-bottom-right-radius: 80px
+
+.searchbar
+    width: 30%
+    height: 3rem
+    border-radius: 1rem
+    border: none
+    outline: none
+    padding-left: 1rem
+    padding: 1.2rem 
+    font-size: 1.2rem
+    margin-top: 1rem
+    margin-bottom: 1rem
+    background-color: white
+    border: 1px solid black
+    border-radius: 45px
+    color: var(--text)
+
+    > input 
+        background-color: inherit
+        color: white
+        height: inherit
+        width: 90%
+        border: none
