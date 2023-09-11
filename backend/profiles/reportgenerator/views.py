@@ -31,16 +31,48 @@ def upload_pdf_to_azure(file_path, file_name):
     return pdf_url
 
 
-def generate_domain_graphs_js(
-    domain_overall_data_points,
-    domain_ratios,
-    domain_emotions,
-    domain_num_per_source,
-    domain_timeseries,
-):
+def generate_domain_graphs_js(response_data):
     f = open("assets/domain_js.txt", "r")
     default_js = f.read()
     f.close()
+
+    domain_overall_data_points = [
+        int(response_data["domain"]["aggregated_metrics"]["general"]["score"] * 100),
+        100
+        - int(response_data["domain"]["aggregated_metrics"]["general"]["score"] * 100),
+    ]
+
+    domain_ratios = [
+        int(response_data["domain"]["aggregated_metrics"]["ratios"]["positive"] * 100),
+        int(response_data["domain"]["aggregated_metrics"]["ratios"]["negative"] * 100),
+        int(response_data["domain"]["aggregated_metrics"]["ratios"]["neutral"] * 100),
+    ]
+    domain_emotions = [
+        int(response_data["domain"]["aggregated_metrics"]["emotions"]["anger"] * 100),
+        int(response_data["domain"]["aggregated_metrics"]["emotions"]["disgust"] * 100),
+        int(response_data["domain"]["aggregated_metrics"]["emotions"]["fear"] * 100),
+        int(response_data["domain"]["aggregated_metrics"]["emotions"]["joy"] * 100),
+        int(response_data["domain"]["aggregated_metrics"]["emotions"]["sadness"] * 100),
+        int(
+            response_data["domain"]["aggregated_metrics"]["emotions"]["surprise"] * 100
+        ),
+    ]
+
+    # Getting number of reviews per source
+    domain_num_per_source = []
+    for key in response_data:
+        if key != "domain":
+            domain_num_per_source.append(
+                {
+                    response_data[key]["source_name"]: response_data[key]["meta_data"][
+                        "num_analysed"
+                    ]
+                }
+            )
+
+    domain_timeseries = []
+    for i in response_data["domain"]["timeseries"]["overall"]:
+        domain_timeseries.append({"x": i[0], "y": i[1]})
 
     result = default_js.replace(
         "%domain_overall_data_points%", str(domain_overall_data_points)
@@ -53,28 +85,39 @@ def generate_domain_graphs_js(
     return result
 
 
-def generate_domain_html(
-    domain_icon,
-    domain_description,
-    domain_overall_score,
-    domain_num_analysed,
-    domain_reviews_per_day,
-    domain_toxicity,
-    domain_positive,
-    domain_negative,
-    domain_neutral,
-    domain_anger,
-    domain_disgust,
-    domain_fear,
-    domain_joy,
-    domain_sadness,
-    domain_surprise,
-    domain_start_date,
-    domain_end_date,
-):
+def generate_domain_html(domain_icon, domain_description, response_data):
     f = open("assets/domain_html.txt", "r")
     default_js = f.read()
     f.close()
+    domain_data = response_data["domain"]
+    domain_overall_score = int(
+        domain_data["aggregated_metrics"]["general"]["score"] * 100
+    )
+    domain_num_analysed = domain_data["meta_data"]["num_analysed"]
+
+    # calculating difference between earliest and latest record
+    date_format = "%d %B %Y"
+    start = time.mktime(
+        time.strptime(domain_data["meta_data"]["earliest_record"], date_format)
+    )
+    end = time.mktime(
+        time.strptime(domain_data["meta_data"]["latest_record"], date_format)
+    )
+    domain_reviews_per_day = ((end - start) / 86400) / domain_num_analysed
+    domain_toxicity = int(domain_data["aggregated_metrics"]["toxicity"]["score"] * 100)
+
+    domain_positive = int(domain_data["aggregated_metrics"]["ratios"]["positive"] * 100)
+    domain_negative = int(domain_data["aggregated_metrics"]["ratios"]["negative"] * 100)
+    domain_neutral = int(domain_data["aggregated_metrics"]["ratios"]["neutral"] * 100)
+    domain_anger = int(domain_data["aggregated_metrics"]["emotions"]["anger"] * 100)
+    domain_disgust = int(domain_data["aggregated_metrics"]["emotions"]["disgust"] * 100)
+    domain_fear = int(domain_data["aggregated_metrics"]["emotions"]["fear"] * 100)
+    domain_joy = int(domain_data["aggregated_metrics"]["emotions"]["joy"] * 100)
+    domain_sadness = int(domain_data["aggregated_metrics"]["emotions"]["sadness"] * 100)
+    domain_surprise = int(
+        domain_data["aggregated_metrics"]["emotions"]["surprise"] * 100
+    )
+
     result = default_js.replace("{domain_icon}", domain_icon)
     result = result.replace("{domain_description}", domain_description)
     result = result.replace("{domain_overall_score}", str(domain_overall_score))
@@ -92,8 +135,12 @@ def generate_domain_html(
     result = result.replace("{domain_joy}", str(domain_joy))
     result = result.replace("{domain_sadness}", str(domain_sadness))
     result = result.replace("{domain_surprise}", str(domain_surprise))
-    result = result.replace("{domain_start_date}", str(domain_start_date))
-    result = result.replace("{domain_end_date}", str(domain_end_date))
+    result = result.replace(
+        "{domain_start_date}", str(domain_data["meta_data"]["earliest_record"])
+    )
+    result = result.replace(
+        "{domain_end_date}", str(domain_data["meta_data"]["latest_record"])
+    )
 
     return result
 
@@ -244,112 +291,13 @@ def generate_report(request: HttpRequest):
                         response_data[key]["source_name"] = i["source_name"]
                         response_data[key]["source_type"] = i["params"]["source_type"]
 
-        domain_data = response_data["domain"]
-
-        domain_overall_data_points = [
-            int(domain_data["aggregated_metrics"]["general"]["score"] * 100),
-            100 - int(domain_data["aggregated_metrics"]["general"]["score"] * 100),
-        ]
-
-        domain_ratios = [
-            int(domain_data["aggregated_metrics"]["ratios"]["positive"] * 100),
-            int(domain_data["aggregated_metrics"]["ratios"]["negative"] * 100),
-            int(domain_data["aggregated_metrics"]["ratios"]["neutral"] * 100),
-        ]
-        domain_emotions = [
-            int(domain_data["aggregated_metrics"]["emotions"]["anger"] * 100),
-            int(domain_data["aggregated_metrics"]["emotions"]["disgust"] * 100),
-            int(domain_data["aggregated_metrics"]["emotions"]["fear"] * 100),
-            int(domain_data["aggregated_metrics"]["emotions"]["joy"] * 100),
-            int(domain_data["aggregated_metrics"]["emotions"]["sadness"] * 100),
-            int(domain_data["aggregated_metrics"]["emotions"]["surprise"] * 100),
-        ]
-
-        # Getting number of reviews per source
-        domain_num_per_source = []
-        for key in response_data:
-            if key != "domain":
-                domain_num_per_source.append(
-                    {
-                        response_data[key]["source_name"]: response_data[key][
-                            "meta_data"
-                        ]["num_analysed"]
-                    }
-                )
-
-        domain_timeseries = []
-        for i in domain_data["timeseries"]["overall"]:
-            domain_timeseries.append({"x": i[0], "y": i[1]})
-
-        domain_graphs_js_string = generate_domain_graphs_js(
-            domain_overall_data_points,
-            domain_ratios,
-            domain_emotions,
-            domain_num_per_source,
-            domain_timeseries,
-        )
+        domain_graphs_js_string = generate_domain_graphs_js(response_data)
 
         domain_icon = domain["icon"]
         domain_description = domain["description"]
 
-        domain_overall_score = int(
-            domain_data["aggregated_metrics"]["general"]["score"] * 100
-        )
-        domain_num_analysed = domain_data["meta_data"]["num_analysed"]
-
-        # calculating difference between earliest and latest record
-        date_format = "%d %B %Y"
-        start = time.mktime(
-            time.strptime(domain_data["meta_data"]["earliest_record"], date_format)
-        )
-        end = time.mktime(
-            time.strptime(domain_data["meta_data"]["latest_record"], date_format)
-        )
-        domain_reviews_per_day = ((end - start) / 86400) / domain_num_analysed
-        domain_toxicity = int(
-            domain_data["aggregated_metrics"]["toxicity"]["score"] * 100
-        )
-
-        domain_positive = int(
-            domain_data["aggregated_metrics"]["ratios"]["positive"] * 100
-        )
-        domain_negative = int(
-            domain_data["aggregated_metrics"]["ratios"]["negative"] * 100
-        )
-        domain_neutral = int(
-            domain_data["aggregated_metrics"]["ratios"]["neutral"] * 100
-        )
-        domain_anger = int(domain_data["aggregated_metrics"]["emotions"]["anger"] * 100)
-        domain_disgust = int(
-            domain_data["aggregated_metrics"]["emotions"]["disgust"] * 100
-        )
-        domain_fear = int(domain_data["aggregated_metrics"]["emotions"]["fear"] * 100)
-        domain_joy = int(domain_data["aggregated_metrics"]["emotions"]["joy"] * 100)
-        domain_sadness = int(
-            domain_data["aggregated_metrics"]["emotions"]["sadness"] * 100
-        )
-        domain_surprise = int(
-            domain_data["aggregated_metrics"]["emotions"]["surprise"] * 100
-        )
-
         domain_html_string = generate_domain_html(
-            domain_icon,
-            domain_description,
-            domain_overall_score,
-            domain_num_analysed,
-            domain_reviews_per_day,
-            domain_toxicity,
-            domain_positive,
-            domain_negative,
-            domain_neutral,
-            domain_anger,
-            domain_disgust,
-            domain_fear,
-            domain_joy,
-            domain_sadness,
-            domain_surprise,
-            domain_data["meta_data"]["earliest_record"],
-            domain_data["meta_data"]["latest_record"],
+            domain_icon, domain_description, response_data
         )
 
         source_graph_js = generate_source_graph_js(response_data)
