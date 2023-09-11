@@ -24,12 +24,12 @@
           id="chartContainer"
           #chartContainer
           class="chart-container"
-          style="text-align: center; margin-bottom: 15px;"
+          style="text-align: center; margin-bottom: 15px; overflow: hidden;"
           
         >
           <!-- <canvas #myChart data-cy="canvas-element"></canvas> -->
           <apx-chart
-            style="z-index: 0; fill: rgb(211, 77, 77) !important"
+            style="z-index: 0;"
             [series]="chartOptions.series!"
             [chart]="chartOptions.chart!"
             [xaxis]="chartOptions.xaxis!"
