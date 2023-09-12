@@ -13,7 +13,7 @@
               ">
             <div class="circle-wrapper-domain flex-row center up-item"
               style="height: 150px; width: 150px; box-shadow: none">
-              <img src="{assets_path}/images/starbucks-logo.png" />
+              <img src={domain_icon} />
             </div>
             <p style="
                   text-align: center;

@@ -420,6 +420,11 @@ def generate_report(request: HttpRequest):
                         response_data[key]["source_type"] = i["params"]["source_type"]
                         response_data[key]["source_icon"] = i["source_icon"]
 
+        number_of_sources = len(response_data) - 1
+        comments_per_source = number_of_sources / 8
+        if comments_per_source < 1:
+            comments_per_source = 1
+
         domain_graphs_js_string = generate_domain_graphs_js(response_data)
 
         domain_icon = domain["icon"]
@@ -441,6 +446,8 @@ def generate_report(request: HttpRequest):
         result = result.replace("{ source_graph_js_string }", source_graph_js)
         result = result.replace("{source_html}", source_html)
         result = result.replace("{final_page_num}", str(FINAL_PAGE_NUM))
+        result = result.replace("{domain_name}", domain["name"])
+        result = result.replace("{domain_icon}", domain_icon)
         html_template = result.replace("{assets_path}", assets_path)
 
         # Format the html_template string.
