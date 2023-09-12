@@ -1,16 +1,19 @@
 <div class="flex-column align-center">
   <div class="top-bar flex-column center" style="color: white;">
-    <div class="dp-logo"></div>
-    <h2>What do you need help with?</h2>
-    <div class="searchbar flex-row">
-      <input type="text" placeholder="Search.." name="search">
+    
+    <div class="flex-row center" style="margin-top: 2rem;">
+      <img src="../../assets/logos/logo-small-white.png" alt="domain pulse logo" style="height: 3rem;">
+      <p class="title">Help Page</p>
     </div>
+    <!-- <h2><div class="dp-logo"></div>What do you need help with?</h2> -->
+      <input class="search-bar" type="text" placeholder="Search.." name="search">
+
   </div>
 
-  <div class="flex-column" style="width: 50vw; height: 60vh; overflow-y: scroll;">
+  <div class="flex-column scroll-div" style="width: 70vw; height: 100vh; overflow-y: scroll;">
    
 
-    <div class="flex-column" style="gap: 0.7rem">
+    <div class="flex-column" style="width: 40%;" style="gap: 0.7rem">
       <accordion [collapsing]="collapsing">
         <accordion-item title="How to log into the Application">
           <ng-template accordionContent>

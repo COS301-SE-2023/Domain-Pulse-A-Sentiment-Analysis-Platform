@@ -12,6 +12,14 @@
 p
     color: var(--text-color)
 
+.title
+    font-size: 2rem
+    font-weight: 800
+    font-family: 'Open Sans'
+    color: white
+    margin-left: 1rem
+
+
 .dp-logo
     height: 8rem
     width: 100%
@@ -21,6 +29,24 @@ p
     background-position: center
     margin-top: 1rem
 
+.scroll-div
+    scrollbar-width: 1rem
+    scrollbar-color: var(--grey-subtle)
+    padding: 1rem
+
+    &::-webkit-scrollbar
+        width: 1rem
+
+    &::-webkit-scrollbar-track
+        background-color: transparent
+
+    &::-webkit-scrollbar-thumb
+        background-color: var(--grey-subtle)
+        border-radius: 10px
+
+    &::-webkit-scrollbar-thumb:hover
+        background-color: var(--grey-item)
+
 .accord-container
     padding: 1rem
     display: flex
@@ -28,16 +54,15 @@ p
     align-items: center
 
 .top-bar
-    height: 260px
     width: 100vw
     margin-bottom: 1rem
     background-color: #037fff
     border-bottom-left-radius: 80px
     border-bottom-right-radius: 80px
 
-.searchbar
+.search-bar
     width: 30%
-    height: 3rem
+    height: 0.3rem
     border-radius: 1rem
     border: none
     outline: none
@@ -47,9 +72,8 @@ p
     margin-top: 1rem
     margin-bottom: 1rem
     background-color: white
-    border: 1px solid black
     border-radius: 45px
-    color: var(--text)
+    color: black
 
     > input 
         background-color: inherit
