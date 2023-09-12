@@ -35,14 +35,14 @@ p
     padding: 1rem
 
     &::-webkit-scrollbar
-        width: 1rem
+        width: 0.8rem
 
     &::-webkit-scrollbar-track
         background-color: transparent
 
     &::-webkit-scrollbar-thumb
         background-color: var(--grey-subtle)
-        border-radius: 10px
+        border-radius: 2rem
 
     &::-webkit-scrollbar-thumb:hover
         background-color: var(--grey-item)
@@ -56,11 +56,23 @@ p
 .top-bar
     width: 100vw
     margin-bottom: 1rem
-    background-color: #037fff
-    border-bottom-left-radius: 80px
-    border-bottom-right-radius: 80px
+    background: linear-gradient(to bottom, #005ebd, #037fff)
+    border-bottom-left-radius: 6rem
+    border-bottom-right-radius: 6rem
+    
 
-.search-bar
+.search-button
+    border-radius: 25px
+    background-color: white
+    color: black
+    font-family: 'Source Sans 3'
+    font-size: 14pt
+    border: none
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+    margin-left: 1rem
+    padding: 0.5rem
+
+/* .search-bar
     width: 30%
     height: 0.3rem
     border-radius: 1rem
@@ -68,16 +80,33 @@ p
     outline: none
     padding-left: 1rem
     padding: 1.2rem 
-    font-size: 1.2rem
+    font-size: 1rem
     margin-top: 1rem
     margin-bottom: 1rem
     background-color: white
     border-radius: 45px
     color: black
+    font-family: 'Source Sans 3' */
 
-    > input 
-        background-color: inherit
-        color: white
-        height: inherit
-        width: 90%
-        border: none
+.search-container
+    background-color: white
+    border-radius: 45px
+    padding:1rem
+    width: 80%
+    margin-bottom: 1rem
+
+.search-bar
+    width: 100%
+    padding: 0rem 2rem 0rem 0rem
+    border-radius: 0px
+    border: none
+    outline: none
+
+
+
+> input 
+    background-color: inherit
+    color: white
+    height: inherit
+    width: 90%
+    border: none
