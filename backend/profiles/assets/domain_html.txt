@@ -34,30 +34,7 @@
                 overflow-x: hidden;
                 flex-wrap: wrap;
               ">
-            <div class="box3 sb14">I'm speech bubble</div>
-            <div class="box3 sb13">
-              This is a longer como etst to see hwo the sce whether or not it
-              is good or bad
-            </div>
-            <div class="box3 sb14">
-              This is a longer comment to etst to see or not it is good or bad
-            </div>
-            <div class="box3 sb13">I'm speech bubble</div>
-            <div class="box3 sb14">
-              This is a longer como etst to see hwo the sce whether or not it
-              is good or bad
-            </div>
-            <div class="box3 sb13">
-              This is a longer comment to etst to see or not it is good or bad
-            </div>
-            <div class="box3 sb14">I'm speech bubble</div>
-            <div class="box3 sb13">I'm speech bubble</div>
-            <div class="box3 sb14">
-              This is a longer comment to etst to or not ier s good or bad er
-              comment to etst to see or not ier s good or bad er comment to
-              etst to see or not ier comment to etst to see or not ier comment
-              to etst to see or not i
-            </div>
+            {domain_sample_data}
           </div>
         </div>
         <div class="flex-column" style="height: 100%; flex-basis: 60%; align-items: flex-start">

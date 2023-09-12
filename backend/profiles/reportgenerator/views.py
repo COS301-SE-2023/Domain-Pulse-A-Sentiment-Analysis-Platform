@@ -20,6 +20,8 @@ GET_DOMAINS_ENDPOINT = (
 
 FINAL_PAGE_NUM = 5
 
+DOMAINS_SAMPLE_DATA = []
+
 IMAGE_PATHS = {
     "googlereviews": "{assets_path}/images/google-logo.png",
     "youtube": "{assets_path}/images/youtube-logo.png",
@@ -93,7 +95,9 @@ def generate_domain_graphs_js(response_data):
     return result
 
 
-def generate_domain_html(domain_icon, domain_description, response_data):
+def generate_domain_html(
+    domain_icon, domain_description, response_data, samples_per_source
+):
     f = open("assets/domain_html.txt", "r")
     default_js = f.read()
     f.close()
@@ -102,6 +106,29 @@ def generate_domain_html(domain_icon, domain_description, response_data):
         domain_data["aggregated_metrics"]["general"]["score"] * 100
     )
     domain_num_analysed = domain_data["meta_data"]["num_analysed"]
+    source_comment_count = 1
+    for source in response_data:
+        if source != "domain":
+            if source_comment_count <= 8:
+                DOMAINS_SAMPLE_DATA.extend(
+                    response_data[source]["individual_metrics"][:samples_per_source]
+                )
+                source_comment_count += 1
+            else:
+                break
+
+    sample_comment_string = ""
+    counter = 0
+    for sample in DOMAINS_SAMPLE_DATA:
+        if counter % 2 == 0:
+            sample_comment_string += (
+                '<div class="box3 sb14">' + sample["data"] + "</div>"
+            )
+        else:
+            sample_comment_string += (
+                '<div class="box3 sb13">' + sample["data"] + "</div>"
+            )
+        counter += 1
 
     domain_sources = []
     for key in response_data:
@@ -169,6 +196,7 @@ def generate_domain_html(domain_icon, domain_description, response_data):
         "{domain_end_date}", str(domain_data["meta_data"]["latest_record"])
     )
     result = result.replace("{domain_sources}", source_list)
+    result = result.replace("{domain_sample_data}", sample_comment_string)
 
     return result
 
@@ -421,17 +449,18 @@ def generate_report(request: HttpRequest):
                         response_data[key]["source_icon"] = i["source_icon"]
 
         number_of_sources = len(response_data) - 1
-        comments_per_source = number_of_sources / 8
-        if comments_per_source < 1:
-            comments_per_source = 1
+        samples_per_source = 8 / number_of_sources
+        if samples_per_source < 1:
+            samples_per_source = 1
 
+        samples_per_source = int(samples_per_source)
         domain_graphs_js_string = generate_domain_graphs_js(response_data)
 
         domain_icon = domain["icon"]
         domain_description = domain["description"]
 
         domain_html_string = generate_domain_html(
-            domain_icon, domain_description, response_data
+            domain_icon, domain_description, response_data, samples_per_source
         )
 
         source_graph_js = generate_source_graph_js(response_data)
