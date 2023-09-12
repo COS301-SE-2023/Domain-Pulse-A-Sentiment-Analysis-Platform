@@ -18,6 +18,8 @@ GET_DOMAINS_ENDPOINT = (
     "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
 )
 
+FINAL_PAGE_NUM = 5
+
 IMAGE_PATHS = {
     "googlereviews": "{assets_path}/images/google-logo.png",
     "youtube": "{assets_path}/images/youtube-logo.png",
@@ -105,7 +107,7 @@ def generate_domain_html(domain_icon, domain_description, response_data):
     for key in response_data:
         if key != "domain":
             domain_sources.append(
-                {response_data[key]["source_name"]: response_data[key]["source_type"]}
+                {response_data[key]["source_name"]: response_data[key]["source_icon"]}
             )
 
     source_list = ""
@@ -113,7 +115,8 @@ def generate_domain_html(domain_icon, domain_description, response_data):
         source_list += '<div class="flex-item flex-column center"><div>'
         source_list += (
             '<img src="'
-            + IMAGE_PATHS[list(i.values())[0]]
+            + "{assets_path}/images/"
+            + list(i.values())[0]
             + '"class="up-item" style="width: 40%" />'
         )
         source_list += "<p>" + list(i.keys())[0] + "</p>"
@@ -255,6 +258,106 @@ def generate_source_graph_js(source_data):
     return result
 
 
+def generate_source_html(response_data):
+    f = open("assets/source_html.txt", "r")
+    default_html = f.read()
+    f.close()
+    source_num = 1
+    page_number = 3
+    for source in response_data:
+        if source != "domain":
+            source_overall_score = int(
+                response_data[source]["aggregated_metrics"]["general"]["score"] * 100
+            )
+            source_num_analysed = response_data[source]["meta_data"]["num_analysed"]
+
+            # calculating difference between earliest and latest record
+            date_format = "%d %B %Y"
+            start = time.mktime(
+                time.strptime(
+                    response_data[source]["meta_data"]["earliest_record"], date_format
+                )
+            )
+            end = time.mktime(
+                time.strptime(
+                    response_data[source]["meta_data"]["latest_record"], date_format
+                )
+            )
+            source_reviews_per_day = ((end - start) / 86400) / source_num_analysed
+            source_toxicity = int(
+                response_data[source]["aggregated_metrics"]["toxicity"]["score"] * 100
+            )
+
+            source_positive = int(
+                response_data[source]["aggregated_metrics"]["ratios"]["positive"] * 100
+            )
+            source_negative = int(
+                response_data[source]["aggregated_metrics"]["ratios"]["negative"] * 100
+            )
+            source_neutral = int(
+                response_data[source]["aggregated_metrics"]["ratios"]["neutral"] * 100
+            )
+            source_anger = int(
+                response_data[source]["aggregated_metrics"]["emotions"]["anger"] * 100
+            )
+            source_disgust = int(
+                response_data[source]["aggregated_metrics"]["emotions"]["disgust"] * 100
+            )
+            source_fear = int(
+                response_data[source]["aggregated_metrics"]["emotions"]["fear"] * 100
+            )
+            source_joy = int(
+                response_data[source]["aggregated_metrics"]["emotions"]["joy"] * 100
+            )
+            source_sadness = int(
+                response_data[source]["aggregated_metrics"]["emotions"]["sadness"] * 100
+            )
+            source_surprise = int(
+                response_data[source]["aggregated_metrics"]["emotions"]["surprise"]
+                * 100
+            )
+
+            result = default_html.replace(
+                "{source_icon}",
+                "{assets_path}/images/" + response_data[source]["source_icon"],
+            )
+            result = result.replace(
+                "{source_name}", response_data[source]["source_name"]
+            )
+            result = result.replace("{source_number}", str(source_num))
+            result = result.replace("{source_overall_score}", str(source_overall_score))
+            result = result.replace("{source_num_analysed}", str(source_num_analysed))
+            result = result.replace(
+                "{source_review_rate}", str(round(source_reviews_per_day, 2))
+            )
+            result = result.replace("{source_toxicity}", str(source_toxicity))
+            result = result.replace("{source_positive}", str(source_positive))
+            result = result.replace("{source_negative}", str(source_negative))
+            result = result.replace("{source_neutral}", str(source_neutral))
+            result = result.replace("{source_anger}", str(source_anger))
+            result = result.replace("{source_disgust}", str(source_disgust))
+            result = result.replace("{source_fear}", str(source_fear))
+            result = result.replace("{source_joy}", str(source_joy))
+            result = result.replace("{source_sadness}", str(source_sadness))
+            result = result.replace("{source_surprise}", str(source_surprise))
+            result = result.replace(
+                "{source_start_date}",
+                str(response_data[source]["meta_data"]["earliest_record"]),
+            )
+            result = result.replace(
+                "{source_end_date}",
+                str(response_data[source]["meta_data"]["latest_record"]),
+            )
+            result = result.replace("{page_num_1}", str(page_number))
+            page_number += 1
+            result = result.replace("{page_num_2}", str(page_number))
+            page_number += 1
+            FINAL_PAGE_NUM = page_number
+            source_num += 1
+
+    return result
+
+
 @csrf_exempt
 def generate_report(request: HttpRequest):
     assets_path = os.getenv("ASSETS_PATH")
@@ -315,6 +418,7 @@ def generate_report(request: HttpRequest):
                     if (i["source_id"]) == key:
                         response_data[key]["source_name"] = i["source_name"]
                         response_data[key]["source_type"] = i["params"]["source_type"]
+                        response_data[key]["source_icon"] = i["source_icon"]
 
         domain_graphs_js_string = generate_domain_graphs_js(response_data)
 
@@ -327,12 +431,16 @@ def generate_report(request: HttpRequest):
 
         source_graph_js = generate_source_graph_js(response_data)
 
+        source_html = generate_source_html(response_data)
+
         File = open("assets/input_template.html", "r")
         content = File.read()
         File.close()
         result = content.replace("{ domain_graphs_js_string }", domain_graphs_js_string)
         result = result.replace("{domain_html_string}", domain_html_string)
         result = result.replace("{ source_graph_js_string }", source_graph_js)
+        result = result.replace("{source_html}", source_html)
+        result = result.replace("{final_page_num}", str(FINAL_PAGE_NUM))
         html_template = result.replace("{assets_path}", assets_path)
 
         # Format the html_template string.
