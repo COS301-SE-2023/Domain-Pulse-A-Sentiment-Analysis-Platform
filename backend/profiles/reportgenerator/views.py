@@ -345,9 +345,35 @@ def generate_source_html(response_data):
                 * 100
             )
 
+            sample_data = []
+
+            if source != "domain":
+                for sample in response_data[source]["individual_metrics"]:
+                    source_comment_count = 1
+                    if source_comment_count <= 13:
+                        if sample not in DOMAINS_SAMPLE_DATA:
+                            sample_data.append(sample["data"])
+                            source_comment_count += 1
+
+            counter = 0
+            source_sample_data_string = ""
+            for data in sample_data:
+                if counter % 2 == 0:
+                    source_sample_data_string += (
+                        '<div class="box3 sb14">' + data + "</div>"
+                    )
+                else:
+                    source_sample_data_string += (
+                        '<div class="box3 sb13">' + data + "</div>"
+                    )
+                counter += 1
+
             result = default_html.replace(
                 "{source_icon}",
                 "{assets_path}/images/" + response_data[source]["source_icon"],
+            )
+            result = default_html.replace(
+                "{source_sample_data}", source_sample_data_string
             )
             result = result.replace(
                 "{source_name}", response_data[source]["source_name"]
