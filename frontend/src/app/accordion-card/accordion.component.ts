@@ -16,7 +16,7 @@ import { merge, of } from 'rxjs';
 @Component({
   selector: 'accordion',
   templateUrl: './accordion.component.html',
-  styleUrls: ['./accordion.component.css'],
+  styleUrls: ['./accordion.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('contentExpansion', [
