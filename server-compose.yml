@@ -27,6 +27,12 @@ services:
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
     ports: 
       - "8000:8000"
     restart: always
@@ -63,6 +69,12 @@ services:
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
     ports:
       - "8001:8001"
     restart: always
@@ -99,6 +111,12 @@ services:
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
     ports:
       - "8002:8002"
     restart: always
@@ -135,6 +153,12 @@ services:
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
     ports:
       - "8003:8003"
     restart: always
@@ -171,6 +195,12 @@ services:
     env_file:
       - ./backend/.env
       - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
     ports:
       - "8004:8004"
     restart: always
@@ -185,11 +215,6 @@ services:
     image: thuthuka111/domain-pulse-webserver:dev-latest
     environment:
       - NGINX_CONF=dev-domainpulse.app.conf
-      - DOMAINS_HOST=dev-domains
-      - ENGINE_HOST=dev-engine
-      - PROFILES_HOST=dev-profiles
-      - SOURCECONNECTOR_HOST=dev-sourceconnector
-      - WAREHOUSE_HOST=dev-warehouse
     restart: always
     volumes:
       - uwsgi_data:/tmp/uwsgi/
@@ -212,7 +237,7 @@ services:
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     ports:
-      - "6000:80"
+      - "5500:80"
     depends_on:
       - prod-engine
       - prod-domains
