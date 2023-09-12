@@ -15,16 +15,7 @@
                     height: 50px;
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                   ">
-                <div class="flex-row center" style="height: 100%; margin-left: 1rem">
-                  <img src="{assets_path}/images/link-solid.svg" style="width: 30px; margin-right: 1rem" />
-                  <a style="
-                        max-width: 500px;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        overflow: hidden;
-                      "
-                    href="https://www.youtube.com/watch?v=xpN394MAhPA">https://www.youtube.ssssssssssssssssssssssssssssssssssssssssscom/watch?v=xpN394MAhPA</a>
-                </div>
+                {source_url}
               </div>
 
               <div class="flex-column up-card" style="display: flex; align-items: flex-start; width: 100%">

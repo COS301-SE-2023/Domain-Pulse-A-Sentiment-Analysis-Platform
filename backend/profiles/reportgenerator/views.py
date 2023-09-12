@@ -18,6 +18,9 @@ GET_DOMAINS_ENDPOINT = (
     "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
 )
 
+assets_path = os.getenv("ASSETS_PATH")
+
+
 FINAL_PAGE_NUM = 5
 
 DOMAINS_SAMPLE_DATA = []
@@ -43,7 +46,7 @@ def upload_pdf_to_azure(file_path, file_name):
 
 
 def generate_domain_graphs_js(response_data):
-    f = open("assets/domain_js.txt", "r")
+    f = open(assets_path + "/domain_js.txt", "r")
     default_js = f.read()
     f.close()
 
@@ -98,7 +101,7 @@ def generate_domain_graphs_js(response_data):
 def generate_domain_html(
     domain_icon, domain_description, response_data, samples_per_source
 ):
-    f = open("assets/domain_html.txt", "r")
+    f = open(assets_path + "/domain_html.txt", "r")
     default_js = f.read()
     f.close()
     domain_data = response_data["domain"]
@@ -202,7 +205,7 @@ def generate_domain_html(
 
 
 def generate_source_graph_js(source_data):
-    f = open("assets/source_js.txt", "r")
+    f = open(assets_path + "/source_js.txt", "r")
     default_js = f.read()
     f.close()
     source_num = 1
@@ -287,7 +290,7 @@ def generate_source_graph_js(source_data):
 
 
 def generate_source_html(response_data):
-    f = open("assets/source_html.txt", "r")
+    f = open(assets_path + "/source_html.txt", "r")
     default_html = f.read()
     f.close()
     source_num = 1
@@ -299,6 +302,25 @@ def generate_source_html(response_data):
             )
             source_num_analysed = response_data[source]["meta_data"]["num_analysed"]
 
+            source_url_string = ""
+
+            if response_data[source]["url"] != "":
+                source_url_string = (
+                    '<div class="flex-row center" style="height: 100%; margin-left: 1rem">\
+                  <img src="{assets_path}/images/link-solid.svg" style="width: 30px; margin-right: 1rem" />\
+                  <a style="\
+                        max-width: 500px;\
+                        text-overflow: ellipsis;\
+                        white-space: nowrap;\
+                        overflow: hidden;"\
+                        href="https://www.youtube.com/watch?v='
+                    + response_data[source]["url"]
+                    + '">'
+                    + response_data[source]["url"]
+                    + "</a>\
+                </div>"
+                )
+            print("here")
             # calculating difference between earliest and latest record
             date_format = "%d %B %Y"
             start = time.mktime(
@@ -362,19 +384,20 @@ def generate_source_html(response_data):
                     source_sample_data_string += (
                         '<div class="box3 sb14">' + data + "</div>"
                     )
+
                 else:
                     source_sample_data_string += (
                         '<div class="box3 sb13">' + data + "</div>"
                     )
+
                 counter += 1
 
             result = default_html.replace(
                 "{source_icon}",
                 "{assets_path}/images/" + response_data[source]["source_icon"],
             )
-            result = default_html.replace(
-                "{source_sample_data}", source_sample_data_string
-            )
+            result = result.replace("{source_url}", source_url_string)
+            result = result.replace("{source_sample_data}", source_sample_data_string)
             result = result.replace(
                 "{source_name}", response_data[source]["source_name"]
             )
@@ -473,6 +496,19 @@ def generate_report(request: HttpRequest):
                         response_data[key]["source_name"] = i["source_name"]
                         response_data[key]["source_type"] = i["params"]["source_type"]
                         response_data[key]["source_icon"] = i["source_icon"]
+                        if i["params"]["source_type"] == "youtube":
+                            response_data[key]["url"] = (
+                                "https://www.youtube.com/watch?v="
+                                + i["params"]["video_id"]
+                            )
+                        elif i["params"]["source_type"] == "googlereviews":
+                            response_data[key]["url"] = i["params"]["maps_url"]
+                        elif i["params"]["source_type"] == "tripadvisor":
+                            response_data[key]["url"] = i["params"]["tripadvisor_url"]
+                        elif i["params"]["source_type"] == "trustpilot":
+                            response_data[key]["url"] = i["params"]["query_url"]
+                        else:
+                            response_data[key]["url"] = ""
 
         number_of_sources = len(response_data) - 1
         samples_per_source = 8 / number_of_sources
@@ -493,7 +529,7 @@ def generate_report(request: HttpRequest):
 
         source_html = generate_source_html(response_data)
 
-        File = open("assets/input_template.html", "r")
+        File = open(assets_path + "/input_template.html", "r")
         content = File.read()
         File.close()
         result = content.replace("{ domain_graphs_js_string }", domain_graphs_js_string)
