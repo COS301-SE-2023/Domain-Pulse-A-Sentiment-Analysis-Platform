@@ -90,13 +90,18 @@ export class TooltipDirective {
   private showTooltip() {
     clearTimeout(this.tooltipTimeout);
 
+    /* display: flex
+    flex-direction: column */
+      this.renderer.setStyle(this.tooltip, 'display', 'flex');
+      this.renderer.setStyle(this.tooltip, 'flex-direction', 'column');
       this.renderer.setStyle(this.tooltip, 'background-color', 'rgba(3, 127, 255, 0.9)');
       this.renderer.setStyle(this.tooltip, 'color', '#e0efff');
       this.renderer.setStyle(this.tooltip, 'padding', '20px');
       //create shadow behind the tooltip
       this.renderer.setStyle(this.tooltip, 'box-shadow', '0 0 10px rgba(0, 0, 0, 0.3)');
       // set width
-      this.renderer.setStyle(this.tooltip, 'width', '250px');
+      this.renderer.setStyle(this.tooltip, 'width', 'fit-content');
+      this.renderer.setStyle(this.tooltip, 'max-width', '300px');
       this.renderer.setStyle(this.tooltip, 'border-radius', '35px');
       this.renderer.setStyle(this.tooltip, 'opacity', '1');
       this.renderer.setStyle(this.tooltip, 'transform', 'translateX(0)');
@@ -104,14 +109,34 @@ export class TooltipDirective {
       this.renderer.setStyle(this.tooltip, 'position', 'absolute');
       this.renderer.setStyle(this.tooltip, 'z-index', '11');
   
-      this.tooltip.textContent = this.tooltipText;
+      //this.tooltip.textContent = this.tooltipText;
+
+      /* display: flex
+    flex-direction: row */
+      const div = this.renderer.createElement('div');
+      this.renderer.setStyle(div, 'display', 'flex');
+      this.renderer.setStyle(div, 'flex-direction', 'row');
+      
+      const p = this.renderer.createElement('p');
+
+      p.textContent = this.tooltipText;
+
+      const br = this.renderer.createElement('br');
+
   
       const icon = this.renderer.createElement('img');
-      this.renderer.setAttribute(icon, 'src', "../assets/icons/tooltip.svg"); // Add your icon classes here
-  
+      this.renderer.setAttribute(icon, 'src', "../assets/icons/tooltip-info.png"); // Add your icon classes here
+      this.renderer.setStyle(icon, 'margin-right', '10px');
+      this.renderer.setStyle(icon, 'width', '20px');
+      this.renderer.setStyle(icon, 'height', '20px');
+
+
       const link = this.renderer.createElement('a');
       this.renderer.setAttribute(link, 'href', 'http://localhost:4200/help'); 
       this.renderer.setAttribute(link, 'target', '_blank'); // Set your link URL here
+      this.renderer.setStyle(link, 'color', 'white');
+      this.renderer.setStyle(link, 'font-size', '0.8rem');
+
       link.textContent = 'need more help?';
 
       this.renderer.listen(link, 'click', (event) => {
@@ -119,8 +144,13 @@ export class TooltipDirective {
         this.hideTooltip();
       });
   
+      this.renderer.appendChild(div, icon);
+      this.renderer.appendChild(p, br);
+      this.renderer.appendChild(p, link);
+      this.renderer.appendChild(div, p);
+      this.renderer.appendChild(this.tooltip, div);
   
-      this.renderer.appendChild(this.tooltip, link);
+
       this.renderer.appendChild(document.body, this.tooltip);
       this.updateTooltipPosition();
 
