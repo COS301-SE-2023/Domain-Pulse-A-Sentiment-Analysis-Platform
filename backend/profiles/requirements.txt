@@ -6,6 +6,7 @@ python-dotenv
 # app specific packages
 psycopg2-binary
 djangorestframework-simplejwt
+pdfkit
 
 # move away from sshtunnel
 sshtunnel
