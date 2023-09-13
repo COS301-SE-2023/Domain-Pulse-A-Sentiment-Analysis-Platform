@@ -9,7 +9,7 @@ import numpy as np
 import pdfkit
 import jinja2
 import requests
-from azure.storage.blob import BlobClient
+from azure.storage.blob import BlobClient, ContentSettings
 from check_auth import views as checks
 import shortuuid
 import tempfile
@@ -36,9 +36,10 @@ IMAGE_PATHS = {
 def upload_pdf_to_azure(file_path, file_name):
     sas_url = f"{os.getenv('BLOB_URL')}{file_name}{os.getenv('BLOB_SAS_KEY')}"
     client = BlobClient.from_blob_url(sas_url)
+    settings = ContentSettings(content_type="application/pdf")
 
     with open(file_path, "rb") as data:
-        client.upload_blob(data)
+        client.upload_blob(data, content_settings=settings)
 
     pdf_url = client.url
 
@@ -573,8 +574,8 @@ def generate_report(request: HttpRequest):
             },
         )
 
-        # pdf_url = upload_pdf_to_azure(
-        #     pdf_path, domain["name"] + "Report" + str(id) + ".pdf"
-        # )
-        # os.unlink(pdf_path)
-        return JsonResponse({"status": "SUCCESS", "url": "testing"})
+        pdf_url = upload_pdf_to_azure(
+            pdf_path, domain["name"] + "Report" + str(id) + ".pdf"
+        )
+        os.unlink(pdf_path)
+        return JsonResponse({"status": "SUCCESS", "url": pdf_url})
