@@ -380,17 +380,21 @@ class QueryEngineTests(TestCase):
     #     mocked_find.assert_called_once_with({"source_id": dummy_source_id})
     #     mock_mongo_client.return_value.close.assert_called_once()
 
-    @patch("query.views.get_address")
-    def test_foreign_request_method_get_report_data_internal(self, mock_get_address):
-        mock_get_address.return_value = "192.1.1.1"
+    def test_foreign_request_method_get_report_data_internal(self):
+        local_key = "123"
         url = "/query/get_report_data_internal/"
-        response = self.client.get(path=url)
+        response = self.client.post(
+            path=url,
+            data=json.dumps({"local_key": local_key}),
+            content_type="application/json",
+        )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(data["status"], "FAILURE")
         self.assertEqual(data["details"], "Foreign Request")
 
     def test_invalid_request_method_get_report_data_internal(self):
+        local_key = os.getenv("LOCAL_KEY")
         url = "/query/get_report_data_internal/"
         response = self.client.get(path=url)
         self.assertEqual(response.status_code, 200)
@@ -406,7 +410,7 @@ class QueryEngineTests(TestCase):
     ):
         url = "/query/get_report_data_internal/"
         source_ids = ["hbfhwbgufbo724n2n7", "hbfhwbgufbo724n2n7"]
-        request_body = {"source_ids": source_ids}
+        request_body = {"local_key": os.getenv("LOCAL_KEY"), "source_ids": source_ids}
 
         mock_verify_user.return_value = True, ""
 
@@ -422,6 +426,7 @@ class QueryEngineTests(TestCase):
             "overall": {},
             "metadata": {},
             "individual_data": {},
+            "timeseries": {},
         }
         mocked_response.return_value = mock_response
 

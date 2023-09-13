@@ -127,10 +127,9 @@ def get_report_data_internal(request: HttpRequest):
     # 2. Determine the meta-data
     # 3. Send that data to the aggregator (engine) to get cumulative metrics
     # 4. Return data from the response from 3, as well as meta-data and an other status codes, etc
-    raw_data = json.loads(request.body)
-
-    if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
-        if request.method == "POST":
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
             source_ids_raw = raw_data["source_ids"]
 
             all_individual_records = []
@@ -193,10 +192,10 @@ def get_report_data_internal(request: HttpRequest):
                     return JsonResponse({"status": "FAILURE"})
 
             return JsonResponse(response)
-
-        return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+        else:
+            return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
     else:
-        return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+        return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -369,10 +368,6 @@ def refresh_source(request: HttpRequest):
         )
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
-
-
-def get_address(request):
-    return request.META.get("REMOTE_ADDR")
 
 
 # @csrf_exempt
