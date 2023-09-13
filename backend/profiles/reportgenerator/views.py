@@ -295,6 +295,8 @@ def generate_source_html(response_data):
     f.close()
     source_num = 1
     page_number = 3
+    output = ""
+
     for source in response_data:
         if source != "domain":
             source_overall_score = int(
@@ -313,14 +315,14 @@ def generate_source_html(response_data):
                         text-overflow: ellipsis;\
                         white-space: nowrap;\
                         overflow: hidden;"\
-                        href="https://www.youtube.com/watch?v='
+                        href="'
                     + response_data[source]["url"]
                     + '">'
                     + response_data[source]["url"]
                     + "</a>\
                 </div>"
                 )
-            print("here")
+
             # calculating difference between earliest and latest record
             date_format = "%d %B %Y"
             start = time.mktime(
@@ -431,8 +433,9 @@ def generate_source_html(response_data):
             page_number += 1
             FINAL_PAGE_NUM = page_number
             source_num += 1
+            output += result + "\n"
 
-    return result
+    return output
 
 
 @csrf_exempt
