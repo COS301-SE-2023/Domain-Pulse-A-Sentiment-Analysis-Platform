@@ -1,16 +1,11 @@
 import json
 import os
 import time
-from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-import matplotlib.pyplot as plt
-import numpy as np
 import pdfkit
-import jinja2
 import requests
 from azure.storage.blob import BlobClient, ContentSettings
-from check_auth import views as checks
 import shortuuid
 import tempfile
 
