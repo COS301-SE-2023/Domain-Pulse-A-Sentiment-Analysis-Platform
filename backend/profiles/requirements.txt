@@ -8,6 +8,9 @@ psycopg2-binary
 djangorestframework-simplejwt
 pdfkit
 requests
+azure
+tempfile
+shortuuid
 
 # move away from sshtunnel
 sshtunnel
