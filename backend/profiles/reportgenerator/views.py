@@ -437,8 +437,6 @@ def generate_source_html(response_data):
 
 @csrf_exempt
 def generate_report(request: HttpRequest):
-    assets_path = os.getenv("ASSETS_PATH")
-
     # html_template = f'<div class="header"><h1>Hello World</h1> <img src="{assets_path}/images/google-logo.png"></div>'
 
     # with open(assets_path + "/input_template.html", "r") as html_template_file:
