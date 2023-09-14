@@ -299,7 +299,7 @@
       </div>
       <div class="content flex-column" style="align-items: flex-start">
       <div class="flex-row">
-        <img src="{assets_path}/images/google-logo.png" style="width: 45px; height: 45px; padding-right: 1rem" />
+        <img src="{source_icon}" style="width: 45px; height: 45px; padding-right: 1rem" />
         <p class="page-heading">{source_name}</p>
       </div>
       <div class="flex-column" style="width: 100%; align-items: flex-start">

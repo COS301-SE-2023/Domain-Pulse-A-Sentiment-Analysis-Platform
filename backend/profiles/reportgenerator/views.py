@@ -17,8 +17,6 @@ GET_DOMAINS_ENDPOINT = (
 assets_path = str(settings.ASSETS_DIR)
 
 
-FINAL_PAGE_NUM = 5
-
 DOMAINS_SAMPLE_DATA = []
 
 IMAGE_PATHS = {
@@ -428,7 +426,6 @@ def generate_source_html(response_data):
             page_number += 1
             result = result.replace("{page_num_2}", str(page_number))
             page_number += 1
-            FINAL_PAGE_NUM = page_number
             source_num += 1
             output += result + "\n"
 
@@ -538,7 +535,6 @@ def generate_report(request: HttpRequest):
         result = result.replace("{domain_html_string}", domain_html_string)
         result = result.replace("{ source_graph_js_string }", source_graph_js)
         result = result.replace("{source_html}", source_html)
-        result = result.replace("{final_page_num}", str(FINAL_PAGE_NUM))
         result = result.replace("{domain_name}", domain["name"])
         result = result.replace("{domain_icon}", domain_icon)
         html_template = result.replace("{assets_path}", assets_path)
