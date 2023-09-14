@@ -460,6 +460,10 @@ def generate_report(request: HttpRequest):
         response = requests.post(
             GET_DOMAINS_ENDPOINT, json=data, headers=request.headers
         )
+        if response.status_code != 200:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "Error in domain request"}
+            )
         response_data = response.json()
         if response_data["status"] == "FAILURE":
             return JsonResponse(

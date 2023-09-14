@@ -10,7 +10,7 @@ from django.http import HttpRequest
 # Create your tests here.
 
 
-def mocked_requests_post(url, **kwargs):
+def mocked_requests_post_correct(url, **kwargs):
     mock_response = MagicMock()
     if (
         url
@@ -143,6 +143,94 @@ def mocked_requests_post(url, **kwargs):
     return mock_response
 
 
+def mocked_requests_post_failed_domains(url, **kwargs):
+    mock_response = MagicMock()
+    mock_response.status_code = 400
+    return mock_response
+
+
+def mocked_requests_post_invalid_domains(url, **kwargs):
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"status": "FAILED", "details": "Test Error"}
+    return mock_response
+
+
+def mocked_requests_post_failed_warehouse(url, **kwargs):
+    mock_response = MagicMock()
+    if (
+        url
+        == "http://localhost:"
+        + str(os.getenv("DJANGO_DOMAINS_PORT"))
+        + "/domains/get_domain"
+    ):
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "status": "SUCCESS",
+            "domain": {
+                "_id": "64e245de5da9ebd795ec574e",
+                "name": "Testing",
+                "icon": "https://domainpulseblob.blob.core.windows.net/blob/defaultDomain1.png",
+                "description": "Testing",
+                "sources": [
+                    {
+                        "source_id": "testSouceID",
+                        "source_name": "Youtube Video",
+                        "source_icon": "youtube-logo.png",
+                        "last_refresh_timestamp": 1694119695,
+                        "params": {"source_type": "youtube", "video_id": "VQjPKqE39No"},
+                    }
+                ],
+            },
+        }
+    elif (
+        url
+        == f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+    ):
+        mock_response.status_code = 400
+
+    return mock_response
+
+
+def mocked_requests_post_invalid_warehouse(url, **kwargs):
+    mock_response = MagicMock()
+    if (
+        url
+        == "http://localhost:"
+        + str(os.getenv("DJANGO_DOMAINS_PORT"))
+        + "/domains/get_domain"
+    ):
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "status": "SUCCESS",
+            "domain": {
+                "_id": "64e245de5da9ebd795ec574e",
+                "name": "Testing",
+                "icon": "https://domainpulseblob.blob.core.windows.net/blob/defaultDomain1.png",
+                "description": "Testing",
+                "sources": [
+                    {
+                        "source_id": "testSouceID",
+                        "source_name": "Youtube Video",
+                        "source_icon": "youtube-logo.png",
+                        "last_refresh_timestamp": 1694119695,
+                        "params": {"source_type": "youtube", "video_id": "VQjPKqE39No"},
+                    }
+                ],
+            },
+        }
+    elif (
+        url
+        == f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+    ):
+        mock_response.status_code = 400
+        mock_response.json.return_value = {
+            "status": "FAILED",
+            "details": "Test Error",
+        }
+    return mock_response
+
+
 class TestGenerateReport(TestCase):
     @patch("reportgenerator.views.upload_pdf_to_azure")
     @patch("reportgenerator.views.generate_domain_graphs_js")
@@ -153,7 +241,7 @@ class TestGenerateReport(TestCase):
     @patch("pdfkit.configuration")
     @patch("pdfkit.from_string")
     @patch("os.unlink")
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.post", side_effect=mocked_requests_post_correct)
     def test_generate_report_success(
         self,
         mock_post,
@@ -190,4 +278,19 @@ class TestGenerateReport(TestCase):
         self.assertEqual(
             response_data,
             {"status": "SUCCESS", "url": "http://example.com/report.pdf"},
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post_failed_domains)
+    def test_generate_report_failed_domains(self, mock_request):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps({"domain_id": "12345"})
+
+        response = report_views.generate_report(request)
+
+        response_data = json.loads(response.content)
+
+        self.assertEqual(
+            response_data,
+            {"status": "FAILURE", "details": "Error in domain request"},
         )
