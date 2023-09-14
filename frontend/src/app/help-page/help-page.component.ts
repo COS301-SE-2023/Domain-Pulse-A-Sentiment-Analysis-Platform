@@ -29,5 +29,10 @@ export class HelpPageComponent implements AfterViewInit {
     if (!this.accordionItems) {
       return;
     }
+    if (this.searchTerm === "") {
+      this.accordionItems.forEach((item: any) => item.style.display = 'block');
+      return;
+    }
   }
+  
 }
