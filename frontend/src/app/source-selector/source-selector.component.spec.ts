@@ -15,6 +15,7 @@ import {
   SetIsActive,
   SetSource,
   SetSourceIsLoading,
+  ToastError,
 } from '../app.actions';
 import { DisplaySource, Source } from '../app.state';
 
@@ -43,7 +44,8 @@ describe('SourceSelectorComponent', () => {
 
   it('should fire a "AddNewSource" action', (done: DoneFn) => {
     component.newSourceName = 'New Domain Name';
-    component.newSourcePlatform = 'Twitter';
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
     spyOn(component, 'determineSourceParams').and.returnValue({
       source_type: 'youtube',
       video_id: 'dQw4w9WgXcQ',
@@ -61,6 +63,45 @@ describe('SourceSelectorComponent', () => {
     });
 
     component.addNewSource();
+  });
+
+  it('should show an error message when URL is not specified when adding a new source', () => {
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.newSourceName = 'New Domain Name';
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = ''; 
+  
+    component.addNewSource();
+  
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Please add a URL')
+    );
+
+  });
+
+
+  it('should show an error message when details are missing when adding a new source', () => {
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.newSourceName = '';
+    component.newSourcePlatform = '';
+    component.newSourceUrl = 'fakeurl'; 
+  
+    component.addNewSource();
+  
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Please fill in all fields')
+    );
+
   });
 
   it('should test "determinePlatformFromNewSourcePlatform()"', () => {

@@ -77,15 +77,17 @@ export class SourceSelectorComponent implements OnInit {
     console.log('platform: ' + this.newSourcePlatform);
     console.log('name: ' + this.newSourceName);
 
+    if(this.newSourcePlatform != 'livereview' && this.newSourceUrl ==''){
+      this.store.dispatch(new ToastError('Please add a URL'));
+      return;
+    }
+
     if (!params || !this.newSourcePlatform || !this.newSourceName) {
       this.store.dispatch(new ToastError('Please fill in all fields'));
       return;
     }
 
-    if(this.newSourcePlatform != 'livereview' && this.newSourceUrl ==''){
-      this.store.dispatch(new ToastError('Please add a URL'));
-      return;
-    }
+    
 
 
     this.store.dispatch(
