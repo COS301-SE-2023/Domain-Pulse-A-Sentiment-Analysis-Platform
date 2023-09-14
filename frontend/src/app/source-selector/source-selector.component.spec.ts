@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { SourceSelectorComponent } from './source-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
@@ -12,12 +15,14 @@ import {
   AttempPsswdLogin,
   DeleteSource,
   EditSource,
+  GetSourceDashBoardInfo,
   RefreshSourceData,
   SetAllSourcesSelected,
   SetIsActive,
   SetSource,
   SetSourceIsLoading,
   ToastError,
+  ToastSuccess,
 } from '../app.actions';
 import { DisplaySource, Source } from '../app.state';
 import { Data } from '@angular/router';
@@ -39,7 +44,12 @@ describe('SourceSelectorComponent', () => {
         SourceSelectorComponent,
         { provide: AppApi, useValue: appApiSpy },
       ],
-      imports: [NgxsModule.forRoot([]), FormsModule, HttpClientModule, HttpClientTestingModule],
+      imports: [
+        NgxsModule.forRoot([]),
+        FormsModule,
+        HttpClientModule,
+        HttpClientTestingModule,
+      ],
     });
 
     component = TestBed.inject(SourceSelectorComponent);
@@ -53,13 +63,8 @@ describe('SourceSelectorComponent', () => {
     component.newSourceName = 'New Domain Name';
     component.newSourcePlatform = 'youtube';
     component.newSourceUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-    spyOn(component, 'determineSourceParams').and.returnValue({
-      source_type: 'youtube',
-      video_id: 'dQw4w9WgXcQ',
-    });
 
     actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
-      // expect the clearing of the set variables
       setTimeout(() => {
         expect(component.newSourceName).toBe('');
         expect(component.newSourceUrl).toBe('');
@@ -75,7 +80,9 @@ describe('SourceSelectorComponent', () => {
   it('should fire a "AddNewSource" action for adding csv', (done: DoneFn) => {
     component.newSourceName = 'CSV Source';
     component.newSourcePlatform = 'csv';
-    component.newCSVFile = new File(['mock content'], 'mock.csv', { type: 'text/csv' });
+    component.newCSVFile = new File(['mock content'], 'mock.csv', {
+      type: 'text/csv',
+    });
 
     actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
       setTimeout(() => {
@@ -89,33 +96,53 @@ describe('SourceSelectorComponent', () => {
 
     component.addNewSource();
   });
-
-  /* it('should fire a "AddNewSource" action for CSV source', (done: DoneFn) => {
-    component.newSourceName = 'CSV Source';
-    component.newSourcePlatform = 'csv';
   
-    // Mock determineSourceParams since it's not used for CSV platform
-    spyOn(component, 'determineSourceParams').and.returnValue(null);
-  
-    actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
-      // Expectations for the "AddNewSource" action when the platform is 'csv'
-      expect(component.newSourceName).toBe('');
-      expect(component.showAddSourcesModal).toBe(false);
-  
-      // Ensure that the "AddNewSource" action is dispatched with the correct platform
-      const dispatchedAction = Store.dispatch.calls.mostRecent().args[0];
-      expect(dispatchedAction.constructor).toBe(AddNewSource);
-      expect(dispatchedAction.name).toBe('CSV Source');
-      expect(dispatchedAction.platform).toBe('csv');
-  
-      done();
+ /*  it('should dispatch actions for CSV platform with a valid CSV file', async () => {
+    // Set up the test data
+    const sourceID = 'your-source-id';
+    const mockFile = new File(['mock content'], 'mock.csv', {
+      type: 'text/csv',
     });
+    component.newSourcePlatform = 'csv';
+    component.newCSVFile = mockFile;
+    component.newSourceName = 'CSV Source';
   
-    component.addNewSource();
+    // Spy on the store's dispatch method and return an observable of your choice (e.g., of(null))
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+  
+    // Use await to ensure that the asynchronous code is properly handled
+    await component.addNewSource();
+  
+    // Assert that the actions were dispatched as expected
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new AddNewSource('CSV Source', component.newSourcePlatform, jasmine.any(Object))
+    );
+  
+ 
   }); */
 
+  it('should show an error message when CSV platform is selected but no CSV file is uploaded', () => {
+    component.newSourcePlatform = 'csv';
+    component.newCSVFile = '';
+    component.newSourceName = 'CSV Source';
+
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+    component.addNewSource();
+
+    
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Please upload a CSV file')
+    );
+  });
+
   it('should set newCSVFile when uploadFile is called', () => {
-    const mockFile = new File(['mock content'], 'mock.csv', { type: 'text/csv' });
+    const mockFile = new File(['mock content'], 'mock.csv', {
+      type: 'text/csv',
+    });
 
     const event = {
       target: {
@@ -130,19 +157,21 @@ describe('SourceSelectorComponent', () => {
 
   it('should send a file with sourceID when sendFile is called', () => {
     const sourceID = '65034fff5aff62e633eb690b';
-    const mockFile = new File(['mock content'], 'mock.csv', { type: 'text/csv' });
-  
+    const mockFile = new File(['mock content'], 'mock.csv', {
+      type: 'text/csv',
+    });
+
     spyOn(storeSpy, 'selectSnapshot').and.returnValue({ id: sourceID });
-  
+
     component.newCSVFile = mockFile;
-  
+
     component.sendFile(sourceID);
-  
+
     const testUrl = '/api/warehouse/ingest/ingest_csv/';
     const testData = {};
-  
-    httpClient.get<Data>(testUrl).subscribe(data => {
-      console.log("test data: " + data)
+
+    httpClient.get<Data>(testUrl).subscribe((data) => {
+      console.log('test data: ' + data);
       expect(data).toEqual(testData);
 
       httpTestingController.verify();
@@ -150,7 +179,6 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should show an error message when URL is not specified when adding a new source', () => {
-    
     const storeDispatchSpy = spyOn(
       component['store'],
       'dispatch'
@@ -158,18 +186,16 @@ describe('SourceSelectorComponent', () => {
 
     component.newSourceName = 'New Domain Name';
     component.newSourcePlatform = 'youtube';
-    component.newSourceUrl = ''; 
-  
+    component.newSourceUrl = '';
+
     component.addNewSource();
-  
+
     expect(storeDispatchSpy).toHaveBeenCalledWith(
       new ToastError('Please add a URL')
     );
-
   });
 
   it('should show an error message when .csv is not uploaded when adding a new source', () => {
-    
     const storeDispatchSpy = spyOn(
       component['store'],
       'dispatch'
@@ -177,20 +203,17 @@ describe('SourceSelectorComponent', () => {
 
     component.newSourceName = 'New Domain Name';
     component.newSourcePlatform = 'csv';
-    component.newSourceUrl = ''; 
+    component.newSourceUrl = '';
     component.newCSVFile = '';
-  
+
     component.addNewSource();
-  
+
     expect(storeDispatchSpy).toHaveBeenCalledWith(
       new ToastError('Please upload a CSV file')
     );
-
   });
 
-
   it('should show an error message when details are missing when adding a new source', () => {
-    
     const storeDispatchSpy = spyOn(
       component['store'],
       'dispatch'
@@ -198,14 +221,13 @@ describe('SourceSelectorComponent', () => {
 
     component.newSourceName = '';
     component.newSourcePlatform = '';
-    component.newSourceUrl = 'fakeurl'; 
-  
+    component.newSourceUrl = 'fakeurl';
+
     component.addNewSource();
-  
+
     expect(storeDispatchSpy).toHaveBeenCalledWith(
       new ToastError('Please fill in all fields')
     );
-
   });
 
   it('should test "determinePlatformFromNewSourcePlatform()"', () => {
@@ -353,12 +375,13 @@ describe('SourceSelectorComponent', () => {
 
   it('should return the correct source parameters for different platforms', () => {
     component.newSourcePlatform = 'trustpilot';
-    component.newSourceUrl = 'https://www.trustpilot.com/review/www.spotify.com';
+    component.newSourceUrl =
+      'https://www.trustpilot.com/review/www.spotify.com';
     expect(component.determineSourceParams()).toEqual({
       source_type: 'trustpilot',
       query_url: 'www.spotify.com',
     });
-    
+
     component.newSourcePlatform = 'trustpilot';
     component.newSourceUrl = 'www.spotify.com';
     expect(component.determineSourceParams()).toEqual({
