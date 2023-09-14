@@ -18,7 +18,7 @@ import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 BACKEND_DIR = BASE_DIR.parent.parent
-ASSETS_DIR = BASE_DIR / "assets"
+ASSETS_DIR = BASE_DIR.parent / "assets"
 
 ENV_FILE = BACKEND_DIR / ".env"
 DATABASE_ENV_FILE = BACKEND_DIR / ".postgresql.env"
@@ -36,7 +36,7 @@ RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
+    "127.0.0.1",
     "localhost",
     "154.73.32.89",
     ".domainpulse.app",
@@ -111,7 +111,6 @@ from sshtunnel import SSHTunnelForwarder
 
 local_port_to_connect_to = -1
 if os.getenv("USE_TUNNEL") != "False":
-
     # setup ssh tunnel
     ssh_tunnel = SSHTunnelForwarder(
         os.getenv("DB_TUNNEL_HOST"),

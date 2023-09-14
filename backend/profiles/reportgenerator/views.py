@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import pdfkit
 import requests
 from azure.storage.blob import BlobClient, ContentSettings
+from profiles import settings
 import shortuuid
 import tempfile
 
@@ -13,7 +14,7 @@ GET_DOMAINS_ENDPOINT = (
     "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
 )
 
-assets_path = os.getenv("ASSETS_PATH")
+assets_path = str(settings.ASSETS_DIR)
 
 
 FINAL_PAGE_NUM = 5
