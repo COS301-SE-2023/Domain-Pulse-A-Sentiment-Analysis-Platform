@@ -60,24 +60,12 @@ export class SourceSelectorComponent implements OnInit {
   sendFile(sourceID: any) {
     const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
 
-    console.log('sourceID for csv: ' + sourceID)
-    console.log(sourceID)
-
     const file = this.newCSVFile;
     
     const formData = new FormData();
     formData.append('file', file);
     formData.append('source_id', sourceID);
 
-    console.log('file: ')
-    console.log(file)
-    console.log('sourceID: ')
-    console.log(sourceID)
-
-    console.log('formData: ')
-    console.log(formData)
-
-  
     return this.http.post('/api/warehouse/ingest/ingest_csv/', formData);
   }
 
@@ -136,14 +124,10 @@ export class SourceSelectorComponent implements OnInit {
       this.store.dispatch(
         new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
       ).subscribe((result1) => {
-        console.log('result1: ');
-        console.log(result1);
         this.sendFile(result1.app.selectedSource.id).subscribe((result) => {
           this.store.dispatch(new ToastSuccess("CSV uploaded successfully"));
           this.store.dispatch(new GetSourceDashBoardInfo());
-
           this.newCSVFile = '';
-
         });
       });
       
