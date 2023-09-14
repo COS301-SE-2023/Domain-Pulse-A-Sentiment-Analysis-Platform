@@ -405,7 +405,7 @@ export class AppState {
     if (!selectedDomain) return;
 
     let domainID = selectedDomain.id;
-    this.appApi
+    /* this.appApi
       .addSource(domainID, state.name, source_image_name, state.params)
       .subscribe((res) => {
         if (res.status === 'FAILURE') {
@@ -448,7 +448,7 @@ export class AppState {
         this.store.dispatch(new SetSourceIsLoading(true));
         this.store.dispatch(new SetSource(lastSource));
         console.log("identifier3: " + state.platform)
-        if(state.platform == "livereview"){
+        if(state.platform == "livereview" || state.platform == "csv"){
           console.log("live review here")
           this.store.dispatch(new GetSourceDashBoardInfo());
         }
@@ -457,7 +457,81 @@ export class AppState {
           this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
 
         }
-      });
+
+        return of(res.domain.new_source_id);
+
+      }); */
+
+    return this.appApi
+    .addSource(domainID, state.name, source_image_name, state.params)
+    .pipe(
+      switchMap((res) => {
+        if (res.status === 'FAILURE') {
+          this.store.dispatch(
+            new ToastError('Your source could not be added')
+          );
+          return of(res);
+        } else {
+
+          console.log("added this source: ");
+          console.log(res)
+          let domainRes = res.domain;
+          let domainsIDs = domainRes.sources.map(
+            (source: any) => source.source_id
+          );
+          let selectedDomain: DisplayDomain = {
+            id: domainRes._id,
+            name: domainRes.name,
+            description: domainRes.description,
+            imageUrl: domainRes.icon,
+            sourceIds: domainsIDs,
+            sources: AppState.formatResponseSources(domainRes.sources),
+            selected: false,
+          };
+  
+          let domains = ctx.getState().domains;
+          if (!domains) return of(null);
+  
+          for (let i = 0; i < domains.length; i++) {
+            if (domains[i].id == selectedDomain.id) {
+              domains[i] = selectedDomain;
+              ctx.patchState({
+                domains: domains,
+              });
+              break;
+            }
+          }
+  
+          this.store.dispatch(new SetDomain(selectedDomain));
+  
+          let lastSource =
+            selectedDomain.sources[selectedDomain.sources.length - 1];
+  
+          this.store.dispatch(new SetSourceIsLoading(true));
+          this.store.dispatch(new SetSource(lastSource));
+          console.log("identifier3: " + state.platform)
+          if(state.platform == "livereview" || state.platform == "csv"){
+            console.log("live review here")
+            this.store.dispatch(new GetSourceDashBoardInfo());
+          }
+          else{
+            lastSource.isRefreshing = true;
+            this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
+          }
+          console.log("identifier4: " + res.domain.new_source_id)
+          return of(res.domain.new_source_id);
+        }
+      }),
+      catchError((error: any) => {
+        this.store.dispatch(
+          new ToastError('An error occurred while adding the source')
+        );
+        return throwError(
+          () => new Error('Error occurred while adding the source')
+        );
+      })
+    );
+    
   }
 
   /*  @Action(EditSource)
@@ -1166,6 +1240,9 @@ export class AppState {
         break;
       case 'livereview':
         source_image_name = 'live-review-logo.png';
+        break;
+      case 'csv':
+        source_image_name = 'csv-logo.png';
         break;
     }
     return source_image_name;

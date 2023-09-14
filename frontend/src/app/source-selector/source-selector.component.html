@@ -158,7 +158,7 @@
 
           <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'csv'">
             <p class="step-heading">CSV Upload:</p>
-            <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+            <input type="file" (change)="uploadFile($event)">
           </div>
 
           <div class="flex-column center" style="width: 100%" *ngIf="newSourcePlatform === ''">
