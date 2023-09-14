@@ -339,3 +339,16 @@ class TestGenerateReport(TestCase):
             response_data,
             {"status": "FAILURE", "details": "Test Error"},
         )
+
+    def test_generate_report_invalid_request(self):
+        request = HttpRequest()
+        request.method = "GET"
+
+        response = report_views.generate_report(request)
+
+        response_data = json.loads(response.content)
+
+        self.assertEqual(
+            response_data,
+            {"status": "FAILURE", "details": "Invalid request"},
+        )

@@ -577,3 +577,5 @@ def generate_report(request: HttpRequest):
         )
         os.unlink(pdf_path)
         return JsonResponse({"status": "SUCCESS", "url": pdf_url})
+    else:
+        return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
