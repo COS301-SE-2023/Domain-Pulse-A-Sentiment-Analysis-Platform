@@ -363,7 +363,7 @@ class TestGenerateReport(TestCase):
         mock_open.assert_called_once_with("fake/path", "rb")
         self.assertEqual(response, "http://example.com/report.pdf")
 
-    test_read_string = (
+    test_read_string_domain_js = (
         "%domain_overall_data_points%,"
         + "%domain_ratios%,"
         + "%domain_emotions%,"
@@ -372,7 +372,9 @@ class TestGenerateReport(TestCase):
         + "%domain_timeseries%"
     )
 
-    @patch("builtins.open", new_callable=mock_open, read_data=test_read_string)
+    @patch(
+        "builtins.open", new_callable=mock_open, read_data=test_read_string_domain_js
+    )
     def test_generate_domain_graphs_js(self, mock_open):
         time = (datetime.now()).strftime("%Y-%m-%dT%H:%M:%S")
         test_data = {
@@ -480,4 +482,119 @@ class TestGenerateReport(TestCase):
             + "', 'y': "
             + str(0.6)
             + "}]",
+        )
+
+    test_read_string_domain_html = "{domain_icon},{domain_description},{domain_overall_score},{domain_num_analysed},\
+{domain_toxicity},{domain_positive},{domain_neutral},{domain_negative},{domain_anger},{domain_disgust},\
+{domain_fear},{domain_joy},{domain_sadness},{domain_surprise},{domain_start_date},{domain_end_date}"
+
+    @patch(
+        "builtins.open", new_callable=mock_open, read_data=test_read_string_domain_html
+    )
+    def test_generate_domain_html(self, mock_open):
+        time = (datetime.now()).strftime("%Y-%m-%dT%H:%M:%S")
+        time_2 = (datetime.now()).strftime("%d %B %Y")
+        test_data = {
+            "domain": {
+                "aggregated_metrics": {
+                    "general": {"category": "No data", "score": 0},
+                    "emotions": {
+                        "anger": 0,
+                        "disgust": 0,
+                        "fear": 0,
+                        "joy": 0,
+                        "neutral": 0,
+                        "sadness": 0,
+                        "surprise": 0,
+                    },
+                    "toxicity": {
+                        "level_of_toxic": "No data",
+                        "score": 0,
+                    },
+                    "ratios": {
+                        "positive": 0,
+                        "neutral": 0,
+                        "negative": 0,
+                    },
+                },
+                "meta_data": {
+                    "num_analysed": 1,
+                    "earliest_record": time_2,
+                    "latest_record": time_2,
+                },
+                "individual_metrics": [
+                    {
+                        "_id": "64d5fc4a094459b793def2eb",
+                        "data": "Test data.",
+                        "general": {"category": "UNDECIDED", "score": 0.5},
+                        "emotions": {
+                            "surprise": 0.9775,
+                            "sadness": 0.0087,
+                            "joy": 0.0138,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
+                        "ratios": {"positive": 0.38, "neutral": 0.36, "negative": 0.25},
+                        "timestamp": 1691745104,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    }
+                ],
+                "timeseries": {"overall": [[time, 0.6]]},
+            },
+            "testSouceID": {
+                "source_name": "testSource",
+                "url": "testUrl",
+                "source_icon": "testIcon",
+                "source_type": "testType",
+                "aggregated_metrics": {
+                    "general": {"category": "No data", "score": 0},
+                    "emotions": {
+                        "anger": 0,
+                        "disgust": 0,
+                        "fear": 0,
+                        "joy": 0,
+                        "neutral": 0,
+                        "sadness": 0,
+                        "surprise": 0,
+                    },
+                    "toxicity": {
+                        "level_of_toxic": "No data",
+                        "score": 0,
+                    },
+                    "ratios": {
+                        "positive": 0,
+                        "neutral": 0,
+                        "negative": 0,
+                    },
+                },
+                "meta_data": {
+                    "num_analysed": 1,
+                    "earliest_record": time_2,
+                    "latest_record": time_2,
+                },
+                "individual_metrics": [
+                    {
+                        "_id": "64d5fc4a094459b793def2eb",
+                        "data": "Test data.",
+                        "general": {"category": "UNDECIDED", "score": 0.5},
+                        "emotions": {
+                            "surprise": 0.9775,
+                            "sadness": 0.0087,
+                            "joy": 0.0138,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
+                        "ratios": {"positive": 0.38, "neutral": 0.36, "negative": 0.25},
+                        "timestamp": 1691745104,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    }
+                ],
+                "timeseries": {"overall": [[time, 0.6]]},
+            },
+        }
+        response = report_views.generate_domain_html(
+            "test", "testDescrip", test_data, 1
+        )
+
+        self.assertEqual(
+            response,
+            "test,testDescrip,0,1,0,0,0,0,0,0,0,0,0,0," + time_2 + "," + time_2,
         )
