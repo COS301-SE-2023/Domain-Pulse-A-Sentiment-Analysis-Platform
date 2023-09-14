@@ -664,7 +664,7 @@ export class AppState {
     console.log(selectedSource)
     console.log(selectedSource?.params)
     console.log(selectedSource?.params?.source_type)
-    if(selectedSource?.url == "live-review-logo.png"){
+    if(selectedSource?.url == "live-review-logo.png" || selectedSource?.url == "csv-logo.png"){
       console.log("live review here")
       if (!selectedSource) return;
 
