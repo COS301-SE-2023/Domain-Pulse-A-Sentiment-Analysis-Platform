@@ -831,5 +831,6 @@ describe('AppState', () => {
     expect(AppState.platformToIcon('livereview')).toEqual(
       'live-review-logo.png'
     );
+    expect(AppState.platformToIcon('csv')).toEqual('csv-logo.png');
   });
 });
