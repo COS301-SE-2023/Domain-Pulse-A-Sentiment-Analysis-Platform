@@ -9,7 +9,6 @@ djangorestframework-simplejwt
 pdfkit
 requests
 azure-storage-blob
-tempfile
 shortuuid
 
 # move away from sshtunnel
