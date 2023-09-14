@@ -223,7 +223,7 @@ def mocked_requests_post_invalid_warehouse(url, **kwargs):
         url
         == f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
     ):
-        mock_response.status_code = 400
+        mock_response.status_code = 200
         mock_response.json.return_value = {
             "status": "FAILURE",
             "details": "Test Error",
@@ -295,8 +295,23 @@ class TestGenerateReport(TestCase):
             {"status": "FAILURE", "details": "Error in domain request"},
         )
 
+    @patch("requests.post", side_effect=mocked_requests_post_invalid_domains)
+    def test_generate_report_invalid_domains(self, mock_request):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps({"domain_id": "12345"})
+
+        response = report_views.generate_report(request)
+
+        response_data = json.loads(response.content)
+
+        self.assertEqual(
+            response_data,
+            {"status": "FAILURE", "details": "Test Error"},
+        )
+
     @patch("requests.post", side_effect=mocked_requests_post_failed_warehouse)
-    def test_generate_report_failed_domains(self, mock_request):
+    def test_generate_report_failed_warehouse(self, mock_request):
         request = HttpRequest()
         request.method = "POST"
         request._body = json.dumps({"domain_id": "12345"})
@@ -308,4 +323,19 @@ class TestGenerateReport(TestCase):
         self.assertEqual(
             response_data,
             {"status": "FAILURE", "details": "Error in warehouse request"},
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post_invalid_warehouse)
+    def test_generate_report_invalid_warehouse(self, mock_request):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps({"domain_id": "12345"})
+
+        response = report_views.generate_report(request)
+
+        response_data = json.loads(response.content)
+
+        self.assertEqual(
+            response_data,
+            {"status": "FAILURE", "details": "Test Error"},
         )
