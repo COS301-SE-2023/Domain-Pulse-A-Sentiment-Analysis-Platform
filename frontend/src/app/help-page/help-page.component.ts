@@ -23,5 +23,11 @@ export class HelpPageComponent implements AfterViewInit {
         this.filterAccordionByText(this.searchTerm);
       }
     );
+  }
 
+  filterAccordionByText(textToFilter: string) {
+    if (!this.accordionItems) {
+      return;
     }
+  }
+}
