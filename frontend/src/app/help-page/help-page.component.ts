@@ -33,6 +33,19 @@ export class HelpPageComponent implements AfterViewInit {
       this.accordionItems.forEach((item: any) => item.style.display = 'block');
       return;
     }
+    this.accordionItems.forEach((item: any) => {
+      const headerTextT = item;
+      if (!headerTextT)
+        return;
+      const text = headerTextT.innerText;
+      console.log(headerTextT, text);
+
+      if (text.toLowerCase().includes(textToFilter.toLowerCase())) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
   }
-  
 }
