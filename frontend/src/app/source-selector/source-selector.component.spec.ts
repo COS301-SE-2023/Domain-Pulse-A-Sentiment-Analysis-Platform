@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
+import { HttpClientModule } from '@angular/common/http';
 import { SourceSelectorComponent } from './source-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
@@ -34,7 +34,7 @@ describe('SourceSelectorComponent', () => {
         SourceSelectorComponent,
         { provide: AppApi, useValue: appApiSpy },
       ],
-      imports: [NgxsModule.forRoot([]), FormsModule],
+      imports: [NgxsModule.forRoot([]), FormsModule, HttpClientModule],
     });
 
     component = TestBed.inject(SourceSelectorComponent);
