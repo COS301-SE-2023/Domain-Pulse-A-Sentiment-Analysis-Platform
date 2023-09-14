@@ -295,7 +295,7 @@ class TestGenerateReport(TestCase):
             {"status": "FAILURE", "details": "Error in domain request"},
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post_invalid_domains)
+    @patch("requests.post", side_effect=mocked_requests_post_failed_warehouse)
     def test_generate_report_failed_domains(self, mock_request):
         request = HttpRequest()
         request.method = "POST"
@@ -307,5 +307,5 @@ class TestGenerateReport(TestCase):
 
         self.assertEqual(
             response_data,
-            {"status": "FAILURE", "details": "Test Error"},
+            {"status": "FAILURE", "details": "Error in warehouse request"},
         )
