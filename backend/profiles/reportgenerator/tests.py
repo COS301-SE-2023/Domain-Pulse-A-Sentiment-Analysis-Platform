@@ -152,7 +152,7 @@ def mocked_requests_post_failed_domains(url, **kwargs):
 def mocked_requests_post_invalid_domains(url, **kwargs):
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {"status": "FAILED", "details": "Test Error"}
+    mock_response.json.return_value = {"status": "FAILURE", "details": "Test Error"}
     return mock_response
 
 
@@ -225,7 +225,7 @@ def mocked_requests_post_invalid_warehouse(url, **kwargs):
     ):
         mock_response.status_code = 400
         mock_response.json.return_value = {
-            "status": "FAILED",
+            "status": "FAILURE",
             "details": "Test Error",
         }
     return mock_response
@@ -293,4 +293,19 @@ class TestGenerateReport(TestCase):
         self.assertEqual(
             response_data,
             {"status": "FAILURE", "details": "Error in domain request"},
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post_invalid_domains)
+    def test_generate_report_failed_domains(self, mock_request):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps({"domain_id": "12345"})
+
+        response = report_views.generate_report(request)
+
+        response_data = json.loads(response.content)
+
+        self.assertEqual(
+            response_data,
+            {"status": "FAILURE", "details": "Test Error"},
         )
