@@ -122,6 +122,83 @@ def get_dashboard_data_domain(request: HttpRequest):
 
 
 @csrf_exempt
+def get_report_data_internal(request: HttpRequest):
+    # 1. Query the sentiment records database for all data from a provided domain
+    # 2. Determine the meta-data
+    # 3. Send that data to the aggregator (engine) to get cumulative metrics
+    # 4. Return data from the response from 3, as well as meta-data and an other status codes, etc
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
+            source_ids_raw = raw_data["source_ids"]
+
+            all_individual_records = []
+            records_by_source = {}
+            for source_id in source_ids_raw:
+                records_by_source[
+                    source_id  # Need to make a request to make this source_name instead of source id
+                ] = sentiment_record_model.get_records_by_source_id(source_id)
+
+                all_individual_records += (
+                    sentiment_record_model.get_records_by_source_id(source_id)
+                )
+
+            for record in all_individual_records:
+                record["_id"] = ""
+
+            request_to_engine_body = {"metrics": all_individual_records}
+
+            url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
+            response_from_aggregator = requests.post(
+                url, data=json.dumps(request_to_engine_body)
+            )
+            response = {}
+
+            if response_from_aggregator.status_code == 200:
+                response["status"] = "SUCCESS"
+
+                agg_response_body = response_from_aggregator.json()
+                response["domain"] = {}
+                response["domain"]["aggregated_metrics"] = agg_response_body["overall"]
+                response["domain"]["meta_data"] = agg_response_body["metadata"]
+                response["domain"]["individual_metrics"] = agg_response_body[
+                    "individual_data"
+                ]
+                response["domain"]["timeseries"] = agg_response_body["timeseries"]
+            else:
+                return JsonResponse({"status": "FAILURE"})
+
+            for source in records_by_source:
+                for record in records_by_source[source]:
+                    record["_id"] = str(record["_id"])
+                request_to_engine_body = {"metrics": records_by_source[source]}
+                response_from_aggregator = requests.post(
+                    url, data=json.dumps(request_to_engine_body)
+                )
+                if response_from_aggregator.status_code == 200:
+                    response["status"] = "SUCCESS"
+
+                    agg_response_body = response_from_aggregator.json()
+                    response[source] = {}
+                    response[source]["aggregated_metrics"] = agg_response_body[
+                        "overall"
+                    ]
+                    response[source]["meta_data"] = agg_response_body["metadata"]
+                    response[source]["individual_metrics"] = agg_response_body[
+                        "individual_data"
+                    ]
+                    response[source]["timeseries"] = agg_response_body["timeseries"]
+                else:
+                    return JsonResponse({"status": "FAILURE"})
+
+            return JsonResponse(response)
+        else:
+            return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+    else:
+        return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
+@csrf_exempt
 def refresh_source(request: HttpRequest):
     # FINAL VERSION
     # 0. Given a source_id, get the details of the source from the Domains service (performs auth)

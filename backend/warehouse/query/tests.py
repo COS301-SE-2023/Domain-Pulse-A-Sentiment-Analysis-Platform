@@ -354,22 +354,18 @@ class QueryEngineTests(TestCase):
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
 
-
-    # @patch("utils.db_connection.get_db_handle")
-    # def test_add_record_sentiment_model(self, mock_get_db_handle):
-    #     mock_db_handle = MagicMock()
-    #     mock_get_db_handle.return_value = mock_db_handle
-    #     mock_collection = MagicMock()
-    #     mock_db_handle.__getitem__.return_value = mock_collection
-    #     mock_insert_one = MagicMock()
-    #     mock_collection.insert_one = mock_insert_one
+    # @patch("pymongo.MongoClient")
+    # def test_add_record_sentiment_model(self, mock_mongo_client):
+    #     mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
+    #         "sentiment_records"
+    #     ]
+    #     mocked_insert_one = mocked_collection.insert_one
 
     #     dummy_record = {"text": "this is some review", "timestamp": 123456789}
     #     sentiment_record_model.add_record(dummy_record)
-
-    #     mock_db_handle.__getitem__.assert_called_once_with("sentiment_records")
-    #     mock_insert_one.assert_called_once_with(dummy_record)
-
+    #     mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
+    #     mocked_insert_one.assert_called_once_with(dummy_record)
+    #     mock_mongo_client.return_value.close.assert_called_once()
 
     # @patch("pymongo.MongoClient")
     # def test_get_records_sentiment_model(self, mock_mongo_client):
@@ -383,5 +379,66 @@ class QueryEngineTests(TestCase):
     #     mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
     #     mocked_find.assert_called_once_with({"source_id": dummy_source_id})
     #     mock_mongo_client.return_value.close.assert_called_once()
+
+    def test_foreign_request_method_get_report_data_internal(self):
+        local_key = "123"
+        url = "/query/get_report_data_internal/"
+        response = self.client.post(
+            path=url,
+            data=json.dumps({"local_key": local_key}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Foreign Request")
+
+    def test_invalid_request_method_get_report_data_internal(self):
+        local_key = os.getenv("LOCAL_KEY")
+        url = "/query/get_report_data_internal/"
+        response = self.client.get(path=url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Invalid request")
+
+    @patch("authchecker.auth_checks.verify_user_owns_source_ids")
+    @patch("datamanager.sentiment_record_model.get_records_by_source_id")
+    @patch("requests.post")
+    def test_valid_request_get_report_data_internal(
+        self, mocked_response, mock_get_records, mock_verify_user
+    ):
+        url = "/query/get_report_data_internal/"
+        source_ids = ["hbfhwbgufbo724n2n7", "hbfhwbgufbo724n2n7"]
+        request_body = {"local_key": os.getenv("LOCAL_KEY"), "source_ids": source_ids}
+
+        mock_verify_user.return_value = True, ""
+
+        mock_records = [
+            {},
+            {},
+        ]
+        mock_get_records.return_value = mock_records
+
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "overall": {},
+            "metadata": {},
+            "individual_data": {},
+            "timeseries": {},
+        }
+        mocked_response.return_value = mock_response
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "SUCCESS")
+        self.assertEqual(data["domain"]["aggregated_metrics"], {})
+        self.assertEqual(data["domain"]["meta_data"], {})
+        self.assertEqual(data["domain"]["individual_metrics"], {})
 
     # ----------------------------------------------------------------
