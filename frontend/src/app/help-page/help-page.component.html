@@ -1,6 +1,6 @@
 <div class="flex-column align-center">
   <div class="top-bar flex-column center" style="color: white;">
-    
+
     <div class="flex-row center" style="margin-top: 2rem;">
       <img src="../../assets/logos/logo-small-white.png" alt="domain pulse logo" style="height: 3rem;">
       <p class="title">Help Page</p>
@@ -8,7 +8,7 @@
     <!-- <h2><div class="dp-logo"></div>What do you need help with?</h2> -->
     <div class="flex-row center" style="margin-top: 2rem; width: 50%;">
       <div class="search-container flex-row center">
-        <input class="search-bar" type="text" placeholder="Search.." name="search">
+        <input class="search-bar" type="text" placeholder="Search.." name="search"  [(ngModel)]="searchTerm" (keyup)="filterAccordionByText()">
         <img src="../../assets/icons/search.png" alt="domain pulse logo" style="height: 1rem;">
       </div>
     </div>

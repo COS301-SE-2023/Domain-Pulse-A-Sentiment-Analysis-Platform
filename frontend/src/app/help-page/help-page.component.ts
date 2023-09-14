@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 //import {AccordionModule} from "ngx-accordion";
 @Component({
   selector: 'app-help-page',
@@ -20,12 +21,13 @@ export class HelpPageComponent implements AfterViewInit {
       .subscribe(params => {
         console.log(params); 
         this.searchTerm = params['q'];
-        this.filterAccordionByText(this.searchTerm);
+        this.filterAccordionByText();
       }
     );
   }
 
-  filterAccordionByText(textToFilter: string) {
+  filterAccordionByText() {
+    const textToFilter = this.searchTerm;
     if (!this.accordionItems) {
       return;
     }
