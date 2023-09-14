@@ -6,7 +6,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: setup
+        uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
@@ -67,22 +71,25 @@ jobs:
       - name: Determine Docker Tag
         id: set-image-tag
         run: |
-          if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
+          if [[ ${{ github.ref == 'refs/heads/main' }} == true ]]; then
+            echo "Setting image tag to 'latest'"
             echo "IMAGE-TAG=latest" >> $GITHUB_OUTPUT
-          elif [[ ${{ github.ref == 'refs/heads/dev'}} ]]; then
+          elif [[ ${{ github.ref == 'refs/heads/dev'}} == true ]]; then
+            echo "Setting image tag to 'dev-latest'"
             echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
           else
+            echo "Not on main or dev branch. Skipping Docker build and push."
             echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
           fi
 
       - name: Push to DockerHub
-        if: steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none'
+        if: ${{ steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none' }}
         uses: docker/build-push-action@v4
         with:
           context: ./backend/warehouse
           file: ./backend/warehouse/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:${{ env.IMAGE-TAG }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-warehouse:${{ steps.set-image-tag.outputs.IMAGE-TAG }}
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2

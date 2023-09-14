@@ -44,7 +44,7 @@ def get_dashboard_data_source(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
+        url = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -98,7 +98,7 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
+        url = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -211,12 +211,12 @@ def refresh_source(request: HttpRequest):
     originalRequest = request
 
     GET_SOURCE_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     )
-    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
-    SOURCE_CONNECTOR_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
+    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://{os.getenv('PROFILES_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
+    SOURCE_CONNECTOR_ENDPOINT = f"http://{os.getenv('SOURCECONNECTOR_HOST')}:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
     ANALYSER_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
     )
 
     if request.method == "POST":

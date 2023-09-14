@@ -23,3 +23,4 @@ urlpatterns = [
     path("check/", include("check_auth.urls")),
     path("report/", include("reportgenerator.urls")),
 ]
+ 
