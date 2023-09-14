@@ -8,7 +8,7 @@ psycopg2-binary
 djangorestframework-simplejwt
 pdfkit
 requests
-azure
+azure-storage-blob
 tempfile
 shortuuid
 
