@@ -41,12 +41,12 @@ export class GraphSelectorComponent implements OnInit {
         ],
       },
       options: {
-        onClick: (event: any, elements: string | any[]) => {
+        /* onClick: (event: any, elements: string | any[]) => {
           if (elements && elements.length > 0) {
             const clickedIndex = elements[0]._index;
             this.showPopup(clickedIndex);
           }
-        },
+        }, */
         responsive: true,
         maintainAspectRatio: false,
         cutout: '50%',
@@ -86,12 +86,12 @@ export class GraphSelectorComponent implements OnInit {
         ],
       },
       options: {
-        onClick: (event: any, elements: string | any[]) => {
+        /* onClick: (event: any, elements: string | any[]) => {
           if (elements && elements.length > 0) {
             const clickedIndex = elements[0]._index;
             this.showPopup(clickedIndex);
           }
-        },
+        }, */
       },
     },
     {
@@ -151,12 +151,12 @@ export class GraphSelectorComponent implements OnInit {
         legend: {
           display: false,
         },
-        onClick: (event: any, elements: string | any[]) => {
+        /* onClick: (event: any, elements: string | any[]) => {
           if (elements && elements.length > 0) {
             const clickedIndex = elements[0]._index;
             this.showPopup(clickedIndex);
           }
-        },
+        }, */
       },
     },
     {
@@ -179,12 +179,12 @@ export class GraphSelectorComponent implements OnInit {
         ],
       },
       options: {
-        onClick: (event: any, elements: string | any[]) => {
+       /*  onClick: (event: any, elements: string | any[]) => {
           if (elements && elements.length > 0) {
             const clickedIndex = elements[0]._index;
             this.showPopup(clickedIndex);
           }
-        },
+        }, */
       },
     },
     /* {

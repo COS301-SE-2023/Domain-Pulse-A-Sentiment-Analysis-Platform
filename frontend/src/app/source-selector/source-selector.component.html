@@ -122,11 +122,37 @@
           </div>
         </div>
         <div class="flex-row" style="width: 80%">
-          <p class="modal-step-tag">3</p>
-          <div class="flex-column" style="width: 100%">
-            <p class="step-heading">Source url:</p>
+          <p class="modal-step-tag" *ngIf="newSourcePlatform === 'livereview'" style="opacity: 0;">3</p>
+          <p class="modal-step-tag" *ngIf="newSourcePlatform !== 'livereview'">3</p>
+          <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'googlereviews'">
+            <p class="step-heading">Google maps location URL:</p>
             <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
           </div>
+
+          <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'tripadvisor'">
+            <p class="step-heading">Tripadvisor Link:</p>
+            <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          </div>
+
+          <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'youtube'">
+            <p class="step-heading">Youtube Video Link:</p>
+            <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          </div>
+
+          <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'trustpilot'">
+            <p class="step-heading">Trustpilot URL:</p>
+            <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          </div>
+
+          <div class="flex-column" style="width: 100%; opacity: 0;" *ngIf="newSourcePlatform === 'livereview'">
+            <p class="step-heading">LiveReview Url</p>
+            <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          </div>
+
+          <div class="flex-column center" style="width: 100%" *ngIf="newSourcePlatform === ''">
+            <p class="step-heading">Select a source type before moving onto this step!</p>
+          </div>
+
         </div>
 
         <div class="bottom-div">
