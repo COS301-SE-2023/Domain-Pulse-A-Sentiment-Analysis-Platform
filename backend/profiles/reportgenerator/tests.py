@@ -3,7 +3,7 @@ from datetime import datetime
 import os
 import json
 from django.test import TestCase
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, Mock, MagicMock, mock_open
 from django.http import HttpRequest
 
 
@@ -352,3 +352,13 @@ class TestGenerateReport(TestCase):
             response_data,
             {"status": "FAILURE", "details": "Invalid request"},
         )
+
+    @patch("builtins.open", new_callable=mock_open, read_data="data")
+    @patch("reportgenerator.views.BlobClient.from_blob_url", autospec=True)
+    def test_upload_pdf_to_azure(self, mock_blob_client, mock_open):
+        mock_client = MagicMock()
+        mock_client.url = "http://example.com/report.pdf"
+        mock_blob_client.return_value = mock_client
+        response = report_views.upload_pdf_to_azure("fake/path", "test.pdf")
+        mock_open.assert_called_once_with("fake/path", "rb")
+        self.assertEqual(response, "http://example.com/report.pdf")
