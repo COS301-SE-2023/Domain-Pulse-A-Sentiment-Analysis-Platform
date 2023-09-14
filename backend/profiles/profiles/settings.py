@@ -16,10 +16,12 @@ from dotenv import load_dotenv
 import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
+BACKEND_DIR = BASE_DIR.parent.parent
+ASSETS_DIR = BASE_DIR / "assets"
 
-ENV_FILE = BASE_DIR.parent / ".env"
-DATABASE_ENV_FILE = BASE_DIR.parent / ".postgresql.env"
+ENV_FILE = BACKEND_DIR / ".env"
+DATABASE_ENV_FILE = BACKEND_DIR / ".postgresql.env"
 load_dotenv(ENV_FILE)
 load_dotenv(DATABASE_ENV_FILE)
 
