@@ -70,6 +70,7 @@
         src="../assets/icons/grey-trash.svg"
         [mul]="0.9"
         [tooltip]="'Removes the domain from your list'"
+        [searchTerm]="'remove'"
         height="15px"
         (click)="
           toggleConfirmDeleteDomainModal(domain.id); $event.stopPropagation()
