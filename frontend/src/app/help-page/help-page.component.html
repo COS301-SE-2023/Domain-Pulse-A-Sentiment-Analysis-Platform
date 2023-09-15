@@ -1,297 +1,351 @@
-<div class="flex-column align-center">
-  <div class="top-bar flex-column center" style="color: white;">
-
-    <div class="flex-row center" style="margin-top: 2rem;">
-      <img src="../../assets/logos/logo-small-white.png" alt="domain pulse logo" style="height: 3rem;">
-      <p class="title">Help Page</p>
+<div class="flex-column align-center" style="height: 100vh;">
+    <div class="top-bar flex-column center">
+        <div class="flex-row center" style="margin-top: 2rem;">
+            <img src="../../assets/logos/logo-small-white.png" alt="domain pulse logo" style="height: 3rem;">
+            <p class="title">Help Page</p>
+        </div>
+        <!-- <h2><div class="dp-logo"></div>What do you need help with?</h2> -->
+        <div class="flex-row center" style="margin-top: 2rem; width: 50%;">
+            <div class="search-container flex-row center">
+                <input class="search-bar" type="text" placeholder="Search.." name="search" [(ngModel)]="searchTerm" (keyup)="filterAccordionByText()">
+                <img src="../../assets/icons/search.png" alt="domain pulse logo" style="height: 1rem;">
+            </div>
+        </div>
     </div>
-    <!-- <h2><div class="dp-logo"></div>What do you need help with?</h2> -->
-    <div class="flex-row center" style="margin-top: 2rem; width: 50%;">
-      <div class="search-container flex-row center">
-        <input class="search-bar" type="text" placeholder="Search.." name="search"  [(ngModel)]="searchTerm" (keyup)="filterAccordionByText()">
-        <img src="../../assets/icons/search.png" alt="domain pulse logo" style="height: 1rem;">
-      </div>
+
+    <div class="scroll-div" style="flex-basis: 70%; overflow-y: scroll; width: 60%; padding-top: 1rem" id="scrollFrFr">
+
+        <div class="flex-column" style="width: 40%;" style="gap: 0.7rem">
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to log into the Application">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to login?</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <h3>While you are on the login page:</h3>
+                                <li>Simply add your username and password with which you registered with and click on
+                                    the blue <i>'login'</i> button.</li>
+                                <li>If you have forgotton your password, click on the <i>'forgot password?'</i> link and
+                                    follow the instructons.</li>
+                                <li>If you do not have an account, click on the <i>'Dont have an account'</i> link and
+                                    register for an account using your chosen details.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to register for an account">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to Register?</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <h3>To register for an account the following information will be required:</h3>
+                                <ul style="margin-bottom: 1rem;">
+                                    <li>Username</li>
+                                    <li>Email Adress</li>
+                                    <li>Password</li>
+                                    <li>Confirmation of password</li>
+                                </ul>
+                                <li>Please enter the required information specified above in the relevant fields.</li>
+                                <li style="margin-bottom: 1rem;">Click on the blue <i>'Register'</i> button</li>
+                                <p>If you already have an account, click on the <i>'Already have an account?'</i> link
+                                    and login with your registered details.</p>
+
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to add a Domain">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to add a Domain</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <p style="margin-bottom: 1rem;margin-top: 1rem;">To add a Domain expand the sidebar and
+                                    while the sidebar is expanded click on the <i>'Add a Domain'</i> button.</p>
+
+                                <li>The add Domain modal will appear, enter a Domain name of your choice in the field.
+                                </li>
+                                <li>A description of your chosen domain.</li>
+                                <li style="margin-bottom: 1rem;">A chosen image for your domain.</li>
+                                <p>Domains will act as a 'folder' for your sources, so you can group spurces together
+                                    about a specific domain.</p>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to remove a Domain">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to remove a Domain</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+
+                                <li style="margin-top: 1rem;">To remove a domain expand the sidebar and while the
+                                    sidebar is expanded, click on the <i>'bin'</i> icon and this will cause a pop-up
+                                    moda to appear.</li>
+                                <li>The removal of the specified Domain will will occur after confirmation from the
+                                    user. </li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to edit a Domain">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to edit a Domain</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <p style="margin-top: 1rem;">To edit a Domain, expand the sidebar and while it is
+                                    expanded:</p>
+                                <li>Click on the <i>'edit'</i> button which is the pencil icon</li>
+                                <li>This will allow you to edit the name</li>
+                                <li>This will allow you to change the description</li>
+                                <li>Will allow you to change the image of the specified domain</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to add a Source">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to add a Source</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <h3 style="margin-bottom: 1rem;">Navigate to the select source bar at the top of the
+                                    page</h3>
+                                <li>Click on the blue '+' button to begin adding a Source.</li>
+                                <li>Add the source name.</li>
+                                <li>Choose between the tested Sources(Google reviews,Trip-Adviser and Youtube).</li>
+                                <li>Add a source URL, for Youtube add a link to a Youtube video, for Trip advisor add a
+                                    link to a Trip advisor Domain and for Google reviews add a link to a Google maps
+                                    location.</li>
+                                <li>Click confirm to save the Source.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to remove a Source">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to remove a Source</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <h3 style="margin-bottom: 1rem;">Navigate to the select source bar at the top of the
+                                    page</h3>
+                                <li>To remove a Source, click on the source you would like to remove and click on the
+                                    red 'bin' button.</li>
+                                <li>The Source will be removed after confirmation from the user.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to refresh a Source">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to refresh a Source</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <h3 style="margin-bottom: 1rem;">Navigate to the select source bar at the top of the
+                                    page</h3>
+                                <li>To refresh the data of a source, click on the green refresh button on the right hand
+                                    side of the page.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to edit a Source">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to edit a Source</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <p style="margin-top: 1rem;">To edit a Source, click on the source you would like to
+                                    edit and click on the yellow edit button on the right hand side of the page and an
+                                    edit source modal will appear.</p>
+                                <li style="margin-top: 1rem;">Edit the name of the source.</li>
+                                <li>Edit the source URL of a chosen source.</li>
+                                <li>Once you have edited the relevant information, click on the blue 'confirm' button to
+                                    save the changes.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to toggle theme">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to toggle theme</h3>
+                                <p>To toggle a theme, click on the profile icon at the bottom of the sidebar and a
+                                    profile modal will appear.</p>
+                                <li>Click on the 'Toggle Theme' button to toggle between a light and dark theme.</li>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to log out">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to log out</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <li>To log out click on the profile icon at the bottom of the sidebar and a profile
+                                    modal will appear, click on the 'Log Out' button to log out of the app.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to delete your account">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to delete account</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <p>To delete your account click on the profile icon at the bottom of the sidebar and a
+                                    profile modal will appear.</p>
+                                <li>Click on the 'Delete Account' button.</li>
+                                <li>Confirm that you do want to delete your account.</li>
+                                <li>Enter your password to confirm account deletion.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="How to update profile picture">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>How to update profile picture</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <p>To update your profile picture click on the profile icon at the bottom of the sidebar
+                                    and a profile modal will appear.</p>
+                                <li>Click on the profile picture itself to update your profile picture and then click
+                                    the 'Confirm' button to save the changes.</li>
+
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="Explanation of Center console">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>Explanation of center console</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <li><b>Overall score</b> is the ratio of positive and negative sentiment of a chosen
+                                    domain, the higher the score the more positive the sentiment data and vice versa.
+                                </li>
+                                <li><b>The amount of positive, negative and neutral </b>sentiment of a chosen domain
+                                    which are represented in percentages, the higher the percentage the more that
+                                    sentiment is present in the chosen domain.</li>
+                                <li><b>The Emotion block</b> of the center console is the most prevelant emotion of a
+                                    chosen domain, the emotions detectable are anger, disgust, fear, joy, neutral,
+                                    sadness and finally surprise.</li>
+                                <li><b>The toxicity block</b> aims to access the level of harmfulness or offensiveness
+                                    in the text and classify it accordingly.</li>
+                                <li><b>The analysed block</b> presents the amount of sentiment that has been analysed in
+                                    a chosen domain.</li>
+                                <li><b>The Range block</b> is the timeframe in which the data has been collected to
+                                    calculate the statistics and insights.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="Explanation of Graphs and charts console">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <h3>Explanation of Graphs and charts console</h3>
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <li>The graphs shown are graphical representations of the statistics and insights shown
+                                    in the center console of the page.</li>
+                                <li>Clicking on the arrows on the left and right of the graphs will allow you to view
+                                    the graphs of the previous and next statistic respectively.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+
+            <accordion [collapsing]="collapsing">
+                <accordion-item title="Explanation of the sample data console">
+                    <ng-template accordionContent>
+                        <div class="accord-container">
+                            <ol type="1">
+                                <img src="../../assets/stock-profile-pic.jpg" alt="stock"
+                                    style="width: 600px; height: auto;">
+                                <h3>This is where you can view sample data of a chosen domain.</h3>
+                                <li>The first metric is the overall score statistic.</li>
+                                <li>The second metric is the overall categorisation of the sentiment.</li>
+                                <li>The most prevalent emotion found within the piece of sample data.</li>
+                                <li>A binary output classifying wheather the sample data is toxic or not, if a comment
+                                    is deemed toxic you can click on the text below to view it.</li>
+                            </ol>
+                        </div>
+                    </ng-template>
+                </accordion-item>
+            </accordion>
+        </div>
+
+        <div id="detectorDiv"></div>
+
     </div>
-
-  </div>
-
-  <div class="flex-column scroll-div" style="width: 70vw; height: 100vh; overflow-y: scroll;">
-   
-
-    <div class="flex-column" style="width: 40%;" style="gap: 0.7rem">
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to log into the Application">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to login?</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <h3>While you are on the login page:</h3>
-                <li>Simply add your username and password with which you registered with and click on the blue <i>'login'</i> button.</li>
-                <li>If you have forgotton your password, click on the <i>'forgot password?'</i> link and follow the instructons.</li>
-                <li>If you do not have an account, click on the <i>'Dont have an account'</i> link and register for an account using your chosen details.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to register for an account">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to Register?</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <h3>To register for an account the following information will be required:</h3>
-                <ul style="margin-bottom: 1rem;">
-                  <li>Username</li>
-                  <li>Email Adress</li>
-                  <li>Password</li>
-                  <li>Confirmation of password</li>
-                </ul>
-                <li>Please enter the required information specified above in the relevant fields.</li>
-                <li style="margin-bottom: 1rem;">Click on the blue <i>'Register'</i> button</li>
-                <p>If you already have an account, click on the <i>'Already have an account?'</i> link and login with your registered details.</p>
-                
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to add a Domain">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to add a Domain</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <p style="margin-bottom: 1rem;margin-top: 1rem;">To add a Domain expand the sidebar and while the sidebar is expanded click on the <i>'Add a Domain'</i> button.</p>
-                
-                <li>The add Domain modal will appear, enter a Domain name of your choice in the field.</li>
-                <li>A description of your chosen domain.</li>
-                <li style="margin-bottom: 1rem;">A chosen image for your domain.</li>
-                <p>Domains will act as a 'folder' for your sources, so you can group spurces together about a specific domain.</p>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to remove a Domain">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to remove a Domain</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-
-                <li style="margin-top: 1rem;">To remove a domain expand the sidebar and while the sidebar is expanded, click on the <i>'bin'</i> icon and this will cause a pop-up moda to appear.</li>
-                <li>The removal of the specified Domain will will occur after confirmation from the user. </li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to edit a Domain">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to edit a Domain</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <p style="margin-top: 1rem;">To edit a Domain, expand the sidebar and while it is expanded:</p>
-                <li>Click on the <i>'edit'</i> button which is the pencil icon</li>
-                <li>This will allow you to edit the name</li>
-                <li>This will allow you to change the description</li>
-                <li>Will allow you to change the image of the specified domain</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to add a Source">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to add a Source</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <h3 style="margin-bottom: 1rem;">Navigate to the select source bar at the top of the page</h3>
-                <li>Click on the blue '+' button to begin adding a Source.</li>
-                <li>Add the source name.</li>
-                <li>Choose between the tested Sources(Google reviews,Trip-Adviser and Youtube).</li>
-                <li>Add a source URL, for Youtube add a link to a Youtube video, for Trip advisor add a link to a Trip advisor Domain and for Google reviews add a link to a Google maps location.</li>
-                <li>Click confirm to save the Source.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to remove a Source">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to remove a Source</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <h3 style="margin-bottom: 1rem;">Navigate to the select source bar at the top of the page</h3>
-                <li>To remove a Source, click on the source you would like to remove and click on the red 'bin' button.</li>
-                <li>The Source will be removed after confirmation from the user.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to refresh a Source">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to refresh a Source</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <h3 style="margin-bottom: 1rem;">Navigate to the select source bar at the top of the page</h3>
-                <li>To refresh the data of a source, click on the green refresh button on the right hand side of the page.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to edit a Source">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to edit a Source</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <p style="margin-top: 1rem;">To edit a Source, click on the source you would like to edit and click on the yellow edit button on the right hand side of the page and an edit source modal will appear.</p>
-                <li style="margin-top: 1rem;">Edit the name of the source.</li>
-                <li>Edit the source URL of a chosen source.</li>
-                <li>Once you have edited the relevant information, click on the blue 'confirm' button to save the changes.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to toggle theme">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to toggle theme</h3>
-                <p>To toggle a theme, click on the profile icon at the bottom of the sidebar and a profile modal will appear.</p>
-                <li>Click on the 'Toggle Theme' button to toggle between a light and dark theme.</li>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to log out">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to log out</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <li>To log out click on the profile icon at the bottom of the sidebar and a profile modal will appear, click on the 'Log Out' button to log out of the app.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to delete your account">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to delete account</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <p>To delete your account click on the profile icon at the bottom of the sidebar and a profile modal will appear.</p>
-                <li>Click on the 'Delete Account' button.</li>
-                <li>Confirm that you do want to delete your account.</li>
-                <li>Enter your password to confirm account deletion.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="How to update profile picture">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>How to update profile picture</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <p>To update your profile picture click on the profile icon at the bottom of the sidebar and a profile modal will appear.</p>
-                <li>Click on the profile picture itself to update your profile picture and then click the 'Confirm' button to save the changes.</li>
-
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="Explanation of Center console">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>Explanation of center console</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <li><b>Overall score</b> is the ratio of positive and negative sentiment of a chosen domain, the higher the score the more positive the sentiment data and vice versa.</li>
-                <li><b>The amount of positive, negative and neutral </b>sentiment of a chosen domain which are represented in percentages, the higher the percentage the more that sentiment is present in the chosen domain.</li>
-                <li><b>The Emotion block</b> of the center console is the most prevelant emotion of a chosen domain, the emotions detectable are anger, disgust, fear, joy, neutral, sadness and finally surprise.</li>
-                <li><b>The toxicity block</b> aims to access the level of harmfulness or offensiveness in the text and classify it accordingly.</li>
-                <li><b>The analysed block</b> presents the amount of sentiment that has been analysed in a chosen domain.</li>
-                <li><b>The Range block</b> is the timeframe in which the data has been collected to calculate the statistics and insights.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="Explanation of Graphs and charts console">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <h3>Explanation of Graphs and charts console</h3>
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <li>The graphs shown are graphical representations of the statistics and insights shown in the center console of the page.</li>
-                <li>Clicking on the arrows on the left and right of the graphs will allow you to view the graphs of the previous and next statistic respectively.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-
-      <accordion [collapsing]="collapsing">
-        <accordion-item title="Explanation of the sample data console">
-          <ng-template accordionContent>
-            <div class="accord-container">
-              <ol type="1">
-                <img src="../../assets/stock-profile-pic.jpg" alt="stock" style="width: 600px; height: auto;">
-                <h3>This is where you can view sample data of a chosen domain.</h3>
-                <li>The first metric is the overall score statistic.</li>
-                <li>The second metric is the overall categorisation of the sentiment.</li>
-                <li>The most prevalent emotion found within the piece of sample data.</li>
-                <li>A binary output classifying wheather the sample data is toxic or not, if a comment is deemed toxic you can click on the text below to view it.</li>
-              </ol>
-            </div>
-          </ng-template>
-        </accordion-item>
-      </accordion>
-    </div>
-  </div>
 </div>
