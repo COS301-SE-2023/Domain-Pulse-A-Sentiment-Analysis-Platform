@@ -18,7 +18,8 @@ export class TooltipDirective {
 
   @Input('tooltip') tooltipText: string = '';
   @Input() tooltipPosition: string = 'right'; // Default position is right
-  @Input('mul') tooltipMargin: number = 1.0; 
+  @Input('mul') tooltipMargin: number = 1.0;
+  @Input() searchTerm: string | undefined;
 
  /*  @HostListener('mouseenter', ['$event']) onMouseEnter(event: MouseEvent) {
 
@@ -132,7 +133,7 @@ export class TooltipDirective {
 
 
       const link = this.renderer.createElement('a');
-      this.renderer.setAttribute(link, 'href', 'http://localhost:4200/help'); 
+      this.renderer.setAttribute(link, 'href', 'http://localhost:4200/help' + (this.searchTerm? (`?q=${this.searchTerm}`): ""));
       this.renderer.setAttribute(link, 'target', '_blank'); // Set your link URL here
       this.renderer.setStyle(link, 'color', 'white');
       this.renderer.setStyle(link, 'font-size', '0.8rem');
