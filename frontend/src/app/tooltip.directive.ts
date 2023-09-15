@@ -9,8 +9,6 @@ export class TooltipDirective {
   private isMouseInsideTooltip = false;
   private tooltipTimeout: any;
 
-
-
   constructor(private el: ElementRef, private renderer: Renderer2) {
     this.tooltip = this.renderer.createElement('div');
     this.renderer.addClass(this.tooltip, 'tooltip');
