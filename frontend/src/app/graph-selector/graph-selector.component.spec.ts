@@ -853,6 +853,76 @@ describe('GraphSelectorComponent', () => {
 
   });
 
+  it('should switch to the previous graph', () => {
+    component.chartOptionsArray = mockGraphData;
+    component.currentGraphIndex = 1;
+    component.currentStatisticIndex = 0;
+    
+    component.switchToPreviousGraph();
+
+    expect(component.currentGraphIndex).toBe(0);
+  });
+
+  it('should switch to the next graph', () => {
+    component.chartOptionsArray = mockGraphData;
+    component.currentGraphIndex = 0;
+    component.currentStatisticIndex = 0;
+    
+    component.switchToNextGraph();
+
+    expect(component.currentGraphIndex).toBe(1);
+    expect(component.currentStatisticIndex).toBe(0);
+  });
+
+  it('should handle edge case when chartOptionsArray is empty', () => {
+    component.chartOptionsArray = [];
+    component.currentGraphIndex = 0;
+    component.currentStatisticIndex = 0;
+    
+    component.switchToPreviousGraph();
+    component.switchToNextGraph();
+
+    expect(component.currentGraphIndex).toBe(0);
+  });
+
+
+
+
+  it('should not render graph if no \'myChart\' or \'chartContainer\'', () => {
+    component.renderGraph();
+
+    expect(component.chart).toBeUndefined();
+  });
+
+  it('should return an array of selected dots with the correct count', () => {
+    component.dots = [3, 5, 2];
+    component.selectedDotIndex = 1; 
+    
+    const result = component.getSelectedDots();
+
+    expect(result.length).toBe(5);
+    expect(result).toEqual([0, 0, 0, 0, 0]);
+  });
+
+  it('should select a dot and update currentGraphIndex', () => {
+    component.dots = [3, 5, 2];
+    component.selectedDotIndex = 1;
+    
+    component.selectDot(2);
+    
+    expect(component.selectedDotIndex).toBe(2);
+    expect(component.currentGraphIndex).toBe(2);
+  });
+
+  it('should call renderGraph when selecting a dot', () => {
+    component.dots = [3, 5, 2];
+    spyOn(component, 'renderGraph'); 
+    
+    component.selectDot(0);
+    
+    expect(component.renderGraph).toHaveBeenCalled();
+  });
+
   
 
   
