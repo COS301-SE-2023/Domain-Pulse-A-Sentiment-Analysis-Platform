@@ -871,10 +871,7 @@ export class GraphSelectorComponent implements OnInit {
         this.currentGraphIndex
     );
 
-    if (!this.myChart || !this.chartContainer) {
-      this.chartOptions = {};
-      return;
-    }
+    
 
     const container = this.chartContainer.nativeElement;
     const containerHeight = container.offsetHeight;
@@ -903,6 +900,10 @@ export class GraphSelectorComponent implements OnInit {
         this.currentGraphIndex
       ];
 
+
+      if (!this.myChart || !this.chartContainer) {
+        return;
+      }
 
     
   }
