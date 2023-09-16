@@ -966,7 +966,64 @@ describe('GraphSelectorComponent', () => {
     expect(component.dots).toEqual([]);
   });
 
+  it('should not clear dots array when selectedIndex is negative', () => {
+    const selectedIndex = -1;
+    
+    
+    component.updateDots(selectedIndex);
+    expect(component.dots).toEqual([]);
+  });
+
+  it('should render graph and update chart height based on container height', () => {
+    const mockElementRef: ElementRef = {
+      nativeElement: document.createElement('div'), // You can use any HTML element here
+    };
+    
+
+    component.myChart = mockElementRef; // Assign the mock ElementRef
+    component.chartContainer = mockElementRef;
+    
+    const mockChartOptionsArray = component.assignGraphData(
+      mockAggregatedMetricsData,
+      mockTimeSeriesData,
+      mockGraphData
+    );
+    
+    component.currentStatisticIndex = 0;
+    component.currentGraphIndex = 1; 
+    const expectedChartHeight = '150px'; 
+
+    component.chartOptionsArray = mockChartOptionsArray;
+    
+    component.renderGraph();
+
+    expect(component.selectedDotIndex).toBe(0);
+    expect(component.chartOptions).toEqual(mockChartOptionsArray[0][1]);
+  });
+
+
+
+  it('should handle missing chart or chartContainer elements', () => {
+
+    const mockChartOptionsArray = component.assignGraphData(
+      mockAggregatedMetricsData,
+      mockTimeSeriesData,
+      mockGraphData
+    );
+
+    component.chartOptionsArray = mockChartOptionsArray;
+    
+    component.currentStatisticIndex = 0;
+    component.currentGraphIndex = 0;
+
+
+
   
+    component.renderGraph();
+
+    expect(component.selectedDotIndex).toBe(0);
+    expect(component.chartOptions).toEqual({});
+  });
 
   
 
