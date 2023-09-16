@@ -700,11 +700,6 @@ export class GraphSelectorComponent implements OnInit {
 
   ];
 
-
-  showPopup(index: number) {
-    console.log('Clicked on section:', index);
-  }
-
   constructor(private store: Store) {}
   
   
@@ -742,7 +737,11 @@ export class GraphSelectorComponent implements OnInit {
     });
   }
 
-  private updateDots(selectedIndex: number) {
+  public updateDots(selectedIndex: number) {
+
+    if(selectedIndex <0){
+      this.dots = [];
+    }
 
     const dotsArray = [2, 2, 3, 2, 1]; 
 
@@ -762,6 +761,15 @@ export class GraphSelectorComponent implements OnInit {
   ): any[] {
     const aggregatedMetrics = aggregated_metrics;
     const timeseriesData = timeseries;
+
+    console.log('timeseries data')
+    console.log(timeseriesData);
+
+    console.log('aggregated metrics');
+    console.log(aggregatedMetrics);
+
+    console.log('graph array');
+    console.log(graphArray);
 
     const score = aggregatedMetrics.general.score * 100;
     graphArray[0][0].series = [score];
@@ -863,7 +871,10 @@ export class GraphSelectorComponent implements OnInit {
         this.currentGraphIndex
     );
 
-    
+    if (!this.myChart || !this.chartContainer) {
+      this.chartOptions = {};
+      return;
+    }
 
     const container = this.chartContainer.nativeElement;
     const containerHeight = container.offsetHeight;
@@ -893,9 +904,7 @@ export class GraphSelectorComponent implements OnInit {
       ];
 
 
-    if (!this.myChart || !this.chartContainer) {
-      return;
-    }
+    
   }
 
   getSelectedDots(): number[] {
@@ -904,6 +913,10 @@ export class GraphSelectorComponent implements OnInit {
   }
 
   selectDot(index: number) {
+    if(index >= this.dots[this.selectedDotIndex] || index < 0) {
+      return;
+    }
+
     this.selectedDotIndex = index;
     this.currentGraphIndex = index;
 
