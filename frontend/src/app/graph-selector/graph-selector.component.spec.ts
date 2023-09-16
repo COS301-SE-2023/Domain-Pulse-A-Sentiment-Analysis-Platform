@@ -923,6 +923,49 @@ describe('GraphSelectorComponent', () => {
     expect(component.renderGraph).toHaveBeenCalled();
   });
 
+  it('should handle edge case when selecting an out-of-range dot index', () => {
+    component.dots = [3, 5, 2];
+    component.selectedDotIndex = 1;
+    component.currentGraphIndex = 1;
+    
+    component.selectDot(10);
+    
+    expect(component.selectedDotIndex).toBe(1);
+    expect(component.currentGraphIndex).toBe(1);
+  });
+
+  it('should handle edge case when selecting a negative index', () => {
+    component.dots = [3, 5, 2];
+    component.selectedDotIndex = 1;
+    component.currentGraphIndex = 1;
+    
+    component.selectDot(-5);
+    
+    expect(component.selectedDotIndex).toBe(1);
+    expect(component.currentGraphIndex).toBe(1);
+  });
+
+  it('should update dots array when selectedIndex is valid', () => {
+
+    const selectedIndex = 2;
+    const expectedDots = [0, 0, 0]; 
+    
+
+    component.updateDots(selectedIndex);
+
+    expect(component.dots).toEqual(expectedDots);
+  });
+
+  it('should clear dots array when selectedIndex is out of range', () => {
+
+    const selectedIndex = 5;
+    
+   
+    component.updateDots(selectedIndex);
+
+    expect(component.dots).toEqual([]);
+  });
+
   
 
   
