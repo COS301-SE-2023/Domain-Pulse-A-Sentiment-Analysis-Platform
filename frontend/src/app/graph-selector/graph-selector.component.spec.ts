@@ -799,6 +799,61 @@ describe('GraphSelectorComponent', () => {
     expect(component).toBeDefined();
   });
 
+  it('should set gepahs on new Data', () => {
+    const result = component.assignGraphData(mockAggregatedMetricsData, mockTimeSeriesData, mockGraphData);
+
+    expect(result).toBeDefined();
+    expect(result[0][0].series[0]).toEqual(mockAggregatedMetricsData.general.score * 100);
+    expect(result[1][0].series).toEqual([
+      Math.floor(mockAggregatedMetricsData.ratios.positive * 100),
+      Math.floor(mockAggregatedMetricsData.ratios.negative * 100),
+      Math.floor(mockAggregatedMetricsData.ratios.neutral * 100),
+    ]);
+
+
+    expect(result[2][0].series[0].data).toEqual([
+      Math.floor(mockAggregatedMetricsData.emotions.anger * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.disgust * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.fear * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.joy * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.surprise * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.sadness * 100),
+    ]);
+
+    expect(result[2][2].series[0].data).toEqual([
+      Math.floor(mockAggregatedMetricsData.emotions.anger * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.disgust * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.fear * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.joy * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.surprise * 100),
+      Math.floor(mockAggregatedMetricsData.emotions.sadness * 100),
+    ]);
+
+    expect(result[3][0].series).toEqual([
+      Math.floor(mockAggregatedMetricsData.toxicity.score * 100),
+    ]);
+
+    expect(result[0][1].series[0].data).toEqual(mockTimeSeriesData.overall);
+
+    expect(result[1][1].series[0].data).toEqual(mockTimeSeriesData.ratios.pos);
+    expect(result[1][1].series[1].data).toEqual(mockTimeSeriesData.ratios.neg);
+    expect(result[1][1].series[2].data).toEqual(mockTimeSeriesData.ratios.neu);
+
+    expect(result[2][1].series[0].data).toEqual(mockTimeSeriesData.emotions.anger);
+    expect(result[2][1].series[1].data).toEqual(mockTimeSeriesData.emotions.disgust);
+    expect(result[2][1].series[2].data).toEqual(mockTimeSeriesData.emotions.fear);
+    expect(result[2][1].series[3].data).toEqual(mockTimeSeriesData.emotions.joy);
+    expect(result[2][1].series[4].data).toEqual(mockTimeSeriesData.emotions.surprise);
+    expect(result[2][1].series[5].data).toEqual(mockTimeSeriesData.emotions.sadness);
+
+    expect(result[3][1].series[0].data).toEqual(mockTimeSeriesData.toxicity.toxic_count);
+    expect(result[3][1].series[1].data).toEqual(mockTimeSeriesData.toxicity.overall_helper);
+
+    expect(result[4][0].series[0].data).toEqual(mockTimeSeriesData.num_records);
+
+  });
+
+  
 
   
 
