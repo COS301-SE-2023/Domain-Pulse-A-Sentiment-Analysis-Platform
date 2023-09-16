@@ -220,6 +220,17 @@ export class AppState {
     return state.allSourcesSelected;
   }
 
+  @Selector()
+  static pdfUrl(state: AppStateModel) {
+    return state.pdfUrl;
+  }
+
+  @Selector()
+  static pdfLoading(state: AppStateModel) {
+    return state.pdfLoading;
+  }
+  
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {

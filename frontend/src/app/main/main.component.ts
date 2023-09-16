@@ -48,16 +48,24 @@ export class MainComponent implements OnInit {
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  @Select(AppState.pdfLoading) pdfLoading$!: Observable<boolean>;
+  @Select(AppState.pdfUrl) pdfUrl$!: Observable<string>;
+
   selectedDomain!: DisplayDomain | null;
 
 
   sidebarCollapsed = true;
   showReportModal = false;
+  pdfUrl!: string;
 
   constructor(private store: Store) {}
    ngOnInit(): void {
     this.selectedDomain$.subscribe(domain => {
       this.selectedDomain = domain;
+    });
+
+    this.pdfUrl$.subscribe(res => {
+      this.pdfUrl = res;
     });
    }
 
