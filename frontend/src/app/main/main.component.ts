@@ -73,25 +73,14 @@ export class MainComponent implements OnInit {
     }
   }
 
-  generateReportAndPrintPdfUrl() {
-    this.generateReport().subscribe((pdfUrl) => {
-      if (pdfUrl !== null) {
-        console.log('PDF URL:', pdfUrl);
+
+  generateReport(){
+    this.store.dispatch(new GenerateReport(this.selectedDomain!.id)).subscribe((res) => {
+      if (res !== null) {
+        console.log('PDF URL:', res.app.pdfUrl);
       } else {
         console.log('PDF URL is null');
       }
     });
-  }
-
-  generateReport(): Observable<string | null> {
-    console.log('generateReport ' + this.selectedDomain!.id)
-    return this.store.dispatch(new GenerateReport(this.selectedDomain!.id)).pipe(
-      switchMap(() =>
-        this.store.selectOnce((state) => state.appState.pdfUrl).pipe(
-          filter((pdfUrl) => pdfUrl !== null),
-          take(1), 
-        )
-      )
-    );
   }
 }
