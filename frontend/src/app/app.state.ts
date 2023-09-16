@@ -1146,6 +1146,9 @@ export class AppState {
   static platformToIcon(platform: string): string {
     let source_image_name = '';
     switch (platform) {
+      case 'trustpilot':
+        source_image_name = 'trustpilot-logo.png';
+        break;
       case 'facebook':
         source_image_name = 'facebook-logo.png';
         break;

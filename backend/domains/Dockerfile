@@ -10,5 +10,4 @@ RUN apk add python3-dev build-base linux-headers pcre-dev
 RUN pip install uwsgi
 RUN pip install --no-cache-dir -r requirements-lock.txt
 
-
 CMD ["uwsgi", "--ini", "/code/domains.uwsgi.ini"]

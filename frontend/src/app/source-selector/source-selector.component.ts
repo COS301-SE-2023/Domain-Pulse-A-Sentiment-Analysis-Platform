@@ -17,8 +17,6 @@ export class SourceSelectorComponent implements OnInit {
   @Select(AppState.allSourcesSelected) allSources$!: Observable<number>;
   selectedSource?: DisplaySource;
 
-
-
   showAddSourcesModal = false;
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
@@ -79,10 +77,19 @@ export class SourceSelectorComponent implements OnInit {
     console.log('platform: ' + this.newSourcePlatform);
     console.log('name: ' + this.newSourceName);
 
+    if(this.newSourcePlatform != 'livereview' && this.newSourceUrl ==''){
+      this.store.dispatch(new ToastError('Please add a URL'));
+      return;
+    }
+
     if (!params || !this.newSourcePlatform || !this.newSourceName) {
       this.store.dispatch(new ToastError('Please fill in all fields'));
       return;
     }
+
+    
+
+
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     );
@@ -98,6 +105,23 @@ export class SourceSelectorComponent implements OnInit {
  */
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
+      case 'trustpilot':
+        const tpurl = this.newSourceUrl;
+        if (!tpurl.includes('trustpilot')) {
+          return {
+            source_type: 'trustpilot',
+            query_url: tpurl,
+          };
+        }
+
+        const urlParts = tpurl.split('/');
+        const indexOfReviews = urlParts.indexOf('review');
+        const tpID = urlParts[indexOfReviews + 1];
+
+        return {
+          source_type: 'trustpilot',
+          query_url: tpID,
+        }
       case 'googlereviews':
         return {
           source_type: 'googlereviews',
@@ -169,6 +193,8 @@ export class SourceSelectorComponent implements OnInit {
         return 'YouTube';
       case 'livereview':
         return 'livereview';
+      case 'trustpilot':
+        return 'trustpilot';
     }
     return '';
   }
@@ -227,13 +253,8 @@ export class SourceSelectorComponent implements OnInit {
 
   toggleActive(event: any) {
     console.log('onValueChange', event);
-
     const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
     
-
-
     this.store.dispatch(new SetIsActive(!selectedSource?.params));
-
-
   }
 }

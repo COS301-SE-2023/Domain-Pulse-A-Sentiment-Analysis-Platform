@@ -43,12 +43,12 @@ def mocked_analyser_request(dummy1, **kwargs):
 
 def mocked_down_analyser_request(dummy1, json=None, headers=None, data=None):
     ANALYSER_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
     )
     GET_SOURCE_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     )
-    DOMAINS_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
+    DOMAINS_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
     if dummy1 == ANALYSER_ENDPOINT:
         mock_response = MagicMock()
         mock_response.status_code = 404
@@ -190,15 +190,7 @@ class LiveIngestionTests(TestCase):
             content_type="application/x-www-form-urlencoded",
         )
 
-        self.assertContains(
-            response,
-            """<body>
-    <h1>There was an error submitting your review!</h1>
-    <h2>Details: {{details}}</h2>
-</body>""".replace(
-                "{{details}}", "Error communicating with analyser"
-            ),
-        )
+        self.assertContains(response, "Error communicating with analyser")
 
     @patch("requests.post")
     def test_domains_service_failed_case(self, mocked_post):

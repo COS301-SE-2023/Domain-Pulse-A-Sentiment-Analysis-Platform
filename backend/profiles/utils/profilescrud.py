@@ -244,17 +244,13 @@ def get_profile(request, id):
 
 
 def login_user(request, username, password):
-    if not request.user.is_authenticated:
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            jwt = create_JWT(user)
-            return {"status": "SUCCESS", "id": user.id, "JWT": jwt}
-        else:
-            return {"status": "FAILURE", "details":"Invalid credentials"}
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
+        jwt = create_JWT(user)
+        return {"status": "SUCCESS", "id": user.id, "JWT": jwt}
     else:
-        return {"status": "FAILURE", "details":"Already logged in"}
-
+        return {"status": "FAILURE", "details":"Invalid credentials"}
 
 def create_JWT(user):
     if user.is_authenticated:

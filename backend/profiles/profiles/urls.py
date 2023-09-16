@@ -22,3 +22,4 @@ urlpatterns = [
     path("profiles/", include("profileservice.urls")),
     path("check/", include("check_auth.urls")),
 ]
+ 

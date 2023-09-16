@@ -39,6 +39,16 @@ ALLOWED_HOSTS = [
     "154.73.32.89",
     ".domainpulse.app",
     ".dp.cos301.thuthuka.me",
+    "dev-domains",
+    "dev-engine",
+    "dev-profiles",
+    "dev-sourceconnector",
+    "dev-warehouse",
+    "prod-domains",
+    "prod-engine",
+    "prod-profiles",
+    "prod-sourceconnector",
+    "prod-warehouse",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = False

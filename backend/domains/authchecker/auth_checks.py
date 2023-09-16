@@ -3,7 +3,7 @@ import requests
 from django.http import HttpResponse, HttpRequest, JsonResponse
 import os
 
-PROFILES_SERVICE_ADDRESS = "http://localhost:" + str(os.getenv("DJANGO_PROFILES_PORT"))
+PROFILES_SERVICE_ADDRESS = f"http://{os.getenv('PROFILES_HOST')}:" + str(os.getenv("DJANGO_PROFILES_PORT"))
 VERIFY_SOURCES_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/source_ids/"
 VERIFY_DOMAINS_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/domain_ids/"
 ADD_DOMAIN_ENDPOINT = PROFILES_SERVICE_ADDRESS + "/check/add_domain/"
