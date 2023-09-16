@@ -30,6 +30,7 @@ import {
   EditSource,
   SetAllSourcesSelected,
   SetIsActive,
+  UplaodCVSFile,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -1180,6 +1181,25 @@ export class AppState {
       }
     });
     
+  }
+
+  @Action(UplaodCVSFile)
+  uploadCVSFile(ctx: StateContext<AppStateModel>, state: UplaodCVSFile) {
+    const selectedSource = ctx.getState().selectedSource;
+    if (!selectedSource) return;
+
+    const sourceID = selectedSource.id;
+    const { file } = state;
+
+    this.appApi.sendCSVFile(sourceID, file).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your file could not be uploaded'));
+        return;
+      } else if (res.status === 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('Your file has been uploaded'));
+        this.store.dispatch(new GetSourceDashBoardInfo());
+      }
+    });
   }
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {

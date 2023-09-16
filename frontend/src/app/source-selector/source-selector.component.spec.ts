@@ -1,10 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { SourceSelectorComponent } from './source-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
@@ -23,6 +17,7 @@ import {
   SetSourceIsLoading,
   ToastError,
   ToastSuccess,
+  UplaodCVSFile,
 } from '../app.actions';
 import { DisplaySource, Source } from '../app.state';
 import { Data } from '@angular/router';
@@ -32,8 +27,6 @@ describe('SourceSelectorComponent', () => {
   let storeSpy: jasmine.SpyObj<Store>;
   let appApiSpy: jasmine.SpyObj<AppApi>;
   let actions$: Observable<any>;
-  let httpClient: HttpClient;
-  let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
     appApiSpy = jasmine.createSpyObj('AppApi', ['getSourceSentimentData']);
@@ -47,15 +40,11 @@ describe('SourceSelectorComponent', () => {
       imports: [
         NgxsModule.forRoot([]),
         FormsModule,
-        HttpClientModule,
-        HttpClientTestingModule,
       ],
     });
 
     component = TestBed.inject(SourceSelectorComponent);
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
-    httpClient = TestBed.inject(HttpClient);
-    httpTestingController = TestBed.inject(HttpTestingController);
     actions$ = TestBed.inject(Actions);
   });
 
@@ -97,7 +86,7 @@ describe('SourceSelectorComponent', () => {
     component.addNewSource();
   });
   
- /*  it('should dispatch actions for CSV platform with a valid CSV file', async () => {
+ it('should dispatch actions for CSV platform with a valid CSV file', () => {
     // Set up the test data
     const sourceID = 'your-source-id';
     const mockFile = new File(['mock content'], 'mock.csv', {
@@ -111,15 +100,13 @@ describe('SourceSelectorComponent', () => {
     const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
   
     // Use await to ensure that the asynchronous code is properly handled
-    await component.addNewSource();
+    component.addNewSource();
   
     // Assert that the actions were dispatched as expected
     expect(storeDispatchSpy).toHaveBeenCalledWith(
-      new AddNewSource('CSV Source', component.newSourcePlatform, jasmine.any(Object))
-    );
-  
- 
-  }); */
+      new UplaodCVSFile(mockFile)
+    ); 
+  });
 
   it('should show an error message when CSV platform is selected but no CSV file is uploaded', () => {
     component.newSourcePlatform = 'csv';
@@ -153,29 +140,6 @@ describe('SourceSelectorComponent', () => {
     component.uploadFile(event);
 
     expect(component.newCSVFile).toBe(mockFile);
-  });
-
-  it('should send a file with sourceID when sendFile is called', () => {
-    const sourceID = '65034fff5aff62e633eb690b';
-    const mockFile = new File(['mock content'], 'mock.csv', {
-      type: 'text/csv',
-    });
-
-    spyOn(storeSpy, 'selectSnapshot').and.returnValue({ id: sourceID });
-
-    component.newCSVFile = mockFile;
-
-    component.sendFile(sourceID);
-
-    const testUrl = '/api/warehouse/ingest/ingest_csv/';
-    const testData = {};
-
-    httpClient.get<Data>(testUrl).subscribe((data) => {
-      console.log('test data: ' + data);
-      expect(data).toEqual(testData);
-
-      httpTestingController.verify();
-    });
   });
 
   it('should show an error message when URL is not specified when adding a new source', () => {

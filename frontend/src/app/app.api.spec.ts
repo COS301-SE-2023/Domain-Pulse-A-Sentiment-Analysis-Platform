@@ -644,8 +644,28 @@ describe('AppApi', () => {
     req.flush(expectedResponse);
   });
   
-  
-  
+  // put this in the api file btw
+  // it('should send a file with sourceID when sendFile is called', () => {
+  //   const sourceID = '65034fff5aff62e633eb690b';
+  //   const mockFile = new File(['mock content'], 'mock.csv', {
+  //     type: 'text/csv',
+  //   });
 
+  //   spyOn(storeSpy, 'selectSnapshot').and.returnValue({ id: sourceID });
+
+  //   component.newCSVFile = mockFile;
+
+  //   component.sendFile(sourceID);
+
+  //   const testUrl = '/api/warehouse/ingest/ingest_csv/';
+  //   const testData = {};
+
+  //   httpClient.get<Data>(testUrl).subscribe((data) => {
+  //     console.log('test data: ' + data);
+  //     expect(data).toEqual(testData);
+
+  //     httpTestingController.verify();
+  //   });
+  // });
   
 });

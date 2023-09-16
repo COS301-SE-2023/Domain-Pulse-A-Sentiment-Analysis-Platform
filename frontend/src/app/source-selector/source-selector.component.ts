@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -32,8 +32,7 @@ export class SourceSelectorComponent implements OnInit {
 
   isOpen = false;
 
-
-  constructor(private store: Store, private http: HttpClient) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.selectedSource$.subscribe(source => {
@@ -50,26 +49,10 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   uploadFile(event: any) {
-
     this.newCSVFile = event.target.files[0];
     console.log('this.newCSVFile: ')
     console.log(this.newCSVFile)
-
   }
-
-  sendFile(sourceID: any) {
-    const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
-
-    const file = this.newCSVFile;
-    
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('source_id', sourceID);
-
-    return this.http.post('/api/warehouse/ingest/ingest_csv/', formData);
-  }
-
-
 
   copyToClipboard() {
     const liveReviewLink = document.getElementById('liveReviewLink');
@@ -78,8 +61,6 @@ export class SourceSelectorComponent implements OnInit {
       navigator.clipboard.writeText(textToCopy);
     }
   }
-
-  
 
   selectSource(source: DisplaySource) {
     this.store.dispatch(new SetAllSourcesSelected(false));
@@ -117,34 +98,17 @@ export class SourceSelectorComponent implements OnInit {
       return;
     }
 
-    
-
-
-    if(this.newSourcePlatform == 'csv'){
-      this.store.dispatch(
-        new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
-      ).subscribe((result1) => {
-        this.sendFile(result1.app.selectedSource.id).subscribe((result) => {
-          this.store.dispatch(new ToastSuccess("CSV uploaded successfully"));
-          this.store.dispatch(new GetSourceDashBoardInfo());
-          this.newCSVFile = '';
-        });
-      });
-      
-    }else{
-      this.store.dispatch(
-        new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
-      );
-    }
-
-    
-    
-
-
+    this.store.dispatch(
+      new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
+    ).subscribe(() => {
+      if(this.newSourcePlatform == 'csv'){
+        this.store.dispatch(new UplaodCVSFile(this.newCSVFile));
+        this.newCSVFile = '';
+      }
+    });
     
     this.newSourceName = '';
     this.newSourceUrl = '';
-    //this.newCSVFile = '';
     this.showAddSourcesModal = false;
   }
 

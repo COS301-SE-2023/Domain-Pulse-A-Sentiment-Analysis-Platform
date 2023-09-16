@@ -165,3 +165,8 @@ export class SetIsActive{
   static readonly type = '[Profile] Set Is Active';
   constructor(public isActive: boolean) {}
 }
+
+export class UplaodCVSFile{
+  static readonly type = '[Source] Upload CVS File';
+  constructor(public file: any) {}
+}
