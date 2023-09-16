@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 
 import { GraphSelectorComponent } from './graph-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartComponent } from 'ng-apexcharts';
 import { ElementRef } from '@angular/core';
@@ -1127,7 +1127,47 @@ describe('GraphSelectorComponent', () => {
     expect(component.currentGraphIndex).toBe(1);
     expect(component.selectedDotIndex).toBe(1);
   });
+  
 
+  it('should process overall sentiment data', fakeAsync(() => {
+    const mockData = {
+      aggregated_metrics: mockAggregatedMetricsData,
+      timeseries: mockTimeSeriesData
+    };
+
+    spyOn(component, 'assignGraphData').and.returnValue([]);
+    spyOn(component, 'renderGraph');
+
+    component.processOverallSentiment(mockData);
+
+    tick(300);
+
+    expect(component.assignGraphData).toHaveBeenCalledWith(
+      mockData.aggregated_metrics,
+      mockData.timeseries,
+      component.chartOptionsArray
+    );
+    expect(component.renderGraph).toHaveBeenCalled();
+  }));
+
+  it('should process statistic index and render graph', () => {
+    const newStatIndex = 1;
+    spyOn(component, 'renderGraph');
+
+    component.processStatisticIndex(newStatIndex);
+
+    expect(component.currentStatisticIndex).toBe(newStatIndex);
+    expect(component.renderGraph).toHaveBeenCalled();
+  });
+
+  it('should process statistic index and update dots', () => {
+    const newStatIndex = 1;
+    spyOn(component, 'updateDots');
+
+    component.processStatisticIndex2(newStatIndex);
+
+    expect(component.updateDots).toHaveBeenCalledWith(newStatIndex);
+  });
 
 
   /* it('should handle missing chart or chartContainer elements', () => {

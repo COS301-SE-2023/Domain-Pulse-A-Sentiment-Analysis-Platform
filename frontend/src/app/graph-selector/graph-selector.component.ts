@@ -72,7 +72,6 @@ export class GraphSelectorComponent implements OnInit {
           toolbar: {
             show: true,
           },
-          
         },
         plotOptions: {
           radialBar: {
@@ -89,10 +88,10 @@ export class GraphSelectorComponent implements OnInit {
                 color: '#61d478',
               },
               value: {
-                formatter: function(val:any) {
-                  return parseInt(val.toFixed(2)) + "%";
+                formatter: function (val: any) {
+                  return parseInt(val.toFixed(2)) + '%';
                 },
-              }
+              },
             },
           },
         },
@@ -133,7 +132,6 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'area',
-          
         },
         title: {
           text: 'Overall Score over time',
@@ -147,13 +145,12 @@ export class GraphSelectorComponent implements OnInit {
         yaxis: [
           {
             labels: {
-              formatter: function(val:any) {
+              formatter: function (val: any) {
                 return val.toFixed(0);
-              }
-            }
-          }
-        ]
-
+              },
+            },
+          },
+        ],
       },
     ],
     [
@@ -168,7 +165,6 @@ export class GraphSelectorComponent implements OnInit {
           toolbar: {
             show: true,
           },
-          
         },
         labels: ['Postive', 'Negative', 'Neutral'],
         colors: [
@@ -189,12 +185,12 @@ export class GraphSelectorComponent implements OnInit {
         yaxis: [
           {
             labels: {
-              formatter: function(val:any) {
+              formatter: function (val: any) {
                 return val.toFixed(0);
-              }
-            }
-          }
-        ]
+              },
+            },
+          },
+        ],
       },
       {
         //2.2pos-neg-neu ratio
@@ -239,7 +235,6 @@ export class GraphSelectorComponent implements OnInit {
               console.log(new Date(e.xaxis.min));
             },
           },
-          
         },
         colors: [
           'rgba(63, 231, 133, 0.8)',
@@ -268,12 +263,12 @@ export class GraphSelectorComponent implements OnInit {
         yaxis: [
           {
             labels: {
-              formatter: function(val:any) {
+              formatter: function (val: any) {
                 return val.toFixed(0);
-              }
-            }
-          }
-        ]
+              },
+            },
+          },
+        ],
       },
     ],
     [
@@ -291,7 +286,6 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           type: 'bar',
           height: '100%',
-          
         },
         plotOptions: {
           bar: {
@@ -395,7 +389,6 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'area',
-          
         },
         title: {
           text: 'Emotion Ratings over time',
@@ -427,12 +420,12 @@ export class GraphSelectorComponent implements OnInit {
         yaxis: [
           {
             labels: {
-              formatter: function(val:any) {
+              formatter: function (val: any) {
                 return val.toFixed(0);
-              }
-            }
-          }
-        ]
+              },
+            },
+          },
+        ],
       },
       {
         //3.3 radar emotions
@@ -447,7 +440,6 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'radar',
-          
         },
         title: {
           text: 'Emotions Radar Chart',
@@ -464,14 +456,12 @@ export class GraphSelectorComponent implements OnInit {
         },
         yaxis: {
           show: false,
- 
-          labels: {
-            formatter: function(val:any) {
-              return val.toFixed(0);
-            }
-          }
-            
 
+          labels: {
+            formatter: function (val: any) {
+              return val.toFixed(0);
+            },
+          },
         },
         plotOptions: {
           radar: {
@@ -498,7 +488,6 @@ export class GraphSelectorComponent implements OnInit {
           toolbar: {
             show: true,
           },
-          
         },
         plotOptions: {
           radialBar: {
@@ -515,10 +504,10 @@ export class GraphSelectorComponent implements OnInit {
                 color: '#cf5050',
               },
               value: {
-                formatter: function(val:any) {
-                  return parseInt(val.toFixed(2)) + "%";
+                formatter: function (val: any) {
+                  return parseInt(val.toFixed(2)) + '%';
                 },
-              }
+              },
             },
           },
         },
@@ -576,7 +565,6 @@ export class GraphSelectorComponent implements OnInit {
           height: '100%',
           type: 'line',
           colors: ['#fb2600', '#30a800'],
-          
         },
         all_series_config: {
           stroke_width: 10,
@@ -612,9 +600,9 @@ export class GraphSelectorComponent implements OnInit {
               style: {
                 color: '#fb2600',
               },
-              formatter: function(val:any) {
+              formatter: function (val: any) {
                 return val.toFixed(0);
-              }
+              },
             },
             title: {
               text: 'Number of Toxic Comments',
@@ -640,9 +628,9 @@ export class GraphSelectorComponent implements OnInit {
               style: {
                 color: '#30a800',
               },
-              formatter: function(val:any) {
+              formatter: function (val: any) {
                 return val.toFixed(0);
-              }
+              },
             },
             title: {
               text: 'Overall Score',
@@ -684,7 +672,6 @@ export class GraphSelectorComponent implements OnInit {
         chart: {
           height: '100%',
           type: 'area',
-          
         },
         title: {
           text: 'Number of Reviews over time',
@@ -697,14 +684,11 @@ export class GraphSelectorComponent implements OnInit {
         },
       },
     ],
-
   ];
 
   constructor(private store: Store) {}
-  
-  
 
-  ngOnInit(): void {
+  /* ngOnInit(): void {
     this.sourceOverallSentiment.subscribe((data) => {
       console.log(data);
       if (data) {
@@ -723,36 +707,107 @@ export class GraphSelectorComponent implements OnInit {
     });
 
     this.statisticIndex.subscribe((statIndex) => {
-      if (statIndex !== this.currentStatisticIndex && statIndex !== undefined) {
-        this.currentStatisticIndex = statIndex;
-
-        this.renderGraph();
-      }
+      this.processStatisticIndex(statIndex);
     });
 
     this.chartOptions = this.chartOptionsArray[0];
 
     this.statisticIndex.subscribe(index => {
-      this.updateDots(index);
+    });
+  } */
+
+  ngOnInit(): void {
+    this.sourceOverallSentiment.subscribe((data) => {
+      this.processOverallSentiment(data);
+    });
+
+    this.statisticIndex.subscribe((statIndex) => {
+      this.processStatisticIndex(statIndex);
+    });
+
+    this.chartOptions = this.chartOptionsArray[0];
+
+    this.statisticIndex.subscribe((index) => {
+      this.processStatisticIndex2(index);
     });
   }
 
-  public updateDots(selectedIndex: number) {
+  public processOverallSentiment(data: any) {
+    console.log(data);
+    if (data) {
+      if (data.aggregated_metrics.general.category != 'No data') {
+        this.updatedGraphArray = this.assignGraphData(
+          data.aggregated_metrics,
+          data.timeseries,
+          this.chartOptionsArray
+        );
+        setTimeout(() => {
+          console.log('rendering graph after fetching data');
+          this.renderGraph();
+        }, 300);
+      }
+    }
+  }
 
-    if(selectedIndex <0){
+  public processStatisticIndex(statIndex: number) {
+    if (statIndex !== this.currentStatisticIndex && statIndex !== undefined) {
+      this.currentStatisticIndex = statIndex;
+      this.renderGraph();
+    }
+  }
+
+  public processStatisticIndex2(statIndex: number) {
+
+    this.updateDots(statIndex);
+
+  }
+
+  /* ngOnInit(): void {
+    this.sourceOverallSentiment.subscribe((data) => {
+      processOverallSetniment(data);
+    });
+
+    this.statisticIndex.subscribe((statIndex) => {
+      .. put it in a function
+    });
+
+    this.chartOptions = this.chartOptionsArray[0];
+
+    this.statisticIndex.subscribe(index => {
+      ...put it in a function
+    });
+  }
+
+processOverallSetniment(data) {
+  console.log(data);
+      if (data) {
+        if (data.aggregated_metrics.general.category != 'No data') {
+          this.updatedGraphArray = this.assignGraphData(
+            data.aggregated_metrics,
+            data.timeseries,
+            this.chartOptionsArray
+          );
+          setTimeout(() => {
+            console.log('rendering graph after fetching data');
+            this.renderGraph();
+          }, 300);
+        }
+      }
+} */
+
+  public updateDots(selectedIndex: number) {
+    if (selectedIndex < 0) {
       this.dots = [];
     }
 
-    const dotsArray = [2, 2, 3, 2, 1]; 
+    const dotsArray = [2, 2, 3, 2, 1];
 
     if (selectedIndex >= 0 && selectedIndex < dotsArray.length) {
       this.dots = new Array(dotsArray[selectedIndex]).fill(0);
     } else {
-      this.dots = []; 
+      this.dots = [];
     }
   }
-
-  
 
   assignGraphData(
     aggregated_metrics: any,
@@ -762,7 +817,7 @@ export class GraphSelectorComponent implements OnInit {
     const aggregatedMetrics = aggregated_metrics;
     const timeseriesData = timeseries;
 
-    console.log('timeseries data')
+    console.log('timeseries data');
     console.log(timeseriesData);
 
     console.log('aggregated metrics');
@@ -809,7 +864,6 @@ export class GraphSelectorComponent implements OnInit {
     graphArray[1][1].series[1].data = timeseriesData.ratios.neg;
     graphArray[1][1].series[2].data = timeseriesData.ratios.neu;
 
-
     graphArray[2][1].series[0].data = timeseriesData.emotions.anger;
     graphArray[2][1].series[1].data = timeseriesData.emotions.disgust;
     graphArray[2][1].series[2].data = timeseriesData.emotions.fear;
@@ -820,15 +874,12 @@ export class GraphSelectorComponent implements OnInit {
     graphArray[3][1].series[0].data = timeseriesData.toxicity.toxic_count;
     graphArray[3][1].series[1].data = timeseriesData.toxicity.overall_helper;
 
-
     graphArray[4][0].series[0].data = timeseriesData.num_records;
 
     return graphArray;
   }
 
   updatedGraphArray?: any[];
-
-  
 
   switchToPreviousGraph() {
     if (!this.chartOptionsArray || !this.chartOptionsArray.length) {
@@ -841,8 +892,7 @@ export class GraphSelectorComponent implements OnInit {
         this.chartOptionsArray[this.currentStatisticIndex].length) %
       this.chartOptionsArray[this.currentStatisticIndex].length;
 
-      this.selectedDotIndex = this.currentGraphIndex;
-
+    this.selectedDotIndex = this.currentGraphIndex;
 
     this.renderGraph();
   }
@@ -857,8 +907,6 @@ export class GraphSelectorComponent implements OnInit {
       this.chartOptionsArray[this.currentStatisticIndex].length;
 
     this.selectedDotIndex = this.currentGraphIndex;
-
-
 
     this.renderGraph();
   }
@@ -880,7 +928,7 @@ export class GraphSelectorComponent implements OnInit {
     ) {
       this.currentGraphIndex =
         this.chartOptionsArray[this.currentStatisticIndex].length - 1;
-        this.selectedDotIndex = this.currentGraphIndex;
+      this.selectedDotIndex = this.currentGraphIndex;
     }
 
     // Update chart height based on container's height
@@ -897,11 +945,6 @@ export class GraphSelectorComponent implements OnInit {
       this.chartOptionsArray[this.currentStatisticIndex][
         this.currentGraphIndex
       ];
-
-
-      
-
-    
   }
 
   getSelectedDots(): number[] {
@@ -910,7 +953,7 @@ export class GraphSelectorComponent implements OnInit {
   }
 
   selectDot(index: number) {
-    if(index >= this.dots[this.currentStatisticIndex] || index < 0) {
+    if (index >= this.dots[this.currentStatisticIndex] || index < 0) {
       return;
     }
 
@@ -918,6 +961,5 @@ export class GraphSelectorComponent implements OnInit {
     this.currentGraphIndex = index;
 
     this.renderGraph();
-
   }
 }
