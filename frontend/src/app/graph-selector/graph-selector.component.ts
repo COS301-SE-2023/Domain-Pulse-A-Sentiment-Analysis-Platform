@@ -953,7 +953,7 @@ processOverallSetniment(data) {
   }
 
   selectDot(index: number) {
-    if (index >= this.dots[this.currentStatisticIndex] || index < 0) {
+    if (index >= this.dots.length || index < 0) {
       return;
     }
 
