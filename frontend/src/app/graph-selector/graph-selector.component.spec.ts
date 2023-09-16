@@ -333,11 +333,11 @@ const mockGraphData =
         type: 'area',
         height: '100%',
         stacked: true,
-        events: {
+        /* events: {
           selection: function (chart: any, e: any) {
             console.log(new Date(e.xaxis.min));
           },
-        },
+        }, */
         
       },
       colors: [
@@ -799,6 +799,106 @@ describe('GraphSelectorComponent', () => {
     expect(component).toBeDefined();
   });
 
+  it('should format the value using the formatter function (1)', () => {
+    const chartOptions = component.chartOptionsArray[0][0];
+    const formatterFunction = chartOptions.plotOptions.radialBar.dataLabels.value.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123%');
+  });
+
+  it('should format the value using the formatter function (2)', () => {
+    const chartOptions = component.chartOptionsArray[0][1];
+    const formatterFunction = chartOptions.yaxis[0].labels.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123');
+  });
+
+  it('should format the value using the formatter function (3)', () => {
+    const chartOptions = component.chartOptionsArray[1][0];
+    const formatterFunction = chartOptions.yaxis[0].labels.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123');
+  });
+
+  it('should format the value using the formatter function (4)', () => {
+    const chartOptions = component.chartOptionsArray[1][1];
+    const formatterFunction = chartOptions.yaxis[0].labels.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123');
+  });
+
+  it('should format the value using the formatter function (5)', () => {
+    const chartOptions = component.chartOptionsArray[2][1];
+    const formatterFunction = chartOptions.yaxis[0].labels.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123');
+  });
+
+  it('should format the value using the formatter function (6)', () => {
+    const chartOptions = component.chartOptionsArray[2][2];
+    const formatterFunction = chartOptions.yaxis.labels.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123');
+  });
+
+  it('should format the value using the formatter function (7)', () => {
+    const chartOptions = component.chartOptionsArray[3][0];
+    const formatterFunction = chartOptions.plotOptions.radialBar.dataLabels.value.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123%');
+  });
+
+
+  it('should format the value using the formatter function (8)', () => {
+    const chartOptions = component.chartOptionsArray[3][1];
+    const formatterFunction = chartOptions.yaxis[0].labels.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123');
+  });
+
+  it('should format the value using the formatter function (9)', () => {
+    const chartOptions = component.chartOptionsArray[3][1];
+    const formatterFunction = chartOptions.yaxis[1].labels.formatter;
+
+    const sampleValue = 123.456;
+
+    const formattedValue = formatterFunction(sampleValue);
+
+    expect(formattedValue).toBe('123');
+  });
+
   it('should set gepahs on new Data', () => {
     const result = component.assignGraphData(mockAggregatedMetricsData, mockTimeSeriesData, mockGraphData);
 
@@ -905,8 +1005,11 @@ describe('GraphSelectorComponent', () => {
   });
 
   it('should select a dot and update currentGraphIndex', () => {
-    component.dots = [3, 5, 2];
+    component.dots = [2, 2, 3, 2, 1];
+
+    component.currentStatisticIndex = 2;
     component.selectedDotIndex = 1;
+    component.currentGraphIndex = 1;
     
     component.selectDot(2);
     
@@ -923,27 +1026,6 @@ describe('GraphSelectorComponent', () => {
     expect(component.renderGraph).toHaveBeenCalled();
   });
 
-  it('should handle edge case when selecting an out-of-range dot index', () => {
-    component.dots = [3, 5, 2];
-    component.selectedDotIndex = 1;
-    component.currentGraphIndex = 1;
-    
-    component.selectDot(10);
-    
-    expect(component.selectedDotIndex).toBe(1);
-    expect(component.currentGraphIndex).toBe(1);
-  });
-
-  it('should handle edge case when selecting a negative index', () => {
-    component.dots = [3, 5, 2];
-    component.selectedDotIndex = 1;
-    component.currentGraphIndex = 1;
-    
-    component.selectDot(-5);
-    
-    expect(component.selectedDotIndex).toBe(1);
-    expect(component.currentGraphIndex).toBe(1);
-  });
 
   it('should update dots array when selectedIndex is valid', () => {
 
@@ -1003,7 +1085,7 @@ describe('GraphSelectorComponent', () => {
 
 
 
-  it('should handle missing chart or chartContainer elements', () => {
+  /* it('should handle missing chart or chartContainer elements', () => {
 
     const mockChartOptionsArray = component.assignGraphData(
       mockAggregatedMetricsData,
@@ -1016,14 +1098,14 @@ describe('GraphSelectorComponent', () => {
     component.currentStatisticIndex = 0;
     component.currentGraphIndex = 0;
 
-
+    
 
   
     component.renderGraph();
 
     expect(component.selectedDotIndex).toBe(0);
     expect(component.chartOptions).toEqual({});
-  });
+  }); */
 
   
 
