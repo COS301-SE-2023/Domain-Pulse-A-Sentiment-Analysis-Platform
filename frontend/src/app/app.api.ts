@@ -277,4 +277,12 @@ export class AppApi {
     return this.http.post(setIsActiveUrl, body, { withCredentials: true });
   }
 
+  generateReport(domainId: string): Observable<any> {
+    const generateReportUrl = this.warehouseBaseUrl + 'profiles/report/generate_report';
+    const body = {
+      domain_id: domainId,
+    };
+    return this.http.post(generateReportUrl, body, { withCredentials: true });
+  }
+
 }

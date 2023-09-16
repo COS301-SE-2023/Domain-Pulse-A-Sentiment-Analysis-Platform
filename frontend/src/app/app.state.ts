@@ -30,6 +30,7 @@ import {
   EditSource,
   SetAllSourcesSelected,
   SetIsActive,
+  GenerateReport
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, of, switchMap, throwError } from 'rxjs';
@@ -1109,6 +1110,24 @@ export class AppState {
       }
     });
     
+  }
+
+  @Action(GenerateReport)
+  generateReport(ctx: StateContext<AppStateModel>, state: DisplayDomain){
+
+    const domainID = state.id;
+
+    this.appApi.generateReport(domainID).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your report could not be generated'));
+        return;
+      } else if (res.status === 'SUCCESS') {
+
+        this.store.dispatch(new ToastSuccess('Your report has been generated'));
+        return res.pdf_url;
+      }
+    });
+
   }
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
