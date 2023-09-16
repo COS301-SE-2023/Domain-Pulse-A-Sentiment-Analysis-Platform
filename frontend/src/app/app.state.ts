@@ -1113,9 +1113,9 @@ export class AppState {
   }
 
   @Action(GenerateReport)
-  generateReport(ctx: StateContext<AppStateModel>, state: DisplayDomain){
+  generateReport(ctx: StateContext<AppStateModel>, state: GenerateReport){
 
-    const domainID = state.id;
+    const domainID = state.domainId;
 
     this.appApi.generateReport(domainID).subscribe((res) => {
       if (res.status === 'FAILURE') {
