@@ -1018,12 +1018,38 @@ describe('GraphSelectorComponent', () => {
   });
 
   it('should call renderGraph when selecting a dot', () => {
-    component.dots = [3, 5, 2];
+    component.dots = [2, 2, 3, 2, 1];
     spyOn(component, 'renderGraph'); 
     
     component.selectDot(0);
     
     expect(component.renderGraph).toHaveBeenCalled();
+  });
+
+  it('should test edge case to select dot with negative index', () => {
+    component.dots = [2, 2, 3, 2, 1];
+
+    component.currentStatisticIndex = 2;
+    component.selectedDotIndex = 1;
+    component.currentGraphIndex = 1;
+    
+    component.selectDot(-10);
+    
+    expect(component.selectedDotIndex).toBe(1);
+    expect(component.currentGraphIndex).toBe(1);
+  });
+
+  it('should test edge case to select dot with too large index', () => {
+    component.dots = [2, 2, 3, 2, 1];
+
+    component.currentStatisticIndex = 2;
+    component.selectedDotIndex = 1;
+    component.currentGraphIndex = 1;
+    
+    component.selectDot(50);
+    
+    expect(component.selectedDotIndex).toBe(1);
+    expect(component.currentGraphIndex).toBe(1);
   });
 
 
@@ -1073,7 +1099,6 @@ describe('GraphSelectorComponent', () => {
     
     component.currentStatisticIndex = 0;
     component.currentGraphIndex = 1; 
-    const expectedChartHeight = '150px'; 
 
     component.chartOptionsArray = mockChartOptionsArray;
     
@@ -1081,6 +1106,26 @@ describe('GraphSelectorComponent', () => {
 
     expect(component.selectedDotIndex).toBe(0);
     expect(component.chartOptions).toEqual(mockChartOptionsArray[0][1]);
+  });
+
+  it('should wrap the selectedGraphIndex if too large', () => {
+    
+    const mockChartOptionsArray = component.assignGraphData(
+      mockAggregatedMetricsData,
+      mockTimeSeriesData,
+      mockGraphData
+    );
+    
+    component.currentStatisticIndex = 0;
+    component.currentGraphIndex = 4;
+    component.selectedDotIndex = 1;
+
+    component.chartOptionsArray = mockChartOptionsArray;
+    
+    component.renderGraph();
+
+    expect(component.currentGraphIndex).toBe(1);
+    expect(component.selectedDotIndex).toBe(1);
   });
 
 
