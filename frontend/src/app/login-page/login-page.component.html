@@ -33,7 +33,7 @@
           name="password"
           data-cy="password"
         />
-        <div class="forgot">
+        <div class="forgot" (click)="toggleForgotPasswordModal()">
           <p>Forgot your password?</p>
         </div>
       </div>
@@ -59,3 +59,21 @@
   <div class="right-side"></div>
   <img class="wave-art" src="../assets/wave-squished.svg" alt="Wave Art">
 </div>
+
+<dp-modal-container [modalDisplay]="showForgotPasswordModal" (close)="toggleForgotPasswordModal()">
+  <div class="flex-column center modal" style="gap: 1.3rem; width: 30vw; height: 25vh; color: black; border-radius: 10px">
+    <div class="flex-row center" style="width: 100%">
+      <div class="flex-column center" style="gap: 2rem">
+        <h2 class="confirm-text">
+          Please contact support at <a href="mailto:christianlombaard" class="clickable-item">support</a>
+        </h2>
+      </div>
+    </div>
+
+    <div class="flex-row center" style="width: 100%">
+      <div class="flex-column center" style="gap: 2rem; width: 80%">
+        <button class="button clickable-item" (click)="toggleForgotPasswordModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</dp-modal-container>
