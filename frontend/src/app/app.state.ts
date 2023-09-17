@@ -106,6 +106,8 @@ interface AppStateModel {
   toasterError?: Toast;
   toasterSuccess?: Toast;
   allSourcesSelected: boolean;
+  userHasNoDomains: boolean;
+  userHasNoSources: boolean;
 }
 
 @State<AppStateModel>({
@@ -115,6 +117,8 @@ interface AppStateModel {
     selectedStatisticIndex: 0,
     sourceIsLoading: true,
     allSourcesSelected: true,
+    userHasNoDomains: false,
+    userHasNoSources: false,
   },
 })
 @Injectable()
@@ -213,6 +217,16 @@ export class AppState {
     return state.allSourcesSelected;
   }
 
+  @Selector()
+  static userHasNoDomains(state: AppStateModel) {
+    return state.userHasNoDomains;
+  }
+
+  @Selector()
+  static userHasNoSources(state: AppStateModel) {
+    return state.userHasNoSources;
+  }
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -251,6 +265,10 @@ export class AppState {
       }
 
       let domainIDs: string[] = res.domainIDs;
+
+      ctx.patchState({
+        userHasNoDomains: domainIDs.length === 0,
+      });
 
       let firstDomain = true;
 
@@ -318,6 +336,10 @@ export class AppState {
       domain.selected = false;
     }
     state.domain.selected = true;
+  
+    ctx.patchState({
+      userHasNoSources: state.domain.sources.length === 0,
+    });
 
     ctx.patchState({
       domains: domains,
