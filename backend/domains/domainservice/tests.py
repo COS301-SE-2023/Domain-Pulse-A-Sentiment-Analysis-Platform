@@ -210,7 +210,7 @@ class DomainsTests(TestCase):
             result, {"status": "SUCCESS", "details": "Domains deleted successfully"}
         )
 
-    def test_delete_domains_internal(self):
+    def test_delete_domains_internal_view(self):
         request = HttpRequest()
         request.method = "POST"
         request._body = json.dumps(
