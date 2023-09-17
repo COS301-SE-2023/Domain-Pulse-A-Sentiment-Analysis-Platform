@@ -1,4 +1,5 @@
 import json
+import os
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.test import TestCase
 from unittest import mock
@@ -189,6 +190,35 @@ class DomainsTests(TestCase):
     def test_delete_domain(self, mock_delete):
         result = domainscrud.delete_domain("64a2d2a2580b40e94e42b72a")
         self.assertEqual(result["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.delete_many")
+    def test_delete_domains_internal(self, mock_delete):
+        mock_response = MagicMock()
+        mock_response.deleted_count = 1
+        mock_delete.return_value = mock_response
+        local_key = os.getenv("LOCAL_KEY")
+
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps(
+            {"local_key": local_key, "domain_ids": ["64a2d2a2580b40e94e42b72a"]}
+        )
+
+        response = domain_views.delete_domains_internal(request)
+        result = json.loads(response.content)
+        self.assertEqual(
+            result, {"status": "SUCCESS", "details": "Domains deleted successfully"}
+        )
+
+    def test_delete_domains_internal_view(self):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps(
+            {"local_key": "fake", "domain_ids": ["64a2d2a2580b40e94e42b72a"]}
+        )
+        response = domain_views.delete_domains_internal(request)
+        result = json.loads(response.content)
+        self.assertEqual(result, {"status": "FAILURE", "details": "Foreign Request"})
 
     @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
     def test_get_domain(self, mock_find):
@@ -788,6 +818,11 @@ class DomainsTests(TestCase):
     def test_endpoints_post_only(self):
         response: JsonResponse = self.client.get(
             path="/domains/delete_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_domains_internal",
         )
         assert response.json()["status"] == "FAILURE"
 

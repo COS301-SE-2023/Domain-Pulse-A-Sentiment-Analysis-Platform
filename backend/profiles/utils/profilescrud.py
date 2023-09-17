@@ -1,5 +1,7 @@
+import os
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+import requests
 from profileservice import models as profile_models
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -284,15 +286,36 @@ def delete_user(request, username, password):
 
         if request.user == user:
             if user.check_password(password):
+                profile = profile_models.Profiles.objects.get(id=request.user.id)
+                domain_list = []
+                for i in profile.domainIDs.all().values_list("id", flat=True):
+                    domain_list.append(i)
+                data = {"local_key": os.getenv("LOCAL_KEY"), "domain_ids": domain_list}
+                GET_DOMAINS_ENDPOINT = (
+                    "http://localhost:"
+                    + str(os.getenv("DJANGO_DOMAINS_PORT"))
+                    + "/domains/delete_domains_internal"
+                )
+
+                response = requests.post(GET_DOMAINS_ENDPOINT, json=data)
+
+                if response.status_code != 200:
+                    return {
+                        "status": "FAILURE",
+                        "details": "Failure connecting to domains service",
+                    }
+                elif response.json()["status"] == "FAILURE":
+                    return {"status": "FAILURE", "details": "Failure deleting domains"}
+
                 user.delete()
                 logout(request)
                 return {"status": "SUCCESS"}
             else:
-                return {"status": "FAILURE"}
+                return {"status": "FAILURE", "details": "Authentication failed"}
         else:
-            return {"status": "FAILURE"}
+            return {"status": "FAILURE", "details": "Authentication failed"}
     else:
-        return {"status": "FAILURE"}
+        return {"status": "FAILURE", "details": "Authentication failed"}
 
 
 def get_user_by_id(id):
