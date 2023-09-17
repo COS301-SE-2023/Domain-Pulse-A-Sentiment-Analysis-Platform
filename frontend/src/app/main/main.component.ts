@@ -71,8 +71,8 @@ export class MainComponent implements OnInit {
 
   }
 
-  private setupClickEventListener(): void {
-    const copyIcon = document.getElementById('copyIcon');
+  setupClickEventListener(): void {
+    const copyIcon = document.getElementById('copyIconPdf');
     if (copyIcon) {
       copyIcon.addEventListener('click', () => {
         this.copyToClipboard();

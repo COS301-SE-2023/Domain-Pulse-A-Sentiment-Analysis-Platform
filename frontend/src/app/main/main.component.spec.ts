@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
-import { GetDomains, ToastError, ToastSuccess } from '../app.actions';
+import { GenerateReport, GetDomains, ToastError, ToastSuccess } from '../app.actions';
 import { DisplayDomain } from '../app.state';
 
 describe('MainComponent', () => {
@@ -110,5 +110,42 @@ describe('MainComponent', () => {
     component.showReportModal = true;
     component.toggleReportModal();
     expect(component.showReportModal).toBe(false);
+  });
+
+  it('should add a click event listener to copyIcon', () => {
+    const mockCopyIcon = document.createElement('div');
+    mockCopyIcon.id = 'copyIconPdf';
+    document.body.appendChild(mockCopyIcon);
+
+    const addEventListenerSpy = spyOn(mockCopyIcon, 'addEventListener');
+    const dispatchEventSpy = spyOn(mockCopyIcon, 'dispatchEvent').and.callThrough();
+
+    component.setupClickEventListener();
+
+    const clickEvent = new MouseEvent('click');
+    mockCopyIcon.dispatchEvent(clickEvent);
+
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'click',
+      jasmine.any(Function)
+    );
+
+    expect(dispatchEventSpy).toHaveBeenCalledWith(clickEvent);
+});
+  it('should dispatch GenerateReport action when generateReport is called', () => {
+    const selectedDomain = { id: "1234" };
+
+    component.selectedDomain  = selectedDomain as DisplayDomain;
+
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+  
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(selectedDomain);
+
+    component.generateReport();
+  
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new GenerateReport(component.selectedDomain!.id)
+    );
   });
 });
