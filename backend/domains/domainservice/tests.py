@@ -210,6 +210,16 @@ class DomainsTests(TestCase):
             result, {"status": "SUCCESS", "details": "Domains deleted successfully"}
         )
 
+    def test_delete_domains_internal(self):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps(
+            {"local_key": "fake", "domain_ids": ["64a2d2a2580b40e94e42b72a"]}
+        )
+        response = domain_views.delete_domains_internal(request)
+        result = json.loads(response.content)
+        self.assertEqual(result, {"status": "FAILURE", "details": "Foreign Request"})
+
     @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
     def test_get_domain(self, mock_find):
         result = domainscrud.get_domain("64a2d2a2580b40e94e42b72a")
