@@ -19,7 +19,7 @@
 
         <source-selector class="flex-row align-center"></source-selector>
 
-        <ng-container *ngIf="userHasNoSources; else hasNoSources">
+        <ng-container *ngIf="!userHasNoSources; else hasNoSources">
 
           <statistic-selector></statistic-selector>
 
