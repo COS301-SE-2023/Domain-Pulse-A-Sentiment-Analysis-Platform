@@ -837,9 +837,17 @@ class ProfilesTests(TestCase):
     @mock.patch("utils.profilescrud.logout", side_effect=mocked_logout)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
-    def test_delete_user(self, mocked_logout, mocked_login, mocked_create_profile):
+    @mock.patch("requests.post")
+    def test_delete_user(
+        self, mocked_post, mocked_logout, mocked_login, mocked_create_profile
+    ):
         class MockUser:
             is_authenticated = True
+
+        response = mock.MagicMock()
+        response.status_code = 200
+        response.json.return_value = {"status": "SUCCESS"}
+        mocked_post.return_value = response
 
         data = {}
         request1 = HttpRequest()
@@ -1132,9 +1140,15 @@ class ProfilesTests(TestCase):
         else:
             assert False
 
-    def test_delete_user_integration(self):
+    @mock.patch("utils.profilescrud.requests.post")
+    def test_delete_user_integration(self, mocked_post):
         class MockUser:
             is_authenticated = True
+
+        response = mock.MagicMock()
+        response.status_code = 200
+        response.json.return_value = {"status": "SUCCESS"}
+        mocked_post.return_value = response
 
         data = {"username": "test", "email": "test@t.com", "password": "test"}
         request1 = HttpRequest()
