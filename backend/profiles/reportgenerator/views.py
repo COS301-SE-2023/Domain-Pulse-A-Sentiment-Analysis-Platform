@@ -80,7 +80,6 @@ def generate_domain_graphs_js(response_data):
     domain_timeseries = []
     for i in response_data["domain"]["timeseries"]["overall"]:
         domain_timeseries.append({"x": i[0], "y": i[1]})
-
     result = default_js.replace(
         "%domain_overall_data_points%", str(domain_overall_data_points)
     )
@@ -149,7 +148,10 @@ def generate_domain_html(
     end = time.mktime(
         time.strptime(domain_data["meta_data"]["latest_record"], date_format)
     )
-    domain_reviews_per_day = ((end - start) / 86400) / domain_num_analysed
+    domain_reviews_per_day = 0
+    if ((end - start) / 86400) != 0:
+        domain_reviews_per_day = domain_num_analysed / ((end - start) / 86400)
+
     domain_toxicity = int(domain_data["aggregated_metrics"]["toxicity"]["score"] * 100)
 
     domain_positive = int(domain_data["aggregated_metrics"]["ratios"]["positive"] * 100)
