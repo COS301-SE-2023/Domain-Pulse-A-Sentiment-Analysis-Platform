@@ -18,8 +18,6 @@ GET_DOMAINS_ENDPOINT = (
 assets_path = str(settings.ASSETS_DIR)
 
 
-DOMAINS_SAMPLE_DATA = []
-
 IMAGE_PATHS = {
     "googlereviews": "{assets_path}/images/google-logo.png",
     "youtube": "{assets_path}/images/youtube-logo.png",
@@ -96,7 +94,11 @@ def generate_domain_graphs_js(response_data):
 
 
 def generate_domain_html(
-    domain_icon, domain_description, response_data, samples_per_source
+    domain_icon,
+    domain_description,
+    response_data,
+    samples_per_source,
+    DOMAINS_SAMPLE_DATA,
 ):
     f = open(assets_path + "/domain_html.txt", "r")
     default_js = f.read()
@@ -106,16 +108,6 @@ def generate_domain_html(
         domain_data["aggregated_metrics"]["general"]["score"] * 100
     )
     domain_num_analysed = domain_data["meta_data"]["num_analysed"]
-    source_comment_count = 1
-    for source in response_data:
-        if source != "domain":
-            if source_comment_count <= 8:
-                DOMAINS_SAMPLE_DATA.extend(
-                    response_data[source]["individual_metrics"][:samples_per_source]
-                )
-                source_comment_count += 1
-            else:
-                break
 
     sample_comment_string = ""
     counter = 0
@@ -286,7 +278,7 @@ def generate_source_graph_js(source_data):
     return result
 
 
-def generate_source_html(response_data):
+def generate_source_html(response_data, DOMAINS_SAMPLE_DATA):
     f = open(assets_path + "/source_html.txt", "r")
     default_html = f.read()
     f.close()
@@ -332,7 +324,10 @@ def generate_source_html(response_data):
                     response_data[source]["meta_data"]["latest_record"], date_format
                 )
             )
-            source_reviews_per_day = source_num_analysed / ((end - start) / 86400)
+
+            source_reviews_per_day = 0
+            if (end - start) / 86400 != 0:
+                source_reviews_per_day = source_num_analysed / ((end - start) / 86400)
             source_toxicity = int(
                 response_data[source]["aggregated_metrics"]["toxicity"]["score"] * 100
             )
@@ -452,6 +447,8 @@ def generate_report(request: HttpRequest):
     # output_pdf = "Report"
 
     if request.method == "POST":
+        DOMAINS_SAMPLE_DATA = []
+
         raw_data = json.loads(request.body)
         domain_id = raw_data["domain_id"]
         data = {"id": domain_id}
@@ -522,13 +519,29 @@ def generate_report(request: HttpRequest):
         domain_icon = domain["icon"]
         domain_description = domain["description"]
 
+        source_comment_count = 1
+
+        for source in response_data:
+            if source != "domain":
+                if source_comment_count <= 8:
+                    DOMAINS_SAMPLE_DATA.extend(
+                        response_data[source]["individual_metrics"][:samples_per_source]
+                    )
+                    source_comment_count += 1
+                else:
+                    break
+
         domain_html_string = generate_domain_html(
-            domain_icon, domain_description, response_data, samples_per_source
+            domain_icon,
+            domain_description,
+            response_data,
+            samples_per_source,
+            DOMAINS_SAMPLE_DATA,
         )
 
         source_graph_js = generate_source_graph_js(response_data)
 
-        source_html = generate_source_html(response_data)
+        source_html = generate_source_html(response_data, DOMAINS_SAMPLE_DATA)
 
         File = open(assets_path + "/input_template.html", "r")
         content = File.read()

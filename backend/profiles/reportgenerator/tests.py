@@ -591,7 +591,7 @@ class TestGenerateReport(TestCase):
             },
         }
         response = report_views.generate_domain_html(
-            "test", "testDescrip", test_data, 1
+            "test", "testDescrip", test_data, 1, []
         )
 
         self.assertEqual(
@@ -827,7 +827,7 @@ class TestGenerateReport(TestCase):
                 "timeseries": {"overall": [[time, 0.6]]},
             },
         }
-        response = report_views.generate_source_html(test_data)
+        response = report_views.generate_source_html(test_data, [])
 
         self.assertEqual(
             response,
