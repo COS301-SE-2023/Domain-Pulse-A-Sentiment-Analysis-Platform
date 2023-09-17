@@ -873,6 +873,78 @@ class ProfilesTests(TestCase):
     @mock.patch("utils.profilescrud.logout", side_effect=mocked_logout)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    @mock.patch("requests.post")
+    def test_delete_user_fail_domain_req(
+        self, mocked_post, mocked_logout, mocked_login, mocked_create_profile
+    ):
+        class MockUser:
+            is_authenticated = True
+
+        response = mock.MagicMock()
+        response.status_code = 400
+        response.json.return_value = {"status": "SUCCESS"}
+        mocked_post.return_value = response
+
+        data = {}
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1._body = json.dumps(data)
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testUsername = "test"
+        testPassword = "test"
+        data = {"username": user["id"], "oldpassword": "test", "newpassword": "test2"}
+        request2 = HttpRequest()
+        request2.method = "POST"
+        request2._body = json.dumps(data)
+
+        user = authenticate(username="test", password="test")
+        request2.user = user
+        result = profilescrud.delete_user(request2, testUsername, testPassword)
+        if result["status"] == "FAILURE":
+            assert True
+        else:
+            assert False
+
+    @mock.patch("utils.profilescrud.logout", side_effect=mocked_logout)
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
+    @mock.patch("requests.post")
+    def test_delete_user_invalid_domain_req(
+        self, mocked_post, mocked_logout, mocked_login, mocked_create_profile
+    ):
+        class MockUser:
+            is_authenticated = True
+
+        response = mock.MagicMock()
+        response.status_code = 200
+        response.json.return_value = {"status": "FAILURE"}
+        mocked_post.return_value = response
+
+        data = {}
+        request1 = HttpRequest()
+        request1.method = "POST"
+        request1._body = json.dumps(data)
+        request1.user = MockUser()
+        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        testUsername = "test"
+        testPassword = "test"
+        data = {"username": user["id"], "oldpassword": "test", "newpassword": "test2"}
+        request2 = HttpRequest()
+        request2.method = "POST"
+        request2._body = json.dumps(data)
+
+        user = authenticate(username="test", password="test")
+        request2.user = user
+        result = profilescrud.delete_user(request2, testUsername, testPassword)
+        if result["status"] == "FAILURE":
+            assert True
+        else:
+            assert False
+
+    @mock.patch("utils.profilescrud.logout", side_effect=mocked_logout)
+    @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
+    @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     def test_delete_user_failure(
         self, mocked_logout, mocked_login, mocked_create_profile
     ):
