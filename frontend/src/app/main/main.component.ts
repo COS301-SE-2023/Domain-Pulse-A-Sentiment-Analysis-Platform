@@ -13,9 +13,9 @@ import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, filter, switchMap, take } from 'rxjs/operators';
-import { GenerateReport } from '../app.actions';
+import { GenerateReport, ToastError, ToastSuccess } from '../app.actions';
 /* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
- */@Component({
+ */ @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.sass'],
@@ -53,37 +53,57 @@ export class MainComponent implements OnInit {
 
   selectedDomain!: DisplayDomain | null;
 
-
   sidebarCollapsed = true;
   showReportModal = false;
   pdfUrl!: string;
 
   constructor(private store: Store) {}
-   ngOnInit(): void {
-    this.selectedDomain$.subscribe(domain => {
-      this.selectedDomain = domain;
+  ngOnInit(): void {
+    this.selectedDomain$.subscribe((domain) => {
+      this.processSelectedDomain(domain!);
     });
 
-    this.pdfUrl$.subscribe(res => {
-      const pdfIndex: number = res.lastIndexOf(".pdf");
-
-      if (pdfIndex !== -1) {
-          const result: string = res.slice(0, pdfIndex + 4);
-          console.log(result);
-          this.pdfUrl = result;
-      } else {
-          console.log("'.pdf' not found in the URL");
-      }
-      
+    this.pdfUrl$.subscribe((res) => {
+      this.processpdfUrl(res);
     });
 
+    this.setupClickEventListener();
+
+  }
+
+  private setupClickEventListener(): void {
     const copyIcon = document.getElementById('copyIcon');
     if (copyIcon) {
       copyIcon.addEventListener('click', () => {
         this.copyToClipboard();
       });
     }
-   }
+  }
+
+  processpdfUrl(res: string) {
+    const pdfIndex: number = res.lastIndexOf('.pdf');
+
+    if (pdfIndex !== -1) {
+      const result: string = res.slice(0, pdfIndex + 4);
+      console.log(result);
+      this.pdfUrl = result;
+      this.store.dispatch(
+        new ToastSuccess(
+          'Your report has been generated!'
+        )
+      );
+    } else {
+      this.store.dispatch(
+        new ToastError(
+          'An error occured while generating the report. Please try again.'
+        )
+      );
+    }
+  }
+
+  processSelectedDomain(domain: DisplayDomain) {
+    this.selectedDomain = domain;
+  }
 
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
@@ -97,8 +117,7 @@ export class MainComponent implements OnInit {
     }
   }
 
-
-  generateReport(){
+  generateReport() {
     this.store.dispatch(new GenerateReport(this.selectedDomain!.id));
   }
 
