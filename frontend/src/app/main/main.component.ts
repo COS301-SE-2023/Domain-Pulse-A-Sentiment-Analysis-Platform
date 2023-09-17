@@ -65,10 +65,9 @@ export class MainComponent implements OnInit {
     });
 
     this.pdfUrl$.subscribe(res => {
-      const pdfIndex: number = res.indexOf(".pdf");
+      const pdfIndex: number = res.lastIndexOf(".pdf");
 
       if (pdfIndex !== -1) {
-          // Remove everything after ".pdf"
           const result: string = res.slice(0, pdfIndex + 4);
           console.log(result);
           this.pdfUrl = result;
@@ -100,13 +99,7 @@ export class MainComponent implements OnInit {
 
 
   generateReport(){
-    this.store.dispatch(new GenerateReport(this.selectedDomain!.id)).subscribe((res) => {
-      if (res !== null) {
-        console.log('PDF URL:', res.app.pdfUrl);
-      } else {
-        console.log('PDF URL is null');
-      }
-    });
+    this.store.dispatch(new GenerateReport(this.selectedDomain!.id));
   }
 
   copyToClipboard() {
