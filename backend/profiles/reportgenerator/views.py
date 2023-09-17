@@ -9,6 +9,7 @@ from azure.storage.blob import BlobClient, ContentSettings
 from profiles import settings
 import shortuuid
 import tempfile
+import urllib.parse
 
 GET_DOMAINS_ENDPOINT = (
     "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
@@ -28,7 +29,8 @@ IMAGE_PATHS = {
 
 
 def upload_pdf_to_azure(file_path, file_name):
-    sas_url = f"{os.getenv('BLOB_URL')}{file_name}{os.getenv('BLOB_SAS_KEY')}"
+    sanitized = urllib.parse.quote_plus(file_name)
+    sas_url = f"{os.getenv('BLOB_URL')}{sanitized}{os.getenv('BLOB_SAS_KEY')}"
     client = BlobClient.from_blob_url(sas_url)
     settings = ContentSettings(content_type="application/pdf")
 
