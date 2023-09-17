@@ -1,5 +1,5 @@
 from reportgenerator import views as report_views
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 from django.test import TestCase
@@ -68,7 +68,9 @@ def mocked_requests_post_correct(url, **kwargs):
                 },
                 "meta_data": {
                     "num_analysed": 1,
-                    "earliest_record": (datetime.now()).strftime("%d %B %Y"),
+                    "earliest_record": ((datetime.today()) - timedelta(days=1)).strftime(
+                        "%d %B %Y"
+                    ),
                     "latest_record": (datetime.now()).strftime("%d %B %Y"),
                 },
                 "individual_metrics": [
@@ -115,7 +117,9 @@ def mocked_requests_post_correct(url, **kwargs):
                 },
                 "meta_data": {
                     "num_analysed": 1,
-                    "earliest_record": (datetime.now()).strftime("%d %B %Y"),
+                    "earliest_record": ((datetime.today()) - timedelta(days=1)).strftime(
+                        "%d %B %Y"
+                    ),
                     "latest_record": (datetime.now()).strftime("%d %B %Y"),
                 },
                 "individual_metrics": [
