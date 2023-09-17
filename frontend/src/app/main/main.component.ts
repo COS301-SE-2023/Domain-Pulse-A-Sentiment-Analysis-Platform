@@ -65,8 +65,25 @@ export class MainComponent implements OnInit {
     });
 
     this.pdfUrl$.subscribe(res => {
-      this.pdfUrl = res;
+      const pdfIndex: number = res.indexOf(".pdf");
+
+      if (pdfIndex !== -1) {
+          // Remove everything after ".pdf"
+          const result: string = res.slice(0, pdfIndex + 4);
+          console.log(result);
+          this.pdfUrl = result;
+      } else {
+          console.log("'.pdf' not found in the URL");
+      }
+      
     });
+
+    const copyIcon = document.getElementById('copyIcon');
+    if (copyIcon) {
+      copyIcon.addEventListener('click', () => {
+        this.copyToClipboard();
+      });
+    }
    }
 
   toggleSidebar() {
@@ -90,5 +107,13 @@ export class MainComponent implements OnInit {
         console.log('PDF URL is null');
       }
     });
+  }
+
+  copyToClipboard() {
+    const reportLink = document.getElementById('reportLink');
+    if (reportLink) {
+      const textToCopy = reportLink.getAttribute('href')!;
+      navigator.clipboard.writeText(textToCopy);
+    }
   }
 }

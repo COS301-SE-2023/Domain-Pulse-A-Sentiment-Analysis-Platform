@@ -167,3 +167,33 @@
 .pdf-spinner 
   width: 30%
 
+.loading
+  display: inline-block
+  width: 100px
+  height: 100px
+  border: 8px solid rgba(142, 163, 255, 0.651)
+  border-radius: 50%
+  border-top-color: var(--primary)
+  animation: spin 1s ease-in-out infinite
+  -webkit-animation: spin 1s ease-in-out infinite
+
+@keyframes spin
+  to
+    -webkit-transform: rotate(360deg)
+
+@-webkit-keyframes spin
+  to
+    -webkit-transform: rotate(360deg)
+
+.copy-icon
+    width: 1.2rem
+    height: 1.2rem
+    padding-left: 1rem
+    filter: var(--icon-filter)
+
+.load-text
+    color: var(--text-color)
+
+
+
+
