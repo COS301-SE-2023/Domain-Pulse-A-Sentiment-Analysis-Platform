@@ -332,7 +332,7 @@ def generate_source_html(response_data):
                     response_data[source]["meta_data"]["latest_record"], date_format
                 )
             )
-            source_reviews_per_day = ((end - start) / 86400) / source_num_analysed
+            source_reviews_per_day = source_num_analysed / ((end - start) / 86400)
             source_toxicity = int(
                 response_data[source]["aggregated_metrics"]["toxicity"]["score"] * 100
             )

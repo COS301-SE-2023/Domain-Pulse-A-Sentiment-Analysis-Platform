@@ -56,7 +56,7 @@
                       </div>
                       <div class="flex-column item-stats">
                         <p class="card-heading">Number Analysed</p>
-                        <p class="stat-text">102 sentiments</p>
+                        <p class="stat-text">{source_num_analysed} sentiments</p>
                       </div>
                     </div>
                     <div class="statistic-item flex-row card up-item" style="
