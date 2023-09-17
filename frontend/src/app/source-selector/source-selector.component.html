@@ -32,9 +32,11 @@
         </ng-container>
       </div>
     </ng-container>
-
+    
     <ng-template #loadingSources>
-      <p>No sources: Add source -></p>
+      <div class="flex-column center" style="border-radius: 25px; border: 3px blue solid; padding: 1rem">
+        <p>Please add a Source -></p>
+      </div>
     </ng-template>
 
     <div
@@ -49,6 +51,7 @@
         [tooltip]="'Adds a new source to your dashboard'"
         [searchTerm]="'Add a Source'"
         style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem"
+
       />
       <!-- <p>Add a Source</p> -->
     </div>
