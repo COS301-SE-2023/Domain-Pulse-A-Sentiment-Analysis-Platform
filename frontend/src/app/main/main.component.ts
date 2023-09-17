@@ -46,10 +46,21 @@ export class MainComponent {
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  @Select(AppState.userHasNoDomains) userHasNoDomains$!: Observable<boolean>;
+  @Select(AppState.userHasNoSources) userHasNoSources$!: Observable<boolean>;
+  userHasNoDomains = false;
+  userHasNoSources = false;
 
   sidebarCollapsed = true;
 
-  constructor() {}
+  constructor() {
+    this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
+      this.userHasNoDomains = userHasNoDomains;
+    });
+    this.userHasNoSources$.subscribe((userHasNoSources: boolean) => {
+      this.userHasNoSources = userHasNoSources;
+    });
+  }
 
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
