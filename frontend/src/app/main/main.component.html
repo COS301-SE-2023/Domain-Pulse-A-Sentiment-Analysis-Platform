@@ -23,7 +23,7 @@
 
           <statistic-selector></statistic-selector>
 
-          <div class="source-manager flex-row" style="gap: 1rem; height: 43%; width: 100%">
+          <div class="source-manager flex-row" style="gap: 1rem; height: 43%; width: 100%;">
             <graph-selector></graph-selector>
             <comments-view></comments-view>
           </div>
@@ -32,7 +32,7 @@
 
         <ng-template #hasNoSources>
           <div class="flex-column center" style="height: 100%;">
-            <img src="../../assets/noSources.png" style="height: 20rem; width: auto;" />
+            <img src="../../assets/noSources.png" style="height: 20rem; width: auto; opacity: 0.5" />
           </div>
         </ng-template>
 
@@ -42,7 +42,7 @@
 
   <ng-template #hasNoDomains>
     <div class="flex-column center" style="width: 100%;">
-      <img src="../../assets/noDomains.png" style="width:40%;"/>
+      <img src="../../assets/noDomains.png" style="width:40%; opacity: 0.5;"/>
     </div>
   </ng-template>
 
