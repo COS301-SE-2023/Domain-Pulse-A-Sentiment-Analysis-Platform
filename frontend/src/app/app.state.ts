@@ -1140,6 +1140,9 @@ export class AppState {
       map((res) => {
         if (res.status === 'FAILURE') {
           this.store.dispatch(new ToastError('Your report could not be generated'));
+          ctx.patchState({
+            pdfLoading: false,
+          });
           return of(res);
         } else if (res.status === 'SUCCESS') {
           this.store.dispatch(new ToastSuccess('Your report has been generated'));
