@@ -30,9 +30,10 @@ import {
   EditSource,
   SetAllSourcesSelected,
   SetIsActive,
+  GenerateReport
 } from './app.actions';
 import { Router } from '@angular/router';
-import { catchError, of, switchMap, throwError } from 'rxjs';
+import { catchError, map, of, switchMap, throwError } from 'rxjs';
 import { patch } from '@ngxs/store/operators';
 
 export interface Source {
@@ -107,6 +108,8 @@ interface AppStateModel {
   toasterError?: Toast;
   toasterSuccess?: Toast;
   allSourcesSelected: boolean;
+  pdfUrl?: string;
+  pdfLoading: boolean;
 }
 
 @State<AppStateModel>({
@@ -116,6 +119,9 @@ interface AppStateModel {
     selectedStatisticIndex: 0,
     sourceIsLoading: true,
     allSourcesSelected: true,
+    pdfLoading: false,
+    pdfUrl: '',
+
   },
 })
 @Injectable()
@@ -213,6 +219,17 @@ export class AppState {
   static allSourcesSelected(state: AppStateModel) {
     return state.allSourcesSelected;
   }
+
+  @Selector()
+  static pdfUrl(state: AppStateModel) {
+    return state.pdfUrl;
+  }
+
+  @Selector()
+  static pdfLoading(state: AppStateModel) {
+    return state.pdfLoading;
+  }
+  
 
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
@@ -1109,6 +1126,38 @@ export class AppState {
       }
     });
     
+  }
+
+  @Action(GenerateReport)
+  generateReport(ctx: StateContext<AppStateModel>, state: GenerateReport) {
+    const domainID = state.domainId;
+
+    ctx.patchState({
+      pdfLoading: true,
+    });
+  
+    return this.appApi.generateReport(domainID).pipe(
+      map((res) => {
+        if (res.status === 'FAILURE') {
+          this.store.dispatch(new ToastError('Your report could not be generated'));
+          ctx.patchState({
+            pdfLoading: false,
+          });
+          return of(res);
+        } else if (res.status === 'SUCCESS') {
+          this.store.dispatch(new ToastSuccess('Your report has been generated'));
+          ctx.patchState({
+            pdfUrl: res.url,
+            pdfLoading: false,
+          });
+          return res.url;
+        }
+      }),
+      catchError((error) => {
+        // Handle error here and return an observable if needed
+        return of(error);
+      })
+    );
   }
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {

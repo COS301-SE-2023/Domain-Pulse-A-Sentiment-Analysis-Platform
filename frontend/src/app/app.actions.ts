@@ -165,3 +165,8 @@ export class SetIsActive{
   static readonly type = '[Profile] Set Is Active';
   constructor(public isActive: boolean) {}
 }
+
+export class GenerateReport{
+  static readonly type = '[Source] Generate Report';
+  constructor(public domainId: string) {}
+}
