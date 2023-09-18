@@ -25,12 +25,25 @@
     </ng-container>
 
     <ng-template #loadingSources>
-      <p>No sources: Add source -></p>
+      <div class="flex-column center" style="height: 100%;">
+        <img src="../../assets/addSource.png" style="height:100%;"/>
+      </div>
     </ng-template>
 
-    <div (click)="toggleAddSourcesModal()" class="flex-column center clickable-item" style="cursor: pointer"
-      data-cy="addSource">
-      <img src="../assets/icons/add-blue.svg" style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem" />
+    <div
+      (click)="toggleAddSourcesModal()"
+      class="flex-column center clickable-item"
+      style="cursor: pointer"
+      data-cy="addSource"
+    >
+      <img
+        src="../assets/icons/add-blue.svg"
+        [mul]="0.9"
+        [tooltip]="'Adds a new source to your dashboard'"
+        [searchTerm]="'Add a Source'"
+        style="height: 3rem; padding-bottom: 0.5rem; padding-right: 2rem"
+
+      />
       <!-- <p>Add a Source</p> -->
     </div>
   </div>
@@ -40,16 +53,24 @@
     <div class="button-div flex-row center">
       <div class="button clickable-item" (click)="refreshSource()" data-cy="refresh">
         <img class="button-icon" src="../assets/icons/refresh.svg" alt="Icon" />
-        <span class="button-text">Refresh</span>
+        <span class="button-text" [mul]="0.9" [tooltipPosition]="'left'" [tooltip]="'Refreshes your current source with new data'">Refresh</span>
       </div>
       <div class="button clickable-item" (click)="toggleEditSourceModal()" data-cy="edit">
         <img class="button-icon" src="../assets/icons/edit.svg" alt="Icon" />
-        <span class="button-text">Edit</span>
+        <span class="button-text" [mul]="0.9" [tooltipPosition]="'left'" [searchTerm]="'edit a source'"[tooltip]="'The \'Edit\' button is to edit an already existing source'">Edit</span>
       </div>
 
-      <div class="button clickable-item" (click)="toggleConfirmDeleteSourceModal()" data-cy="deleteSourceModal">
-        <img class="button-icon" src="../assets/icons/trash-can-regular.svg" alt="Icon" />
-        <span class="button-text">Delete</span>
+      <div
+        class="button clickable-item"
+        (click)="toggleConfirmDeleteSourceModal()"
+        data-cy="deleteSourceModal"
+      >
+        <img
+          class="button-icon"
+          src="../assets/icons/trash-can-regular.svg"
+          alt="Icon"
+        />
+        <span class="button-text" [mul]="0.9"  [tooltipPosition]="'left'" [searchTerm]="'remove a source'" [tooltip]="'Delete the current source'">Delete</span>
       </div>
       <div class="button clickable-item">
         <img class="button-icon" src="../assets/icons/search.svg" alt="Icon" />
@@ -152,6 +173,16 @@
           <div class="flex-column center" style="width: 100%" *ngIf="newSourcePlatform === ''">
             <p class="step-heading">Select a source type before moving onto this step!</p>
           </div>
+
+          <span style = "padding-left: 0.5rem;"class="flex-row center" [tooltip]="'The source URL section is where you can paste a relevant source link which will be analysed'">
+              
+            <img
+              src="../../assets/icons/tooltip.svg"
+              
+              style="width: 1.5rem;"
+            />
+
+          </span>
 
         </div>
 
