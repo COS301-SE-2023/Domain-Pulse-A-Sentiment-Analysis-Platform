@@ -12,22 +12,24 @@ export class HelpPageComponent implements AfterViewInit {
   searchTerm = "";
   accordionItems: NodeListOf<Element> | undefined;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) { }
 
   ngAfterViewInit() {
     this.accordionItems = document.querySelectorAll('accordion');
 
     this.route.queryParams
       .subscribe(params => {
-        console.log(params); 
+        console.log(params);
         this.searchTerm = params['q'];
         this.filterAccordionByText();
       }
-    );
+      );
   }
 
   filterAccordionByText() {
     const textToFilter = this.searchTerm;
+    const shownCategories = new Set();
+
     if (!this.accordionItems) {
       return;
     }
@@ -44,10 +46,26 @@ export class HelpPageComponent implements AfterViewInit {
 
       if (text.toLowerCase().includes(textToFilter.toLowerCase())) {
         item.style.display = 'block';
+        shownCategories.add(item.getAttribute('data-catID'));
       } else {
         item.style.display = 'none';
       }
     });
 
+
+    const allCategoryElements = document.querySelectorAll('.heading');
+
+    console.log(shownCategories);
+
+    allCategoryElements.forEach((categoryElement: any) => {
+      const catID = categoryElement.getAttribute('data-catID');
+
+      if (!shownCategories.has(catID)) {
+        categoryElement.style.display = 'none';
+      } else {
+        categoryElement.style.display = 'block';
+      }
+    });
   }
+
 }
