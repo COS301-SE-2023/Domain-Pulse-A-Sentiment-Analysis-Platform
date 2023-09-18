@@ -29,6 +29,7 @@ import {
   SetUserDetails,
   ToastError,
   ToastSuccess,
+  UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
 import { Observable, of, zip } from 'rxjs';
@@ -64,6 +65,7 @@ describe('AppState', () => {
       'changeMode',
       'changePassword',
       'logOut',
+      'sendCSVFile',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -730,6 +732,60 @@ describe('AppState', () => {
 
     const actual = store.selectSnapshot(AppState.statisticIndex);
     expect(actual).toEqual(1);
+  });
+
+  it('should test a positive "UplaodCVSFile" event', (done: DoneFn) => {
+    zip(
+      actions$.pipe(ofActionDispatched(ToastSuccess)),
+      actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo))
+    ).subscribe((_) => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.sendCSVFile.and.returnValue(of({ status: 'SUCCESS' }));
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    store.reset({ app: { selectedSource: mockSource, sources: [mockSource] } });
+
+    const mockFile = new File([''], 'test.csv', { type: 'text/csv' });
+
+    store.dispatch(new UplaodCVSFile(mockFile));
+  });
+
+  it('should test a negative "UplaodCVSFile" event', (done: DoneFn) => {
+    const mockFile = new File([''], 'test.csv', { type: 'text/csv' });
+    // just to run the null case
+    store.dispatch(new UplaodCVSFile(mockFile));
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.sendCSVFile.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    store.reset({ app: { selectedSource: mockSource, sources: [mockSource] } });
+
+
+    store.dispatch(new UplaodCVSFile(mockFile));
   });
 
   it('should correctly format the response from the server to a DisplaySOurce', () => {
