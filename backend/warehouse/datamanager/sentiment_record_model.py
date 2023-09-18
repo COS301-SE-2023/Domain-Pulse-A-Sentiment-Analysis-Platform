@@ -5,6 +5,7 @@ mongo_collection = "sentiment_records"
 
 db = db_connection.get_db_handle(mongo_db)
 
+
 def add_record(new_record):
     collection = db[mongo_collection]
     collection.insert_one(new_record)

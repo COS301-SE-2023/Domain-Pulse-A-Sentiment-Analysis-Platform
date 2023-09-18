@@ -6,6 +6,7 @@ mongo_collection = "domains"
 
 db = db_connection.get_db_handle(mongo_db)
 
+
 def get_source(source_id):
     collection = db[mongo_collection]
 
@@ -21,6 +22,7 @@ def get_source(source_id):
     final_source["source_id"] = str(final_source["source_id"])
 
     return final_source
+
 
 def edit_source(source_id, name):
     collection = db[mongo_collection]
@@ -40,6 +42,27 @@ def edit_source(source_id, name):
         i["source_id"] = str(i["source_id"])
 
     return result
+
+
+def set_source_active(source_id, active_status):
+    collection = db[mongo_collection]
+
+    query = {"sources.source_id": ObjectId(source_id)}
+    result = collection.find_one(query)
+
+    for source in result["sources"]:
+        if source["source_id"] == ObjectId(source_id):
+            if source["params"]["source_type"] != "livereview":
+                return False
+            else:
+                source["params"]["is_active"] = active_status
+                break
+
+    collection.update_one(
+        {"_id": result["_id"]}, {"$set": {"sources": result["sources"]}}
+    )
+
+    return True
 
 
 def update_last_refresh(source_id, new_last_refresh):
@@ -75,7 +98,7 @@ def create_domain(domain_name, domain_icon, description):
         "sources": [],
     }
     ret = collection.insert_one(new_item)
-    
+
     return {
         "id": str(ret.inserted_id),
         "name": domain_name,
@@ -114,7 +137,6 @@ def delete_domain(id):
     collection = db[mongo_collection]
     query = {"_id": ObjectId(id)}
     ret = collection.delete_one(query)
-    
 
     if ret.deleted_count > 0:
         return {"status": "SUCCESS"}
@@ -156,7 +178,7 @@ def add_source(domain_id, source_name, source_image_name, params):
         i["source_id"] = str(i["source_id"])
     resId = str(result["_id"])
     result["_id"] = resId
-    
+
     result.update({"new_source_id": str(new_id)})
     return result
 
@@ -173,7 +195,6 @@ def remove_source(domain_id, source_id):
         i["source_id"] = str(i["source_id"])
     resId = str(result["_id"])
     result["_id"] = resId
-    
 
     return result
 
@@ -192,7 +213,6 @@ def create_param(domain_id, source_id, key, value):
         i["source_id"] = str(i["source_id"])
     resId = str(result["_id"])
     result["_id"] = resId
-    
 
     return result
 
@@ -213,3 +233,12 @@ def delete_param(domain_id, source_id, key):
     result["_id"] = resId
 
     return result
+
+
+def delete_domains_internal(domain_ids):
+    ids = []
+    for i in domain_ids:
+        ids.append(ObjectId(i))
+    collection = db[mongo_collection]
+    query = {"_id": {"$in": ids}}
+    result = collection.delete_many(query)

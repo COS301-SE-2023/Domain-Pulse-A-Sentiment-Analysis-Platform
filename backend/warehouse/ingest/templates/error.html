@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+  {% load static %}
+
+  <head>
     <title>Failure</title>
-</head>
-<body>
-    <h1>There was an error submitting your review!</h1>
-    <h2>Details: {{details}}</h2>
-</body>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+    
+  </head>
+  <body>
+    <div class="flex-column center container">
+      <img class="logo" src="{% static 'Centre logo white.svg' %}" />
+      <div class="flex-column center block" style="gap:10%">
+        <img src="{% static 'error.svg' %}" alt="checkmark" style="width:30%">
+        <p class = "message">There was an error when submitting your review!</p>
+        <p class = "message" style="font-size: 1em;">Details: {{details}}</p> 
+      </div>
+
+      <div class="filler"></div>
+    </div>
+  </body>
 </html>

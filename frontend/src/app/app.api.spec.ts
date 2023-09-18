@@ -596,6 +596,80 @@ describe('AppApi', () => {
   
     req.flush(expectedResponse);
   });
+
+  it('should send a POST request to toggle isActive', () => {
+    const sourceID = '123';
+    const isActive = true;
+
+    const expectedResponse = { /* Define your expected response here */ };
+
+    appApi.setIsActive(sourceID, isActive).subscribe((response) => {
+      expect(response).toEqual(expectedResponse);
+    });
+
+    const expectedUrl = '/api/domains/domains/toggle_is_active';
+    const expectedMethod = 'POST';
+    const expectedBody = {
+      source_id: sourceID,
+      is_active: isActive,
+    };
+
+    const req = httpTestingController.expectOne(expectedUrl);
+    expect(req.request.method).toEqual(expectedMethod);
+    expect(req.request.body).toEqual(expectedBody);
+
+    req.flush(expectedResponse);
+  });
+
+
+  it('should send a POST request to get a profile by ID', () => {
+    const profileID = 456;
+
+    const expectedResponse = { /* Define your expected response here */ };
+
+    appApi.getProfile(profileID).subscribe((response) => {
+      expect(response).toEqual(expectedResponse);
+    });
+
+    const expectedUrl = '/api/profiles/profiles/get_profile';
+    const expectedMethod = 'POST';
+    const expectedBody = {
+      id: profileID,
+    };
+
+    const req = httpTestingController.expectOne(expectedUrl);
+    expect(req.request.method).toEqual(expectedMethod);
+    expect(req.request.body).toEqual(expectedBody);
+
+    req.flush(expectedResponse);
+  });
+
+  it('should send a POST request to generate a report for a domain', () => {
+    const domainId = '650579d05ce2576d38fcd99a';
+
+    const expectedResponse = {
+      status: "SUCCESS",
+      url: jasmine.stringMatching(
+        /^https:\/\/domainpulseblob\.blob\.core\.windows\.net\/pdf\/MeetingReport[0-9a-zA-Z]+\.pdf/
+      ),
+  };
+
+    appApi.generateReport(domainId).subscribe((response) => {
+      expect(response).toEqual(expectedResponse);
+    });
+
+    const expectedUrl = '/api/profiles/report/generate_report';
+    const expectedMethod = 'POST';
+    const expectedBody = {
+      domain_id: domainId,
+    };
+
+    const req = httpTestingController.expectOne(expectedUrl);
+    expect(req.request.method).toEqual(expectedMethod);
+    expect(req.request.body).toEqual(expectedBody);
+
+    req.flush(expectedResponse);
+  });
   
   
   

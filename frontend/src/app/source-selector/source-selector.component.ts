@@ -1,25 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetSource, SetSourceIsLoading, ToastError } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
   templateUrl: './source-selector.component.html',
   styleUrls: ['./source-selector.component.sass'],
 })
-export class SourceSelectorComponent {
+export class SourceSelectorComponent implements OnInit {
   @Select(AppState.sources) sources$!: Observable<DisplaySource[] | null>;
   @Select(AppState.selectedSource)
-  selectedSource$!: Observable<DisplaySource | null>;
+  selectedSource$!: Observable<DisplaySource | undefined>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
   @Select(AppState.allSourcesSelected) allSources$!: Observable<number>;
-
+  selectedSource?: DisplaySource;
 
   showAddSourcesModal = false;
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
+  showInfoModal = false;
   newSourceName = '';
   newSourcePlatform = '';
   newSourceUrl = '';
@@ -27,13 +28,41 @@ export class SourceSelectorComponent {
   editSourceName = '';
   editSourceUrl = '';
 
+  isOpen = false;
+
 
   constructor(private store: Store) {}
+
+  ngOnInit(): void {
+    this.selectedSource$.subscribe(source => {
+      this.selectedSource = source;
+    });
+
+    const copyIcon = document.getElementById('copyIcon');
+    if (copyIcon) {
+      copyIcon.addEventListener('click', () => {
+        this.copyToClipboard();
+      });
+    }
+    
+  }
+
+  copyToClipboard() {
+    const liveReviewLink = document.getElementById('liveReviewLink');
+    if (liveReviewLink) {
+      const textToCopy = liveReviewLink.getAttribute('href')!;
+      navigator.clipboard.writeText(textToCopy);
+    }
+  }
+
+  
 
   selectSource(source: DisplaySource) {
     this.store.dispatch(new SetAllSourcesSelected(false));
     this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new SetSource(source));
+    console.log('source: ' + source.id);
+    console.log('source: ' + source.name);
   }
 
   selectAllSources(){
@@ -46,12 +75,21 @@ export class SourceSelectorComponent {
     var params = this.determineSourceParams();
     console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
-    console.log('url: ' + this.newSourceName);
+    console.log('name: ' + this.newSourceName);
+
+    if(this.newSourcePlatform != 'livereview' && this.newSourceUrl ==''){
+      this.store.dispatch(new ToastError('Please add a URL'));
+      return;
+    }
 
     if (!params || !this.newSourcePlatform || !this.newSourceName) {
       this.store.dispatch(new ToastError('Please fill in all fields'));
       return;
     }
+
+    
+
+
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     );
@@ -60,8 +98,30 @@ export class SourceSelectorComponent {
     this.showAddSourcesModal = false;
   }
 
+  /* elif type_of_source.lower() == "livereview":
+        if "is_active" not in params:
+            return False, "Missing parameter: is_active"
+        return True, "Source details are valid"
+ */
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
+      case 'trustpilot':
+        const tpurl = this.newSourceUrl;
+        if (!tpurl.includes('trustpilot')) {
+          return {
+            source_type: 'trustpilot',
+            query_url: tpurl,
+          };
+        }
+
+        const urlParts = tpurl.split('/');
+        const indexOfReviews = urlParts.indexOf('review');
+        const tpID = urlParts[indexOfReviews + 1];
+
+        return {
+          source_type: 'trustpilot',
+          query_url: tpID,
+        }
       case 'googlereviews':
         return {
           source_type: 'googlereviews',
@@ -71,6 +131,11 @@ export class SourceSelectorComponent {
         return {
           source_type: 'TripAdvisor',
           tripadvisor_url: this.newSourceUrl,
+        }
+      case 'livereview':
+        return {
+          source_type: 'livereview',
+          is_active: true,
         }
       case 'youtube':
 
@@ -126,6 +191,10 @@ export class SourceSelectorComponent {
         return 'tripadvisor';
       case 'youtube':
         return 'YouTube';
+      case 'livereview':
+        return 'livereview';
+      case 'trustpilot':
+        return 'trustpilot';
     }
     return '';
   }
@@ -167,5 +236,25 @@ export class SourceSelectorComponent {
     } else {
       this.showConfirmDeleteSourceModal = false;
     }
+  }
+
+  toggleInfoModal() {
+    if (!this.showInfoModal) {
+      this.showInfoModal = true;
+    } else {
+      this.showInfoModal = false;
+    }
+  }
+
+  showInfo(event: Event): void {
+    event.stopPropagation();
+    this.toggleInfoModal();
+  }
+
+  toggleActive(event: any) {
+    console.log('onValueChange', event);
+    const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
+    
+    this.store.dispatch(new SetIsActive(!selectedSource?.params));
   }
 }

@@ -1,0 +1,96 @@
+name: Test Domains
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Login to Docker HHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME  }}
+          password: ${{ secrets.DOCKERHUB_TOKEN  }}
+
+      - name: setup .envs
+        working-directory: ./backend
+        run: |
+          echo "$PROD_DJANGO_PORTS" > .env
+          echo "$POSTGRES_CONFIG" > .postgresql.env
+          mkdir ~/.ssh
+          echo "$POSTGRES_USER_PRIV_KEY" >> ~/.ssh/posgresql-user-priv_key
+        env:
+          PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
+          POSTGRES_CONFIG: ${{ secrets.POSTGRES_CONFIG }}
+          POSTGRES_USER_PRIV_KEY: ${{ secrets.POSTGRES_USER_PRIV_KEY }}
+
+      - name: cache deps
+        id: cache-deps
+        uses: actions/cache@v3
+        with:
+          path: backend/domains/venv
+          key: pip-deps_cache-${{ hashFiles('backend/domains/requirements.txt') }}
+
+      - name: install dependencies
+        working-directory: ./backend/domains
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        env:
+          PIPENV_VENV_IN_PROJECT: 1
+        run: |
+          python -m venv venv
+          venv/bin/python -m pip install -r requirements.txt
+          venv/bin/python -m pip install coverage mock
+
+      - name: Run Tests
+        working-directory: ./backend/domains
+        run: |
+          venv/bin/python -m coverage run --source='.' manage.py test
+          venv/bin/python -m coverage report -m
+
+      - name: Check for in Domains source code changes
+        id: check-changes
+        run: |
+          if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} 'backend/domains') ]]; then
+            echo "Changes detected in source directory. Building and pushing Docker image."
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes detected in source directory. Skipping Docker build and push."
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine Docker Tag
+        id: set-image-tag
+        run: |
+          if [[ ${{ github.ref == 'refs/heads/main' }} == true ]]; then
+            echo "Setting image tag to 'latest'"
+            echo "IMAGE-TAG=latest" >> $GITHUB_OUTPUT
+          elif [[ ${{ github.ref == 'refs/heads/dev'}} == true ]]; then
+            echo "Setting image tag to 'dev-latest'"
+            echo "IMAGE-TAG=dev-latest" >> $GITHUB_OUTPUT
+          else
+            echo "Not on main or dev branch. Skipping Docker build and push."
+            echo "IMAGE-TAG=none" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push to DockerHub
+        if: ${{ steps.check-changes.outputs.changes == 'true' && steps.set-image-tag.outputs.IMAGE-TAG != 'none' }}
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend/domains
+          file: ./backend/domains/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/domain-pulse-domains:${{ steps.set-image-tag.outputs.IMAGE-TAG }}
+
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-domains-test
+          path: backend/domains/.coverage

@@ -21,8 +21,6 @@ export class AzureBlobStorageService {
       .then(() => handler())
   }
 
-
-
   private containerClient(sas: string): ContainerClient {
     return new BlobServiceClient(`https://${this.picturesAccount}.blob.core.windows.net?${sas}`)
             .getContainerClient(this.picturesContainer);
