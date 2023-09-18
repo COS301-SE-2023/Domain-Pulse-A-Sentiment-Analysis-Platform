@@ -109,7 +109,7 @@ export class TooltipDirective {
       this.renderer.setStyle(this.tooltip, 'transform', 'translateX(0)');
       this.renderer.setStyle(this.tooltip, 'transition', 'opacity 1500ms ease-in, transform 1500ms ease-in');
       this.renderer.setStyle(this.tooltip, 'position', 'absolute');
-      this.renderer.setStyle(this.tooltip, 'z-index', '11');
+      this.renderer.setStyle(this.tooltip, 'z-index', '100');
   
       //this.tooltip.textContent = this.tooltipText;
 
