@@ -110,7 +110,7 @@ def create_domain(request: HttpRequest):
             }
         )
 
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -135,7 +135,7 @@ def edit_domain(request: HttpRequest):
             }
         )
 
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -158,7 +158,7 @@ def edit_source(request: HttpRequest):
             }
         )
 
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -183,7 +183,7 @@ def toggle_active(request: HttpRequest):
             }
         )
 
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -250,7 +250,7 @@ def get_domain(request: HttpRequest):
         return JsonResponse(
             {"status": "SUCCESS", "domain": domainscrud.get_domain(raw_data["id"])}
         )
-    return JsonResponse({"status": "FAILURE"}) 
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -288,7 +288,7 @@ def add_source(request: HttpRequest):
                 "domain": domain,
             }
         )
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -334,7 +334,7 @@ def remove_source(request: HttpRequest):
                 ),
             }
         )
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -361,7 +361,7 @@ def create_param(request: HttpRequest):
                 ),
             }
         )
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -385,4 +385,18 @@ def delete_param(request: HttpRequest):
                 ),
             }
         )
-    return JsonResponse({"status": "FAILURE"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
+@csrf_exempt
+def delete_domains_internal(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
+            domainscrud.delete_domains_internal(raw_data["domain_ids"])
+            return JsonResponse(
+                {"status": "SUCCESS", "details": "Domains deleted successfully"}
+            )
+        else:
+            return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})

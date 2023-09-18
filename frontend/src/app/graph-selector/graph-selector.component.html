@@ -5,34 +5,60 @@
 </ng-container>
 
 <ng-template #loadingContent>
-  <div
-    class="flex-row"
-    style="width: 97%; height: 90%; justify-content: space-between"
-  >
-    <div class="flex-row center" style="width: 2%">
-      <img
-        width="100%"
-        src="../../assets/icons/arrowBlockLeft.svg"
-        alt="Arrow block left"
-        (click)="switchToPreviousGraph()"
-        data-cy="switchToPreviousGraph"
-        class="clickable-item"
-      />
-    </div>
+      <div
+        class="flex-row"
+        style="width: 97%; height: 90%; justify-content: space-between"
+      >
+        <div class="flex-row center" style="width: 2%">
+          <img
+            width="100%"
+            src="../../assets/icons/arrowBlockLeft.svg"
+            alt="Arrow block left"
+            (click)="switchToPreviousGraph()"
+            data-cy="switchToPreviousGraph"
+            class="clickable-item"
+          />
+        </div>
 
-    <div id="chartContainer" #chartContainer class="chart-container">
-      <canvas #myChart data-cy="canvas-element"></canvas>
-    </div>
+        <div
+          id="chartContainer"
+          #chartContainer
+          class="chart-container"
+          style="text-align: center; margin-bottom: 15px; overflow: hidden;"
+          
+        >
+          <!-- <canvas #myChart data-cy="canvas-element"></canvas> -->
+          <apx-chart
+            style="z-index: 0;"
+            [series]="chartOptions.series!"
+            [chart]="chartOptions.chart!"
+            [xaxis]="chartOptions.xaxis!"
+            [title]="chartOptions.title!"
+            [dataLabels]="chartOptions.dataLabels!"
+            [colors]="chartOptions.colors!"
+            [legend]="chartOptions.legend!"
+            [fill]="chartOptions.fill!"
+            [yaxis]="chartOptions.yaxis!"
+            [plotOptions]="chartOptions.plotOptions!"
+            [labels]="chartOptions.labels!"
+            [responsive]="chartOptions.responsive!"
+            [stroke]="chartOptions.stroke!"
+            [annotations]="chartOptions.annotations!"
+          ></apx-chart>
+        </div>
 
-    <div class="flex-row center" style="width: 2%">
-      <img
-        width="100%"
-        src="../../assets/icons/arrowBlockRight.svg"
-        alt="Arrow block right"
-        (click)="switchToNextGraph()"
-        data-cy="switchToNextGraph"
-        class="clickable-item"
-      />
+        <div class="flex-row center" style="width: 2%">
+          <img
+            width="100%"
+            src="../../assets/icons/arrowBlockRight.svg"
+            alt="Arrow block right"
+            (click)="switchToNextGraph()"
+            data-cy="switchToNextGraph"
+            class="clickable-item"
+          />
+        </div>
+      </div>
+    <div class="dot-container">
+        <div *ngFor="let dot of dots; let i = index" class="dot" [ngClass]="{ 'selected': i === selectedDotIndex }" (click)="selectDot(i)"></div>
     </div>
-  </div>
 </ng-template>

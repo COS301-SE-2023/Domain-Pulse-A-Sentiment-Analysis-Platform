@@ -18,6 +18,7 @@ import {
   DeleteSource,
   DeleteUser,
   EditSource,
+  GenerateReport,
   GetDomains,
   GetSourceDashBoardInfo,
   Logout,
@@ -66,6 +67,7 @@ describe('AppState', () => {
       'changePassword',
       'logOut',
       'sendCSVFile',
+      'generateReport',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -75,7 +77,8 @@ describe('AppState', () => {
 
     await TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule, NgxsModule.forRoot([AppState])],
-      providers: [{ provide: AppApi, useValue: apiSpy },
+      providers: [
+        { provide: AppApi, useValue: apiSpy },
         { provide: Router, useClass: MockRouter },
       ],
     }).compileComponents();
@@ -291,7 +294,7 @@ describe('AppState', () => {
       }
       expect(actualSources[0].selected).toEqual(false);
       expect(actualSources[1].selected).toEqual(true);
-      done()
+      done();
     }, 500);
   });
 
@@ -553,12 +556,14 @@ describe('AppState', () => {
     };
     store.reset({ app: { profileDetails: mockProfileDetails } });
 
-    store.dispatch(new ChangeMode);
+    store.dispatch(new ChangeMode());
   });
 
-    it('should react correctly to successfull "ChangeMode" event', (done: DoneFn) => {
+  it('should react correctly to successfull "ChangeMode" event', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
-      const currentProfileDetails = store.selectSnapshot(AppState.profileDetails);
+      const currentProfileDetails = store.selectSnapshot(
+        AppState.profileDetails
+      );
       expect(currentProfileDetails?.mode).toEqual(false);
       expect(currentProfileDetails?.profileIcon).toEqual('test');
       expect(currentProfileDetails?.profileId).toEqual(1);
@@ -566,7 +571,9 @@ describe('AppState', () => {
       done();
     });
 
-    apiSpy.changeMode.and.returnValue(of({ status: 'SUCCESS', profileIcon: 'test', mode: false, id: 1 }));
+    apiSpy.changeMode.and.returnValue(
+      of({ status: 'SUCCESS', profileIcon: 'test', mode: false, id: 1 })
+    );
 
     const mockProfileDetails: ProfileDetails = {
       profileId: 1,
@@ -575,7 +582,7 @@ describe('AppState', () => {
     };
     store.reset({ app: { profileDetails: mockProfileDetails } });
 
-    store.dispatch(new ChangeMode);
+    store.dispatch(new ChangeMode());
   });
 
   it('should react correctly to failed "ChangePassword" event', (done: DoneFn) => {
@@ -709,7 +716,14 @@ describe('AppState', () => {
   });
 
   it('should react correclty to successfull ChangeProfileICon event', (done: DoneFn) => {
-    apiSpy.changeProfileIcon.and.returnValue(of({ status: 'SUCCESS', profileIcon: 'https://not_a_real_icon2.png', mode: false, profileId: 1 }));
+    apiSpy.changeProfileIcon.and.returnValue(
+      of({
+        status: 'SUCCESS',
+        profileIcon: 'https://not_a_real_icon2.png',
+        mode: false,
+        profileId: 1,
+      })
+    );
 
     // set the profile
     const mockProfile: ProfileDetails = {
@@ -721,14 +735,16 @@ describe('AppState', () => {
 
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
       const newProfileDetails = store.selectSnapshot(AppState.profileDetails);
-      expect(newProfileDetails?.profileIcon).toEqual('https://not_a_real_icon2.png');
-      
+      expect(newProfileDetails?.profileIcon).toEqual(
+        'https://not_a_real_icon2.png'
+      );
+
       done();
     });
 
-
-    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png")).subscribe();
-
+    store
+      .dispatch(new ChangeProfileIcon('https://not_a_real_icon.png'))
+      .subscribe();
   });
 
   it('should react correctly to failed ChangeProfileICon event', (done: DoneFn) => {
@@ -747,14 +763,15 @@ describe('AppState', () => {
       done();
     });
 
-
-    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png")).subscribe();
+    store
+      .dispatch(new ChangeProfileIcon('https://not_a_real_icon.png'))
+      .subscribe();
   });
 
   it('should react correctly to failed ChangeProfileICon event with no profileIcon', () => {
     // (really just running the empty case)
 
-    store.dispatch(new ChangeProfileIcon("https://not_a_real_icon.png"));
+    store.dispatch(new ChangeProfileIcon('https://not_a_real_icon.png'));
     expect(true).toBe(true);
   });
 
@@ -818,6 +835,49 @@ describe('AppState', () => {
 
     store.dispatch(new UplaodCVSFile(mockFile));
   });
+  it('should handle successful report generation', (done: DoneFn) => {
+    const domainId = '650579d05ce2576d38fcd99a';
+
+    apiSpy.generateReport.and.returnValue(
+      of({ status: 'SUCCESS', url: 'https://example.com/report.pdf' })
+    );
+
+    // set the profile
+
+    store.reset({ app: { pdfLoading: true, pdfUrl: 'empty' } });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      const pdfLoading = store.selectSnapshot(AppState.pdfLoading);
+      const pdfUrl= store.selectSnapshot(AppState.pdfUrl);
+      expect(pdfLoading).toEqual(false);
+      expect(pdfUrl).toEqual(
+        'https://example.com/report.pdf'
+      );
+
+      done();
+    });
+
+    store.dispatch(new GenerateReport(domainId));
+
+  });
+
+
+  it('should handle failed report generation', (done: DoneFn) => {
+    const domainId = '650579d05ce2576d38fcd99a';
+
+    apiSpy.generateReport.and.returnValue(of({ status: 'FAILURE' }));
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      const state = store.selectSnapshot((state) => state);
+
+      expect(state.app.pdfLoading).toBe(false);
+
+      done();
+    });
+
+    store.dispatch(new GenerateReport(domainId));
+  });
+
 
   it('should correctly format the response from the server to a DisplaySOurce', () => {
     let mockResponseSources: any[] = [
@@ -904,7 +964,9 @@ describe('AppState', () => {
   });
 
   it('should choose the correct source icon for the platform', () => {
-    expect(AppState.platformToIcon('trustpilot')).toEqual('trustpilot-logo.png');
+    expect(AppState.platformToIcon('trustpilot')).toEqual(
+      'trustpilot-logo.png'
+    );
     expect(AppState.platformToIcon('facebook')).toEqual('facebook-logo.png');
     expect(AppState.platformToIcon('instagram')).toEqual('instagram-Icon.png');
     expect(AppState.platformToIcon('reddit')).toEqual('reddit-logo.png');

@@ -233,3 +233,12 @@ def delete_param(domain_id, source_id, key):
     result["_id"] = resId
 
     return result
+
+
+def delete_domains_internal(domain_ids):
+    ids = []
+    for i in domain_ids:
+        ids.append(ObjectId(i))
+    collection = db[mongo_collection]
+    query = {"_id": {"$in": ids}}
+    result = collection.delete_many(query)

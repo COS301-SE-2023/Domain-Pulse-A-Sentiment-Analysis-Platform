@@ -1,5 +1,7 @@
+import os
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+import requests
 from profileservice import models as profile_models
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -10,23 +12,27 @@ DARK = True
 
 
 def create_user(request, uname, email, pword):
-    user = User.objects.create_user(username=uname, email=email, password=pword)
-    profile = create_profile(
-        user,
-        "https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg",
-        LIGHT,
-    )
-    login(request, user)
-    jwt = create_JWT(user)
-    return {
-        "status": "SUCCESS",
-        "id": user.id,
-        "username": user.username,
-        "email": user.email,
-        "password": user.password,
-        "profileID": profile.id,
-        "JWT": jwt,
-    }
+    try:
+        user = User.objects.get(username=uname)
+        return {"status": "FAILURE", "details": "User already exists"}
+    except User.DoesNotExist:
+        user = User.objects.create_user(username=uname, email=email, password=pword)
+        profile = create_profile(
+            user,
+            "https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg",
+            LIGHT,
+        )
+        login(request, user)
+        jwt = create_JWT(user)
+        return {
+            "status": "SUCCESS",
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "password": user.password,
+            "profileID": profile.id,
+            "JWT": jwt,
+        }
 
 
 def create_profile(user_id, profileIcon, mode=LIGHT):
@@ -250,7 +256,8 @@ def login_user(request, username, password):
         jwt = create_JWT(user)
         return {"status": "SUCCESS", "id": user.id, "JWT": jwt}
     else:
-        return {"status": "FAILURE", "details":"Invalid credentials"}
+        return {"status": "FAILURE", "details": "Invalid credentials"}
+
 
 def create_JWT(user):
     if user.is_authenticated:
@@ -279,15 +286,36 @@ def delete_user(request, username, password):
 
         if request.user == user:
             if user.check_password(password):
+                profile = profile_models.Profiles.objects.get(id=request.user.id)
+                domain_list = []
+                for i in profile.domainIDs.all().values_list("id", flat=True):
+                    domain_list.append(i)
+                data = {"local_key": os.getenv("LOCAL_KEY"), "domain_ids": domain_list}
+                GET_DOMAINS_ENDPOINT = (
+                    "http://localhost:"
+                    + str(os.getenv("DJANGO_DOMAINS_PORT"))
+                    + "/domains/delete_domains_internal"
+                )
+
+                response = requests.post(GET_DOMAINS_ENDPOINT, json=data)
+
+                if response.status_code != 200:
+                    return {
+                        "status": "FAILURE",
+                        "details": "Failure connecting to domains service",
+                    }
+                elif response.json()["status"] == "FAILURE":
+                    return {"status": "FAILURE", "details": "Failure deleting domains"}
+
                 user.delete()
                 logout(request)
                 return {"status": "SUCCESS"}
             else:
-                return {"status": "FAILURE"}
+                return {"status": "FAILURE", "details": "Authentication failed"}
         else:
-            return {"status": "FAILURE"}
+            return {"status": "FAILURE", "details": "Authentication failed"}
     else:
-        return {"status": "FAILURE"}
+        return {"status": "FAILURE", "details": "Authentication failed"}
 
 
 def get_user_by_id(id):
@@ -370,7 +398,7 @@ def get_sources_for_domain(user_id, domain_id):
         return {"status": "FAILURE", "details": "No user exists"}
     if domain_id in profile.domainIDs.all().values_list("id", flat=True):
         return {
-            "status":"SUCCESS",
+            "status": "SUCCESS",
             "id": user_id,
             "domain_id": domain_id,
             "source_ids": domain.sourceIDs,
@@ -393,4 +421,4 @@ def get_sources_for_user_internal(user_id):
     for domain_id in domain_list:
         domain = profile_models.Domains.objects.get(id=domain_id)
         source_list.extend(domain.sourceIDs)
-    return {"status":"SUCCESS","id": user_id, "source_ids": source_list}
+    return {"status": "SUCCESS", "id": user_id, "source_ids": source_list}

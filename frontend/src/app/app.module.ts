@@ -24,6 +24,8 @@ import { AppApi } from './app.api';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
 import { ApiInterceptor } from './api.interceptor';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import { ApiInterceptor } from './api.interceptor';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
+    NgApexchartsModule,
     NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({
       collapsed: false,

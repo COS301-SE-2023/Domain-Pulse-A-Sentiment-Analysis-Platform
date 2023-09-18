@@ -6,12 +6,12 @@
   align-items: center
   justify-content: center
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+  position: relative
 
 .chart-container
   position: relative
   width: 90%
-  height: 100%
-  margin-bottom: -50px
+  height: auto
 
 .loading-container 
   display: flex
@@ -22,3 +22,24 @@
 
 .loading-spinner 
   height: 60%
+
+.dot-container 
+  position: absolute
+  bottom: 0
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 10px
+  padding-top: 10px
+  padding-bottom: 15px
+
+.dot
+  width: 10px
+  height: 10px
+  background-color: #ccc
+  border-radius: 50%
+  cursor: pointer
+  transition: background-color 0.3s ease
+
+.selected
+  background-color: #007bff
