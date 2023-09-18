@@ -141,11 +141,11 @@ In terms of prior knowledge and experience, users may have different levels of e
   \caption{User Story: Add a source}
   \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
     \hline
-    \textbf{User Story}          & As a user/business manager, I want to add a source (Twitter, Instagram, etc...) for sentiment data to my list of sources, so that I can view and track customers' sentiment on said source. \\
+    \textbf{User Story}          & As a user/business manager, I want to add a source (Youtube, Google Reviews, etc...) for sentiment data to my list of sources, so that I can view and track customers' sentiment on said source. \\
     \hline
     \textbf{Acceptance Criteria} &
     Given that I provided the name/link to the source I wish to use,                                                                                                                                                           \\
-                                 & When I click the 'add source' button,                                                                                                                                                       \\
+                                 & When I click the 'add source' button and select the appropriate source type (providing the appropriate parameter data),                                                                                                                                                       \\
                                  & Then the source is added to my list of sources.                                                                                                                                             \\
     \hline
   \end{tabular}
@@ -321,15 +321,30 @@ In terms of prior knowledge and experience, users may have different levels of e
 
 
 \begin{table}[htbp]
-  \caption{User Story: Repoort generatatin}
+  \caption{User Story: Report generation}
   \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
     \hline
-    \textbf{User Story}          & As a user/PR manager, I want to generate a sharable PDF report that neatly summarizes th results of the sentiment analysis, so that I can present the results in a meeting or to an executive more formally. \\
+    \textbf{User Story}          & As a user/PR manager, I want to generate a sharable PDF report that neatly summarizes the results of the sentiment analysis, so that I can present the results in a meeting or to an executive more formally. \\
     \hline
     \textbf{Acceptance Criteria} &
     Given that I have selected the domain I wish to generate a report for,                                                                                                                                            \\
                                  & When click the "Generate report" button,                                                                                                                                               \\
                                  & Then a QR code is displayed as well as a URL to view the PDF report.                                                                                   \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{table}[htbp]
+  \caption{User Story: Live review}
+  \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+    \hline
+    \textbf{User Story}          & As a user/PR manager, I want to generate a QR code that enables anyone to make a review about any arbitrary thing, so that I may collect my own sentiment data in real time. \\
+    \hline
+    \textbf{Acceptance Criteria} &
+    Given that I have selected the domain I wish to add a live review data source to,                                                                                                                                            \\
+                                 & When click the "Add source" button and select live review,                                                                                                                                               \\
+                                 & Then a QR code is displayed which acts as a link to the review form.                                                                                   \\
     \hline
   \end{tabular}
 \end{table}
@@ -486,14 +501,14 @@ In terms of prior knowledge and experience, users may have different levels of e
   \includegraphics[width=13cm]{../../Images/UC2.2.5.png}
 \end{center}
 
-\subsection{Eventual Use Case Diagrams}
-\begin{center}
-  \includegraphics[width=13cm]{../../Images/UC 2.1.png}
-  \includegraphics[width=13cm]{../../Images/UC 2.2.png}
-  \includegraphics[width=13cm]{../../Images/UC 2.3.png}
-  \includegraphics[width=13cm]{../../Images/UC 2.4.png}
-  \includegraphics[width=13cm]{../../Images/UC 2.5.png}
-\end{center}
+% \subsection{Eventual Use Case Diagrams}
+% \begin{center}
+%   \includegraphics[width=13cm]{../../Images/UC 2.1.png}
+%   \includegraphics[width=13cm]{../../Images/UC 2.2.png}
+%   \includegraphics[width=13cm]{../../Images/UC 2.3.png}
+%   \includegraphics[width=13cm]{../../Images/UC 2.4.png}
+%   \includegraphics[width=13cm]{../../Images/UC 2.5.png}
+% \end{center}
 
 
 
@@ -514,7 +529,7 @@ The system will be developed using Django as the backend web framework and Angul
 The project will be managed using the Agile methodology, with weekly meetings between team members for effective communication and task coordination. GitHub Project Boards will be used to track tasks and progress. Biweekly meetings with the client will be conducted to provide progress reports and sprint reviews.
 
 \subsection{Module Agreement}
-The developed system will consist of external services and libraries within the codebase, comprising no more than 15% of the total developed codebase. The team will ensure compliance with The University of Pretoria's Plagiarism and Code of Conduct policies, ensuring the originality and ownership of the produced code.
+The developed system will consist of external services and libraries within the codebase, comprising no more than 15\% of the total developed codebase. The team will ensure compliance with The University of Pretoria's Plagiarism and Code of Conduct policies, ensuring the originality and ownership of the produced code.
 
 \subsection{Timeline}
 The project will be completed within the provided timeframes of the COS 301 Capstone Project, and all required information and progress updates will be provided during the respective demos.
@@ -645,9 +660,9 @@ Authentication User Functions will be controlled by Django Authentication System
 \textbf{Precondition:} \textit{source: Source} \\
 \textbf{Postcondition:} The relevant data pertaining to the domain's specific source sentiment metrics shall be displayed on the web page.
 
-\subsubsection*{displayGraphs}
-\textbf{Precondition:} \textit{source: Source} \\
-\textbf{Postcondition:} The relevant graphs pertaining to the domain's specific source sentiment metrics shall be displayed on the web page.
+% \subsubsection*{displayGraphs}
+% \textbf{Precondition:} \textit{source: Source} \\
+% \textbf{Postcondition:} The relevant graphs pertaining to the domain's specific source sentiment metrics shall be displayed on the web page.
 
 
 \newpage
@@ -673,13 +688,13 @@ Authentication User Functions will be controlled by Django Authentication System
 
 \textbf{Technical Constraints}
 \begin{itemize}
-  \item We are required to make use of a NoSQL document-based database in our application (upon specification from Southern Cross Solutions), however, upon request and their advice (given our architecture), it is acceptable to use a SQL database for microservices where we deem it necessary.
+  \item We are required to make use of a NoSQL document-based database in our application (upon specification from Southern Cross Solutions), however, upon request and their advice (given our architecture), it is acceptable to use a SQL database for services where we deem it necessary.
   \item All technology used for development must be free and open source (upon specification from Southern Cross Solutions).
 \end{itemize}
 
 \textbf{Performance Constraints}
 \begin{itemize}
-  \item There are no specific, measurable metrics of performance that the application is required to conform to; however, the following guidelines must be adhered to:
+  \item Generally speaking, the following guidelines must be adhered to. Specific quantificiation of these requirements can be found in our ststement of quality requirements and Testing Manual:
         \begin{itemize}
           \item The user must not wait for an inordinate amount of time for the data to be refreshed, including fetching new data from external APIs and performing analysis on that data.
           \item Viewing metrics for different sources and domains should feel seamless, with minimal waiting time involved in fetching the data.
@@ -702,14 +717,12 @@ Authentication User Functions will be controlled by Django Authentication System
 
 \textbf{Cost Constraints}
 \begin{itemize}
-  \item No budget allocated for the project as of yet.
-  \item Potentially a \$50 credit to make use of AWS services.
-  \item Southern Cross Solutions have not confirmed whether they will supply a budget to make use of paid external APIs (such as that for Twitter) - this is an issue that will be addressed further along in development.
+  \item Budget allocated for Project Daya materials as well as an amount of no more than R300 towarda making use of 3rd party webscraping services.
 \end{itemize}
 
 \textbf{Time Constraints}
 \begin{itemize}
-  \item Need to have the final product delivered before the final demonstration and Project Day (approximately 6 months).
+  \item Need to have the final product delivered before the final demonstration and Project Day (approximately 6 months from start of development).
   \item Need to conform to milestone deadlines as set out by the requirements for demos 1 to 4.
 \end{itemize}
 
@@ -718,7 +731,7 @@ Authentication User Functions will be controlled by Django Authentication System
 \section{Technology Requirements}
 
 \subsection{Development Environment}
-For development, our team members shall be developing within VS Code on Linux to ensure consistency within the produced code and testing of our software. Having all members using VS Code also allows for the use of software such as Live Share for collaborative development to improve efficiency within development.
+For development, our team members shall be developing within VS Code in an Ubuntu Linux enivronment to ensure consistency within the produced code and testing of our software. Having all members using VS Code also allows for the use of software such as Live Share for collaborative development to improve efficiency within development.
 
 \subsection{Version Control}
 Git will be used for version control, using a clear and simple branching strategy that allows members to easily work on distinct components of our system while also allowing the reverting to previous versions as a 'fail-safe'. Meanwhile, GitHub will be used to host the Git repository.
@@ -727,7 +740,7 @@ Git will be used for version control, using a clear and simple branching strateg
 Within our team, many (if not all) members have a high proficiency in coding in Python. Python is considered one of the best programming languages for Machine Learning and data analysis, which are aspects on which our system will heavily rely. Therefore, Python is our programming language of choice.
 
 \subsection{Frameworks and Libraries}
-We have decided to use Django as our web framework for the creation of our app due to its simplicity, efficiency, and secure data transmission capabilities. Within our Django project, we will be utilizing Python's proficiency in data analysis and machine learning by using the powerful Vader and Grafana libraries, which allow us to perform sentiment analysis on text and visualize our data, respectively. For the front-end development, we will be using Angular due to its versatility and ability to create high-quality user interfaces.
+We have decided to use Django as our web framework for the creation of our app due to its simplicity, efficiency, and secure data transmission capabilities. Within our Django project, we will be utilizing Python's proficiency in data analysis and machine learning by using a variety of powerful libraries for sentiment analysis and Natural Language Processing. For the front-end development, we will be using Angular due to its versatility and ability to create high-quality user interfaces.
 
 \subsection{Database Systems}
 For our database systems, we will be using MongoDB as a document-based NoSQL database for data collection of comments, posts, and other content related to user data. Additionally, PostgreSQL will be used as an SQL database for storing user profiles and authentication data for ease of access and querying.
@@ -736,10 +749,10 @@ For our database systems, we will be using MongoDB as a document-based NoSQL dat
 We will perform various forms of testing to ensure the quality of our software. For front-end testing, Cypress will be used, and for unit testing, we will utilize the built-in Unittest library of Python, which is recommended for Django.
 
 \subsection{Deployment and Infrastructure}
-For deployment, our clients have provided a Linux-based virtual machine where we can deploy our software. We will use one virtual machine for the testing environment and another for the production environment to ensure a separation of concerns. Additionally, a domain may be acquired for ease of customer access to the software.
+For deployment, our clients have provided a Linux-based virtual machine where we can deploy our software. We will use one virtual machine for the testing environment and another for the production environment (accessible with different domain names) to ensure a separation of concerns. Additionally, a domain may be acquired for ease of customer access to the software.
 
 \subsection{Collaboration and Communication Tools}
-To ensure effective communication within our team, we have a private WhatsApp group for important announcements, a private Discord server for more specific announcements and discussions, and a GitHub Project Board to track work progress. For communication with our clients, we have set up a Slack workspace for quick communication.
+To ensure effective communication within our team, we have a private WhatsApp group for important announcements, a private Discord server for more specific announcements and discussions, and a private Signal group for sharing sensitive information such as secret keys, and a GitHub Project Board to track work progress. For communication with our clients, we have set up a Slack workspace for quick communication.
 
 \subsection{Security and Encryption}
 Our system is secured using technologies such as Django's authentication system, which encrypts user data. We prioritize the use of POST over GET for more secure data transmission. Our virtual machine is protected by extensive firewalls to prevent foreign attacks, and access is restricted to authorized members of our team using SSH and private login details.
