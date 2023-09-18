@@ -35,6 +35,7 @@ export class HelpPageComponent implements AfterViewInit {
     }
     if (this.searchTerm === "") {
       this.accordionItems.forEach((item: any) => item.style.display = 'block');
+      document.querySelectorAll('.heading').forEach((item: any) => item.style.display = 'block');
       return;
     }
     this.accordionItems.forEach((item: any) => {
