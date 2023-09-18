@@ -6,11 +6,49 @@
 
 <ng-template #loadingContent>
   <div class="flex-row icon-div">
-    <img src="../../assets/icons/comments.svg" width="8%" alt="Positive Icon" style="padding-right: 1rem" />
+    <img
+      src="../../assets/icons/comments.svg"
+      width="8%"
+      alt="Positive Icon"
+      style="padding-right: 1rem"
+    />
     <h2 style="margin-top: 0">Sample data</h2>
   </div>
 
   <div class="flex-column" style="gap: 1rem">
+    <commentsAccordion [collapsing]="true">
+      <commentsAccordion-item title="Tests">
+        <ng-template commentsAccordionContent>
+          <div class="accordion-container">
+            <p>works</p>
+            <p>works</p>
+            <p>works</p>
+          </div>
+        </ng-template>
+      </commentsAccordion-item>
+    </commentsAccordion>
+    <commentsAccordion [collapsing]="true">
+      <commentsAccordion-item title="Tests">
+        <ng-template commentsAccordionContent>
+          <div class="accordion-container">
+            <p>works</p>
+            <p>works</p>
+            <p>works</p>
+          </div>
+        </ng-template>
+      </commentsAccordion-item>
+    </commentsAccordion>
+    <commentsAccordion [collapsing]="true">
+      <commentsAccordion-item title="Tests">
+        <ng-template commentsAccordionContent>
+          <div class="accordion-container">
+            <p>works</p>
+            <p>works</p>
+            <p>works</p>
+          </div>
+        </ng-template>
+      </commentsAccordion-item>
+    </commentsAccordion>
     <div class="flex-column" *ngFor="let comment of comments; let i = index">
       <div class="comment">
         <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
@@ -19,7 +57,11 @@
 
         <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
           <p class="comment-text">{{ comment.comment }}</p>
-          <p (click)="toggleShowComment(i)" class="warning-text comment-text" data-cy="hideComment">
+          <p
+            (click)="toggleShowComment(i)"
+            class="warning-text comment-text"
+            data-cy="hideComment"
+          >
             Hide Comment
           </p>
         </ng-container>
@@ -28,7 +70,11 @@
           <div class="blur-text">
             <p>{{ comment.comment }}</p>
           </div>
-          <p (click)="toggleShowComment(i)" class="warning-text comment-text" data-cy="toxicComment">
+          <p
+            (click)="toggleShowComment(i)"
+            class="warning-text comment-text"
+            data-cy="toxicComment"
+          >
             Click to view toxic comment
           </p>
         </ng-container>
