@@ -58,7 +58,7 @@ def get_google_reviews(maps_url, last_refreshed_timestamp):
 
 def handle_request(params):
     google_maps_url = params["maps_url"]
-    last_refresh_timestamp = float(params["last_refresh_timestamp"])
+    last_refresh_timestamp = int(params["last_refresh_timestamp"])
 
     reviews, latest_retrieval = get_google_reviews(
         google_maps_url, last_refresh_timestamp

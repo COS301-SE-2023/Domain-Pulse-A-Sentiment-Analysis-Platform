@@ -267,4 +267,23 @@ export class AppApi {
     });
   }
 
+  setIsActive(sourceID: string, isActive: boolean): Observable<any> {
+    const setIsActiveUrl = this.domainBaseUrl + 'domains/toggle_is_active';
+    console.log("log here: " + isActive)
+    const body = {
+      source_id: sourceID,
+      is_active: isActive,
+    };
+    return this.http.post(setIsActiveUrl, body, { withCredentials: true });
+  }
+
+  generateReport(domain_id: string): Observable<any> {
+    const generateReportUrl = this.profilesBaseUrl + 'report/generate_report';
+    console.log("log here: " + domain_id) 
+    const body = {
+      domain_id: domain_id,
+    };
+    return this.http.post(generateReportUrl, body, { withCredentials: true });
+  }
+
 }

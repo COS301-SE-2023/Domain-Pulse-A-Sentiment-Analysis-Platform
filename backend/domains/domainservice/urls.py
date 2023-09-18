@@ -13,5 +13,7 @@ urlpatterns = [
     path("update_last_refresh", views.update_last_refresh),
     path("edit_domain", views.edit_domain),
     path("edit_source", views.edit_source),
+    path("delete_domains_internal", views.delete_domains_internal),
     path("verify_live_source", views.verify_live_source),
+    path("toggle_is_active", views.toggle_active),
 ]

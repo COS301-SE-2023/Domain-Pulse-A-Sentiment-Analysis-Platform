@@ -1,0 +1,179 @@
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+  <script type="text/javascript">
+    "use strict";
+    (function (setLineDash) {
+      CanvasRenderingContext2D.prototype.setLineDash = function () {
+        if (!arguments[0].length) {
+          arguments[0] = [1, 0];
+        }
+        // Now, call the original method
+        return setLineDash.apply(this, arguments);
+      };
+    })(CanvasRenderingContext2D.prototype.setLineDash);
+    Function.prototype.bind =
+      Function.prototype.bind ||
+      function (thisp) {
+        var fn = this;
+        return function () {
+          return fn.apply(thisp, arguments);
+        };
+      };
+
+    function drawGraphs() {
+
+      { domain_graphs_js_string }
+
+      { source_graph_js_string }
+    }
+    window.onload = function () {
+      drawGraphs();
+    };
+  </script>
+</head>
+
+<body>
+  <div class="page flex-column center outline" style="background-color: white">
+    <div class="header">
+      <img class="header-image" src="{assets_path}/images/header_art.svg" style="width: 100%" alt="Placeholder" />
+    </div>
+    <div class="content center flex-column" style="height: 72%">
+      <div class="flex-column center" style="width: 70%">
+        <img src="{assets_path}/images/dp-logo-blue.png" style="width: 350px; margin: 0; padding: 0" />
+        <p style="
+              color: #037fff;
+              font-family: 'Open Sans';
+              font-weight: 900;
+              font-size: 65px;
+              text-align: center;
+              font-style: bold;
+              margin: 0;
+              padding: 0;
+            ">
+          Sentiment Analysis Report
+        </p>
+      </div>
+
+      <div style="
+            width: 100%;
+            height: 20%;
+            padding-top: 13%;
+            padding-bottom: 13%;
+          " class="flex-row center">
+        <div class="circle-wrapper-domain flex-row center">
+          <img src={domain_icon} />
+        </div>
+      </div>
+
+      <div class="flex-row center" style="
+            background-color: #037fff;
+            border-radius: 100px;
+            width: 55%;
+            height: fit-content;
+          ">
+        <p class="heading">{domain_name}</p>
+      </div>
+    </div>
+    <!-- <img src="{assets_path}/images/google-logo.png" alt="Placeholder" /> -->
+
+    <div class="footer">
+      <img class="footer-image" src="{assets_path}/images/footer_art.svg" style="width: 100%" alt="Placeholder" />
+    </div>
+  </div>
+
+  <div class="page flex-column center outline">
+    <div class="dp-icon">
+      <img class="outline watermark" src="{assets_path}/images/LogoIconBlue.png" />
+    </div>
+    <div class="content flex-column center" style="align-items: flex-start">
+      <div class="flex-row">
+        <img src="{assets_path}/images/allSources.png" style="width: 45px; height: 45px; padding-right: 1rem" />
+        <p class="page-heading">What is in your domain?</p>
+      </div>
+      {domain_html_string}
+    </div>
+
+    <div class="footer">
+      <p class="pageNum">1</p>
+      <img class="footer-image" src="{assets_path}/images/footer_art.svg" style="width: 100%" alt="Placeholder" />
+    </div>
+  </div>
+
+  <div class="page flex-column center outline">
+    <div class="dp-icon">
+      <img class="outline watermark" src="{assets_path}/images/LogoIconBlue.png" />
+    </div>
+    <div class="content flex-column" style="align-items: flex-start">
+      <div class="flex-row">
+        <img src="{assets_path}/images/allSources.png" style="width: 45px; height: 45px; padding-right: 1rem" />
+        <p class="page-heading">What is in your domain?</p>
+      </div>
+      <div class="flex-column" style="width: 100%; align-items: flex-start">
+        <div class="flex-row up-card" style="width: 100%">
+          <div class="flex-row card center left-card" style="
+                flex-basis: 50%;
+                height: 250px;
+                padding: 1rem;
+                box-sizing: border-box;
+              ">
+            <canvas id="canvas1"></canvas>
+          </div>
+          <div class="flex-row card center" style="
+                flex-basis: 50%;
+                height: 250px;
+                padding: 1rem;
+                box-sizing: border-box;
+              ">
+            <canvas id="canvas2"></canvas>
+          </div>
+        </div>
+        <div class="flex-row up-card" style="width: 100%">
+          <div class="flex-row card center" style="
+                flex-basis: 100%;
+                height: 280px;
+                padding: 1rem;
+                box-sizing: border-box;
+              ">
+            <canvas id="canvas3"></canvas>
+          </div>
+        </div>
+        <div class="flex-row up-card" style="width: 100%">
+          <div class="flex-row card center" style="
+                flex-basis: 100%;
+                height: 280px;
+                padding: 1rem;
+                box-sizing: border-box;
+              ">
+            <canvas id="canvas4"></canvas>
+          </div>
+        </div>
+        <div class="flex-row up-card" style="width: 100%">
+          <div class="flex-row card center" style="
+                flex-basis: 100%;
+                height: 280px;
+                padding: 1rem;
+                box-sizing: border-box;
+              ">
+            <canvas id="canvas5"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p class="pageNum">2</p>
+      <img class="footer-image" src="{assets_path}/images/footer_art.svg" style="width: 100%" alt="Placeholder" />
+    </div>
+  </div>
+
+  {source_html}
+
+</body>
+
+</html>

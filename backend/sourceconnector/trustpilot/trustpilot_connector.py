@@ -57,7 +57,7 @@ def get_trustpilot_reviews(query_url: str, last_refreshed_timestamp):
 
 def handle_request(params):
     query_url = params["query_url"]
-    last_refresh_timestamp = float(params["last_refresh_timestamp"])
+    last_refresh_timestamp = int(params["last_refresh_timestamp"])
 
     reviews, latest_retrieval = get_trustpilot_reviews(
         query_url, last_refresh_timestamp

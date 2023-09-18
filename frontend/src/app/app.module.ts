@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { UiSwitchModule } from 'ngx-ui-switch';
+
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -25,6 +27,8 @@ import { ApiInterceptor } from './api.interceptor';
 import { HelpPageComponent } from './help-page/help-page.component';
 import { TooltipDirective } from './tooltip.directive';
 import { AccordionModule } from './accordion-card/accordion.module';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
 
 @NgModule({
   declarations: [
@@ -48,12 +52,14 @@ import { AccordionModule } from './accordion-card/accordion.module';
     AppRoutingModule,
     AccordionModule,
     HttpClientModule,
+    NgApexchartsModule,
     NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({
       collapsed: false,
       // disabled: ENVIRONMENT == 'production',
     }),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    UiSwitchModule,
   ],
   providers: [
     AppApi,

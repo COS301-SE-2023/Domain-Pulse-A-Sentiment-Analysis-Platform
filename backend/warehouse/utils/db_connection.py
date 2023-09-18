@@ -13,7 +13,7 @@ HOST = os.getenv("MONGO_HOST")
 DB_NAME = "domain_pulse_warehouse"
 PORT = os.getenv("MONGO_PORT")
 USER = os.getenv("MONGO_USER")
-PASSWORD = os.getenv("MONGO_PASSWORD")
+PASSWORD = os.getenv("MONGO_PASSWORD") 
 
 #maps database name to db handle
 db_connections = {}

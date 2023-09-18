@@ -29,7 +29,14 @@ sshtunnel = "*"
 outscraper = "*"
 python-socketio = "*"
 eventlet = "*"
+matplotlib = "*"
+numpy = "*"
+pdfkit = "*"
+jinja2 = "*"
+azure-storage-blob = "*"
+shortuuid = "*"
 bleach = "*"
+pytz = "*"
 
 [dev-packages]
 

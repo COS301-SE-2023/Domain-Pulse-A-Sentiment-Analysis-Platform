@@ -51,7 +51,7 @@ def get_comments_by_video_id(video_id: str, last_refresh_time):
 
 def handle_request(params):
     video_id = params["video_id"]
-    last_refresh_timestamp = float(params["last_refresh_timestamp"])
+    last_refresh_timestamp = int(params["last_refresh_timestamp"])
 
     comments, latest_retrieval = get_comments_by_video_id(
         video_id, last_refresh_timestamp

@@ -1,0 +1,272 @@
+<div class="flex-row" style="box-sizing: border-box">
+        <div class="flex-column left-card" style="
+              align-items: flex-start;
+              flex-basis: 40%;
+              box-sizing: border-box;
+              overflow: hidden;
+            ">
+          <div class="flex-column center card up-card" style="
+                width: 100%;
+                height: 30%;
+                box-sizing: border-box;
+                padding: 1rem;
+              ">
+            <div class="circle-wrapper-domain flex-row center up-item"
+              style="height: 150px; width: 150px; box-shadow: none">
+              <img src={domain_icon} />
+            </div>
+            <p style="
+                  text-align: center;
+                  max-height: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                ">
+              {domain_description}
+            </p>
+          </div>
+          <div class="flex-column" style="
+                height: 75%;
+                width: 100%;
+                align-items: flex-start;
+                padding: 1rem;
+                box-sizing: border-box;
+                overflow-y: hidden;
+                overflow-x: hidden;
+                flex-wrap: wrap;
+              ">
+            {domain_sample_data}
+          </div>
+        </div>
+        <div class="flex-column" style="height: 100%; flex-basis: 60%; align-items: flex-start">
+          <div class="center card up-item" style="width: 100%; max-height: 620px; overflow: hidden">
+            <div class="flex-container" style="width: 100%">
+              {domain_sources}
+            </div>
+          </div>
+
+          <div class="flex-column" style="
+                display: flex;
+                flex-grow: 1;
+                align-items: flex-start;
+                width: 100%;
+              ">
+            <div class="flex-row stats-grid" style="display: flex; width: 100%; align-items: flex-start">
+              <div class="flex-column" style="
+                    flex: 1;
+                    align-items: flex-start;
+                    padding-right: 0.5rem;
+                  ">
+                <div class="statistic-item flex-row card up-item" style="
+                      width: 100%;
+                      height: 80px;
+                      align-items: flex-start;
+                      padding: 1rem;
+                      box-sizing: border-box;
+                      border-radius: 25px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    ">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/graph.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Overall Score</p>
+                    <p class="stat-text">{domain_overall_score}%</p>
+                  </div>
+                </div>
+                <div class="statistic-item flex-row card up-item" style="
+                      width: 100%;
+                      height: 80px;
+                      align-items: flex-start;
+                      padding: 1rem;
+                      box-sizing: border-box;
+                      border-radius: 25px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    ">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/analytics.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Number Analysed</p>
+                    <p class="stat-text">{domain_num_analysed} sentiments</p>
+                  </div>
+                </div>
+                <div class="statistic-item flex-row card up-item" style="
+                      width: 100%;
+                      height: 80px;
+                      align-items: flex-start;
+                      padding: 1rem;
+                      box-sizing: border-box;
+                      border-radius: 25px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    ">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/comments.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Review Rate</p>
+                    <p class="stat-text">{domain_reviews_per_day} reviews/day</p>
+                  </div>
+                </div>
+                <div class="statistic-item flex-row card up-item" style="
+                      width: 100%;
+                      height: 80px;
+                      align-items: flex-start;
+                      padding: 1rem;
+                      box-sizing: border-box;
+                      border-radius: 25px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    ">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/toxic.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Toxicity</p>
+                    <p class="stat-text">{domain_toxicity}%</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-column" style="flex: 1; align-items: flex-start; padding-left: 0.5rem">
+                <div class="statistic-item flex-column card up-item" style="
+                      width: 100%;
+                      height: auto;
+                      align-items: flex-start;
+                      border-radius: 25px;
+                    ">
+                  <div class="statistic-item flex-row up-item" style="
+                        width: 100%;
+                        height: 60px;
+                        align-items: flex-start;
+                        padding-bottom: 1.8rem;
+                        padding-top: 1.8rem;
+                        padding-left: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                        padding-top: 3rem;
+                      ">
+                    <div class="flex-row center icon-div" style="height: 100%">
+                      <img src="{assets_path}/images/positive.png" width="40px;" />
+                    </div>
+                    <div class="flex-column item-stats">
+                      <p class="card-heading">Positive</p>
+                      <p class="stat-text">{domain_positive}%</p>
+                    </div>
+                  </div>
+                  <div class="statistic-item flex-row up-item" style="
+                        width: 100%;
+                        height: 60px;
+                        align-items: flex-start;
+                        padding-bottom: 1.8rem;
+                        padding-top: 1.8rem;
+                        padding-left: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                      ">
+                    <div class="flex-row center icon-div" style="height: 100%">
+                      <img src="{assets_path}/images/negative.png" width="40px;" />
+                    </div>
+                    <div class="flex-column item-stats">
+                      <p class="card-heading">Negative</p>
+                      <p class="stat-text">{domain_negative}%</p>
+                    </div>
+                  </div>
+                  <div class="statistic-item flex-row" style="
+                        width: 100%;
+                        height: 60px;
+                        align-items: flex-start;
+                        padding-bottom: 1.8rem;
+                        padding-top: 1.8rem;
+                        padding-left: 1rem;
+                        box-sizing: border-box;
+                        border-radius: 25px;
+                        padding-bottom: 3rem;
+                      ">
+                    <div class="flex-row center icon-div" style="height: 100%">
+                      <img src="{assets_path}/images/neutral-score.png" width="40px;" />
+                    </div>
+                    <div class="flex-column item-stats">
+                      <p class="card-heading">Neutral</p>
+                      <p class="stat-text">{domain_neutral}%</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex-row card up-item" style="
+                      width: 100%;
+                      height: 108px;
+                      align-items: flex-start;
+                      padding: 1rem;
+                      box-sizing: border-box;
+                      border-radius: 25px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                    ">
+                  <div class="flex-column center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/calendar.png" width="40px;" />
+                  </div>
+                  <div style="align-items: flex-start" class="flex-column item-stats">
+                    <p class="card-heading">Timeline</p>
+                    <p class="stat-text">{domain_start_date}-</p>
+                    <p class="stat-text">{domain_end_date}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card center" style="width: 100%">
+              <div class="flex-container" style="width: 100%">
+                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/joy.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats" style="align-items: flex-start">
+                    <p class="card-heading">Joy</p>
+                    <p class="stat-text">{domain_joy}%</p>
+                  </div>
+                </div>
+                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/surprise.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Surprise</p>
+                    <p class="stat-text">{domain_surprise}%</p>
+                  </div>
+                </div>
+                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/fear.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Fear</p>
+                    <p class="stat-text">{domain_fear}%</p>
+                  </div>
+                </div>
+                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/anger.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Anger</p>
+                    <p class="stat-text">{domain_anger}%</p>
+                  </div>
+                </div>
+                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/disgust.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Disgust</p>
+                    <p class="stat-text">{domain_disgust}%</p>
+                  </div>
+                </div>
+                <div class="flex-item statistic-item flex-row" style="height: 60px; align-items: flex-start">
+                  <div class="flex-row center icon-div" style="height: 100%">
+                    <img src="{assets_path}/images/sadness.png" width="40px;" />
+                  </div>
+                  <div class="flex-column item-stats">
+                    <p class="card-heading">Sadness</p>
+                    <p class="stat-text">{domain_sadness}%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

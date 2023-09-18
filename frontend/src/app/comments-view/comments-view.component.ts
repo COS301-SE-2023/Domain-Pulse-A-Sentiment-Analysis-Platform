@@ -16,11 +16,15 @@ export class CommentsViewComponent {
   showComment: boolean[] = [];
   constructor() {
     this.sampleData.subscribe((newSampleData) => {
-      if (newSampleData) {
-        this.comments = this.transformComments(newSampleData);
-      }
+      this.reactToNewComents(newSampleData);
     });
     this.initializeShowCommentArray();
+  }
+
+  reactToNewComents(newSampleData: any) {
+    if (newSampleData) {
+      this.comments = this.transformComments(newSampleData);
+    }
   }
 
   initializeShowCommentArray() {

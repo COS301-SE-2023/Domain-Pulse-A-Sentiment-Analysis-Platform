@@ -93,6 +93,8 @@ services:
 
   webserver:
     build: .
+    environment:
+      - NGINX_CONF=domainpulse.app.conf
     restart: always
     volumes:
       - uwsgi_data:/tmp/uwsgi/
