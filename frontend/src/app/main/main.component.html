@@ -1,70 +1,91 @@
 <div class="flex-row app-container">
-  <dp-sidebar [expanded]="!sidebarCollapsed" [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-    (sidebarClicked)="toggleSidebar()" data-cy="Togglesidebar2">
+  <dp-sidebar
+    [expanded]="!sidebarCollapsed"
+    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (sidebarClicked)="toggleSidebar()"
+    data-cy="Togglesidebar2"
+  >
   </dp-sidebar>
 
   <ng-container *ngIf="!userHasNoDomains; else hasNoDomains">
-
-    <ng-container *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif">
+    <ng-container
+      *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif"
+    >
       <!-- Display the content when selectedDomain$ emits a value (selectedDomain is defined) -->
       <div class="flex-column" style="width: 95%; min-width: 80%; gap: 1.3rem">
         <div class="header flex-row centered" style="gap: 1.2rem">
           <div class="circle-wrapper-domain flex-row center">
-            <img [src]="selectedDomain.imageUrl" alt="Domain Logo" height="80%" />
+            <img
+              [src]="selectedDomain.imageUrl"
+              alt="Domain Logo"
+              height="80%"
+            />
           </div>
           <div class="flex-column">
             <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
             <p class="domainDesc">{{ selectedDomain.description }}</p>
           </div>
-        
-          <div class="flex-row center" style="gap: 1.5rem; margin-left: auto; width: 10%; height: 100%;">
-            <div class="flex-column center clickable-item" style="gap:0.1rem;"
-              (click)="toggleReportModal(); generateReport();">
+
+          <div
+            class="flex-row center"
+            style="gap: 1.5rem; margin-left: auto; width: 10%; height: 100%"
+          >
+            <div
+              class="flex-column center clickable-item"
+              style="gap: 0.1rem"
+              (click)="toggleReportModal(); generateReport()"
+            >
               <img src="../../assets/icons/report.svg" class="top-icons" />
-              <p style="font-size: 0.8rem;">Report</p>
+              <p style="font-size: 0.8rem">Report</p>
             </div>
-            <div class="flex-column center clickable-item" style="gap:0.1rem;">
+
+            <a
+              href="/help"
+              class="flex-column center clickable-item"
+              style="gap: 0.1rem; text-decoration: none; color: inherit;"
+              target="_blank"
+            >
               <img src="../../assets/icons/help.svg" class="top-icons" />
-              <p style="font-size: 0.8rem;">Help</p>
-            </div>
+              <p style="font-size: 0.8rem">Help</p>
+            </a>
           </div>
         </div>
-      
 
-      <source-selector class="flex-row align-center"></source-selector>
+        <source-selector class="flex-row align-center"></source-selector>
 
-      <ng-container *ngIf="!userHasNoSources; else hasNoSources">
+        <ng-container *ngIf="!userHasNoSources; else hasNoSources">
+          <statistic-selector></statistic-selector>
 
-        <statistic-selector></statistic-selector>
+          <div
+            class="source-manager flex-row"
+            style="gap: 1rem; height: 43%; width: 100%"
+          >
+            <graph-selector></graph-selector>
+            <comments-view></comments-view>
+          </div>
+        </ng-container>
 
-        <div class="source-manager flex-row" style="gap: 1rem; height: 43%; width: 100%;">
-          <graph-selector></graph-selector>
-          <comments-view></comments-view>
-        </div>
-
-      </ng-container>
-
-      <ng-template #hasNoSources>
-        <div class="flex-column center" style="height: 100%;">
-          <img src="../../assets/noSources.png" style="height: 20rem; width: auto; opacity: 0.5" />
-        </div>
-      </ng-template>
-
-    </div>
+        <ng-template #hasNoSources>
+          <div class="flex-column center" style="height: 100%">
+            <img
+              src="../../assets/noSources.png"
+              style="height: 20rem; width: auto; opacity: 0.5"
+            />
+          </div>
+        </ng-template>
+      </div>
     </ng-container>
   </ng-container>
 
+  <ng-template #hasNoDomains>
+    <div class="flex-column center" style="width: 100%">
+      <img src="../../assets/noDomains.png" style="width: 40%; opacity: 0.5" />
+    </div>
+  </ng-template>
 
-
-<ng-template #hasNoDomains>
-  <div class="flex-column center" style="width: 100%;">
-    <img src="../../assets/noDomains.png" style="width:40%; opacity: 0.5;" />
-  </div>
-</ng-template>
-
-<ng-template #loadingGif>
-  <div class="loading-container">
-    <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
-  </div>
-</ng-template>
+  <ng-template #loadingGif>
+    <div class="loading-container">
+      <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
+    </div>
+  </ng-template>
 </div>
