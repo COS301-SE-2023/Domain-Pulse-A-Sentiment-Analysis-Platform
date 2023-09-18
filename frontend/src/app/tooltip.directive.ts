@@ -8,6 +8,9 @@ export class TooltipDirective {
   private hoverTimeout: any;
   private isMouseInsideTooltip = false;
   private tooltipTimeout: any;
+  private currHost= window.location.host;
+
+  
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
     this.tooltip = this.renderer.createElement('div');
@@ -124,15 +127,16 @@ export class TooltipDirective {
 
   
       const icon = this.renderer.createElement('img');
-      this.renderer.setAttribute(icon, 'src', "../assets/icons/tooltip-info.png"); // Add your icon classes here
+      this.renderer.setAttribute(icon, 'src', "../assets/icons/tooltip-info.png");
       this.renderer.setStyle(icon, 'margin-right', '10px');
       this.renderer.setStyle(icon, 'width', '20px');
       this.renderer.setStyle(icon, 'height', '20px');
 
 
       const link = this.renderer.createElement('a');
-      this.renderer.setAttribute(link, 'href', 'http://localhost:4200/help' + (this.searchTerm? (`?q=${this.searchTerm}`): ""));
-      this.renderer.setAttribute(link, 'target', '_blank'); // Set your link URL here
+      console.log(this.currHost);
+      this.renderer.setAttribute(link, 'href', 'http://' + this.currHost + '/help' + (this.searchTerm? (`?q=${this.searchTerm}`): ""));
+      this.renderer.setAttribute(link, 'target', '_blank'); 
       this.renderer.setStyle(link, 'color', 'white');
       this.renderer.setStyle(link, 'font-size', '0.8rem');
 
