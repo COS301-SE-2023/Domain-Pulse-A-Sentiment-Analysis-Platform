@@ -71,7 +71,6 @@ describe('AccordionComponent', () => {
   });
 
   it('should handle ngAfterViewInit', () => {
-    // Simulate changes to the items
     const items = new QueryList<AccordionItem>();
     const item1 = new AccordionItem();
     item1.expanded = true;
@@ -85,4 +84,6 @@ describe('AccordionComponent', () => {
     expect(component.expanded.has(0)).toBeTrue();
     expect(component.expanded.has(1)).toBeFalse();
   });
+
+  
 });
