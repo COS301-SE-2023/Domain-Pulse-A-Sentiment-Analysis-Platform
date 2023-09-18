@@ -25,6 +25,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
 import { ApiInterceptor } from './api.interceptor';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { SampleDataAccordionComponent } from './sample-data-accordion/accordion.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     RegisterPageComponent,
     MainComponent,
     SourceSelectorComponent,
+    SampleDataAccordionComponent,
   ],
   imports: [
     BrowserModule,
