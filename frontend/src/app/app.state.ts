@@ -406,62 +406,6 @@ export class AppState {
     if (!selectedDomain) return;
 
     let domainID = selectedDomain.id;
-    /* this.appApi
-      .addSource(domainID, state.name, source_image_name, state.params)
-      .subscribe((res) => {
-        if (res.status === 'FAILURE') {
-          this.store.dispatch(new ToastError('Your source could not be added'));
-          return;
-        }
-
-        let domainRes = res.domain;
-        let domainsIDs = domainRes.sources.map(
-          (source: any) => source.source_id
-        );
-        let selectedDomain: DisplayDomain = {
-          id: domainRes._id,
-          name: domainRes.name,
-          description: domainRes.description,
-          imageUrl: domainRes.icon,
-          sourceIds: domainsIDs,
-          sources: AppState.formatResponseSources(domainRes.sources),
-          selected: false,
-        };
-
-        let domains = ctx.getState().domains;
-        if (!domains) return;
-
-        for (let domain of domains) {
-          if (domain.id == selectedDomain.id) {
-            domain = selectedDomain;
-            ctx.patchState({
-              domains: domains,
-            });
-            break;
-          }
-        }
-
-        this.store.dispatch(new SetDomain(selectedDomain));
-
-        let lastSource =
-          selectedDomain.sources[selectedDomain.sources.length - 1];
-        
-        this.store.dispatch(new SetSourceIsLoading(true));
-        this.store.dispatch(new SetSource(lastSource));
-        console.log("identifier3: " + state.platform)
-        if(state.platform == "livereview" || state.platform == "csv"){
-          console.log("live review here")
-          this.store.dispatch(new GetSourceDashBoardInfo());
-        }
-        else{
-          lastSource.isRefreshing = true;
-          this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
-
-        }
-
-        return of(res.domain.new_source_id);
-
-      }); */
 
     return this.appApi
     .addSource(domainID, state.name, source_image_name, state.params)
