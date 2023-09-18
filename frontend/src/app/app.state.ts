@@ -493,16 +493,6 @@ export class AppState {
           let domains = ctx.getState().domains;
           if (!domains) return of(null);
   
-          for (let i = 0; i < domains.length; i++) {
-            if (domains[i].id == selectedDomain.id) {
-              domains[i] = selectedDomain;
-              ctx.patchState({
-                domains: domains,
-              });
-              break;
-            }
-          }
-  
           this.store.dispatch(new SetDomain(selectedDomain));
   
           let lastSource =
