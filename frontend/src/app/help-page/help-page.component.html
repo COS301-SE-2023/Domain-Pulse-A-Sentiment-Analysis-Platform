@@ -7,7 +7,8 @@
         <!-- <h2><div class="dp-logo"></div>What do you need help with?</h2> -->
         <div class="flex-row center" style="margin-top: 2rem; width: 50%;">
             <div class="search-container flex-row center">
-                <input class="search-bar" type="text" placeholder="Search.." name="search" [(ngModel)]="searchTerm" (keyup)="filterAccordionByText()">
+                <input class="search-bar" type="text" placeholder="Search.." name="search" [(ngModel)]="searchTerm"
+                    (keyup)="filterAccordionByText()">
                 <img src="../../assets/icons/search.png" alt="domain pulse logo" style="height: 1rem;">
             </div>
         </div>
@@ -16,7 +17,10 @@
     <div class="scroll-div" style="flex-basis: 70%; overflow-y: scroll; width: 60%; padding-top: 1rem" id="scrollFrFr">
 
         <div class="flex-column" style="width: 40%;" style="gap: 0.7rem">
-            <accordion [collapsing]="collapsing">
+
+            <h3 class="heading" data-catID="0">Account Creation</h3>
+
+            <accordion [collapsing]="collapsing" data-catID="0">
                 <accordion-item title="How to log into the Application">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -37,7 +41,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="0">
                 <accordion-item title="How to register for an account">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -63,7 +67,9 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <h3 class="heading" data-catID="1">Domain Management</h3>
+
+            <accordion [collapsing]="collapsing" data-catID="1" >
                 <accordion-item title="How to add a Domain">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -86,7 +92,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="1">
                 <accordion-item title="How to remove a Domain">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -106,7 +112,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="1">
                 <accordion-item title="How to edit a Domain">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -126,7 +132,9 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <h3 class="heading" data-catID="2">Source Management</h3>
+
+            <accordion [collapsing]="collapsing" data-catID="2">
                 <accordion-item title="How to add a Source">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -149,7 +157,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="2">
                 <accordion-item title="How to remove a Source">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -168,7 +176,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="2">
                 <accordion-item title="How to refresh a Source">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -186,7 +194,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="2">
                 <accordion-item title="How to edit a Source">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -207,7 +215,9 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <h3 class="heading" data-catID="3">Profile Management</h3>
+
+            <accordion [collapsing]="collapsing" data-catID="3">
                 <accordion-item title="How to toggle theme">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -224,7 +234,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="3">
                 <accordion-item title="How to log out">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -240,7 +250,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="3">
                 <accordion-item title="How to delete your account">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -259,7 +269,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="3">
                 <accordion-item title="How to update profile picture">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -278,7 +288,9 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <h3 class="heading" data-catID="4">Dashboard Configuration</h3>
+
+            <accordion [collapsing]="collapsing" data-catID="4">
                 <accordion-item title="Explanation of Center console">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -307,7 +319,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="4">
                 <accordion-item title="Explanation of Graphs and charts console">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -325,7 +337,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="4">
                 <accordion-item title="Explanation of the sample data console">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -344,7 +356,9 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <h3 class="heading" data-catID="5">Source Selection</h3>
+
+            <accordion [collapsing]="collapsing" data-catID="5">
                 <accordion-item title="How to find a Youtube video URL">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -364,7 +378,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="5">
                 <accordion-item title="How to find a Google reviews URL">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -384,7 +398,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="5">
                 <accordion-item title="How to find a Trip-Advisor URL">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -392,11 +406,11 @@
                                 <h3>How to find a Trip-Advisor URL</h3>
                                 <img src="../../assets/stock-profile-pic.jpg" alt="stock"
                                     style="width: 600px; height: auto;">
-                                    <li style="margin-top: 1rem;">Navigate to a browser of your choice.</li>
-                                    <li>Navigate your way to Trip-Adviser.</li>
-                                    <li>Search for a location of your choice that you would like to use as a source.</li>
-                                    <li>Copy the URL from the search bar at the top of the page.</li>
-                                    <li>Paste the URL into the URL field of the add source modal.</li>
+                                <li style="margin-top: 1rem;">Navigate to a browser of your choice.</li>
+                                <li>Navigate your way to Trip-Adviser.</li>
+                                <li>Search for a location of your choice that you would like to use as a source.</li>
+                                <li>Copy the URL from the search bar at the top of the page.</li>
+                                <li>Paste the URL into the URL field of the add source modal.</li>
 
                             </ol>
                         </div>
@@ -404,7 +418,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="5">
                 <accordion-item title="How to find a TrustPilot URL">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -412,11 +426,12 @@
                                 <h3>How to find a TrustPilot URL</h3>
                                 <img src="../../assets/stock-profile-pic.jpg" alt="stock"
                                     style="width: 600px; height: auto;">
-                                    <li style="margin-top: 1rem;">Navigate to a browser of your choice.</li>
-                                    <li>Navigate your way to TrustPilot.</li>
-                                    <li>Search for a company or category of your choice that you would like to use as a source.</li>
-                                    <li>Copy the URL from the search bar at the top of the page.</li>
-                                    <li>Paste the URL into the URL field of the add source modal.</li>
+                                <li style="margin-top: 1rem;">Navigate to a browser of your choice.</li>
+                                <li>Navigate your way to TrustPilot.</li>
+                                <li>Search for a company or category of your choice that you would like to use as a
+                                    source.</li>
+                                <li>Copy the URL from the search bar at the top of the page.</li>
+                                <li>Paste the URL into the URL field of the add source modal.</li>
 
                             </ol>
                         </div>
@@ -424,7 +439,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="5">
                 <accordion-item title="How to add a csv as a source">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -432,13 +447,14 @@
                                 <h3>How to add a csv as a source</h3>
                                 <img src="../../assets/stock-profile-pic.jpg" alt="stock"
                                     style="width: 600px; height: auto;">
-                                    <li style="margin-top: 1rem;">The csv file has to follow the specific format in which the example file shows below:</li>
-                                    <ul>
-                                        <li><a href="../../assets/test.csv" download>Example csv file</a></li>
-                                    </ul>
-                                    <li>To add a csv file as a source , navigate to the add source modal.</li>
-                                    <li>Once the modal has appeared add your csv file to begin using it as a source.</li>
-                                    
+                                <li style="margin-top: 1rem;">The csv file has to follow the specific format in which
+                                    the example file shows below:</li>
+                                <ul>
+                                    <li><a href="../../assets/test.csv" download>Example csv file</a></li>
+                                </ul>
+                                <li>To add a csv file as a source , navigate to the add source modal.</li>
+                                <li>Once the modal has appeared add your csv file to begin using it as a source.</li>
+
 
                             </ol>
                         </div>
@@ -446,7 +462,7 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <accordion [collapsing]="collapsing" data-catID="5">
                 <accordion-item title="How do live reviews work?">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -454,11 +470,13 @@
                                 <h3>How do live reviews work?</h3>
                                 <img src="../../assets/stock-profile-pic.jpg" alt="stock"
                                     style="width: 600px; height: auto;">
-                                <p style="margin-top: 1rem; margin-bottom: 1rem;">Live reviews is a type of source that is used to generate sentiment on the fly as people input data live.</p>
+                                <p style="margin-top: 1rem; margin-bottom: 1rem;">Live reviews is a type of source that
+                                    is used to generate sentiment on the fly as people input data live.</p>
                                 <li>Create a live reviews source.</li>
                                 <li>Navigate to the information regarding the lice source.</li>
                                 <li>Share the link or QR code.</li>
-                                <li>The avaliablity of the link can be changed to the preference of the user who started the live review source.</li>
+                                <li>The avaliablity of the link can be changed to the preference of the user who started
+                                    the live review source.</li>
                                 <li>Start collecting live data!</li>
                             </ol>
                         </div>
@@ -466,7 +484,9 @@
                 </accordion-item>
             </accordion>
 
-            <accordion [collapsing]="collapsing">
+            <h3 class="heading" data-catID="6">Other</h3>
+
+            <accordion [collapsing]="collapsing" data-catID="6">
                 <accordion-item title="How to reset password">
                     <ng-template accordionContent>
                         <div class="accord-container">
@@ -474,7 +494,10 @@
                                 <h3>How do i reset my forgotton password?</h3>
                                 <img src="../../assets/stock-profile-pic.jpg" alt="stock"
                                     style="width: 600px; height: auto;">
-                                    <li>To reset your forgotten password please cantact support at <a href="mailto:domainpulse.help@gmail.com" class="clickable-item" style="color: #037fff;"><b style="color: #037fff;">domainpulse.help@gmail.com</b></a></li>
+                                <li>To reset your forgotten password please cantact support at <a
+                                        href="mailto:domainpulse.help@gmail.com" class="clickable-item"
+                                        style="color: #037fff;"><b
+                                            style="color: #037fff;">domainpulse.help@gmail.com</b></a></li>
                             </ol>
                         </div>
                     </ng-template>
