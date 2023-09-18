@@ -522,14 +522,6 @@ export class AppState {
           console.log("identifier4: " + res.domain.new_source_id)
           return of(res.domain.new_source_id);
         }
-      }),
-      catchError((error: any) => {
-        this.store.dispatch(
-          new ToastError('An error occurred while adding the source')
-        );
-        return throwError(
-          () => new Error('Error occurred while adding the source')
-        );
       })
     );
     

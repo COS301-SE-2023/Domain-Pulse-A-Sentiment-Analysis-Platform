@@ -361,6 +361,37 @@ describe('AppState', () => {
     );
   });
 
+  it('should react correctly to failed "AddNewSource" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    const mockDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [],
+    };
+
+    const mockSuccessfullResponse: any = {
+      status: 'FAILURE',
+    };
+
+    store.reset({ app: { selectedDomain: mockDomain, domains: [mockDomain] } });
+    apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
+
+    store.dispatch(
+      new AddNewSource('newSourceName', 'newSOurcePlatform', {
+        platform: 'youtube',
+        video_id: 'QblahQw',
+      })
+    );
+  });
+
   it("should correctly refresh source failed 'RefreshSourceData' event", (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
       expect(true).toBe(true);
