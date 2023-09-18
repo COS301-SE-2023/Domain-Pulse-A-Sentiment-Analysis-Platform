@@ -36,11 +36,11 @@
 \section{Introduction}
 
 \subsection{Overview}
-Introducing Domain Pulse, the ultimate sentiment analysis platform. With Domain Pulse, you can easily gauge the sentiment surrounding any domain. Whether it's a business, a person, or anything else, Domain Pulse gathers information from across the internet and analyzes what people are saying.\\
+Introducing Domain Pulse, the ultimate sentiment analysis platform. With Domain Pulse, you can easily gauge the sentiment surrounding any domain. Whether it's a business, franchise, a product, an event, or more. Domain Pulse gathers and analyzes sentiment data from various sources, ranging from social media to review platforms, with the support for providing your own data either via a live review process or a CSV.\\
 \\Domain Pulse presents the results in a visually stunning and easy-to-understand format. Our wide range of visualizations brings statistics to life, making it a breeze to grasp the online presence and sentiment for any domain. Take control of understanding public opinion like never before with Domain Pulse.
 \subsection{Objectives}
 
-The objectives of the Domain Pulse project are to develop a comprehensive web application that enables users to track and analyze data from multiple sources, perform sentiment analysis, and visualize statistics. The application aims to provide a user-centered design approach, ensuring usability, accessibility, and a clear and intuitive interface. The system will be built using a scalable and modifiable architecture, leveraging microservices to handle high traffic and enable easy modification and extension. Security will be a top priority, with encryption and access control measures in place to protect user data. The project also aims to achieve high performance through caching and database optimization techniques. Overall, the objective is to create a reliable and efficient platform that empowers users to gain valuable insights from data analysis.
+The objectives of the Domain Pulse project are to develop a comprehensive web application that enables users to track and analyze data from multiple sources, perform sentiment analysis, and visualize statistics. The application aims to provide a user-centered design approach, ensuring usability, accessibility, and a clear and intuitive interface. The system will be built using a scalable and modifiable architecture, leveraging a combination of powerful architectural patterns to achive the quality requirements set out in the Architectural Design document and statement of quality requirements.
 
 \newpage
 
@@ -58,10 +58,9 @@ The objectives of the Domain Pulse project are to develop a comprehensive web ap
 
 \section{User Characteristics}
 
-Domain Pulse caters to a diverse range of users with varying demographics, including more mature age groups, educational backgrounds, and professional roles such as business professionals, social media managers, researchers, and PR professionals.\\\\
-These users are all unified by their personal and professional interests, with a keen interest in sentiment analysis, online presence monitoring, and understanding public perception. They value data-driven decision-making and insights to support their decision-making processes. Additionally, they have a strong interest in market research, branding, reputation management, and online sentiment analysis. With their analytical and research-oriented mindsets, these users are driven to monitor and manage online presence and sentiment, aligning their professional lifestyles with Domain Pulse.\\\\
-Considering the technological proficiency of users, Domain Pulse accommodates individuals at different skill levels. Novice users, who possess basic technological skills, may require more guidance, while intermediate users have moderate experience and comfort using technology. Expert users, on the other hand, are technologically proficient and adapt quickly to new systems.\\\\
-Furthermore, Domain Pulse ensures accessibility and usability for users with varying physical abilities, including those with different visual capabilities. It also takes into account the cognitive abilities of its users, recognizing that attention spans and memory capabilities vary among individuals.\\\\
+Domain Pulse caters to a diverse range of users with varying demographics, ranging from high-school students to more mature age groups. Domain Pulse can be used by people with various educational backgrounds and professional roles. These may include business professionals, social media managers, researchers, and PR professionals - however other users may find value in using Domain Pulse by simply satisfying personal interests and exploration.\\\\
+Despite the diverse background of our users, they are all unified by their personal and professional interests, with a keen interest in sentiment analysis, online presence monitoring, and understanding public perception. They value data-driven decision-making and insights to support their decision-making processes. Additionally, they have a strong interest in market research, branding, reputation management, and online sentiment analysis. With their analytical and exploratory-oriented mindsets, these users are driven to monitor and/or manage online presence and sentiment, exploring their personal and professional interests with Domain Pulse.\\\\
+Regarding the technological proficiency of users, Domain Pulse accommodates individuals at different skill levels. Novice users, who possess basic technological skills, may require more guidance, while intermediate users have moderate experience and comfort using technology. Expert users, on the other hand, are technologically proficient and adapt quickly to new systems.\\\\
 In terms of prior knowledge and experience, users may have different levels of expertise in sentiment analysis and online presence monitoring, as well as varying degrees of familiarity with similar tools or platforms.
 
 \newpage
@@ -235,19 +234,19 @@ In terms of prior knowledge and experience, users may have different levels of e
   \end{tabular}
 \end{table}
 
-\begin{table}[htbp]
-  \caption{User Story: Forgot Password}
-  \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
-    \hline
-    \textbf{User Story}          & As a user, I want to update my password, so that I can change it to one I shall remember and access my account. \\
-    \hline
-    \textbf{Acceptance Criteria} &
-    Given that I am on the log-in screen,                                                                                                          \\
-                                 & When I click the 'Forgot Password' button,                                                                      \\
-                                 & Then I am prompted to verify by email if I want to update my password and enter my new password.                \\
-    \hline
-  \end{tabular}
-\end{table}
+% \begin{table}[htbp]
+%   \caption{User Story: Forgot Password}
+%   \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+%     \hline
+%     \textbf{User Story}          & As a user, I want to update my password, so that I can change it to one I shall remember and access my account. \\
+%     \hline
+%     \textbf{Acceptance Criteria} &
+%     Given that I am on the log-in screen,                                                                                                          \\
+%                                  & When I click the 'Forgot Password' button,                                                                      \\
+%                                  & Then I am prompted to verify by email if I want to update my password and enter my new password.                \\
+%     \hline
+%   \end{tabular}
+% \end{table}
 
 \begin{table}[htbp]
   \caption{User Story: Select a source}
@@ -305,7 +304,7 @@ In terms of prior knowledge and experience, users may have different levels of e
   \end{tabular}
 \end{table}
 \newpage
-\subsection{Later Iterations}
+% \subsection{Later Iterations}
 \begin{table}[htbp]
   \caption{User Story: View Time Series data}
   \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
@@ -313,9 +312,24 @@ In terms of prior knowledge and experience, users may have different levels of e
     \textbf{User Story}          & As a user/business manager, I want to view the time series data of a domain's sentiment from customers, so that I can understand when customers most enjoyed or disliked my product. \\
     \hline
     \textbf{Acceptance Criteria} &
-    Given that I have selected the domain I wish to see time series data on,                                                                                                                                            \\
-                                 & When I click the 'Time Series' button,                                                                                                                                               \\
-                                 & Then the page displays a graph of customer sentiment of the selected domain over a period of time.                                                                                   \\
+    Given that I have selected the domain or source I wish to see time series data on,                                                                                                                                            \\
+                                 & When I click the navigate the graph pane,                                                                                                                                               \\
+                                 & Then the page displays a graph of customer sentiment of the selected domain or source over a period of time.                                                                                   \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+\begin{table}[htbp]
+  \caption{User Story: Repoort generatatin}
+  \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+    \hline
+    \textbf{User Story}          & As a user/PR manager, I want to generate a sharable PDF report that neatly summarizes th results of the sentiment analysis, so that I can present the results in a meeting or to an executive more formally. \\
+    \hline
+    \textbf{Acceptance Criteria} &
+    Given that I have selected the domain I wish to generate a report for,                                                                                                                                            \\
+                                 & When click the "Generate report" button,                                                                                                                                               \\
+                                 & Then a QR code is displayed as well as a URL to view the PDF report.                                                                                   \\
     \hline
   \end{tabular}
 \end{table}
