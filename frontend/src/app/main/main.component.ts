@@ -52,12 +52,24 @@ export class MainComponent implements OnInit {
   @Select(AppState.pdfUrl) pdfUrl$!: Observable<string>;
 
   selectedDomain!: DisplayDomain | null;
+  @Select(AppState.userHasNoDomains) userHasNoDomains$!: Observable<boolean>;
+  @Select(AppState.userHasNoSources) userHasNoSources$!: Observable<boolean>;
+  userHasNoDomains = false;
+  userHasNoSources = false;
 
   sidebarCollapsed = true;
   showReportModal = false;
   pdfUrl!: string;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store) {
+    this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
+      this.userHasNoDomains = userHasNoDomains;
+    });
+    this.userHasNoSources$.subscribe((userHasNoSources: boolean) => {
+      this.userHasNoSources = userHasNoSources;
+    });
+  }
+  
   ngOnInit(): void {
     this.selectedDomain$.subscribe((domain) => {
       this.processSelectedDomain(domain!);
