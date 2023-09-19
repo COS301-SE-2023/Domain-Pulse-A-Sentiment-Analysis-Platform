@@ -32,6 +32,8 @@ export class SourceSelectorComponent implements OnInit {
 
   isOpen = false;
 
+  currHost = window.location.host;
+
   constructor(private store: Store) {}
 
   ngOnInit(): void {
@@ -277,12 +279,11 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   getLiveReviewLink(): string {
-    const currHost = window.location.host;
-    if (currHost == 'localhost:4200') {
+    if (this.currHost == 'localhost:4200') {
       // the below should not be hardcoded
       return `http://localhost:8004/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
     } else {
-      return `https://${currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
+      return `https://${this.currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
     }
   }
 }
