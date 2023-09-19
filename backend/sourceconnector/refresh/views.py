@@ -37,7 +37,7 @@ def refresh_source(request: HttpRequest):
 
         # Preprocessing here
         # for index, data in enumerate(fetched_data["newdata"]):
-        #     fetched_data["newdata"][index] = # applying some processing to data
+        #     fetched_data["newdata"][index]["text"] = # applying some processing to data["text"]
 
         return fetched_data
 
