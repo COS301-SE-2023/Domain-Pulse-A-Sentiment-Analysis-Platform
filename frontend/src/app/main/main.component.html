@@ -33,7 +33,7 @@
             <div
               class="flex-column center clickable-item"
               style="gap: 0.1rem"
-              (click)="toggleReportModal(); generateReport()"
+              (click)="toggleReportModal();"
             >
               <img src="../../assets/icons/report.svg" class="top-icons" />
               <p style="font-size: 0.8rem">Report</p>
@@ -115,7 +115,7 @@
               class="copy-icon clickable-item" (click)="copyToClipboard()" />
           </div>
           
-            <img
+            <img *ngIf="pdfUrl != null"
               src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{pdfUrl}}"
               alt="Report QR Code" style="width: 70%;" />
         </ng-template>

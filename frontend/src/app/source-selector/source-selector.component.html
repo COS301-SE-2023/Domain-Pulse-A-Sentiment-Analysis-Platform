@@ -330,10 +330,10 @@
               Youtube Video Link
             </a>
           </div>
-          <div class="flex-column left" style="gap:1rem;">
+          <div *ngIf="selectedSource != null" class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
             <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.youtube.com/watch?v={{ selectedSource?.params }}"
+              src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.youtube.com/watch?v={{ selectedSource?.params }}"
               alt="Source Image" style="width: 80%;" />
           </div>
         </ng-container>
@@ -351,9 +351,9 @@
               Link to Source
             </a>
           </div>
-          <div class="flex-column left" style="gap:1rem;">
+          <div *ngIf="selectedSource != null" class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ selectedSource?.params }}"
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ selectedSource?.params }}"
               alt="Source Image" style="width: 80%;" />
           </div>
         </ng-container>

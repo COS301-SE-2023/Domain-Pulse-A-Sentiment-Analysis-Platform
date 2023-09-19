@@ -93,6 +93,7 @@ export class MainComponent implements OnInit {
   }
 
   processpdfUrl(res: string) {
+    if(!res) return;
     const pdfIndex: number = res.lastIndexOf('.pdf');
 
     if (pdfIndex !== -1) {
@@ -132,6 +133,7 @@ export class MainComponent implements OnInit {
       return;
     }
     if (!this.showReportModal) {
+      this.generateReport();
       this.showReportModal = true;
     } else {
       this.showReportModal = false;
