@@ -137,6 +137,14 @@
                     alt="Trustpilot" />
                   <p class="source-type-title">Trustpilot</p>
                 </div> -->
+                
+                <div class="platform-logo clickable-item" (click)="selectPlatform('csv')"
+                  data-cy="selectCSV">
+                  <img src="../assets/csv-logo.png" [ngClass]="{
+                      selected: newSourcePlatform === 'csv'
+                    }" alt="CSV" />
+                  <p class="source-type-title">CSV</p>
+                </div>
               </div>
             </div>
           </div>
@@ -203,6 +211,11 @@
           <div class="flex-column" style="width: 100%; opacity: 0;" *ngIf="newSourcePlatform === 'livereview'">
             <p class="step-heading">LiveReview Url</p>
             <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          </div>
+
+          <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'csv'">
+            <p class="step-heading">CSV Upload:</p>
+            <input type="file" class="file-block" (change)="uploadFile($event)">
           </div>
 
           <div class="flex-column center" style="width: 100%" *ngIf="newSourcePlatform === ''">

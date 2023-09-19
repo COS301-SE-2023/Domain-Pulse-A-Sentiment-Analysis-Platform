@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -24,12 +25,12 @@ export class SourceSelectorComponent implements OnInit {
   newSourceName = '';
   newSourcePlatform = '';
   newSourceUrl = '';
+  newCSVFile: any = '';
 
   editSourceName = '';
   editSourceUrl = '';
 
   isOpen = false;
-
 
   constructor(private store: Store) {}
 
@@ -47,6 +48,12 @@ export class SourceSelectorComponent implements OnInit {
     
   }
 
+  uploadFile(event: any) {
+    this.newCSVFile = event.target.files[0];
+    console.log('this.newCSVFile: ')
+    console.log(this.newCSVFile)
+  }
+
   copyToClipboard() {
     const liveReviewLink = document.getElementById('liveReviewLink');
     if (liveReviewLink) {
@@ -54,8 +61,6 @@ export class SourceSelectorComponent implements OnInit {
       navigator.clipboard.writeText(textToCopy);
     }
   }
-
-  
 
   selectSource(source: DisplaySource) {
     this.store.dispatch(new SetAllSourcesSelected(false));
@@ -77,22 +82,31 @@ export class SourceSelectorComponent implements OnInit {
     console.log('platform: ' + this.newSourcePlatform);
     console.log('name: ' + this.newSourceName);
 
-    if(this.newSourcePlatform != 'livereview' && this.newSourceUrl ==''){
+    if ((this.newSourcePlatform != 'livereview' && this.newSourcePlatform != 'csv') && this.newSourceUrl == '') {
       this.store.dispatch(new ToastError('Please add a URL'));
       return;
     }
+    
 
     if (!params || !this.newSourcePlatform || !this.newSourceName) {
       this.store.dispatch(new ToastError('Please fill in all fields'));
       return;
     }
 
-    
-
+    if(this.newSourcePlatform == 'csv' && this.newCSVFile == ''){
+      this.store.dispatch(new ToastError('Please upload a CSV file'));
+      return;
+    }
 
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
-    );
+    ).subscribe(() => {
+      if(this.newSourcePlatform == 'csv'){
+        this.store.dispatch(new UplaodCVSFile(this.newCSVFile));
+        this.newCSVFile = '';
+      }
+    });
+    
     this.newSourceName = '';
     this.newSourceUrl = '';
     this.showAddSourcesModal = false;
@@ -105,6 +119,10 @@ export class SourceSelectorComponent implements OnInit {
  */
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
+      case 'csv':
+        return {
+          source_type: 'csv',
+        };
       case 'trustpilot':
         const tpurl = this.newSourceUrl;
         if (!tpurl.includes('trustpilot')) {
