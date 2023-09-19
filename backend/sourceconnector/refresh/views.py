@@ -33,6 +33,12 @@ def refresh_source(request: HttpRequest):
         source_type = str(raw_data["source"])
         params = dict(raw_data["params"])
 
-        return decide_function(source_type, params)
+        fetched_data = decide_function(source_type, params)
+
+        # Preprocessing here
+        # for index, data in enumerate(fetched_data["newdata"]):
+        #     fetched_data["newdata"][index] = # applying some processing to data
+
+        return fetched_data
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
