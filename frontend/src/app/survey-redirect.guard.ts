@@ -27,7 +27,7 @@ export class SurveyRedirectGuard {
       // the below should not be hardcoded
       window.location.href = `http://localhost:8004/ingest/post-review/${sourceId}/${sourceName}`;
     } else {
-      window.location.href = `https://${currHost}/ingest/post-review/${sourceId}/${sourceName}`;
+      window.location.href = `${window.location.protocol}://${currHost}/ingest/post-review/${sourceId}/${sourceName}`;
     }
     // Return false to prevent the route from being activated as the redirection will handle it
     return false;
