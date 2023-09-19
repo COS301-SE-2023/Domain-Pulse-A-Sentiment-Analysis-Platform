@@ -54,7 +54,7 @@ jobs:
       # the dp-node host is defined in the config file that was echo'ed previously
       - name: connect and pull
         run: |
-          ssh dp-node-01 << EOF
+          ssh -v dp-node-01 << EOF
             cd /home/rocky/domain-pulse
             git checkout dev
             git pull
