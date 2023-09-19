@@ -67,6 +67,18 @@ describe('SidebarComponent', () => {
   // Integration Test
   
   it('should fire a "AddDomain" action', (done: DoneFn) => {
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+    component.domains = [dummyDisplayDomain];
+    
     component.newDomainName = 'New Domain Name';
     component.newDomainImageName = 'New Domain Image Name';
     component.newDomainDescription = 'New Domain Description';
@@ -119,6 +131,18 @@ describe('SidebarComponent', () => {
   });
 
   it('should Toggle The domain flag', () => {
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+    component.domains = [dummyDisplayDomain];
+
     component.showAddDomainModal = false;
     component.toggleDomainModal();
     expect(component.showAddDomainModal).toBe(true);
@@ -126,6 +150,30 @@ describe('SidebarComponent', () => {
     component.showAddDomainModal = true;
     component.toggleDomainModal();
     expect(component.showAddDomainModal).toBe(false);
+  });
+
+  it('should not toggle The domain flag', () => {
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+    component.domains = [dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain,];
+
+    component.showAddDomainModal = false;
+    component.toggleDomainModal();
+    
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToastError('You have reached the maximum number of domains'));
+
+
   });
 
   it('should toggle the Edit Domain Modal flag', () => {
