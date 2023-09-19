@@ -110,6 +110,8 @@ interface AppStateModel {
   allSourcesSelected: boolean;
   pdfUrl?: string;
   pdfLoading: boolean;
+  userHasNoDomains: boolean;
+  userHasNoSources: boolean;
 }
 
 @State<AppStateModel>({
@@ -121,7 +123,8 @@ interface AppStateModel {
     allSourcesSelected: true,
     pdfLoading: false,
     pdfUrl: '',
-
+    userHasNoDomains: false,
+    userHasNoSources: false,
   },
 })
 @Injectable()
@@ -230,6 +233,14 @@ export class AppState {
     return state.pdfLoading;
   }
   
+  static userHasNoDomains(state: AppStateModel) {
+    return state.userHasNoDomains;
+  }
+
+  @Selector()
+  static userHasNoSources(state: AppStateModel) {
+    return state.userHasNoSources;
+  }
 
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
@@ -269,6 +280,10 @@ export class AppState {
       }
 
       let domainIDs: string[] = res.domainIDs;
+
+      ctx.patchState({
+        userHasNoDomains: domainIDs.length === 0,
+      });
 
       let firstDomain = true;
 
@@ -336,6 +351,10 @@ export class AppState {
       domain.selected = false;
     }
     state.domain.selected = true;
+  
+    ctx.patchState({
+      userHasNoSources: state.domain.sources.length === 0,
+    });
 
     ctx.patchState({
       domains: domains,
