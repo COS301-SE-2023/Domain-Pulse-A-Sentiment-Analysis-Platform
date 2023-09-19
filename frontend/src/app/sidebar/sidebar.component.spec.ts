@@ -624,6 +624,36 @@ it('should show error for too long domain name and domain description', () => {
   );
 });
 
+it('should show error for too long domain name for editing', () => {
+  component.editDomainName = 'New Domain Name that is way too long is way too too long';
+  component.editDomainImageName = 'New Domain Image Name';
+  component.editDomainDescription = 'This description is ws way too long';
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+
+  component.editDomain();
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain name must be less than 20 characters')
+  );
+
+});
+
+it('should show error for too long domain description for editing', () => {
+  component.editDomainName = 'New Domain';
+  component.editDomainImageName = 'New Domain Image Name';
+  component.editDomainDescription = 'This description is way too long his description is way to description is way too  description is way too  description is way too  description is way too  description is way too o long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long';
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+
+  component.editDomain();
+
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain description must be less than 100 characters')
+  );
+});
+
 
 it('should not upload image if no image is selected during uploadImageDomainEdit()', () => {
   

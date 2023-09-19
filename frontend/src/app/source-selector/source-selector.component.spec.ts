@@ -80,6 +80,7 @@ describe('SourceSelectorComponent', () => {
       new ToastError('Source name must be less than 25 characters')
     );
   });
+  
 
   it('should fire a "AddNewSource" action for adding csv', (done: DoneFn) => {
     component.newSourceName = 'CSV Source';
@@ -502,7 +503,7 @@ describe('SourceSelectorComponent', () => {
     expect(storeDispatchSpy).toHaveBeenCalledWith(new RefreshSourceData());
   });
 
-  it('should show error for no source selected for refresg', () => {
+  it('should show error for no source selected for refresh', () => {
 
     
     const storeDispatchSpy = spyOn(
