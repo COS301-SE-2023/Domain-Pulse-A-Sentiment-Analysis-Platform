@@ -1150,7 +1150,15 @@ export class AppState {
   @Action(UplaodCVSFile)
   uploadCVSFile(ctx: StateContext<AppStateModel>, state: UplaodCVSFile) {
     const selectedSource = ctx.getState().selectedSource;
+
+    
+
     if (!selectedSource) return;
+
+    selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
 
     const sourceID = selectedSource.id;
     const { file } = state;
@@ -1158,11 +1166,19 @@ export class AppState {
     this.appApi.sendCSVFile(sourceID, file).subscribe((res) => {
       if (res.status === 'FAILURE') {
         this.store.dispatch(new ToastError('Your file could not be uploaded'));
+        selectedSource.isRefreshing = false;
+      ctx.patchState({
+        selectedSource,
+      });
         return;
       } else if (res.status === 'SUCCESS') {
         this.store.dispatch(new ToastSuccess('Your file has been uploaded'));
         this.store.dispatch(new GetSourceDashBoardInfo());
-      }
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+        }
     });
   }
   @Action(GenerateReport)
