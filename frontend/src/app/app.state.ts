@@ -804,9 +804,8 @@ export class AppState {
   deleteDomain(ctx: StateContext<AppStateModel>, state: DeleteDomain) {
     this.appApi.removeDomain(state.domainID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE');
-        return;
+        this.store.dispatch(new ToastError('There was a problem deleting the domain'));
+
       }
 
       this.store.dispatch(new GetDomains());
@@ -840,7 +839,7 @@ export class AppState {
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         this.store.dispatch(new ToastError('Source data could not be loaded'));
-        return;
+
       }
 
       if (res.aggregated_metrics)

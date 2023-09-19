@@ -122,6 +122,15 @@ export class MainComponent implements OnInit {
   }
 
   toggleReportModal() {
+
+    if(this.selectedDomain?.sources.length === 0) {
+      this.store.dispatch(
+        new ToastError(
+          'You have no sources to generate a report from. Please add a source.'
+        )
+      );
+      return;
+    }
     if (!this.showReportModal) {
       this.showReportModal = true;
     } else {
