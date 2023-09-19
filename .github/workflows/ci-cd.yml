@@ -39,9 +39,9 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           install -m 600 -D /dev/null ~/.ssh/southerncross_private_key
-          echo "$SSH_PRIVATE_KEY > ~/.ssh/id_rsa
-          echo "$SOUTHERNCROSS_PRIVATE_KEY > ~/.ssh/southerncross_private_key
-          echo "$SSH_CONFIG > ~/.ssh/config
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          echo "$SOUTHERNCROSS_PRIVATE_KEY" > ~/.ssh/southerncross_private_key
+          echo "$SSH_CONFIG" > ~/.ssh/config
           ssh-keyscan -H $SSH_HOST> ~/.ssh/known_hosts
 
         env:
