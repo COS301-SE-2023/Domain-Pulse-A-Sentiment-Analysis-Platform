@@ -558,6 +558,24 @@ it('should show a toast error message when no image is selected during uploadIma
   expect(toastErrorSpy).toHaveBeenCalledWith(jasmine.any(ToastError));
 });
 
+it('should show error for too long domain name and domain description', () => {
+  component.newDomainName = 'New Domain Name that is way too long is way too long is way too long is way too long is way too long';
+  component.newDomainImageName = 'New Domain Image Name';
+  component.newDomainDescription = 'This description is way too long his description is way to description is way too  description is way too  description is way too  description is way too  description is way too o long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long';
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+
+  component.addNewDomain();
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain name must be less than 20 characters')
+  );
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain description must be less than 100 characters')
+  );
+});
+
 
 it('should not upload image if no image is selected during uploadImageDomainEdit()', () => {
   

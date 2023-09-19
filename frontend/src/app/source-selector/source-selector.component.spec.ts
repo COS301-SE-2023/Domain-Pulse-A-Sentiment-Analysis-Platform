@@ -66,6 +66,21 @@ describe('SourceSelectorComponent', () => {
     component.addNewSource();
   });
 
+
+  it('should show error for too long source name', () => {
+    component.newSourceName = 'New Domain Name that is way too long is way too long is way too long is way too long is way too long';
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+  
+    component.addNewSource();
+  
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Source name must be less than 25 characters')
+    );
+  });
+
   it('should fire a "AddNewSource" action for adding csv', (done: DoneFn) => {
     component.newSourceName = 'CSV Source';
     component.newSourcePlatform = 'csv';
