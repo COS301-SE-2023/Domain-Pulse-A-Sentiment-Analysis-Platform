@@ -1268,7 +1268,7 @@ export class AppState {
         source_image_name = 'youtube-logo.png';
         break;
       case 'googlereviews':
-        source_image_name = 'google-reviews.png';
+        source_image_name = 'google-logo.png';
         break;
       case 'livereview':
         source_image_name = 'live-review-logo.png';

@@ -975,7 +975,7 @@ describe('AppState', () => {
     );
     expect(AppState.platformToIcon('youtube')).toEqual('youtube-logo.png');
     expect(AppState.platformToIcon('googlereviews')).toEqual(
-      'google-reviews.png'
+      'google-logo.png'
     );
     expect(AppState.platformToIcon('livereview')).toEqual(
       'live-review-logo.png'
