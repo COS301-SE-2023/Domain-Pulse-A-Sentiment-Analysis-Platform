@@ -59,12 +59,18 @@
       <img
         (click)="toggleEditDomainModal(); $event.stopPropagation()"
         src="../assets/icons/pen-solid.svg"
+        [mul]="0.9"
+        [tooltip]="'Edit existing domain'"
+        [searchTerm]="'edit a domain'"
         height="15px"
         class="clickable-item"
         data-cy="editDomainModalToggle"
       />
       <img
         src="../assets/icons/grey-trash.svg"
+        [mul]="0.9"
+        [tooltip]="'Removes the domain from your list'"
+        [searchTerm]="'remove'"
         height="15px"
         (click)="
           toggleConfirmDeleteDomainModal(domain.id); $event.stopPropagation()
