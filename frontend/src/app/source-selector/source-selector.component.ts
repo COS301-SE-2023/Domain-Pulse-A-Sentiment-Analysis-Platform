@@ -98,6 +98,12 @@ export class SourceSelectorComponent implements OnInit {
       return;
     }
 
+    if(this.newSourceName.length > 25){
+      this.store.dispatch(new ToastError('Source name must be less than 25 characters'));
+      return;
+    }
+
+
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     ).subscribe(() => {
