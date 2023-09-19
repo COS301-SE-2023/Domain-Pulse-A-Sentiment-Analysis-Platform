@@ -302,9 +302,7 @@
           </div>
           <div class="flex-row left">
             <div class="tag flex-row center">URL</div>
-            <a id="liveReviewLink" href="http://localhost:8004/ingest/post-review/{{
-                selectedSource?.id || ''
-              }}/{{ selectedSource?.name || '' }}/" target="_blank">
+            <a id="liveReviewLink" [href]="getLiveReviewLink()" target="_blank">
               Live Review Link
             </a>
             <img id="copyIcon" src="../assets/icons/copy.svg" alt="copy live review link"
@@ -312,9 +310,7 @@
           </div>
           <div class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:8004/ingest/post-review/{{
-                selectedSource?.id || ''
-              }}/{{ selectedSource?.name || '' }}/" alt="Source Image" style="width: 80%;" />
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ getLiveReviewLink() }}" alt="Source Image" style="width: 80%;" />
           </div>
 
         </ng-container>

@@ -275,4 +275,14 @@ export class SourceSelectorComponent implements OnInit {
     
     this.store.dispatch(new SetIsActive(!selectedSource?.params));
   }
+
+  getLiveReviewLink(): string {
+    const currHost = window.location.host;
+    if (currHost == 'localhost:4200') {
+      // the below should not be hardcoded
+      return `http://localhost:8004/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
+    } else {
+      return `https://${currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
+    }
+  }
 }
