@@ -237,10 +237,6 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   deleteSource() {
-    if(this.selectedSource == null){
-      this.store.dispatch(new ToastError('You must select a specific source to delete'));
-      return;
-    }
     this.store.dispatch(new DeleteSource());
     this.showConfirmDeleteSourceModal = false;
   }

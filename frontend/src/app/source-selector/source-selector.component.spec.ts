@@ -266,6 +266,17 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should toggle the delete source confirmation modal', () => {
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'csv-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+
     component.showConfirmDeleteSourceModal = false;
     component.toggleConfirmDeleteSourceModal();
     expect(component.showConfirmDeleteSourceModal).toBe(true);
@@ -469,6 +480,18 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should dispatch RefreshSourceData action', () => {
+
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+
     const storeDispatchSpy = spyOn(
       component['store'],
       'dispatch'
@@ -477,6 +500,63 @@ describe('SourceSelectorComponent', () => {
     component.refreshSource();
 
     expect(storeDispatchSpy).toHaveBeenCalledWith(new RefreshSourceData());
+  });
+
+  it('should show error for no source selected for refresg', () => {
+
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.refreshSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('You must select a specific source to refresh')
+    );
+  });
+
+  
+
+  it('should not show error for CSV refresh', () => {
+
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'csv-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.refreshSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('CSV sources cannot be refreshed')
+    );
+  });
+
+  it('should show error for no source selected for delete', () => {
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.showConfirmDeleteSourceModal = false;
+    component.toggleConfirmDeleteSourceModal();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('You must select a specific source to delete')
+    );
   });
 
   it('should dispatch SetAllSourcesSelected, SetSourceIsLoading, and SetSource actions', () => {
