@@ -191,6 +191,10 @@ class SentimentAnalysisTests(TestCase):
             == " hi there  this is a long  test bro"
         )
 
+    def test_ping(self):
+        response = self.client.get(path="/avail_ping/")
+        self.assertEqual(200, response.status_code)
+
     # ----------------------------------------------------------------
 
     # ---------------------- INTEGRATION TESTS -----------------------

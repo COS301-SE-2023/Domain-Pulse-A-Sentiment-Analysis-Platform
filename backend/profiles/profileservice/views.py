@@ -5,6 +5,15 @@ import json
 from utils import profilescrud
 
 
+def ping(request: HttpRequest):
+    RETURN_CODE = 200
+    RETURN_MESSAGE = "Hi I'm available!"
+    response = HttpResponse()
+    response.content = RETURN_MESSAGE
+    response.status_code = RETURN_CODE
+    return response
+
+
 # Create your views here.
 @csrf_exempt
 def create_user(request: HttpRequest):

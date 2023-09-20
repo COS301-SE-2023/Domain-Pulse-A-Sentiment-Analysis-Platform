@@ -15,5 +15,5 @@ urlpatterns = [
     path("get_domains_for_user", views.get_domains_for_user),
     path("get_user_by_id", views.get_user_by_id),
     path("get_sources_for_domain", views.get_sources_for_domain),
+    path("avail_ping/", views.ping),
 ]
-

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from datamanager import sentiment_record_model
 import json
@@ -28,6 +28,15 @@ from unidecode import unidecode
 #                 "timestamp": timestamp,
 #             }
 #         )
+
+
+def ping(request: HttpRequest):
+    RETURN_CODE = 200
+    RETURN_MESSAGE = "Hi I'm available!"
+    response = HttpResponse()
+    response.content = RETURN_MESSAGE
+    response.status_code = RETURN_CODE
+    return response
 
 
 @csrf_exempt
