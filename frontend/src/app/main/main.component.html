@@ -1,50 +1,31 @@
 <div class="flex-row app-container">
-  <dp-sidebar
-    [expanded]="!sidebarCollapsed"
-    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-    (sidebarClicked)="toggleSidebar()"
-    data-cy="Togglesidebar2"
-  >
+  <dp-sidebar [expanded]="!sidebarCollapsed" [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (sidebarClicked)="toggleSidebar()" data-cy="Togglesidebar2">
   </dp-sidebar>
 
   <ng-container *ngIf="!userHasNoDomains; else hasNoDomains">
-    <ng-container
-      *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif"
-    >
+    <ng-container *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif">
       <!-- Display the content when selectedDomain$ emits a value (selectedDomain is defined) -->
       <div class="flex-column" style="width: 95%; min-width: 80%; gap: 1.3rem">
         <div class="header flex-row centered" style="gap: 1.2rem">
           <div class="circle-wrapper-domain flex-row center">
-            <img
-              [src]="selectedDomain.imageUrl"
-              alt="Domain Logo"
-              height="80%"
-            />
+            <img [src]="selectedDomain.imageUrl" alt="Domain Logo" height="80%" />
           </div>
           <div class="flex-column">
             <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
             <p class="domainDesc">{{ selectedDomain.description }}</p>
           </div>
 
-          <div
-            class="flex-row center"
-            style="gap: 1.5rem; margin-left: auto; width: 10%; height: 100%"
-          >
-            <div
-              class="flex-column center clickable-item"
-              style="gap: 0.1rem"
-              (click)="toggleReportModal();"
-            >
+          <div class="flex-row center" style="gap: 1.5rem; margin-left: auto; width: 10%; height: 100%">
+            <div class="flex-column center clickable-item" style="gap: 0.1rem" (click)="toggleReportModal();"
+              [tooltip]="'Generates a shareable pdf report for your current domain'" [tooltipPosition]="'left'"
+              [mul]="1.01">
               <img src="../../assets/icons/report.svg" class="top-icons" />
               <p style="font-size: 0.8rem">Report</p>
             </div>
 
-            <a
-              href="/help"
-              class="flex-column center clickable-item"
-              style="gap: 0.1rem; text-decoration: none; color: inherit;"
-              target="_blank"
-            >
+            <a href="/help" class="flex-column center clickable-item"
+              style="gap: 0.1rem; text-decoration: none; color: inherit;" target="_blank">
               <img src="../../assets/icons/help.svg" class="top-icons" />
               <p style="font-size: 0.8rem">Help</p>
             </a>
@@ -56,10 +37,7 @@
         <ng-container *ngIf="!userHasNoSources; else hasNoSources">
           <statistic-selector></statistic-selector>
 
-          <div
-            class="source-manager flex-row"
-            style="gap: 1rem; height: 43%; width: 100%"
-          >
+          <div class="source-manager flex-row" style="gap: 1rem; height: 43%; width: 100%">
             <graph-selector></graph-selector>
             <comments-view></comments-view>
           </div>
@@ -67,10 +45,7 @@
 
         <ng-template #hasNoSources>
           <div class="flex-column center" style="height: 100%">
-            <img
-              src="../../assets/noSources.png"
-              style="height: 20rem; width: auto; opacity: 0.5"
-            />
+            <img src="../../assets/noSources.png" style="height: 20rem; width: auto; opacity: 0.5" />
           </div>
         </ng-template>
       </div>
@@ -91,13 +66,12 @@
 </div>
 
 <dp-modal-container [modalDisplay]="showReportModal" (close)="toggleReportModal()" data-cy="reportModal">
-  <div class="flex-row modal"
-    style="width: 25vw; height: 25vw; color: black; margin-bottom: 1rem; margin-top: 1rem;">
+  <div class="flex-row modal" style="width: 25vw; height: 25vw; color: black; margin-bottom: 1rem; margin-top: 1rem;">
     <div class="flex-column center modal-contents" style="width: 100%; max-width: none">
       <div class="heading-container" style="padding-bottom: 1rem;">
         <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item"
           (click)="toggleReportModal()" />
-          <p class="modal-heading">Report Generator</p>
+        <p class="modal-heading">Report Generator</p>
       </div>
       <div class="flex-column center content" style="width: 80%; gap: 1rem">
         <ng-container class="flex-column center" *ngIf="(pdfLoading$ | async) === true; else loadingPdf">
@@ -106,18 +80,16 @@
         </ng-container>
         <ng-template class="flex-column center" #loadingPdf>
           <!-- <p>{{pdfUrl}}</p> -->
-          <div class="flex-row" >
-            <a id="reportLink" href="{{pdfUrl}}"
-              target="_blank">
+          <div class="flex-row">
+            <a id="reportLink" href="{{pdfUrl}}" target="_blank">
               Report URL
             </a>
             <img id="copyIconPdf" src="../assets/icons/copy.svg" alt="copy live review link"
               class="copy-icon clickable-item" (click)="copyToClipboard()" />
           </div>
-          
-            <img *ngIf="pdfUrl != null"
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{pdfUrl}}"
-              alt="Report QR Code" style="width: 70%;" />
+
+          <img *ngIf="pdfUrl != null" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{pdfUrl}}"
+            alt="Report QR Code" style="width: 70%;" />
         </ng-template>
       </div>
     </div>
