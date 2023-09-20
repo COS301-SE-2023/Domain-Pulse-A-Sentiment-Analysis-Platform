@@ -76,10 +76,15 @@ import { environment } from '../../environment';
   ],
 })
 export class SidebarComponent {
-  @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closeSidebar: EventEmitter<void> = new EventEmitter<void>();
+  @Output() openSidebar: EventEmitter<void> = new EventEmitter<void>();
 
-  clickSidebar() {
-    this.sidebarClicked.emit();
+  closeSidebarClicked() {
+    this.closeSidebar.emit();
+  }
+
+  openSidebarClicked() {
+    this.openSidebar.emit();
   }
 
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
