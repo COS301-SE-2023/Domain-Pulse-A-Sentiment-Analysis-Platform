@@ -213,7 +213,7 @@ def refresh_source(request: HttpRequest):
     GET_SOURCE_ENDPOINT = (
         f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     )
-    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://{os.getenv('PROFILES_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
+    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
     SOURCE_CONNECTOR_ENDPOINT = f"http://{os.getenv('SOURCECONNECTOR_HOST')}:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
     ANALYSER_ENDPOINT = (
         f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"

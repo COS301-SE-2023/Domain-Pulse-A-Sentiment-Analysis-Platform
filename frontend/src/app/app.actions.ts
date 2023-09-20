@@ -166,6 +166,10 @@ export class SetIsActive{
   constructor(public isActive: boolean) {}
 }
 
+export class UplaodCVSFile{
+  static readonly type = '[Source] Upload CVS File';
+  constructor(public file: any) {}
+}
 export class GenerateReport{
   static readonly type = '[Source] Generate Report';
   constructor(public domainId: string) {}

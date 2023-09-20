@@ -1,27 +1,6 @@
 version: "3.9"
 
 services:
-  dev-domains:
-    image: thuthuka111/domain-pulse-domains:dev-latest
-    env_file:
-      - ./backend/.env
-      - ./backend/.postgresql.env
-    environment:
-      - DOMAINS_HOST=dev-domains
-      - ENGINE_HOST=dev-engine
-      - PROFILES_HOST=dev-profiles
-      - SOURCECONNECTOR_HOST=dev-sourceconnector
-      - WAREHOUSE_HOST=dev-warehouse
-    ports: 
-      - "7000:8000"
-    restart: always
-    command: >
-      sh -c "uwsgi --ini domains.uwsgi.ini"
-    volumes:
-      - uwsgi_data:/tmp/uwsgi/
-    networks:
-      - dev-network
-
   prod-domains:
     image: thuthuka111/domain-pulse-domains:latest
     env_file:
@@ -33,7 +12,7 @@ services:
       - PROFILES_HOST=prod-profiles
       - SOURCECONNECTOR_HOST=prod-sourceconnector
       - WAREHOUSE_HOST=prod-warehouse
-    ports: 
+    ports:
       - "8000:8000"
     restart: always
     command: >
@@ -42,27 +21,6 @@ services:
       - uwsgi_data:/tmp/uwsgi/
     networks:
       - prod-network
-
-  dev-engine:
-    image: thuthuka111/domain-pulse-engine:dev-latest
-    env_file:
-      - ./backend/.env
-      - ./backend/.postgresql.env
-    environment:
-      - DOMAINS_HOST=dev-domains
-      - ENGINE_HOST=dev-engine
-      - PROFILES_HOST=dev-profiles
-      - SOURCECONNECTOR_HOST=dev-sourceconnector
-      - WAREHOUSE_HOST=dev-warehouse
-    ports:
-      - "7001:8001"
-    restart: always
-    command: >
-      sh -c "uwsgi --ini engine.uwsgi.ini"
-    volumes:
-      - uwsgi_data:/tmp/uwsgi/
-    networks:
-      - dev-network
 
   prod-engine:
     image: thuthuka111/domain-pulse-engine:latest
@@ -85,27 +43,6 @@ services:
     networks:
       - prod-network
 
-  dev-profiles:
-    image: thuthuka111/domain-pulse-profiles:dev-latest
-    env_file:
-      - ./backend/.env
-      - ./backend/.postgresql.env
-    environment:
-      - DOMAINS_HOST=dev-domains
-      - ENGINE_HOST=dev-engine
-      - PROFILES_HOST=dev-profiles
-      - SOURCECONNECTOR_HOST=dev-sourceconnector
-      - WAREHOUSE_HOST=dev-warehouse
-    ports:
-      - "7002:8002"
-    restart: always
-    command: >
-      sh -c "uwsgi --ini profiles.uwsgi.ini"
-    volumes:
-      - uwsgi_data:/tmp/uwsgi/
-    networks:
-      - dev-network
-
   prod-profiles:
     image: thuthuka111/domain-pulse-profiles:latest
     env_file:
@@ -126,27 +63,6 @@ services:
       - uwsgi_data:/tmp/uwsgi/
     networks:
       - prod-network
-
-  dev-sourceconnector:
-    image: thuthuka111/domain-pulse-sourceconnector:dev-latest
-    env_file:
-      - ./backend/.env
-      - ./backend/.postgresql.env
-    environment:
-      - DOMAINS_HOST=dev-domains
-      - ENGINE_HOST=dev-engine
-      - PROFILES_HOST=dev-profiles
-      - SOURCECONNECTOR_HOST=dev-sourceconnector
-      - WAREHOUSE_HOST=dev-warehouse
-    ports:
-      - "7003:8003"
-    restart: always
-    command: >
-      sh -c "uwsgi --ini sourceconnector.uwsgi.ini"
-    volumes:
-      - uwsgi_data:/tmp/uwsgi/
-    networks:
-      - dev-network
 
   prod-sourceconnector:
     image: thuthuka111/domain-pulse-sourceconnector:latest
@@ -169,27 +85,6 @@ services:
     networks:
       - prod-network
 
-  dev-warehouse:
-    image: thuthuka111/domain-pulse-warehouse:dev-latest
-    env_file:
-      - ./backend/.env
-      - ./backend/.postgresql.env
-    environment:
-      - DOMAINS_HOST=dev-domains
-      - ENGINE_HOST=dev-engine
-      - PROFILES_HOST=dev-profiles
-      - SOURCECONNECTOR_HOST=dev-sourceconnector
-      - WAREHOUSE_HOST=dev-warehouse
-    ports:
-      - "7004:8004"
-    restart: always
-    command: >
-      sh -c "uwsgi --ini warehouse.uwsgi.ini"
-    volumes:
-      - uwsgi_data:/tmp/uwsgi/
-    networks:
-      - dev-network
-
   prod-warehouse:
     image: thuthuka111/domain-pulse-warehouse:latest
     env_file:
@@ -210,24 +105,6 @@ services:
       - uwsgi_data:/tmp/uwsgi/
     networks:
       - prod-network
-
-  dev-webserver:
-    image: thuthuka111/domain-pulse-webserver:dev-latest
-    environment:
-      - NGINX_CONF=dev-domainpulse.app.conf
-    restart: always
-    volumes:
-      - uwsgi_data:/tmp/uwsgi/
-    ports:
-      - "5000:80"
-    depends_on:
-      - dev-engine
-      - dev-domains
-      - dev-profiles
-      - dev-sourceconnector
-      - dev-warehouse
-    networks:
-      - dev-network
 
   prod-webserver:
     image: thuthuka111/domain-pulse-webserver:latest
@@ -252,4 +129,3 @@ volumes:
 
 networks:
   prod-network:
-  dev-network:

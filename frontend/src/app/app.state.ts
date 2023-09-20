@@ -30,6 +30,7 @@ import {
   EditSource,
   SetAllSourcesSelected,
   SetIsActive,
+  UplaodCVSFile,
   GenerateReport
 } from './app.actions';
 import { Router } from '@angular/router';
@@ -441,59 +442,59 @@ export class AppState {
     if (!selectedDomain) return;
 
     let domainID = selectedDomain.id;
-    this.appApi
-      .addSource(domainID, state.name, source_image_name, state.params)
-      .subscribe((res) => {
+
+    return this.appApi
+    .addSource(domainID, state.name, source_image_name, state.params)
+    .pipe(
+      switchMap((res) => {
         if (res.status === 'FAILURE') {
-          this.store.dispatch(new ToastError('Your source could not be added'));
-          return;
-        }
+          this.store.dispatch(
+            new ToastError('Your source could not be added')
+          );
+          return of(res);
+        } else {
 
-        let domainRes = res.domain;
-        let domainsIDs = domainRes.sources.map(
-          (source: any) => source.source_id
-        );
-        let selectedDomain: DisplayDomain = {
-          id: domainRes._id,
-          name: domainRes.name,
-          description: domainRes.description,
-          imageUrl: domainRes.icon,
-          sourceIds: domainsIDs,
-          sources: AppState.formatResponseSources(domainRes.sources),
-          selected: false,
-        };
-
-        let domains = ctx.getState().domains;
-        if (!domains) return;
-
-        for (let domain of domains) {
-          if (domain.id == selectedDomain.id) {
-            domain = selectedDomain;
-            ctx.patchState({
-              domains: domains,
-            });
-            break;
+          console.log("added this source: ");
+          console.log(res)
+          let domainRes = res.domain;
+          let domainsIDs = domainRes.sources.map(
+            (source: any) => source.source_id
+          );
+          let selectedDomain: DisplayDomain = {
+            id: domainRes._id,
+            name: domainRes.name,
+            description: domainRes.description,
+            imageUrl: domainRes.icon,
+            sourceIds: domainsIDs,
+            sources: AppState.formatResponseSources(domainRes.sources),
+            selected: false,
+          };
+  
+          let domains = ctx.getState().domains;
+          if (!domains) return of(null);
+  
+          this.store.dispatch(new SetDomain(selectedDomain));
+  
+          let lastSource =
+            selectedDomain.sources[selectedDomain.sources.length - 1];
+  
+          this.store.dispatch(new SetSourceIsLoading(true));
+          this.store.dispatch(new SetSource(lastSource));
+          console.log("identifier3: " + state.platform)
+          if(state.platform == "livereview" || state.platform == "csv"){
+            console.log("live review here")
+            this.store.dispatch(new GetSourceDashBoardInfo());
           }
+          else{
+            lastSource.isRefreshing = true;
+            this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
+          }
+          console.log("identifier4: " + res.domain.new_source_id)
+          return of(res.domain.new_source_id);
         }
-
-        this.store.dispatch(new SetDomain(selectedDomain));
-
-        let lastSource =
-          selectedDomain.sources[selectedDomain.sources.length - 1];
-        
-        this.store.dispatch(new SetSourceIsLoading(true));
-        this.store.dispatch(new SetSource(lastSource));
-        console.log("identifier3: " + state.platform)
-        if(state.platform == "livereview"){
-          console.log("live review here")
-          this.store.dispatch(new GetSourceDashBoardInfo());
-        }
-        else{
-          lastSource.isRefreshing = true;
-          this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
-
-        }
-      });
+      })
+    );
+    
   }
 
   /*  @Action(EditSource)
@@ -626,7 +627,7 @@ export class AppState {
     console.log(selectedSource)
     console.log(selectedSource?.params)
     console.log(selectedSource?.params?.source_type)
-    if(selectedSource?.url == "live-review-logo.png"){
+    if(selectedSource?.url == "live-review-logo.png" || selectedSource?.url == "csv-logo.png"){
       console.log("live review here")
       if (!selectedSource) return;
 
@@ -803,9 +804,8 @@ export class AppState {
   deleteDomain(ctx: StateContext<AppStateModel>, state: DeleteDomain) {
     this.appApi.removeDomain(state.domainID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE');
-        return;
+        this.store.dispatch(new ToastError('There was a problem deleting the domain'));
+
       }
 
       this.store.dispatch(new GetDomains());
@@ -839,7 +839,7 @@ export class AppState {
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         this.store.dispatch(new ToastError('Source data could not be loaded'));
-        return;
+
       }
 
       if (res.aggregated_metrics)
@@ -1147,6 +1147,40 @@ export class AppState {
     
   }
 
+  @Action(UplaodCVSFile)
+  uploadCVSFile(ctx: StateContext<AppStateModel>, state: UplaodCVSFile) {
+    const selectedSource = ctx.getState().selectedSource;
+
+    
+
+    if (!selectedSource) return;
+
+    selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
+
+    const sourceID = selectedSource.id;
+    const { file } = state;
+
+    this.appApi.sendCSVFile(sourceID, file).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your file could not be uploaded'));
+        selectedSource.isRefreshing = false;
+      ctx.patchState({
+        selectedSource,
+      });
+        return;
+      } else if (res.status === 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('Your file has been uploaded'));
+        this.store.dispatch(new GetSourceDashBoardInfo());
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+        }
+    });
+  }
   @Action(GenerateReport)
   generateReport(ctx: StateContext<AppStateModel>, state: GenerateReport) {
     const domainID = state.domainId;
@@ -1178,6 +1212,7 @@ export class AppState {
       })
     );
   }
+
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
@@ -1233,10 +1268,13 @@ export class AppState {
         source_image_name = 'youtube-logo.png';
         break;
       case 'googlereviews':
-        source_image_name = 'google-reviews.png';
+        source_image_name = 'google-logo.png';
         break;
       case 'livereview':
         source_image_name = 'live-review-logo.png';
+        break;
+      case 'csv':
+        source_image_name = 'csv-logo.png';
         break;
     }
     return source_image_name;

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Check if NGINX_CONF is set; if not, use the default
 if [ -z "$NGINX_CONF" ]; then

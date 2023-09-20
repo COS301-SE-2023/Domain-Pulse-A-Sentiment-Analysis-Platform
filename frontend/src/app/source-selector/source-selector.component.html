@@ -1,7 +1,7 @@
 <div class="gap-div flex-row align-center">
   <div class="sources-div flex-row align-center scrollable-div">
     <ng-container *ngIf="sources$ | async as sources; else loadingSources">
-      <div class="source-cat flex-column center clickable-item-nohover" (click)="selectAllSources()"
+      <div *ngIf="sources.length > 1"class="source-cat flex-column center clickable-item-nohover" (click)="selectAllSources()"
         [ngClass]="{ 'source-cat-selected': allSources$ | async }">
         <img [src]="'../assets/icons/allSources.png'" height="60%" />
 
@@ -137,6 +137,14 @@
                     alt="Trustpilot" />
                   <p class="source-type-title">Trustpilot</p>
                 </div> -->
+                
+                <div class="platform-logo clickable-item" (click)="selectPlatform('csv')"
+                  data-cy="selectCSV">
+                  <img src="../assets/csv-logo.png" [ngClass]="{
+                      selected: newSourcePlatform === 'csv'
+                    }" alt="CSV" />
+                  <p class="source-type-title">CSV</p>
+                </div>
               </div>
             </div>
           </div>
@@ -203,6 +211,11 @@
           <div class="flex-column" style="width: 100%; opacity: 0;" *ngIf="newSourcePlatform === 'livereview'">
             <p class="step-heading">LiveReview Url</p>
             <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          </div>
+
+          <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'csv'">
+            <p class="step-heading">CSV Upload:</p>
+            <input type="file" class="file-block" (change)="uploadFile($event)">
           </div>
 
           <div class="flex-column center" style="width: 100%" *ngIf="newSourcePlatform === ''">
@@ -289,9 +302,7 @@
           </div>
           <div class="flex-row left">
             <div class="tag flex-row center">URL</div>
-            <a id="liveReviewLink" href="http://localhost:8004/ingest/post-review/{{
-                selectedSource?.id || ''
-              }}/{{ selectedSource?.name || '' }}/" target="_blank">
+            <a id="liveReviewLink" [href]="getLiveReviewLink()" target="_blank">
               Live Review Link
             </a>
             <img id="copyIcon" src="../assets/icons/copy.svg" alt="copy live review link"
@@ -299,9 +310,7 @@
           </div>
           <div class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:8004/ingest/post-review/{{
-                selectedSource?.id || ''
-              }}/{{ selectedSource?.name || '' }}/" alt="Source Image" style="width: 80%;" />
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ getLiveReviewLink() }}" alt="Source Image" style="width: 80%;" />
           </div>
 
         </ng-container>
@@ -317,7 +326,7 @@
               Youtube Video Link
             </a>
           </div>
-          <div class="flex-column left" style="gap:1rem;">
+          <div *ngIf="selectedSource != null" class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
             <img
               src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.youtube.com/watch?v={{ selectedSource?.params }}"
@@ -338,7 +347,7 @@
               Link to Source
             </a>
           </div>
-          <div class="flex-column left" style="gap:1rem;">
+          <div *ngIf="selectedSource != null" class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ selectedSource?.params }}"
               alt="Source Image" style="width: 80%;" />

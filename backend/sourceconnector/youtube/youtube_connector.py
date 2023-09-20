@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
+from unidecode import unidecode
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -38,7 +39,8 @@ def get_comments_by_video_id(video_id: str, last_refresh_time):
             if last_updated_timestamp > last_refresh_time:
                 comments.append(
                     {
-                        "text": str(original_text).replace('"', ""),
+                        # Decoding unsupported characters
+                        "text": unidecode(str(original_text).replace('"', "")),
                         "timestamp": int(last_updated_timestamp),
                     }
                 )

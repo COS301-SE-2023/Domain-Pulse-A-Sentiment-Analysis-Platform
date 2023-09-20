@@ -15,6 +15,7 @@ import {
   ChangeProfileIcon,
   CheckAuthenticate,
   ChooseStatistic,
+  DeleteDomain,
   DeleteSource,
   DeleteUser,
   EditSource,
@@ -30,9 +31,10 @@ import {
   SetUserDetails,
   ToastError,
   ToastSuccess,
+  UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
-import { Observable, of, zip } from 'rxjs';
+import { Observable, combineLatest, of, zip } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 
@@ -65,7 +67,9 @@ describe('AppState', () => {
       'changeMode',
       'changePassword',
       'logOut',
+      'sendCSVFile',
       'generateReport',
+      'removeDomain',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -353,6 +357,37 @@ describe('AppState', () => {
       expect(actaulSelectredomain.sourceIds.length).toEqual(1);
       done();
     });
+
+    store.dispatch(
+      new AddNewSource('newSourceName', 'newSOurcePlatform', {
+        platform: 'youtube',
+        video_id: 'QblahQw',
+      })
+    );
+  });
+
+  it('should react correctly to failed "AddNewSource" event', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    const mockDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [],
+    };
+
+    const mockSuccessfullResponse: any = {
+      status: 'FAILURE',
+    };
+
+    store.reset({ app: { selectedDomain: mockDomain, domains: [mockDomain] } });
+    apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
 
     store.dispatch(
       new AddNewSource('newSourceName', 'newSOurcePlatform', {
@@ -749,6 +784,59 @@ describe('AppState', () => {
     expect(actual).toEqual(1);
   });
 
+  it('should test a positive "UplaodCVSFile" event', (done: DoneFn) => {
+    zip(
+      actions$.pipe(ofActionDispatched(ToastSuccess)),
+      actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo))
+    ).subscribe((_) => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.sendCSVFile.and.returnValue(of({ status: 'SUCCESS' }));
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    store.reset({ app: { selectedSource: mockSource, sources: [mockSource] } });
+
+    const mockFile = new File([''], 'test.csv', { type: 'text/csv' });
+
+    store.dispatch(new UplaodCVSFile(mockFile));
+  });
+
+  it('should test a negative "UplaodCVSFile" event', (done: DoneFn) => {
+    const mockFile = new File([''], 'test.csv', { type: 'text/csv' });
+    // just to run the null case
+    store.dispatch(new UplaodCVSFile(mockFile));
+
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    apiSpy.sendCSVFile.and.returnValue(of({ status: 'FAILURE' }));
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    store.reset({ app: { selectedSource: mockSource, sources: [mockSource] } });
+
+
+    store.dispatch(new UplaodCVSFile(mockFile));
+  });
   it('should handle successful report generation', (done: DoneFn) => {
     const domainId = '650579d05ce2576d38fcd99a';
 
@@ -791,6 +879,7 @@ describe('AppState', () => {
 
     store.dispatch(new GenerateReport(domainId));
   });
+
 
   it('should correctly format the response from the server to a DisplaySOurce', () => {
     let mockResponseSources: any[] = [
@@ -888,10 +977,28 @@ describe('AppState', () => {
     );
     expect(AppState.platformToIcon('youtube')).toEqual('youtube-logo.png');
     expect(AppState.platformToIcon('googlereviews')).toEqual(
-      'google-reviews.png'
+      'google-logo.png'
     );
     expect(AppState.platformToIcon('livereview')).toEqual(
       'live-review-logo.png'
     );
+    expect(AppState.platformToIcon('csv')).toEqual('csv-logo.png');
+  });
+
+  it('should dispatch ToastError and GetDomains actions on API failure', (done: DoneFn) => {
+    const domainID = 'your-domain-id';
+  
+    apiSpy.removeDomain.and.returnValue(of({ status: 'FAILURE' }));
+  
+    // Create observables for ToastError and GetDomains actions
+    const toastError$ = actions$.pipe(ofActionDispatched(ToastError));
+    const getDomains$ = actions$.pipe(ofActionDispatched(GetDomains));
+  
+    combineLatest([toastError$, getDomains$]).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+  
+    store.dispatch(new DeleteDomain(domainID));
   });
 });
