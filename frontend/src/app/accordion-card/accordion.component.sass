@@ -27,8 +27,25 @@
   align-items: center
   //border: 2px solid transparent
   height: var(--accordion-header-height)
+  background: linear-gradient(to left, #eaa7ff, #7bbdff)
   cursor: pointer
-  background: linear-gradient(to left, rgba(158, 46, 192, 0.5), rgba(3,127,255, 0.5))
+  transition: transform 0.4s ease 
+  will-change: transform
+
+
+.accordion__header:not(:active)
+    animation: slight-click-animation 0.4s ease 
+
+.accordion__header:hover
+    transform: scale(1.03)
+
+@keyframes slight-click-animation
+    0%
+        transform: scale(1.03)
+    50%
+        transform: scale(1)
+    100%
+        transform: scale(1.03)
 
 .accordion__toggle-btn
   border: none

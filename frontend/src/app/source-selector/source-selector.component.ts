@@ -98,6 +98,12 @@ export class SourceSelectorComponent implements OnInit {
       return;
     }
 
+    if(this.newSourceName.length > 25){
+      this.store.dispatch(new ToastError('Source name must be less than 25 characters'));
+      return;
+    }
+
+
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     ).subscribe(() => {
@@ -218,6 +224,15 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   refreshSource() {
+    
+    if(this.selectedSource == null){
+      this.store.dispatch(new ToastError('You must select a specific source to refresh'));
+      return;
+    }
+    else if(this.selectedSource?.url == 'csv-logo.png'){
+      this.store.dispatch(new ToastError('CSV sources cannot be refreshed'));
+      return;
+    }
     this.store.dispatch(new RefreshSourceData());
   }
 
@@ -249,6 +264,10 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleConfirmDeleteSourceModal() {
+    if(this.selectedSource == null){
+      this.store.dispatch(new ToastError('You must select a specific source to delete'));
+      return;
+    }
     if (!this.showConfirmDeleteSourceModal) {
       this.showConfirmDeleteSourceModal = true;
     } else {

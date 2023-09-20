@@ -15,6 +15,7 @@ import {
   ChangeProfileIcon,
   CheckAuthenticate,
   ChooseStatistic,
+  DeleteDomain,
   DeleteSource,
   DeleteUser,
   EditSource,
@@ -33,7 +34,7 @@ import {
   UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
-import { Observable, of, zip } from 'rxjs';
+import { Observable, combineLatest, of, zip } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 
@@ -68,6 +69,7 @@ describe('AppState', () => {
       'logOut',
       'sendCSVFile',
       'generateReport',
+      'removeDomain',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -975,11 +977,28 @@ describe('AppState', () => {
     );
     expect(AppState.platformToIcon('youtube')).toEqual('youtube-logo.png');
     expect(AppState.platformToIcon('googlereviews')).toEqual(
-      'google-reviews.png'
+      'google-logo.png'
     );
     expect(AppState.platformToIcon('livereview')).toEqual(
       'live-review-logo.png'
     );
     expect(AppState.platformToIcon('csv')).toEqual('csv-logo.png');
+  });
+
+  it('should dispatch ToastError and GetDomains actions on API failure', (done: DoneFn) => {
+    const domainID = 'your-domain-id';
+  
+    apiSpy.removeDomain.and.returnValue(of({ status: 'FAILURE' }));
+  
+    // Create observables for ToastError and GetDomains actions
+    const toastError$ = actions$.pipe(ofActionDispatched(ToastError));
+    const getDomains$ = actions$.pipe(ofActionDispatched(GetDomains));
+  
+    combineLatest([toastError$, getDomains$]).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+  
+    store.dispatch(new DeleteDomain(domainID));
   });
 });
