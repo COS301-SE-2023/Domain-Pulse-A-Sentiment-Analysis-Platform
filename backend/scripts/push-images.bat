@@ -21,14 +21,17 @@ if "%2"=="prod" (
     set tag=dev-latest
 ) else (
     echo Please specify either "prod" or "dev" as the first argument.
-    echo Example: %0 prod <namespace>
-    echo Example: %0 dev
+    echo "Example: %0 prod <namespace>"
+    echo "Example: %0 dev"
     exit /b
 )
 
-
-echo Building from current branch and pushing to %tag% to repository %namespace%
-docker compose build
+if "%3"=="no-build" (
+    echo Skipping build step
+) else (
+    echo Building from current branch and pushing to %tag% to repository %namespace%
+    docker compose build
+)
 
 echo Tagging and pushing webserver
 docker tag domain-pulse-webserver %namespace%/domain-pulse-webserver:%tag%
