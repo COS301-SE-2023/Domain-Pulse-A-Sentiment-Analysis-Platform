@@ -674,7 +674,7 @@ describe('SourceSelectorComponent', () => {
 
     component.currHost = 'localhost:8004';
     expect(component.getLiveReviewLink()).toBe(
-      'https://localhost:8004/ingest/post-review/1/test'
+      `${window.location.protocol}//localhost:8004/ingest/post-review/1/test`
     );
   });
 });

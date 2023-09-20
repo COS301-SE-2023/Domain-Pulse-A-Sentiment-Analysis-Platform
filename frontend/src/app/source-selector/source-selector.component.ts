@@ -302,7 +302,7 @@ export class SourceSelectorComponent implements OnInit {
       // the below should not be hardcoded
       return `http://localhost:8004/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
     } else {
-      return `https://${this.currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
+      return `${window.location.protocol}//${this.currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
     }
   }
 }
