@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
+from unidecode import unidecode
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -46,7 +47,10 @@ def get_trustpilot_reviews(query_url: str, last_refreshed_timestamp):
         reviews = results["data"][0]
         review_item = {}
         for r in reviews:
-            review_item = {"text": r["review_text"], "timestamp": r["review_date"]}
+            review_item = {
+                "text": unidecode(r["review_text"]),  # Decoding unsupported characters
+                "timestamp": r["review_date"],
+            }
 
             if r["review_date"] > latest_retrieval:
                 latest_retrieval = r["review_date"]

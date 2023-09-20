@@ -1,7 +1,7 @@
 <div class="gap-div flex-row align-center">
   <div class="sources-div flex-row align-center scrollable-div">
     <ng-container *ngIf="sources$ | async as sources; else loadingSources">
-      <div class="source-cat flex-column center clickable-item-nohover" (click)="selectAllSources()"
+      <div *ngIf="sources.length > 1"class="source-cat flex-column center clickable-item-nohover" (click)="selectAllSources()"
         [ngClass]="{ 'source-cat-selected': allSources$ | async }">
         <img [src]="'../assets/icons/allSources.png'" height="60%" />
 
@@ -326,7 +326,7 @@
               Youtube Video Link
             </a>
           </div>
-          <div class="flex-column left" style="gap:1rem;">
+          <div *ngIf="selectedSource != null" class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
             <img
               src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.youtube.com/watch?v={{ selectedSource?.params }}"
@@ -347,7 +347,7 @@
               Link to Source
             </a>
           </div>
-          <div class="flex-column left" style="gap:1rem;">
+          <div *ngIf="selectedSource != null" class="flex-column left" style="gap:1rem;">
             <div class="tag flex-row center" style="width: 100%; margin: 0;">QR Code</div>
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ selectedSource?.params }}"
               alt="Source Image" style="width: 80%;" />

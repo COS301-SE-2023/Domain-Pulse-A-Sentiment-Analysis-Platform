@@ -8,7 +8,7 @@ COPY . /code
 # uwsgi setup
 RUN apk add python3-dev build-base linux-headers pcre-dev
 RUN pip install uwsgi
-RUN pip install --no-cache-dir -r requirements-lock.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 RUN python manage.py collectstatic --noinput
 
