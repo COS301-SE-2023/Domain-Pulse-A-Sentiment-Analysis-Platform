@@ -548,6 +548,7 @@ def generate_report(request: HttpRequest):
         )
         source_graph_js = ""
         source_html = ""
+
         if number_of_sources > 1:
             source_graph_js = generate_source_graph_js(response_data)
             source_html = generate_source_html(response_data, DOMAINS_SAMPLE_DATA)
