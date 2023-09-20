@@ -66,6 +66,22 @@ describe('SourceSelectorComponent', () => {
     component.addNewSource();
   });
 
+
+  it('should show error for too long source name', () => {
+    component.newSourceName = 'New Domain Name that is way too long is way too long is way too long is way too long is way too long';
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+  
+    component.addNewSource();
+  
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Source name must be less than 25 characters')
+    );
+  });
+  
+
   it('should fire a "AddNewSource" action for adding csv', (done: DoneFn) => {
     component.newSourceName = 'CSV Source';
     component.newSourcePlatform = 'csv';
@@ -251,6 +267,17 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should toggle the delete source confirmation modal', () => {
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'csv-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+
     component.showConfirmDeleteSourceModal = false;
     component.toggleConfirmDeleteSourceModal();
     expect(component.showConfirmDeleteSourceModal).toBe(true);
@@ -454,6 +481,18 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should dispatch RefreshSourceData action', () => {
+
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+
     const storeDispatchSpy = spyOn(
       component['store'],
       'dispatch'
@@ -462,6 +501,63 @@ describe('SourceSelectorComponent', () => {
     component.refreshSource();
 
     expect(storeDispatchSpy).toHaveBeenCalledWith(new RefreshSourceData());
+  });
+
+  it('should show error for no source selected for refresh', () => {
+
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.refreshSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('You must select a specific source to refresh')
+    );
+  });
+
+  
+
+  it('should not show error for CSV refresh', () => {
+
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'csv-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.refreshSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('CSV sources cannot be refreshed')
+    );
+  });
+
+  it('should show error for no source selected for delete', () => {
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.showConfirmDeleteSourceModal = false;
+    component.toggleConfirmDeleteSourceModal();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('You must select a specific source to delete')
+    );
   });
 
   it('should dispatch SetAllSourcesSelected, SetSourceIsLoading, and SetSource actions', () => {
