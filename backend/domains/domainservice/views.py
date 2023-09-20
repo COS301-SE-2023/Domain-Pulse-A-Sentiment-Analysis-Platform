@@ -12,7 +12,8 @@ import requests
 
 
 def ping(request: HttpRequest):
-    return HttpResponse()
+    response = HttpResponse("Hi I'm available!", status=200)
+    return response
 
 
 @csrf_exempt

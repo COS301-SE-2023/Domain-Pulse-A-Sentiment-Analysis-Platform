@@ -10,7 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def ping(request: HttpRequest):
-    return HttpResponse()
+    response = HttpResponse("Hi I'm available!", status=200)
+    return response
 
 
 def decide_function(source_type, params):
