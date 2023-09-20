@@ -13,7 +13,7 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 
 def call_youtube_api(video_id: str, last_refresh_time):
-    URL = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={video_id}&maxResults=100&key={YOUTUBE_API_KEY}"
+    URL = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={video_id}&maxResults=50&key={YOUTUBE_API_KEY}"
 
     response = requests.get(url=URL)
     data = response.json()
