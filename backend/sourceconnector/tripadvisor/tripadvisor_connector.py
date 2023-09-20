@@ -7,6 +7,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
 import random
+from unidecode import unidecode
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -138,7 +139,8 @@ def get_tripadvisor_reviews(url, last_refresh_timestamp):
         if review_timestamp > latest_retrieval:
             latest_retrieval = review_timestamp
 
-        item = {"text": review_text, "timestamp": review_timestamp}
+        # Decoding unsupported characters
+        item = {"text": unidecode(review_text), "timestamp": review_timestamp}
 
         ret_data.append(item)
 

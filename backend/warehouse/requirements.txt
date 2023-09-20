@@ -6,4 +6,5 @@ python-dotenv
 # app specific packages
 pymongo
 requests
+unidecode
 bleach

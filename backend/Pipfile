@@ -37,6 +37,7 @@ azure-storage-blob = "*"
 shortuuid = "*"
 bleach = "*"
 pytz = "*"
+unidecode = "*"
 
 [dev-packages]
 
