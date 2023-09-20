@@ -11,6 +11,10 @@ import requests
 # Create your views here.
 
 
+def ping(request: HttpRequest):
+    return HttpResponse()
+
+
 @csrf_exempt
 def verify_live_source(request: HttpRequest):
     if request.method == "POST":

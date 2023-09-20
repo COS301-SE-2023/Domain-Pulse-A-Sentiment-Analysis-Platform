@@ -21,4 +21,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("query/", include("query.urls")),
     path("ingest/", include("ingest.urls")),
+    path("", include("ingest.urls")),
 ]

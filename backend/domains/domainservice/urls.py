@@ -16,4 +16,5 @@ urlpatterns = [
     path("delete_domains_internal", views.delete_domains_internal),
     path("verify_live_source", views.verify_live_source),
     path("toggle_is_active", views.toggle_active),
+    path("avail_ping/", views.ping),
 ]

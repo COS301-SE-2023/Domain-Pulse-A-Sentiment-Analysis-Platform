@@ -33,6 +33,11 @@ def mocked_logout(dummy):
 class ProfilesTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
+    def test_ping(self):
+        response = self.client.get(path="/avail_ping/")
+        self.assertEqual(200, response.status_code)
+
+
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)
     def test_create_user(self, mocked_create_profile, mocked_login):

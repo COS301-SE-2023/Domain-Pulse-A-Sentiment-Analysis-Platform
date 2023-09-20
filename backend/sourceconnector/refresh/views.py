@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
+def ping(request: HttpRequest):
+    return HttpResponse()
 
 
 def decide_function(source_type, params):

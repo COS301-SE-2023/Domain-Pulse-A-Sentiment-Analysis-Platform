@@ -25,6 +25,10 @@ def mocked_month_name_to_number(dummy_param):
 
 class TestingRefreshHandler(TestCase):
     # ------------------ UNIT TESTS---------------------
+    def test_ping(self):
+        response = self.client.get(path="/avail_ping/")
+        self.assertEqual(200, response.status_code)
+
     @mock.patch(
         "googlereviews.google_reviews_connector.handle_request",
         side_effect=mocked_source_handler,

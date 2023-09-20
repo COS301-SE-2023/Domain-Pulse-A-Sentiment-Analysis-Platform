@@ -5,6 +5,10 @@ import json
 from utils import profilescrud
 
 
+def ping(request: HttpRequest):
+    return HttpResponse()
+
+
 # Create your views here.
 @csrf_exempt
 def create_user(request: HttpRequest):
