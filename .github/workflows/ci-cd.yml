@@ -58,23 +58,24 @@ jobs:
           DEV_DJANGO_PORTS: ${{ secrets.DEV_DJANGO_PORTS }}
           POSTGRES_CONFIG_SERVER: ${{ secrets.POSTGRES_CONFIG_SERVER }}
 
-      # the dp-node host is defined in the config file that was echo'ed previously
-      - name: connect and pull
+      - name: copy .env files
         run: |
-          ssh -v dp-node-01 << EOF
-            cd /home/rocky/domain-pulse
-            git checkout dev
+          scp .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/backend
+          scp .postgresql.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DEV }}/backend
+
+      # the dp-node host is defined in the config file that was echo'ed previously
+      - name: connect, pull and update
+        run: |
+          ssh -v ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.WORK_DIR_DEV }}
+            git checkout ${{ secrets.DEV_BRANCH }}
             git pull
 
-            docker compose -f dev-server-compose.yml pull
+            cd backend
+            # bash ./scripts/update-services.sh prod &
 
             exit
             EOF
-
-      - name: copy .env files
-        run: |
-          scp .env dp-node-01:/home/rocky/domain-pulse/backend
-          scp .postgresql.env dp-node-01:/home/rocky/domain-pulse/backend
 
   update_production_environment:
     if: github.ref == 'refs/heads/main'
@@ -100,33 +101,20 @@ jobs:
           PROD_DJANGO_PORTS: ${{ secrets.PROD_DJANGO_PORTS }}
           POSTGRES_CONFIG_SERVER: ${{ secrets.POSTGRES_CONFIG_SERVER }}
 
-      - name: connect and pull first production node
-        run: |
-          ssh dp-node-02 << EOF
-            cd /home/rocky/domain-pulse
-            git checkout ${{ secrets.MAIN_BRANCH }}
-            git pull
-
-            docker compose -f prod-server-compose.yml pull
-
-            exit
-            EOF
-
-      - name: connect and pull second production node
-        run: |
-          ssh dp-node-03 << EOF
-            cd /home/rocky/domain-pulse
-            git checkout ${{ secrets.MAIN_BRANCH }}
-            git pull
-
-            docker compose -f prod-server-compose.yml pull
-
-            exit
-            EOF
-
       - name: copy .env files
         run: |
-          scp .env dp-node-02:/home/rocky/domain-pulse/backend
-          scp .postgresql.env dp-node-02:/home/rocky/domain-pulse/backend
-          scp .env dp-node-03:/home/rocky/domain-pulse/backend
-          scp .postgresql.env dp-node-03:/home/rocky/domain-pulse/backend
+          scp .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_PROD }}/backend
+          scp .postgresql.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_PROD }}/backend
+
+      - name: connect, pull and update
+        run: |
+          ssh -v ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.WORK_DIR_PROD }}
+            git checkout ${{ secrets.MAIN_BRANCH }}
+            git pull
+
+            cd backend
+            bash ./scripts/update-services.sh prod &
+
+            exit
+            EOF
