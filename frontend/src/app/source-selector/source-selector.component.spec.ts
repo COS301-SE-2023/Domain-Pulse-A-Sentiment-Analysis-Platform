@@ -654,4 +654,27 @@ describe('SourceSelectorComponent', () => {
       new SetIsActive(!selectedSource.params)
     );
   });
+
+  it('should return the correct live review link', () => {
+    const selectedSource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = selectedSource;
+
+    component.currHost = 'localhost:4200';
+    expect(component.getLiveReviewLink()).toBe(
+      'http://localhost:8004/ingest/post-review/1/test'
+    );
+
+    component.currHost = 'localhost:8004';
+    expect(component.getLiveReviewLink()).toBe(
+      `${window.location.protocol}//localhost:8004/ingest/post-review/1/test`
+    );
+  });
 });
