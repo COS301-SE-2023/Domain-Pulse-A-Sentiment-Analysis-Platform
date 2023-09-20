@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import csv
 from django.http import JsonResponse, HttpRequest, HttpResponse
 import bleach
+from unidecode import unidecode
 
 
 def handle_request(file):
@@ -24,7 +25,7 @@ def handle_request(file):
         datetime_object = datetime.strptime(row["time"], "%Y-%m-%dT%H:%M:%SZ")
         last_updated_timestamp = datetime_object.timestamp()
         # Preprocessing here
-        # row["reviews"] = apply some processing here to row["reviews"]
+        row["reviews"] = unidecode(row["reviews"])
         review_text = bleach.clean(row["reviews"])
 
         reviews.append({"text": review_text, "timestamp": int(last_updated_timestamp)})

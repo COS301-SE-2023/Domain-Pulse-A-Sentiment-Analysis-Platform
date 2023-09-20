@@ -556,7 +556,7 @@ class TestingRefreshHandler(TestCase):
                 "timestamp": 1686441936,
             },
             {
-                "text": "There are two ways to fix your credit. DIY: do-it-yourself or hiring a Credit Expert. DIY is normally slow and very stressful with little result( I tried this for a very long time). If you’re looking to hire a professional credit repair company; I strongly 7 6 0 P L U S    C R E D I T    S C O R E, they're the best in terms of credit repair. They helped me realize my long time dream of becoming a homeowner. .",
+                "text": "There are two ways to fix your credit. DIY: do-it-yourself or hiring a Credit Expert. DIY is normally slow and very stressful with little result( I tried this for a very long time). If you're looking to hire a professional credit repair company; I strongly 7 6 0 P L U S    C R E D I T    S C O R E, they're the best in terms of credit repair. They helped me realize my long time dream of becoming a homeowner. .",
                 "timestamp": 1686606674,
             },
             {

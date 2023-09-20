@@ -9,6 +9,7 @@ import os
 import bleach
 from CSV import csv_connector
 from datetime import datetime
+from unidecode import unidecode
 
 
 # Create your views here.
@@ -34,7 +35,7 @@ def ingest_live_review(request: HttpRequest):
     if request.method == "POST":
         original_review_text = request.POST.get("review_text")
         # Preprocessing here
-        # original_review_text = apply some processing to original_review_text
+        original_review_text = unidecode(original_review_text)
         review_text = bleach.clean(original_review_text)
         source_id_raw = request.POST.get("source_id")
         timestamp = datetime.now().timestamp()
