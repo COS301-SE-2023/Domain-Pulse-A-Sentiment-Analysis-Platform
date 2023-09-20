@@ -24,7 +24,10 @@ describe('MainComponent', () => {
   });
 
   it('should open the sidebar', () => {
-    component.toggleSidebar();
+    component.setSideBarOpen();
+    expect(component.sidebarCollapsed).toBeFalse();
+
+    component.setSideBarOpen();
     expect(component.sidebarCollapsed).toBeFalse();
   });
 
