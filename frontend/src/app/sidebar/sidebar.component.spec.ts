@@ -176,6 +176,29 @@ describe('SidebarComponent', () => {
 
   });
 
+  it('should toggle domain flag if domains is undefined', () => {
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+
+    component.showAddDomainModal = false;
+    component.toggleDomainModal();
+    
+    expect(component.showAddDomainModal).toBe(true);
+
+
+  });
+
   it('should toggle the Edit Domain Modal flag', () => {
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();

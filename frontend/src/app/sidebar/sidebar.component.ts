@@ -170,6 +170,10 @@ export class SidebarComponent {
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
+      if(this.domains == undefined){
+        this.showAddDomainModal = true;
+        return;
+      }
       if(this.domains.length > 8){
         this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
         return;
