@@ -234,6 +234,7 @@ export class AppState {
     return state.pdfLoading;
   }
   
+  @Selector()
   static userHasNoDomains(state: AppStateModel) {
     return state.userHasNoDomains;
   }
