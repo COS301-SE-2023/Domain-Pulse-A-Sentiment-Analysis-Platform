@@ -208,9 +208,8 @@
             </div>  
           </div>
 
-          <div class="flex-column" style="width: 100%; opacity: 0;" *ngIf="newSourcePlatform === 'livereview'">
-            <p class="step-heading">LiveReview Url</p>
-            <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          <div class="flex-column" style="width: 100%;" *ngIf="newSourcePlatform === 'livereview'">
+            <p>Learn more about how live-review works <a href="/help?q=live reviews" target="_blank">here</a></p>
           </div>
 
           <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'csv'">
