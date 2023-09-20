@@ -94,6 +94,12 @@ export interface Toast {
 
 interface AppStateModel {
   authenticated: boolean;
+  pdfLoading: boolean;
+  userHasNoDomains: boolean;
+  userHasNoSources: boolean;
+  allSourcesSelected: boolean;
+  sourceIsLoading: boolean;
+  selectedStatisticIndex: number;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -102,17 +108,11 @@ interface AppStateModel {
   overallSentimentScores?: any;
   // sampleData?: Comment[];
   sampleData?: any[];
-  selectedStatisticIndex: number;
   userDetails?: UserDetails;
-  sourceIsLoading: boolean;
   profileDetails?: ProfileDetails;
   toasterError?: Toast;
   toasterSuccess?: Toast;
-  allSourcesSelected: boolean;
   pdfUrl?: string;
-  pdfLoading: boolean;
-  userHasNoDomains: boolean;
-  userHasNoSources: boolean;
 }
 
 @State<AppStateModel>({
@@ -927,6 +927,7 @@ export class AppState {
               profileDetails: profileDetails,
             });
 
+            this.store.dispatch(new GetDomains());
             // localStorage.setItem('profileId', state.profileId.toString());
           }
         });
@@ -961,9 +962,29 @@ export class AppState {
   logout(ctx: StateContext<AppStateModel>) {
     this.appApi.logOut().subscribe((res) => {
       if (res.status === 'SUCCESS') {
-        this.store.dispatch(new ToastSuccess('You have been logged out'));
         localStorage.removeItem('JWT');
+        ctx.patchState({
+          authenticated: false,
+          selectedStatisticIndex: 0,
+          sourceIsLoading: true,
+          allSourcesSelected: true,
+          pdfLoading: false,
+          pdfUrl: '',
+          userHasNoDomains: false,
+          userHasNoSources: false,
+          domains: undefined,
+          selectedDomain: undefined,
+          sources: undefined,
+          selectedSource: undefined,
+          overallSentimentScores: undefined,
+          sampleData: undefined,
+          userDetails: undefined,
+          profileDetails: undefined,
+          toasterError: undefined,
+          toasterSuccess: undefined,
+        });
         this.router.navigate(['/login']);
+        this.store.dispatch(new ToastSuccess('You have been logged out'));
       } else {
         this.store.dispatch(new ToastError('You could not be logged out'));
       }
