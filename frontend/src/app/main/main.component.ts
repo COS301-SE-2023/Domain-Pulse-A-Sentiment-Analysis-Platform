@@ -118,8 +118,12 @@ export class MainComponent implements OnInit {
     this.selectedDomain = domain;
   }
 
-  toggleSidebar() {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
+  setSideBarClosed() {
+    this.sidebarCollapsed = true;
+  }
+
+  setSideBarOpen() {
+    this.sidebarCollapsed = false;
   }
 
   toggleReportModal() {

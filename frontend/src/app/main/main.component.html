@@ -2,7 +2,8 @@
   <dp-sidebar
     [expanded]="!sidebarCollapsed"
     [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-    (sidebarClicked)="toggleSidebar()"
+    (closeSidebar)="setSideBarClosed()"
+    (openSidebar)="setSideBarOpen()"
     data-cy="Togglesidebar2"
   >
   </dp-sidebar>
