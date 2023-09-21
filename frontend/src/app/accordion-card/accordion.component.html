@@ -1,0 +1,33 @@
+<section class="accordion">
+  <div *ngFor="let item of items;index as i"
+    class="accordion__item" [class.disabled]="item.disabled" [class.active]="expanded.has(i)">
+    <ng-container
+      [ngTemplateOutlet]="(item?.customHeader?.templateRef || defaultHeader)"
+      [ngTemplateOutletContext]="{$implicit: item, index: i, toggle: getToggleState(i)}"></ng-container>
+    <div class="accordion__content" [class.expanded]="expanded.has(i)" [@contentExpansion]="expanded.has(i) ? 'expanded':'collapsed'">
+      <ng-container *ngIf="item?.content?.templateRef; else noTemplate">
+        <ng-container *ngTemplateOutlet="item.content.templateRef"></ng-container>
+      </ng-container>
+      <ng-template #noTemplate><!-- Handle the case when templateRef is not defined --></ng-template>      
+    </div>
+  </div>
+</section>
+
+<ng-template #defaultHeader let-item let-index="index">
+  <header class="accordion__header"
+    (click)="item.disabled ? {} :toggleState(index)">
+    <ng-container *ngTemplateOutlet="item?.customTitle?.templateRef || defaultTitle"></ng-container>
+    <button class="accordion__toggle-btn" [disabled]="item.disabled">
+      <svg
+        class="arrow-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24" width="24" height="24">
+        <path fill="none" d="M0 0h24v24H0z" />
+        <path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"/>
+      </svg>
+    </button>
+  </header>
+  <ng-template #defaultTitle>
+    <p class="accordion__title">{{item?.title}}</p>
+  </ng-template>
+</ng-template>

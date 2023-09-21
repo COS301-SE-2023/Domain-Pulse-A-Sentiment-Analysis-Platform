@@ -1,16 +1,13 @@
 from utils import db_connection
-import pymongo
 from bson.objectid import ObjectId
 
-mongo_host = db_connection.HOST
-mongo_port = db_connection.PORT
 mongo_db = "domain_pulse_domains"
 mongo_collection = "domains"
 
+db = db_connection.get_db_handle(mongo_db)
+
 
 def get_source(source_id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
 
     query = {"sources.source_id": ObjectId(source_id)}
@@ -20,8 +17,7 @@ def get_source(source_id):
     for source in result["sources"]:
         if source["source_id"] == ObjectId(source_id):
             final_source = source
-
-    client.close()
+            break
 
     final_source["source_id"] = str(final_source["source_id"])
 
@@ -29,8 +25,6 @@ def get_source(source_id):
 
 
 def edit_source(source_id, name):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
 
     query = {"sources.source_id": ObjectId(source_id)}
@@ -47,14 +41,31 @@ def edit_source(source_id, name):
     for i in result["sources"]:
         i["source_id"] = str(i["source_id"])
 
-    client.close()
-
     return result
 
 
+def set_source_active(source_id, active_status):
+    collection = db[mongo_collection]
+
+    query = {"sources.source_id": ObjectId(source_id)}
+    result = collection.find_one(query)
+
+    for source in result["sources"]:
+        if source["source_id"] == ObjectId(source_id):
+            if source["params"]["source_type"] != "livereview":
+                return False
+            else:
+                source["params"]["is_active"] = active_status
+                break
+
+    collection.update_one(
+        {"_id": result["_id"]}, {"$set": {"sources": result["sources"]}}
+    )
+
+    return True
+
+
 def update_last_refresh(source_id, new_last_refresh):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
 
     source_id = ObjectId(source_id)
@@ -74,14 +85,10 @@ def update_last_refresh(source_id, new_last_refresh):
     except Exception:
         return False
 
-    client.close()
-
     return True
 
 
 def create_domain(domain_name, domain_icon, description):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
 
     new_item = {
@@ -91,7 +98,7 @@ def create_domain(domain_name, domain_icon, description):
         "sources": [],
     }
     ret = collection.insert_one(new_item)
-    client.close()
+
     return {
         "id": str(ret.inserted_id),
         "name": domain_name,
@@ -102,8 +109,6 @@ def create_domain(domain_name, domain_icon, description):
 
 
 def edit_domain(id, domain_name, domain_icon, description):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
 
     ret = collection.find_one_and_update(
@@ -116,7 +121,7 @@ def edit_domain(id, domain_name, domain_icon, description):
             }
         },
     )
-    client.close()
+
     for i in ret["sources"]:
         i["source_id"] = str(i["source_id"])
     return {
@@ -129,12 +134,9 @@ def edit_domain(id, domain_name, domain_icon, description):
 
 
 def delete_domain(id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(id)}
     ret = collection.delete_one(query)
-    client.close()
 
     if ret.deleted_count > 0:
         return {"status": "SUCCESS"}
@@ -143,31 +145,24 @@ def delete_domain(id):
 
 
 def get_domain(id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(id)}
     result = collection.find_one(query)
     if result == None:
-        client.close()
         return {"status": "FAILURE", "details": "No Entry Found"}
     resId = str(result["_id"])
     result["_id"] = resId
     for i in result["sources"]:
         i["source_id"] = str(i["source_id"])
-    client.close()
 
     return result
 
 
 def add_source(domain_id, source_name, source_image_name, params):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
     result = collection.find_one(query)
     if result == None:
-        client.close()
         return {"status": "FAILURE", "details": "No Entry Found"}
     new_id = ObjectId()
     new_source = {
@@ -183,14 +178,12 @@ def add_source(domain_id, source_name, source_image_name, params):
         i["source_id"] = str(i["source_id"])
     resId = str(result["_id"])
     result["_id"] = resId
-    client.close()
+
     result.update({"new_source_id": str(new_id)})
     return result
 
 
 def remove_source(domain_id, source_id):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
     result = collection.find_one(query)
@@ -202,19 +195,15 @@ def remove_source(domain_id, source_id):
         i["source_id"] = str(i["source_id"])
     resId = str(result["_id"])
     result["_id"] = resId
-    client.close()
 
     return result
 
 
 def create_param(domain_id, source_id, key, value):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
     result = collection.find_one(query)
     if result == None:
-        client.close()
         return {"status": "FAILURE", "details": "No Entry Found"}
     for i in result["sources"]:
         if str(i["source_id"]) == (source_id):
@@ -224,19 +213,15 @@ def create_param(domain_id, source_id, key, value):
         i["source_id"] = str(i["source_id"])
     resId = str(result["_id"])
     result["_id"] = resId
-    client.close()
 
     return result
 
 
 def delete_param(domain_id, source_id, key):
-    client = pymongo.MongoClient(mongo_host, mongo_port)
-    db = client[mongo_db]
     collection = db[mongo_collection]
     query = {"_id": ObjectId(domain_id)}
     result = collection.find_one(query)
     if result == None:
-        client.close()
         return {"status": "FAILURE", "details": "No Entry Found"}
     for i in result["sources"]:
         if str(i["source_id"]) == (source_id):
@@ -246,6 +231,14 @@ def delete_param(domain_id, source_id, key):
         i["source_id"] = str(i["source_id"])
     resId = str(result["_id"])
     result["_id"] = resId
-    client.close()
 
     return result
+
+
+def delete_domains_internal(domain_ids):
+    ids = []
+    for i in domain_ids:
+        ids.append(ObjectId(i))
+    collection = db[mongo_collection]
+    query = {"_id": {"$in": ids}}
+    result = collection.delete_many(query)

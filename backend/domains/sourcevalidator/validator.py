@@ -11,6 +11,7 @@ load_dotenv(ENV_FILE)
 GOOGLE_REVIEWS_API_KEY = os.getenv("GOOGLE_REVIEWS_API_KEY")
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 TRIPADVISOR_API_KEY = os.getenv("TRIPADVISOR_API_KEY")
+TRUSTPILOT_API_KEY = os.getenv("TRUSTPILOT_API_KEY")
 
 
 def handler(params):
@@ -35,6 +36,9 @@ def handler(params):
             return False, "maps_url is invalid"
         return True, "Source details are valid"
 
+    elif type_of_source.lower() == "csv":
+        return True, "Source details are valid"
+
     elif type_of_source.lower() == "tripadvisor":
         if "tripadvisor_url" not in params:
             return False, "Missing parameter: tripadvisor_url"
@@ -43,8 +47,41 @@ def handler(params):
             return False, "tripadvisor_url is invalid"
         return True, "Source details are valid"
 
+    elif type_of_source.lower() == "trustpilot":
+        if "query_url" not in params:
+            return False, "Missing parameter: query_url"
+        is_valid = validate_trustpilot(params["query_url"])
+        if not is_valid:
+            return False, "query_url is invalid"
+        return True, "Source details are valid"
+
+    elif type_of_source.lower() == "livereview":
+        if "is_active" not in params:
+            return False, "Missing parameter: is_active"
+        return True, "Source details are valid"
+
     else:
         return False, "Unknown source_type"
+
+
+def validate_trustpilot(query_url):
+    ENDPOINT = "https://api.app.outscraper.com/trustpilot/reviews"
+    REVIEWS_LIMIT = 1
+    HEADERS = {"X-API-KEY": TRUSTPILOT_API_KEY}
+
+    response = requests.get(
+        url=ENDPOINT
+        + "?"
+        + "query="
+        + query_url
+        + "&limit="
+        + str(REVIEWS_LIMIT)
+        + "&async="
+        + "false",
+        headers=HEADERS,
+    )
+
+    return "error" not in response.json()
 
 
 def youtube_validate_video_id(video_id: str):

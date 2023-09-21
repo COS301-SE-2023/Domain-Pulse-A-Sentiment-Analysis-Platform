@@ -1,0 +1,12 @@
+#the packages for most
+django
+django-cors-headers
+python-dotenv
+requests
+
+# app specific packages
+pymongo
+outscraper
+
+#monitoring
+elastic-apm

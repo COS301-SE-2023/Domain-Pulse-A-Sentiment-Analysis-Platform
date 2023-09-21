@@ -29,6 +29,16 @@ sshtunnel = "*"
 outscraper = "*"
 python-socketio = "*"
 eventlet = "*"
+matplotlib = "*"
+numpy = "*"
+pdfkit = "*"
+jinja2 = "*"
+azure-storage-blob = "*"
+shortuuid = "*"
+bleach = "*"
+elastic-apm = "*"
+pytz = "*"
+unidecode = "*"
 
 [dev-packages]
 

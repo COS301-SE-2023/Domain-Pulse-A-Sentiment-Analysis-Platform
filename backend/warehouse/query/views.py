@@ -44,7 +44,7 @@ def get_dashboard_data_source(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
+        url = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -58,6 +58,7 @@ def get_dashboard_data_source(request: HttpRequest):
             response["aggregated_metrics"] = agg_response_body["overall"]
             response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
+            response["timeseries"] = agg_response_body["timeseries"]
 
             return JsonResponse(response)
         else:
@@ -97,7 +98,7 @@ def get_dashboard_data_domain(request: HttpRequest):
 
         request_to_engine_body = {"metrics": individual_records}
 
-        url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
+        url = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
         response_from_aggregator = requests.post(
             url, data=json.dumps(request_to_engine_body)
         )
@@ -111,12 +112,90 @@ def get_dashboard_data_domain(request: HttpRequest):
             response["aggregated_metrics"] = agg_response_body["overall"]
             response["meta_data"] = agg_response_body["metadata"]
             response["individual_metrics"] = agg_response_body["individual_data"]
+            response["timeseries"] = agg_response_body["timeseries"]
 
             return JsonResponse(response)
         else:
             return JsonResponse({"status": "FAILURE"})
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
+@csrf_exempt
+def get_report_data_internal(request: HttpRequest):
+    # 1. Query the sentiment records database for all data from a provided domain
+    # 2. Determine the meta-data
+    # 3. Send that data to the aggregator (engine) to get cumulative metrics
+    # 4. Return data from the response from 3, as well as meta-data and an other status codes, etc
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        if raw_data["local_key"] == os.getenv("LOCAL_KEY"):
+            source_ids_raw = raw_data["source_ids"]
+
+            all_individual_records = []
+            records_by_source = {}
+            for source_id in source_ids_raw:
+                records_by_source[
+                    source_id  # Need to make a request to make this source_name instead of source id
+                ] = sentiment_record_model.get_records_by_source_id(source_id)
+
+                all_individual_records += (
+                    sentiment_record_model.get_records_by_source_id(source_id)
+                )
+
+            for record in all_individual_records:
+                record["_id"] = ""
+
+            request_to_engine_body = {"metrics": all_individual_records}
+
+            url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
+            response_from_aggregator = requests.post(
+                url, data=json.dumps(request_to_engine_body)
+            )
+            response = {}
+
+            if response_from_aggregator.status_code == 200:
+                response["status"] = "SUCCESS"
+
+                agg_response_body = response_from_aggregator.json()
+                response["domain"] = {}
+                response["domain"]["aggregated_metrics"] = agg_response_body["overall"]
+                response["domain"]["meta_data"] = agg_response_body["metadata"]
+                response["domain"]["individual_metrics"] = agg_response_body[
+                    "individual_data"
+                ]
+                response["domain"]["timeseries"] = agg_response_body["timeseries"]
+            else:
+                return JsonResponse({"status": "FAILURE"})
+
+            for source in records_by_source:
+                for record in records_by_source[source]:
+                    record["_id"] = str(record["_id"])
+                request_to_engine_body = {"metrics": records_by_source[source]}
+                response_from_aggregator = requests.post(
+                    url, data=json.dumps(request_to_engine_body)
+                )
+                if response_from_aggregator.status_code == 200:
+                    response["status"] = "SUCCESS"
+
+                    agg_response_body = response_from_aggregator.json()
+                    response[source] = {}
+                    response[source]["aggregated_metrics"] = agg_response_body[
+                        "overall"
+                    ]
+                    response[source]["meta_data"] = agg_response_body["metadata"]
+                    response[source]["individual_metrics"] = agg_response_body[
+                        "individual_data"
+                    ]
+                    response[source]["timeseries"] = agg_response_body["timeseries"]
+                else:
+                    return JsonResponse({"status": "FAILURE"})
+
+            return JsonResponse(response)
+        else:
+            return JsonResponse({"status": "FAILURE", "details": "Foreign Request"})
+    else:
+        return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
 @csrf_exempt
@@ -132,12 +211,12 @@ def refresh_source(request: HttpRequest):
     originalRequest = request
 
     GET_SOURCE_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
+        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     )
-    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
-    SOURCE_CONNECTOR_ENDPOINT = f"http://localhost:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
+    UPDATE_LAST_REFRESHED_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
+    SOURCE_CONNECTOR_ENDPOINT = f"http://{os.getenv('SOURCECONNECTOR_HOST')}:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
     ANALYSER_ENDPOINT = (
-        f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
     )
 
     if request.method == "POST":
@@ -216,7 +295,11 @@ def refresh_source(request: HttpRequest):
 
         request_to_engine_body = {}
         if "room_id" in raw_data:
-            request_to_engine_body = {"data": raw_new_data, "data_timestamps": data_timestamps, "room_id": raw_data["room_id"]}
+            request_to_engine_body = {
+                "data": raw_new_data,
+                "data_timestamps": data_timestamps,
+                "room_id": raw_data["room_id"],
+            }
         else:
             request_to_engine_body = {"data": raw_new_data}
 
@@ -239,7 +322,7 @@ def refresh_source(request: HttpRequest):
 
         data_to_store = []
         for metrics, stamped in zip(new_data_metrics, new_data):
-            metrics["timestamp"] = stamped["timestamp"]
+            metrics["timestamp"] = int(stamped["timestamp"])
             metrics["source_id"] = source_id_raw
             data_to_store.append(metrics)
 
@@ -285,3 +368,27 @@ def refresh_source(request: HttpRequest):
         )
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
+# @csrf_exempt
+# def cleanup_sources(request: HttpRequest):
+#     if request.method == "POST":
+#         raw_data = json.loads(request.body)
+#         source_ids_raw = raw_data["source_ids"]
+
+#         source_ids_to_clean = list(source_ids_raw)
+
+#         # ------------------- VERIFYING ACCESS -----------------------
+#         check_passed, details = auth_checks.verify_user_owns_source_ids(
+#             original_request=request, source_id_list=source_ids_to_clean
+#         )
+#         if not check_passed:
+#             return JsonResponse({"status": "FAILURE", "details": details})
+#         # ------------------------------------------------------------
+
+#         sentiment_record_model.delete_data_by_soure_ids(source_ids_to_clean)
+#         return JsonResponse(
+#             {"status": "SUCCESS", "details": "Sentiment records removed successfully"}
+#         )
+#     else:
+#         return JsonResponse({"status": "FAILURE", "details": "Invalid request"})

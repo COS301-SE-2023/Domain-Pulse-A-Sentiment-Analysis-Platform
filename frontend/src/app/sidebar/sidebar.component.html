@@ -1,10 +1,9 @@
 <div
-  class="flex-column center"
+  class="flex-column center sidebar"
   style="gap: 1rem; height: 98%"
-  (click)="clickSidebar(); $event.stopPropagation()"
 >
   <!-- [@logoSwitch]="logoState" -->
-  <div class="flex-column center" style="height: 86px" 
+  <div class="flex-column center logo-container" style="height: 86px" 
   data-cy="sidebar">
     <img
       [@smallLogoSwitch]="smallLogoState"
@@ -14,7 +13,21 @@
       height="auto"
       width="50%"
       style="margin-top: 2rem; margin-bottom: 0.8rem"
+      (click)="openSidebarClicked()"
+      class="sidebarLogo image1"
     />
+
+    <img
+      [@smallLogoSwitch]="smallLogoState"
+      *ngIf="showSmallLogo"
+      src="../assets/icons/openSidebar.svg"
+      alt="Domain Pulse Logo"
+      height="auto"
+      style="margin-top: 2rem; margin-bottom: 0.8rem"
+      class="sidebarLogoSmall1 image2 clickable-item"
+      (click)="openSidebarClicked()"
+      />
+
     <img
       [@fullLogoSwitch]="fullLogoState"
       *ngIf="showFullLogo"
@@ -23,11 +36,24 @@
       height="auto"
       width="85%"
       style="margin-top: 2rem; margin-bottom: 0.8rem"
+      class="sidebarLogoeLarge image1"
+      (click)="closeSidebarClicked()"
+
+    />
+
+    <img
+      [@fullLogoSwitch]="fullLogoState"
+      *ngIf="showFullLogo"
+      src="../assets/icons/closeSidebar.svg"
+      alt="Domain Pulse Logo"
+      style="margin-top: 2rem; margin-bottom: 0.8rem"
+      class="sidebarLogoSmall image2 clickable-item"
+      (click)="closeSidebarClicked()"
     />
   </div>
   <div
     *ngFor="let domain of domains$ | async"
-    (click)="selectDomain(domain); $event.stopPropagation()"
+    (click)="selectDomain(domain)"
     class="domain flex-row align-center clickable-item"
     [ngClass]="{
       'selected-domain': domain.selected,
@@ -57,17 +83,23 @@
       class="icons-container flex-row align-center"
     >
       <img
-        (click)="toggleEditDomainModal(); $event.stopPropagation()"
+        (click)="toggleEditDomainModal()"
         src="../assets/icons/pen-solid.svg"
+        [mul]="0.9"
+        [tooltip]="'Edit existing domain'"
+        [searchTerm]="'edit a domain'"
         height="15px"
         class="clickable-item"
         data-cy="editDomainModalToggle"
       />
       <img
         src="../assets/icons/grey-trash.svg"
+        [mul]="0.9"
+        [tooltip]="'Removes the domain from your list'"
+        [searchTerm]="'remove'"
         height="15px"
         (click)="
-          toggleConfirmDeleteDomainModal(domain.id); $event.stopPropagation()
+          toggleConfirmDeleteDomainModal(domain.id)
         "
         class="clickable-item"
         data-cy="deleteDomain"
@@ -78,7 +110,7 @@
   <!-- </div> -->
 
   <div
-    (click)="toggleDomainModal(); $event.stopPropagation()"
+    (click)="toggleDomainModal()"
     class="domain add-domain-plus flex-row align-center clickable-item"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
@@ -96,7 +128,7 @@
 
   <div
     class="domain flex-row align-center clickable-item"
-    (click)="toggleProfileModal(); $event.stopPropagation()"
+    (click)="toggleProfileModal()"
     data-cy="profileModalToggle"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',

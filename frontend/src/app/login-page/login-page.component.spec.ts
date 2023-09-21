@@ -35,4 +35,14 @@ describe('LoginPageComponent', () => {
 
     component.login();
   });
+
+  it('should toggle the forgot password modal', () => {
+    component.showForgotPasswordModal = false;
+    component.toggleForgotPasswordModal();
+    expect(component.showForgotPasswordModal).toBe(true);
+
+    component.showForgotPasswordModal = true;
+    component.toggleForgotPasswordModal();
+    expect(component.showForgotPasswordModal).toBe(false);
+  });
 });
