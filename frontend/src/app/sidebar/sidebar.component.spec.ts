@@ -263,11 +263,19 @@ describe('SidebarComponent', () => {
     component.deleteDomain();
   });
 
-  it('should fire sideBarClicked event when the sidebar is clicked', () => {
+  it('should fire closeSidebarClicked event when the sidebar is clicked', () => {
     let eventFired = false;
-    component.sidebarClicked.pipe(first()).subscribe(() => (eventFired = true));
+    component.closeSidebar.pipe(first()).subscribe(() => (eventFired = true));
 
-    component.clickSidebar();
+    component.closeSidebarClicked();
+    expect(eventFired).toBeTrue();
+  });
+
+  it('should fire openSidebarClicked event when the sidebar is clicked', () => {
+    let eventFired = false;
+    component.openSidebar.pipe(first()).subscribe(() => (eventFired = true));
+
+    component.openSidebarClicked();
     expect(eventFired).toBeTrue();
   });
 

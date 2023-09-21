@@ -489,6 +489,13 @@ def generate_report(request: HttpRequest):
             )
         response_data.pop("status")
         # Replacing source_id with source_name
+        number_of_sources = len(response_data) - 1
+
+        if number_of_sources == 0:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "No data available for this domain"}
+            )
+
         for key in response_data:
             if key != "domain":
                 for i in domain["sources"]:
@@ -510,7 +517,6 @@ def generate_report(request: HttpRequest):
                         else:
                             response_data[key]["url"] = ""
 
-        number_of_sources = len(response_data) - 1
         samples_per_source = 8 / number_of_sources
         if samples_per_source < 1:
             samples_per_source = 1
@@ -540,10 +546,12 @@ def generate_report(request: HttpRequest):
             samples_per_source,
             DOMAINS_SAMPLE_DATA,
         )
+        source_graph_js = ""
+        source_html = ""
 
-        source_graph_js = generate_source_graph_js(response_data)
-
-        source_html = generate_source_html(response_data, DOMAINS_SAMPLE_DATA)
+        if number_of_sources > 1:
+            source_graph_js = generate_source_graph_js(response_data)
+            source_html = generate_source_html(response_data, DOMAINS_SAMPLE_DATA)
 
         File = open(assets_path + "/input_template.html", "r")
         content = File.read()

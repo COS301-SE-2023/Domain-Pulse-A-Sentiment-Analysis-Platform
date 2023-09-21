@@ -38,6 +38,8 @@ export class HelpPageComponent implements AfterViewInit {
       document.querySelectorAll('.heading').forEach((item: any) => item.style.display = 'block');
       return;
     }
+
+    let atleastOne = false;
     this.accordionItems.forEach((item: any) => {
       const headerTextT = item;
       if (!headerTextT)
@@ -47,11 +49,17 @@ export class HelpPageComponent implements AfterViewInit {
 
       if (text.toLowerCase().includes(textToFilter.toLowerCase())) {
         item.style.display = 'block';
+        atleastOne = true;
         shownCategories.add(item.getAttribute('data-catID'));
       } else {
         item.style.display = 'none';
       }
     });
+
+    const noResultsIMG = document.querySelector('#noResults');
+    if (noResultsIMG) {
+      (noResultsIMG as any).style.display = atleastOne ? 'none' : 'flex';
+    }
 
 
     const allCategoryElements = document.querySelectorAll('.heading');
