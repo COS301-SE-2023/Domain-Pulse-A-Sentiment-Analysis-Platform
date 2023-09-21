@@ -6,6 +6,7 @@ import json
 import requests
 from authchecker import auth_checks
 import os
+import asyncio
 
 # Create your views here.
 
@@ -119,6 +120,37 @@ def get_dashboard_data_domain(request: HttpRequest):
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
+async def async_analyse(ANALYSER_ENDPOINT, request_to_engine_body, source_id_raw, new_data):
+    request_to_engine_body = requests.post(
+        ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+    )
+
+    response_from_analyser = requests.post(
+        ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+    )
+
+    if response_from_analyser.status_code == 200:
+        pass
+    else:
+        return JsonResponse(
+            {
+                "status": "FAILURE",
+                "details": "Could not connect to Analyser",
+            }
+        )
+    new_data_metrics = response_from_analyser.json()["metrics"]
+
+    data_to_store = []
+    for metrics, stamped in zip(new_data_metrics, new_data):
+        metrics["timestamp"] = stamped["timestamp"]
+        metrics["source_id"] = source_id_raw
+        data_to_store.append(metrics)
+
+    # 3.
+    for x in data_to_store:
+        sentiment_record_model.add_record(x)
+    print("Async function has completed")
+
 @csrf_exempt
 def refresh_source(request: HttpRequest):
     # FINAL VERSION
@@ -220,32 +252,41 @@ def refresh_source(request: HttpRequest):
         else:
             request_to_engine_body = {"data": raw_new_data}
 
+        # Create an asyncio event loop
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        
+        # Run the async function asynchronously
+        loop.run_until_complete(async_analyse(ANALYSER_ENDPOINT, request_to_engine_body, source_id_raw, new_data))
+        
+        print("Main function has completed")
+
         # print(request_to_engine_body)
 
-        response_from_analyser = requests.post(
-            ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
-        )
+        # response_from_analyser = requests.post(
+        #     ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+        # )
 
-        if response_from_analyser.status_code == 200:
-            pass
-        else:
-            return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": "Could not connect to Analyser",
-                }
-            )
-        new_data_metrics = response_from_analyser.json()["metrics"]
+        # if response_from_analyser.status_code == 200:
+        #     pass
+        # else:
+        #     return JsonResponse(
+        #         {
+        #             "status": "FAILURE",
+        #             "details": "Could not connect to Analyser",
+        #         }
+        #     )
+        # new_data_metrics = response_from_analyser.json()["metrics"]
 
-        data_to_store = []
-        for metrics, stamped in zip(new_data_metrics, new_data):
-            metrics["timestamp"] = stamped["timestamp"]
-            metrics["source_id"] = source_id_raw
-            data_to_store.append(metrics)
+        # data_to_store = []
+        # for metrics, stamped in zip(new_data_metrics, new_data):
+        #     metrics["timestamp"] = stamped["timestamp"]
+        #     metrics["source_id"] = source_id_raw
+        #     data_to_store.append(metrics)
 
-        # 3.
-        for x in data_to_store:
-            sentiment_record_model.add_record(x)
+        # # 3.
+        # for x in data_to_store:
+        #     sentiment_record_model.add_record(x)
 
         # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
 

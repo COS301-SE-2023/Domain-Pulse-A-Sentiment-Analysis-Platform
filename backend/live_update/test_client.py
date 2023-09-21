@@ -4,20 +4,16 @@ sio = socketio.Client()
 
 @sio.event
 def connect():
-    #wait for connection
-    print('connection established')
-    #sleep 3 seconds
-    sio.sleep(3)
-    sio.emit('query', {'get': 'domains', 'domain_ids': ['64d5fb73521cb3711dea36b8']})
+    sio.emit('my_message', {'data': 'foobar'})
 
-@sio.on('query_result')
-def on_message(data):
-    print('I received a message!')
-    print(data)
+@sio.event
+def my_message(data):
+    print('message received with ', data)
+    sio.emit('my response', {'response': 'my response'})
 
 @sio.event
 def disconnect():
     print('disconnected from server')
 
-sio.connect('http://localhost:5001')
+sio.connect('http://localhost:5000')
 sio.wait()

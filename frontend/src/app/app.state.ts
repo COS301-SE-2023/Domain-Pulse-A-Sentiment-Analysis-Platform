@@ -142,8 +142,12 @@ export class AppState {
         }
       });
 
-    this.socket.on('new_source_data', (newSourceData) => {
+    this.socket.on('new_source_data', (newSourceData: any) => {
       this.store.dispatch(new PartialRefreshSourceData(newSourceData));
+    });
+    this.socket.on('done_refreshing', () => {
+      // maybe this works maybe it doesnt
+      this.store.dispatch(new GetSourceDashBoardInfo());
     });
   }
 
