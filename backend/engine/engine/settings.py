@@ -63,14 +63,16 @@ INSTALLED_APPS = [
     "analyser",
     "aggregator",
     "corsheaders",
-    "elasticapm.contrib.django",
 ]
+
+if os.getenv("APM_ENABLED") == "True":
+    INSTALLED_APPS.append("elasticapm.contrib.django")
 
 ELASTIC_APM = {
     "LOG_LEVEL": "debug",
     "SERVER_URL": os.getenv("APM_SERVER_URL"),
     "SERVICE_NAME": "engine",
-    "SECRET_TOKEN": "<shared with gpg>",
+    "SECRET_TOKEN": os.getenv("APM_TOKEN"),
 }
 
 MIDDLEWARE = [
