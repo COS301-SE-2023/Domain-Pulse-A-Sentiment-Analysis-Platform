@@ -27,8 +27,8 @@ describe('MainComponent', () => {
     component.setSideBarOpen();
     expect(component.sidebarCollapsed).toBeFalse();
 
-    component.setSideBarOpen();
-    expect(component.sidebarCollapsed).toBeFalse();
+    component.setSideBarClosed();
+    expect(component.sidebarCollapsed).toBeTrue();
   });
 
   it('should process pdf URL correctly', () => {

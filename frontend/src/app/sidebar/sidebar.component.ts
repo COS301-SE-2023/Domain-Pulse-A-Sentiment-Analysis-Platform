@@ -169,14 +169,6 @@ export class SidebarComponent {
     });
   }
 
-  logClick1(){
-    console.log('click1');
-  }
-
-  logClick2(){
-    console.log('click2');
-  }
-
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
