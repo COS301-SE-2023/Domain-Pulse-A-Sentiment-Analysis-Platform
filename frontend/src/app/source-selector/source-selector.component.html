@@ -213,8 +213,17 @@
           </div>
 
           <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'csv'">
-            <p class="step-heading">CSV Upload:</p>
+            <p class="step-heading">CSV Upload (in correct format):</p>
+            <div class="flex-row">
             <input type="file" class="file-block" (change)="uploadFile($event)">
+              <span style = "padding-left: 0.5rem;"class="flex-row center" [searchTerm]="'csv'" [tooltip]="'Upload a .csv (excel) file'">      
+                <img
+                  src="../../assets/icons/tooltip.svg"
+                  
+                  style="width: 1.5rem;"
+                />
+              </span>
+            </div>
           </div>
 
           <div class="flex-column center" style="width: 100%" *ngIf="newSourcePlatform === ''">

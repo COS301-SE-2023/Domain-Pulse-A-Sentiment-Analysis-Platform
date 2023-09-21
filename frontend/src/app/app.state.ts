@@ -1165,7 +1165,7 @@ export class AppState {
 
     this.appApi.sendCSVFile(sourceID, file).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.store.dispatch(new ToastError('Your file could not be uploaded'));
+        this.store.dispatch(new ToastError('Your file could not be uploaded - ensure your format is correct'));
         selectedSource.isRefreshing = false;
       ctx.patchState({
         selectedSource,
