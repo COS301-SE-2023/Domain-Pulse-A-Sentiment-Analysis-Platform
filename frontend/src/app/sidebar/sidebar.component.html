@@ -477,7 +477,7 @@
         </div>
         <div
           class="button clickable-item"
-          (click)="toggleConfirmDeleteAccountModal()"
+          (click)="toggleDeleteAccountModal()"
           data-cy="openDeleteAccount"
         >
           <img
@@ -641,41 +641,7 @@
   </div>
 </dp-modal-container>
 
-<dp-modal-container
-  [modalDisplay]="showConfirmDeleteAccountModal"
-  (close)="toggleConfirmDeleteAccountModal()"
->
-  <div
-    class="flex-row modal"
-    style="width: 30vw; height: 25vh; color: black; border-radius: 10px"
-  >
-    <div class="flex-row center" style="width: 100%">
-      <div class="flex-column center" style="gap: 2rem">
-        <p class="confirm-text">
-          Are you sure you want to delete your account?
-        </p>
-        <div class="button-div">
-          <div
-            class="confirm-button clickable-item green center"
-            (click)="toggleDeleteAccountModal()"
-            data-cy="yesDeleteAccount"
-          >
-            <img class="button-icon" src="../assets/icons/yes.svg" alt="Icon" />
-            <span class="button-text" style="margin-left: 0">Yes</span>
-          </div>
-          <div
-            class="confirm-button clickable-item red center"
-            (click)="toggleConfirmDeleteAccountModal()"
-            data-cy="noDeleteAccount"
-          >
-            <img class="button-icon" src="../assets/icons/no.svg" alt="Icon" />
-            <span class="button-text" style="margin-left: 0">No</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</dp-modal-container>
+
 
 <dp-modal-container
   [modalDisplay]="showDeleteAccountModal"

@@ -36,6 +36,9 @@ import {
   ToggleProfileModal,
   ToggleConfirmDeleteDomainModal,
   ToggleEditDomainModal,
+  ToggleChangePasswordModal,
+  ToggleDeleteAccountModal,
+  ToggleProfileEditModal,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, throwError } from 'rxjs';
@@ -121,6 +124,9 @@ interface AppStateModel {
   showProfileModal?: boolean;
   showEditDomainModal?: boolean;
   showConfirmDeleteDomainModal?: boolean;
+  showChangePasswordModal?: boolean;
+  showDeleteAccountModal?: boolean;
+  showProfileEditModal?: boolean;
 }
 
 @State<AppStateModel>({
@@ -276,6 +282,23 @@ export class AppState {
     return state.showConfirmDeleteDomainModal;
   }
 
+  @Selector()
+  static showChangePasswordModal(state: AppStateModel) {
+    return state.showChangePasswordModal;
+  }
+
+  @Selector()
+  static showDeleteAccountModal(state: AppStateModel) {
+    return state.showDeleteAccountModal;
+  }
+
+  @Selector()
+  static showProfileEditModal(state: AppStateModel) {
+    return state.showProfileEditModal;
+  }
+
+
+
 
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
@@ -330,6 +353,30 @@ export class AppState {
     const state = ctx.getState();
     ctx.patchState({
       showConfirmDeleteDomainModal: !state.showConfirmDeleteDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleChangePasswordModal)
+  toggleChangePasswordModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showChangePasswordModal: !state.showChangePasswordModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleDeleteAccountModal)
+  toggleDeleteAccountModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showDeleteAccountModal: !state.showDeleteAccountModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleProfileEditModal)
+  toggleProfileEditModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showProfileEditModal: !state.showProfileEditModal, // Toggle the value
     });
   }
   

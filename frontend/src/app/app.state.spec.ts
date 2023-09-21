@@ -32,8 +32,11 @@ import {
   ToastError,
   ToastSuccess,
   ToggleAddDomainModal,
+  ToggleChangePasswordModal,
   ToggleConfirmDeleteDomainModal,
+  ToggleDeleteAccountModal,
   ToggleEditDomainModal,
+  ToggleProfileEditModal,
   ToggleProfileModal,
   UplaodCVSFile,
 } from './app.actions';
@@ -1037,4 +1040,30 @@ describe('AppState', () => {
 
     expect(state.showConfirmDeleteDomainModal).toBe(true);
   });
+
+  it('should toggle showDeleteAccountModal', () => {
+    store.dispatch(new ToggleDeleteAccountModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showDeleteAccountModal).toBe(true);
+  });
+
+  it('should toggle showChangePasswordModal', () => {
+    store.dispatch(new ToggleChangePasswordModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showChangePasswordModal).toBe(true);
+  });
+
+  it('should toggle showProfileEditModal', () => {
+    store.dispatch(new ToggleProfileEditModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showProfileEditModal).toBe(true);
+  });
+
+
 });

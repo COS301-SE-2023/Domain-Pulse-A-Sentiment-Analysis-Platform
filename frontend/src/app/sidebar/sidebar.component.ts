@@ -34,6 +34,9 @@ import {
   ToggleProfileModal,
   ToggleConfirmDeleteDomainModal,
   ToggleEditDomainModal,
+  ToggleChangePasswordModal,
+  ToggleDeleteAccountModal,
+  ToggleProfileEditModal,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -97,6 +100,10 @@ export class SidebarComponent implements OnInit {
   @Select(AppState.showProfileModal) showProfileModal$!: Observable<boolean>;
   @Select(AppState.showEditDomainModal) showEditDomainModal$!: Observable<boolean>;
   @Select(AppState.showConfirmDeleteDomainModal) showConfirmDeleteDomainModal$!: Observable<boolean>;
+  @Select(AppState.showChangePasswordModal) showChangePasswordModal$!: Observable<boolean>;
+  @Select(AppState.showDeleteAccountModal) showDeleteAccountModal$!: Observable<boolean>;
+  @Select(AppState.showProfileEditModal) showProfileEditModal$!: Observable<boolean>;
+
 
 
 
@@ -159,7 +166,6 @@ export class SidebarComponent implements OnInit {
   showProfileEditModal = false;
   showChangePasswordModal = false;
   showDeleteAccountModal = false;
-  showConfirmDeleteAccountModal = false;
   showConfirmDeleteDomainModal = false;
 
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
@@ -210,6 +216,29 @@ export class SidebarComponent implements OnInit {
       this.showConfirmDeleteDomainModal = value;
     });
 
+    this.store.select(AppState.showChangePasswordModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showChangePasswordModal = value;
+    });
+
+    this.store.select(AppState.showDeleteAccountModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showDeleteAccountModal = value;
+    });
+
+    this.store.select(AppState.showProfileEditModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showProfileEditModal = value;
+    });
+
+
+
 
   
   }
@@ -253,37 +282,20 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleProfileEditModal(): void {
-    if (!this.showProfileEditModal) {
-      this.showProfileEditModal = true;
-    } else {
-      this.showProfileEditModal = false;
-    }
+    this.store.dispatch(new ToggleProfileEditModal());
+
   }
 
   toggleChangePasswordModal(): void {
-    if (!this.showChangePasswordModal) {
-      this.showChangePasswordModal = true;
-    } else {
-      this.showChangePasswordModal = false;
-    }
+    this.store.dispatch(new ToggleChangePasswordModal());
   }
 
   toggleDeleteAccountModal(): void {
-    if (!this.showDeleteAccountModal) {
-      this.showDeleteAccountModal = true;
-    } else {
-      this.showDeleteAccountModal = false;
-      this.toggleConfirmDeleteAccountModal();
-    }
+    this.store.dispatch(new ToggleDeleteAccountModal());
+
   }
 
-  toggleConfirmDeleteAccountModal(): void {
-    if (!this.showConfirmDeleteAccountModal) {
-      this.showConfirmDeleteAccountModal = true;
-    } else {
-      this.showConfirmDeleteAccountModal = false;
-    }
-  }
+
 
   toggleConfirmDeleteDomainModal(id?: string): void {
     if(id){

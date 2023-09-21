@@ -16,8 +16,11 @@ import {
   SetUserDetails,
   ToastError,
   ToggleAddDomainModal,
+  ToggleChangePasswordModal,
   ToggleConfirmDeleteDomainModal,
+  ToggleDeleteAccountModal,
   ToggleEditDomainModal,
+  ToggleProfileEditModal,
   ToggleProfileModal,
 } from '../app.actions';
 import { AppState, DisplayDomain, UserDetails } from '../app.state';
@@ -253,13 +256,15 @@ describe('SidebarComponent', () => {
   });
 
   it('toggle the edit profile modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
     component.showProfileEditModal = false;
     component.toggleProfileEditModal();
-    expect(component.showProfileEditModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileEditModal());
 
     component.showProfileEditModal = true;
     component.toggleProfileEditModal();
-    expect(component.showProfileEditModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileEditModal());
   });
 
   // Integration Test
@@ -465,36 +470,30 @@ describe('SidebarComponent and AppState', () => {
 
 
   it('should toggle the change password modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+
     component.showChangePasswordModal = false;
     component.toggleChangePasswordModal();
-    expect(component.showChangePasswordModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
 
     component.showChangePasswordModal = true;
     component.toggleChangePasswordModal();
-    expect(component.showChangePasswordModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
   });
 
   it('should toggle the delete account modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
     component.showDeleteAccountModal = false;
     component.toggleDeleteAccountModal();
-    expect(component.showDeleteAccountModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleDeleteAccountModal());
 
     component.showDeleteAccountModal = true;
     component.toggleDeleteAccountModal();
-    expect(component.showDeleteAccountModal).toBe(false);
-    expect(component.showConfirmDeleteAccountModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleDeleteAccountModal());
   });
 
-  it('should toggle the confirm delete account modal', () => {
-    
-    component.showConfirmDeleteAccountModal = false;
-    component.toggleConfirmDeleteAccountModal();
-    expect(component.showConfirmDeleteAccountModal).toBe(true);
-
-    component.showConfirmDeleteAccountModal = true;
-    component.toggleConfirmDeleteAccountModal();
-    expect(component.showConfirmDeleteAccountModal).toBe(false);
-  });
 
   it('should toggle the confirm delete domain modal and set deleteDomainId if id is provided', () => {
     const dummyDomainId = '123';
@@ -755,7 +754,8 @@ it('should dispatch ChangePassword action and reset passwords', () => {
   expect(storeDispatchSpy).toHaveBeenCalledWith(new ChangePassword('oldpassword', 'newpassword'));
   expect(component.oldPassword).toBe('');
   expect(component.newPassword).toBe('');
-  expect(component['showChangePasswordModal']).toBe(true);
+  expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
+
 });
 
 it('should dispatch DeleteUser action when username is available', () => {
