@@ -182,3 +182,12 @@ export class ToggleAddDomainModal {
 export class ToggleProfileModal {
   static readonly type = '[App] Toggle Profile Modal';
 }
+
+export class ToggleEditDomainModal{
+  static readonly type = '[App] Toggle Edit Domain Modal';
+
+}
+
+export class ToggleConfirmDeleteDomainModal{
+  static readonly type = '[App] Toggle Confirm Delete Domain Modal';
+}

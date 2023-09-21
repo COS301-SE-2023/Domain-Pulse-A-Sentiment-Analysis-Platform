@@ -32,6 +32,8 @@ import {
   SetAllSourcesSelected,
   ToggleAddDomainModal,
   ToggleProfileModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleEditDomainModal,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -93,6 +95,9 @@ export class SidebarComponent implements OnInit {
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
   @Select(AppState.showAddDomainModal) showAddDomainModal$!: Observable<boolean>;
   @Select(AppState.showProfileModal) showProfileModal$!: Observable<boolean>;
+  @Select(AppState.showEditDomainModal) showEditDomainModal$!: Observable<boolean>;
+  @Select(AppState.showConfirmDeleteDomainModal) showConfirmDeleteDomainModal$!: Observable<boolean>;
+
 
 
 
@@ -190,6 +195,22 @@ export class SidebarComponent implements OnInit {
       }
       this.showProfileModal = value;
     }); 
+
+    this.store.select(AppState.showEditDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showEditDomainModal = value;
+    });
+
+    this.store.select(AppState.showConfirmDeleteDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showConfirmDeleteDomainModal = value;
+    });
+
+
   
   }
 
@@ -214,7 +235,7 @@ export class SidebarComponent implements OnInit {
 
   toggleEditDomainModal(): void {
     if (!this.showEditDomainModal) {
-      this.showEditDomainModal = true;
+      this.store.dispatch(new ToggleEditDomainModal());
       const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
       if (!selectedDomain) return;
       this.editDomainName = selectedDomain.name;
@@ -223,7 +244,7 @@ export class SidebarComponent implements OnInit {
       this.selectIconEdit(selectedDomain.imageUrl);
       
     } else {
-      this.showEditDomainModal = false;
+      this.store.dispatch(new ToggleEditDomainModal());
     }
   }
 
@@ -268,12 +289,7 @@ export class SidebarComponent implements OnInit {
     if(id){
       this.deleteDomainId = id;
     }
-    if (!this.showConfirmDeleteDomainModal) {      
-      this.showConfirmDeleteDomainModal = true;
-    } else {
-      
-      this.showConfirmDeleteDomainModal = false;
-    }
+    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
   }
 
   /* closeAllModals(): void {
@@ -403,7 +419,7 @@ export class SidebarComponent implements OnInit {
       })
     ).subscribe((result) => {
       this.editDomainSpinner = false;
-      this.toggleEditDomainModal();
+      this.store.dispatch(new ToggleEditDomainModal());
     });
 
     
@@ -416,7 +432,7 @@ export class SidebarComponent implements OnInit {
 
   deleteDomain() {
     this.store.dispatch(new DeleteDomain(this.deleteDomainId));
-    this.toggleConfirmDeleteDomainModal();
+    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
   }
 
   selectDomain(domain: DisplayDomain) {

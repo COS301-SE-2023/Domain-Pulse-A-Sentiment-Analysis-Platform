@@ -32,6 +32,8 @@ import {
   ToastError,
   ToastSuccess,
   ToggleAddDomainModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleEditDomainModal,
   ToggleProfileModal,
   UplaodCVSFile,
 } from './app.actions';
@@ -1018,5 +1020,21 @@ describe('AppState', () => {
     const state = store.selectSnapshot(AppState);
 
     expect(state.showProfileModal).toBe(true);
+  });
+
+  it('should toggle showEditDomainModal', () => {
+    store.dispatch(new ToggleEditDomainModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showEditDomainModal).toBe(true);
+  });
+
+  it('should toggle showConfirmDeleteDomainModal', () => {
+    store.dispatch(new ToggleConfirmDeleteDomainModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showConfirmDeleteDomainModal).toBe(true);
   });
 });

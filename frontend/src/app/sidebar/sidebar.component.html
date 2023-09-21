@@ -99,7 +99,7 @@
         [searchTerm]="'remove'"
         height="15px"
         (click)="
-          toggleConfirmDeleteDomainModal(domain.id)
+          toggleConfirmDeleteDomainModal(domain.id); 
         "
         class="clickable-item"
         data-cy="deleteDomain"
@@ -128,7 +128,7 @@
 
   <div
     class="domain flex-row align-center clickable-item"
-    (click)="toggleProfileModal()"
+    (click)="toggleProfileModal();"
     data-cy="profileModalToggle"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
@@ -611,7 +611,7 @@
 
 <dp-modal-container
   [modalDisplay]="showConfirmDeleteDomainModal"
-  (close)="toggleConfirmDeleteDomainModal()"
+  (close)="toggleConfirmDeleteDomainModal();"
 >
   <div
     class="flex-row modal"

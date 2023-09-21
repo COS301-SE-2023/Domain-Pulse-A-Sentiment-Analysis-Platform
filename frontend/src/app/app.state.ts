@@ -33,7 +33,9 @@ import {
   UplaodCVSFile,
   GenerateReport,
   ToggleAddDomainModal,
-  ToggleProfileModal
+  ToggleProfileModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleEditDomainModal,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, throwError } from 'rxjs';
@@ -117,6 +119,8 @@ interface AppStateModel {
   pdfUrl?: string;
   showAddDomainModal?: boolean;
   showProfileModal?: boolean;
+  showEditDomainModal?: boolean;
+  showConfirmDeleteDomainModal?: boolean;
 }
 
 @State<AppStateModel>({
@@ -132,6 +136,8 @@ interface AppStateModel {
     userHasNoSources: false,
     showAddDomainModal: false,
     showProfileModal: false,
+    showEditDomainModal: false,
+    showConfirmDeleteDomainModal: false,
   },
 })
 @Injectable()
@@ -260,6 +266,17 @@ export class AppState {
     return state.showProfileModal;
   }
 
+  @Selector()
+  static showEditDomainModal(state: AppStateModel) {
+    return state.showEditDomainModal;
+  }
+
+  @Selector()
+  static showConfirmDeleteDomainModal(state: AppStateModel) {
+    return state.showConfirmDeleteDomainModal;
+  }
+
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -299,6 +316,23 @@ export class AppState {
       showProfileModal: !state.showProfileModal, // Toggle the value
     });
   }
+
+  @Action(ToggleEditDomainModal)
+  toggleEditDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showEditDomainModal: !state.showEditDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleConfirmDeleteDomainModal)
+  toggleConfirmDeleteDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showConfirmDeleteDomainModal: !state.showConfirmDeleteDomainModal, // Toggle the value
+    });
+  }
+  
 
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
