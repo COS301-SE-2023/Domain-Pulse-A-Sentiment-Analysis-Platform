@@ -148,6 +148,11 @@ def mocked_find_one_and_update(dummy1, dummy2):
 
 
 class DomainsTests(TestCase):
+    def test_apm_enabled(self):
+        with self.settings(APM_ENABLED="True"):
+            response = self.client.get(path="/avail_ping/")
+            self.assertEqual(200, response.status_code)
+
     def test_ping(self):
         response = self.client.get(path="/avail_ping/")
         self.assertEqual(200, response.status_code)

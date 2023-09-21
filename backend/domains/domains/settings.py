@@ -32,11 +32,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '154.73.32.89',
-    '.domainpulse.app',
-    '.dp.cos301.thuthuka.me',
+    "127.0.0.1",
+    "localhost",
+    "154.73.32.89",
+    ".domainpulse.app",
+    ".dp.cos301.thuthuka.me",
     "dev-domains",
     "dev-engine",
     "dev-profiles",
@@ -74,8 +74,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
 ]
-
-if os.getenv("APM_ENABLED") == "True":
+print("outside")
+APM_ENABLED = os.getenv("APM_ENABLED")
+print(APM_ENABLED)
+if APM_ENABLED == "True":
     INSTALLED_APPS.append("elasticapm.contrib.django")
 
 ELASTIC_APM = {
