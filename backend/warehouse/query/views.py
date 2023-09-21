@@ -148,7 +148,7 @@ def get_report_data_internal(request: HttpRequest):
 
             request_to_engine_body = {"metrics": all_individual_records}
 
-            url = f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
+            url = f"http://{str(os.getenv('ENGINE_HOST'))}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/"
             response_from_aggregator = requests.post(
                 url, data=json.dumps(request_to_engine_body)
             )
