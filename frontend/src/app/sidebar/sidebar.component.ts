@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   trigger,
   state,
@@ -30,6 +30,8 @@ import {
   ToastError,
   Logout,
   SetAllSourcesSelected,
+  ToggleAddDomainModal,
+  ToggleProfileModal,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -71,7 +73,7 @@ import { environment } from '../../environment';
     ]),
   ],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Output() closeSidebar: EventEmitter<void> = new EventEmitter<void>();
   @Output() openSidebar: EventEmitter<void> = new EventEmitter<void>();
 
@@ -89,6 +91,10 @@ export class SidebarComponent {
   @Select(AppState.profileDetails)
   profileDetails$!: Observable<ProfileDetails | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  @Select(AppState.showAddDomainModal) showAddDomainModal$!: Observable<boolean>;
+  @Select(AppState.showProfileModal) showProfileModal$!: Observable<boolean>;
+
+
 
   domains: DisplayDomain[] = [];
   smallLogoState = 'in';
@@ -169,23 +175,41 @@ export class SidebarComponent {
     });
   }
 
+  ngOnInit() {
+    this.store.select(AppState.showAddDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showAddDomainModal = value;
+    }); 
+
+    
+    this.store.select(AppState.showProfileModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showProfileModal = value;
+    }); 
+  
+  }
+
 
   toggleDomainModalOff(): void {
 
-    this.showAddDomainModal = false;
+    this.store.dispatch(new ToggleAddDomainModal());
 
   }
 
   toggleDomainModalOn(): void {
     if(this.domains == undefined){
-      this.showAddDomainModal = true;
+      this.store.dispatch(new ToggleAddDomainModal());
       return;
     }
     if(this.domains.length > 8){
       this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
       return;
     }
-    this.showAddDomainModal = true;
+    this.store.dispatch(new ToggleAddDomainModal());
   }
 
   toggleEditDomainModal(): void {
@@ -204,11 +228,7 @@ export class SidebarComponent {
   }
 
   toggleProfileModal(): void {
-    if (!this.showProfileModal) {
-      this.showProfileModal = true;
-    } else {
-      this.showProfileModal = false;
-    }
+    this.store.dispatch(new ToggleProfileModal());
   }
 
   toggleProfileEditModal(): void {

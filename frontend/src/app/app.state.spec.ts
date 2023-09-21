@@ -31,6 +31,8 @@ import {
   SetUserDetails,
   ToastError,
   ToastSuccess,
+  ToggleAddDomainModal,
+  ToggleProfileModal,
   UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
@@ -1000,5 +1002,21 @@ describe('AppState', () => {
     });
   
     store.dispatch(new DeleteDomain(domainID));
+  });
+
+  it('should toggle showAddDomainModal', () => {
+    store.dispatch(new ToggleAddDomainModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showAddDomainModal).toBe(true);
+  });
+
+  it('should toggle showProfileModal', () => {
+    store.dispatch(new ToggleProfileModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showProfileModal).toBe(true);
   });
 });

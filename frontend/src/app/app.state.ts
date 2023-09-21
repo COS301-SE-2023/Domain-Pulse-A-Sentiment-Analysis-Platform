@@ -31,7 +31,9 @@ import {
   SetAllSourcesSelected,
   SetIsActive,
   UplaodCVSFile,
-  GenerateReport
+  GenerateReport,
+  ToggleAddDomainModal,
+  ToggleProfileModal
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, throwError } from 'rxjs';
@@ -113,6 +115,8 @@ interface AppStateModel {
   toasterError?: Toast;
   toasterSuccess?: Toast;
   pdfUrl?: string;
+  showAddDomainModal?: boolean;
+  showProfileModal?: boolean;
 }
 
 @State<AppStateModel>({
@@ -126,6 +130,8 @@ interface AppStateModel {
     pdfUrl: '',
     userHasNoDomains: false,
     userHasNoSources: false,
+    showAddDomainModal: false,
+    showProfileModal: false,
   },
 })
 @Injectable()
@@ -244,6 +250,16 @@ export class AppState {
     return state.userHasNoSources;
   }
 
+  @Selector()
+  static showAddDomainModal(state: AppStateModel) {
+    return state.showAddDomainModal;
+  }
+
+  @Selector()
+  static showProfileModal(state: AppStateModel) {
+    return state.showProfileModal;
+  }
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -266,6 +282,22 @@ export class AppState {
   @Action(Initialise)
   initiliaze(ctx: StateContext<AppStateModel>) {
     this.store.dispatch(new CheckAuthenticate());
+  }
+
+  @Action(ToggleAddDomainModal)
+  toggleAddDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showAddDomainModal: !state.showAddDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleProfileModal)
+  toggleProfileModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showProfileModal: !state.showProfileModal, // Toggle the value
+    });
   }
 
   @Action(GetDomains)
@@ -983,6 +1015,8 @@ export class AppState {
           profileDetails: undefined,
           toasterError: undefined,
           toasterSuccess: undefined,
+          showAddDomainModal: false,
+          showProfileModal: false,
         });
         this.router.navigate(['/login']);
         this.store.dispatch(new ToastSuccess('You have been logged out'));

@@ -174,3 +174,11 @@ export class GenerateReport{
   static readonly type = '[Source] Generate Report';
   constructor(public domainId: string) {}
 }
+
+export class ToggleAddDomainModal {
+  static readonly type = '[App] Toggle Add Domain Modal';
+}
+
+export class ToggleProfileModal {
+  static readonly type = '[App] Toggle Profile Modal';
+}

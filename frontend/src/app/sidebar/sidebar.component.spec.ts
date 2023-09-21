@@ -15,6 +15,8 @@ import {
   SetDomain,
   SetUserDetails,
   ToastError,
+  ToggleAddDomainModal,
+  ToggleProfileModal,
 } from '../app.actions';
 import { AppState, DisplayDomain, UserDetails } from '../app.state';
 import { ModalContainerComponent } from '../modal-container/modal-container.component';
@@ -131,6 +133,9 @@ describe('SidebarComponent', () => {
   });
 
   it('should Toggle The domain flag', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    
     const dummyDisplayDomain: DisplayDomain = {
       id: '1',
       name: 'Dummy Domain',
@@ -145,11 +150,12 @@ describe('SidebarComponent', () => {
 
     component.showAddDomainModal = false;
     component.toggleDomainModalOn();
-    expect(component.showAddDomainModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
+
 
     component.showAddDomainModal = true;
     component.toggleDomainModalOff();
-    expect(component.showAddDomainModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
   });
 
   it('should not toggle The domain flag', () => {
@@ -194,7 +200,8 @@ describe('SidebarComponent', () => {
     component.showAddDomainModal = false;
     component.toggleDomainModalOn();
     
-    expect(component.showAddDomainModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
+
 
 
   });
@@ -210,13 +217,16 @@ describe('SidebarComponent', () => {
   });
 
   it('should toggle the Profile Modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    
     component.showProfileModal = false;
     component.toggleProfileModal();
-    expect(component.showProfileModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileModal());
 
     component.showProfileModal = true;
     component.toggleProfileModal();
-    expect(component.showProfileModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileModal());
   });
 
   it('toggle the edit profile modal', () => {
