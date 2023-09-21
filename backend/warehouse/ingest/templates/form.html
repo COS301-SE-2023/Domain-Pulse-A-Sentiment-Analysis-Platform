@@ -1,16 +1,53 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Input Form</title>
-</head>
-<body>
-    <form method="post", action="/ingest/live_review/">
-        <label for="review_text">Please provide your review for {{source_name}}:</label>
-        <input type="text" name="review_text" id="review_text">
-        <input type="hidden" name="source_id" value={{source_id}}>
-        <br>
-        <input type="submit" value="Submit">
-    </form>
+  {% load static %}
 
-</body>
+  <head>
+    <title>Submit Review</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const submitButton = document.querySelector('.button');
+          const spinner = document.querySelector('.button-spinner');
+  
+          submitButton.addEventListener('click', function () {
+            spinner.classList.add('active');
+          });
+        });
+      </script>
+  </head>
+  <body>
+    <div class="flex-column center container">
+      <img class="logo" src="{% static 'Centre logo white.svg' %}" />
+      <div class="flex-column center block">
+        <div class="title">
+          <p>What do you think about</p>
+          <p class="domain-name">{{source_name}}?</p>
+        </div>
+        <form
+          class="form flex-column center"
+          method="post"
+          ,
+          action="/ingest/live_review/"
+        >
+          <textarea
+            name="review_text"
+            id="review_text"
+            class="textbox"
+            placeholder="Write your review here..."
+          ></textarea>
+          <input type="hidden" name="source_id" value="{{source_id}}" />
+          <button type="submit" value="Submit" class="button center clickable-item">
+            submit
+            <div class="button-spinner"></div>
+          </button>
+        </form>
+      </div>
+
+      <div class="filler"></div>
+    </div>
+  </body>
 </html>

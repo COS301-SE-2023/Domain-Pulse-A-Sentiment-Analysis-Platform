@@ -10,6 +10,15 @@ import socketio
 # Create your views here.
 
 
+def ping(request: HttpRequest):
+    RETURN_CODE = 200
+    RETURN_MESSAGE = "Hi I'm available!"
+    response = HttpResponse()
+    response.content = RETURN_MESSAGE
+    response.status_code = RETURN_CODE
+    return response
+
+
 # Uses the mock data
 # def get_sentiment_metrics(request: HttpRequest, source_id):
 #     source_id = int(source_id)

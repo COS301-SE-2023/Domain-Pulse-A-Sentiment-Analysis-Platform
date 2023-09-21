@@ -37,6 +37,16 @@ ALLOWED_HOSTS = [
     "154.73.32.89",
     ".domainpulse.app",
     ".dp.cos301.thuthuka.me",
+    "dev-domains",
+    "dev-engine",
+    "dev-profiles",
+    "dev-sourceconnector",
+    "dev-warehouse",
+    "prod-domains",
+    "prod-engine",
+    "prod-profiles",
+    "prod-sourceconnector",
+    "prod-warehouse",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = False
@@ -154,7 +164,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "ingest/static"),
+]
+
+STATIC_ROOT = "/static/"
+
+STATIC_URL = "ingest/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

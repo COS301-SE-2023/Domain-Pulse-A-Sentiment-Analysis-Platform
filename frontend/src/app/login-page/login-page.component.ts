@@ -8,6 +8,7 @@ import { AttempPsswdLogin } from '../app.actions';
   styleUrls: ['./login-page.component.sass'],
 })
 export class LoginPageComponent {
+  showForgotPasswordModal = false;
   isSpinning = false;
   username = '';
   password = '';
@@ -29,5 +30,9 @@ export class LoginPageComponent {
           this.isSpinning = false;
         }
       });
+  }
+
+  toggleForgotPasswordModal() {
+    this.showForgotPasswordModal = !this.showForgotPasswordModal;
   }
 }

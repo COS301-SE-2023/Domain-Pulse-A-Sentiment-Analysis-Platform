@@ -1,0 +1,131 @@
+version: "3.9"
+
+services:
+  prod-domains:
+    image: thuthuka111/domain-pulse-domains:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
+    ports:
+      - "8000:8000"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini domains.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod-network
+
+  prod-engine:
+    image: thuthuka111/domain-pulse-engine:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
+    ports:
+      - "8001:8001"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini engine.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod-network
+
+  prod-profiles:
+    image: thuthuka111/domain-pulse-profiles:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
+    ports:
+      - "8002:8002"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini profiles.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod-network
+
+  prod-sourceconnector:
+    image: thuthuka111/domain-pulse-sourceconnector:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
+    ports:
+      - "8003:8003"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini sourceconnector.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod-network
+
+  prod-warehouse:
+    image: thuthuka111/domain-pulse-warehouse:latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=prod-domains
+      - ENGINE_HOST=prod-engine
+      - PROFILES_HOST=prod-profiles
+      - SOURCECONNECTOR_HOST=prod-sourceconnector
+      - WAREHOUSE_HOST=prod-warehouse
+    ports:
+      - "8004:8004"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini warehouse.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - prod-network
+
+  prod-webserver:
+    image: thuthuka111/domain-pulse-webserver:latest
+    environment:
+      - NGINX_CONF=prod-domainpulse.app.conf
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    ports:
+      - "5500:80"
+    depends_on:
+      - prod-engine
+      - prod-domains
+      - prod-profiles
+      - prod-sourceconnector
+      - prod-warehouse
+    networks:
+      - prod-network
+
+volumes:
+  uwsgi_data:
+
+networks:
+  prod-network:

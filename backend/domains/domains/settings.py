@@ -32,11 +32,21 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "154.73.32.89",
-    ".domainpulse.app",
-    ".dp.cos301.thuthuka.me",
+    '127.0.0.1',
+    'localhost',
+    '154.73.32.89',
+    '.domainpulse.app',
+    '.dp.cos301.thuthuka.me',
+    "dev-domains",
+    "dev-engine",
+    "dev-profiles",
+    "dev-sourceconnector",
+    "dev-warehouse",
+    "prod-domains",
+    "prod-engine",
+    "prod-profiles",
+    "prod-sourceconnector",
+    "prod-warehouse",
 ]
 
 CORS_ORIGIN_ALLOW_ALL = False

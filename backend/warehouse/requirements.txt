@@ -7,6 +7,8 @@ python-dotenv
 pymongo
 requests
 bleach
+unidecode
+bleach
 
 #monitoring
 elastic-apm
