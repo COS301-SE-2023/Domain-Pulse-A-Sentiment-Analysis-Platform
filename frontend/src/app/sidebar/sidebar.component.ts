@@ -5,6 +5,7 @@ import {
   style,
   animate,
   transition,
+  AUTO_STYLE,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
 import {
@@ -41,45 +42,45 @@ import { environment } from '../../environment';
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+       })
       ),
       state(
         'out',
         style({
           opacity: 0,
-          transform: 'scale(0.5)',
-        })
+       })
       ),
-      transition('in => out', animate('300ms ease-in')),
-      transition('out => in', animate('300ms ease-out')),
+      transition('in => out', animate('300ms linear')),
+      transition('out => in', animate('300ms linear')),
     ]),
     trigger('fullLogoSwitch', [
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+})
       ),
       state(
         'out',
         style({
-          opacity: 0,
-          transform: 'scale(0.7)',
-        })
+          opacity: 0,        })
       ),
-      transition('in => out', [animate('400ms ease-in')]),
-      transition('out => in', [animate('300ms ease-out')]),
+      transition('in => out', [animate('300ms linear')]),
+      transition('out => in', [animate('300ms linear')]),
     ]),
   ],
 })
 export class SidebarComponent {
-  @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closeSidebar: EventEmitter<void> = new EventEmitter<void>();
+  @Output() openSidebar: EventEmitter<void> = new EventEmitter<void>();
 
-  clickSidebar() {
-    this.sidebarClicked.emit();
+  closeSidebarClicked() {
+    this.closeSidebar.emit();
+  }
+
+  openSidebarClicked() {
+    this.openSidebar.emit();
   }
 
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
@@ -168,8 +169,13 @@ export class SidebarComponent {
     });
   }
 
+
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
+      if(this.domains == undefined){
+        this.showAddDomainModal = true;
+        return;
+      }
       if(this.domains.length > 8){
         this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
         return;

@@ -1,6 +1,13 @@
 <div class="flex-row app-container">
-  <dp-sidebar [expanded]="!sidebarCollapsed" [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-    (sidebarClicked)="toggleSidebar()" data-cy="Togglesidebar2">
+
+  <dp-sidebar
+    [expanded]="!sidebarCollapsed"
+    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (closeSidebar)="setSideBarClosed()"
+    (openSidebar)="setSideBarOpen()"
+    data-cy="Togglesidebar2"
+  >
+
   </dp-sidebar>
 
   <ng-container *ngIf="!userHasNoDomains; else hasNoDomains">

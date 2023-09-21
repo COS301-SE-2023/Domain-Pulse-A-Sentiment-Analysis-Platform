@@ -176,6 +176,29 @@ describe('SidebarComponent', () => {
 
   });
 
+  it('should toggle domain flag if domains is undefined', () => {
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+
+    component.showAddDomainModal = false;
+    component.toggleDomainModal();
+    
+    expect(component.showAddDomainModal).toBe(true);
+
+
+  });
+
   it('should toggle the Edit Domain Modal flag', () => {
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();
@@ -240,11 +263,19 @@ describe('SidebarComponent', () => {
     component.deleteDomain();
   });
 
-  it('should fire sideBarClicked event when the sidebar is clicked', () => {
+  it('should fire closeSidebarClicked event when the sidebar is clicked', () => {
     let eventFired = false;
-    component.sidebarClicked.pipe(first()).subscribe(() => (eventFired = true));
+    component.closeSidebar.pipe(first()).subscribe(() => (eventFired = true));
 
-    component.clickSidebar();
+    component.closeSidebarClicked();
+    expect(eventFired).toBeTrue();
+  });
+
+  it('should fire openSidebarClicked event when the sidebar is clicked', () => {
+    let eventFired = false;
+    component.openSidebar.pipe(first()).subscribe(() => (eventFired = true));
+
+    component.openSidebarClicked();
     expect(eventFired).toBeTrue();
   });
 
