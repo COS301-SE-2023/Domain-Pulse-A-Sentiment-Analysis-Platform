@@ -31,7 +31,14 @@ import {
   SetAllSourcesSelected,
   SetIsActive,
   UplaodCVSFile,
-  GenerateReport
+  GenerateReport,
+  ToggleAddDomainModal,
+  ToggleProfileModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleEditDomainModal,
+  ToggleChangePasswordModal,
+  ToggleDeleteAccountModal,
+  ToggleProfileEditModal,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, throwError } from 'rxjs';
@@ -113,6 +120,13 @@ interface AppStateModel {
   toasterError?: Toast;
   toasterSuccess?: Toast;
   pdfUrl?: string;
+  showAddDomainModal?: boolean;
+  showProfileModal?: boolean;
+  showEditDomainModal?: boolean;
+  showConfirmDeleteDomainModal?: boolean;
+  showChangePasswordModal?: boolean;
+  showDeleteAccountModal?: boolean;
+  showProfileEditModal?: boolean;
 }
 
 @State<AppStateModel>({
@@ -126,6 +140,10 @@ interface AppStateModel {
     pdfUrl: '',
     userHasNoDomains: false,
     userHasNoSources: false,
+    showAddDomainModal: false,
+    showProfileModal: false,
+    showEditDomainModal: false,
+    showConfirmDeleteDomainModal: false,
   },
 })
 @Injectable()
@@ -244,6 +262,44 @@ export class AppState {
     return state.userHasNoSources;
   }
 
+  @Selector()
+  static showAddDomainModal(state: AppStateModel) {
+    return state.showAddDomainModal;
+  }
+
+  @Selector()
+  static showProfileModal(state: AppStateModel) {
+    return state.showProfileModal;
+  }
+
+  @Selector()
+  static showEditDomainModal(state: AppStateModel) {
+    return state.showEditDomainModal;
+  }
+
+  @Selector()
+  static showConfirmDeleteDomainModal(state: AppStateModel) {
+    return state.showConfirmDeleteDomainModal;
+  }
+
+  @Selector()
+  static showChangePasswordModal(state: AppStateModel) {
+    return state.showChangePasswordModal;
+  }
+
+  @Selector()
+  static showDeleteAccountModal(state: AppStateModel) {
+    return state.showDeleteAccountModal;
+  }
+
+  @Selector()
+  static showProfileEditModal(state: AppStateModel) {
+    return state.showProfileEditModal;
+  }
+
+
+
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -267,6 +323,63 @@ export class AppState {
   initiliaze(ctx: StateContext<AppStateModel>) {
     this.store.dispatch(new CheckAuthenticate());
   }
+
+  @Action(ToggleAddDomainModal)
+  toggleAddDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showAddDomainModal: !state.showAddDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleProfileModal)
+  toggleProfileModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showProfileModal: !state.showProfileModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleEditDomainModal)
+  toggleEditDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showEditDomainModal: !state.showEditDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleConfirmDeleteDomainModal)
+  toggleConfirmDeleteDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showConfirmDeleteDomainModal: !state.showConfirmDeleteDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleChangePasswordModal)
+  toggleChangePasswordModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showChangePasswordModal: !state.showChangePasswordModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleDeleteAccountModal)
+  toggleDeleteAccountModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showDeleteAccountModal: !state.showDeleteAccountModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleProfileEditModal)
+  toggleProfileEditModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showProfileEditModal: !state.showProfileEditModal, // Toggle the value
+    });
+  }
+  
 
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
@@ -983,6 +1096,8 @@ export class AppState {
           profileDetails: undefined,
           toasterError: undefined,
           toasterSuccess: undefined,
+          showAddDomainModal: false,
+          showProfileModal: false,
         });
         this.router.navigate(['/login']);
         this.store.dispatch(new ToastSuccess('You have been logged out'));
