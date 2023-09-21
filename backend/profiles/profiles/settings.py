@@ -82,6 +82,22 @@ INSTALLED_APPS = [
     "corsheaders",
 ]
 
+
+def append_installed_apps(enabled):
+    if enabled == "True":
+        INSTALLED_APPS.append("elasticapm.contrib.django")
+
+
+APM_ENABLED = os.getenv("APM_ENABLED")
+append_installed_apps(APM_ENABLED)
+
+ELASTIC_APM = {
+    "LOG_LEVEL": "debug",
+    "SERVER_URL": os.getenv("APM_SERVER_URL"),
+    "SERVICE_NAME": "profiles",
+    "SECRET_TOKEN": os.getenv("APM_TOKEN"),
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

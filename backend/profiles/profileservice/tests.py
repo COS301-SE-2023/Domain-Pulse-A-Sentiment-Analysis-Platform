@@ -33,10 +33,15 @@ def mocked_logout(dummy):
 class ProfilesTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
+    def test_apm_enabled(self):
+        from profiles import settings
+
+        settings.append_installed_apps("True")
+        self.assertIn("elasticapm.contrib.django", settings.INSTALLED_APPS)
+
     def test_ping(self):
         response = self.client.get(path="/avail_ping/")
         self.assertEqual(200, response.status_code)
-
 
     @mock.patch("utils.profilescrud.create_profile", side_effect=mocked_create_profile)
     @mock.patch("utils.profilescrud.login", side_effect=mocked_login)

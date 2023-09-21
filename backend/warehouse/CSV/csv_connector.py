@@ -14,7 +14,8 @@ def handle_request(file):
     reviews = []
     csv_reader = csv.DictReader(decoded_file.splitlines())
     current_time = datetime.now()
-    formatted_current_time = datetime.strftime(current_time, "%Y-%m-%dT%H:%M:%SZ")
+    # formatted_current_time = datetime.strftime(current_time, "%Y-%m-%dT%H:%M:%SZ")
+    formatted_current_time = current_time.timestamp()
     headers = csv_reader.fieldnames
     if headers is None:
         return {"status": "FAILURE", "details": "Invalid CSV file provided"}

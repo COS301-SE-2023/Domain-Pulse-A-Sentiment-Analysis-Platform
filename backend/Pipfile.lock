@@ -486,6 +486,22 @@
             "markers": "python_version >= '3.8' and python_version < '4.0'",
             "version": "==2.4.2"
         },
+        "ecs-logging": {
+            "hashes": [
+                "sha256:02581a56b7fc6cbae2de121a4a398ba3bd73d7bb2d67cd029a8a03df0b144098",
+                "sha256:222cc158d4331157d128bc903629010f7724eab8ba4b642efbffd0cb482f4cde"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==2.1.0"
+        },
+        "elastic-apm": {
+            "hashes": [
+                "sha256:1121eedf3e48f290fb94b3e0ecd3137f87dc5f772e9a630dc5d92e96321b8768",
+                "sha256:d5b1cae784d829aadf34358f4996757eda2e89bc6d0f03048f6b2641e32b14e1"
+            ],
+            "index": "pypi",
+            "version": "==6.18.0"
+        },
         "eventlet": {
             "hashes": [
                 "sha256:722803e7eadff295347539da363d68ae155b8b26ae6a634474d0a920be73cfda",
