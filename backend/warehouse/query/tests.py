@@ -17,6 +17,12 @@ from datamanager import sentiment_record_model
 class QueryEngineTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
+    def test_apm_enabled(self):
+        from warehouse import settings
+
+        settings.append_installed_apps("True")
+        self.assertIn("elasticapm.contrib.django", settings.INSTALLED_APPS)
+
     def setUp(self):
         self.factory = RequestFactory()
 

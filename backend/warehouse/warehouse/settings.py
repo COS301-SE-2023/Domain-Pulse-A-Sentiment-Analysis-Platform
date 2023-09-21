@@ -77,8 +77,14 @@ INSTALLED_APPS = [
     "corsheaders",
 ]
 
-if os.getenv("APM_ENABLED") == "True":
-    INSTALLED_APPS.append("elasticapm.contrib.django")
+
+def append_installed_apps(enabled):
+    if enabled == "True":
+        INSTALLED_APPS.append("elasticapm.contrib.django")
+
+
+APM_ENABLED = os.getenv("APM_ENABLED")
+append_installed_apps(APM_ENABLED)
 
 ELASTIC_APM = {
     "LOG_LEVEL": "debug",
