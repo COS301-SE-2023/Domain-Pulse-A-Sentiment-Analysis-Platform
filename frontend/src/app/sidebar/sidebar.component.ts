@@ -170,20 +170,22 @@ export class SidebarComponent {
   }
 
 
-  toggleDomainModal(): void {
-    if (!this.showAddDomainModal) {
-      if(this.domains == undefined){
-        this.showAddDomainModal = true;
-        return;
-      }
-      if(this.domains.length > 8){
-        this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
-        return;
-      }
+  toggleDomainModalOff(): void {
+
+    this.showAddDomainModal = false;
+
+  }
+
+  toggleDomainModalOn(): void {
+    if(this.domains == undefined){
       this.showAddDomainModal = true;
-    } else {
-      this.showAddDomainModal = false;
+      return;
     }
+    if(this.domains.length > 8){
+      this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
+      return;
+    }
+    this.showAddDomainModal = true;
   }
 
   toggleEditDomainModal(): void {
@@ -323,7 +325,7 @@ export class SidebarComponent {
       })
     ).subscribe((result) => {
       this.addDomainSpinner = false;
-      this.toggleDomainModal();
+      this.toggleDomainModalOff();
     });
     this.newDomainName = '';
     this.newDomainImageName = '';

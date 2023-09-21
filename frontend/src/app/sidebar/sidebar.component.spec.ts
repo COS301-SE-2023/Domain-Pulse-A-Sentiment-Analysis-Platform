@@ -144,11 +144,11 @@ describe('SidebarComponent', () => {
     component.domains = [dummyDisplayDomain];
 
     component.showAddDomainModal = false;
-    component.toggleDomainModal();
+    component.toggleDomainModalOn();
     expect(component.showAddDomainModal).toBe(true);
 
     component.showAddDomainModal = true;
-    component.toggleDomainModal();
+    component.toggleDomainModalOff();
     expect(component.showAddDomainModal).toBe(false);
   });
 
@@ -169,7 +169,7 @@ describe('SidebarComponent', () => {
     component.domains = [dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain,];
 
     component.showAddDomainModal = false;
-    component.toggleDomainModal();
+    component.toggleDomainModalOn();
     
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToastError('You have reached the maximum number of domains'));
 
@@ -192,7 +192,7 @@ describe('SidebarComponent', () => {
 
 
     component.showAddDomainModal = false;
-    component.toggleDomainModal();
+    component.toggleDomainModalOn();
     
     expect(component.showAddDomainModal).toBe(true);
 

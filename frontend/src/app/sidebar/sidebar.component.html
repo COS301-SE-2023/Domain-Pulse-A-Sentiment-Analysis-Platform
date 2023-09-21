@@ -110,7 +110,7 @@
   <!-- </div> -->
 
   <div
-    (click)="toggleDomainModal()"
+    (click)="toggleDomainModalOn()"
     class="domain add-domain-plus flex-row align-center clickable-item"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
@@ -157,7 +157,7 @@
 
 <dp-modal-container
   [modalDisplay]="showAddDomainModal"
-  (close)="toggleDomainModal()"
+  (close)="toggleDomainModalOff()"
 >
   <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
@@ -169,7 +169,7 @@
           src="../assets/icons/back-arrow-right-light.svg"
           alt="Back Arrow"
           class="icon back-arrow clickable-item"
-          (click)="toggleDomainModal()"
+          (click)="toggleDomainModalOff()"
         />
 
         <p class="modal-heading">Add a Domain</p>
