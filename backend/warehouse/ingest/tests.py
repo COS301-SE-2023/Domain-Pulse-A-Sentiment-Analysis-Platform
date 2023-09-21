@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from io import StringIO
 import json
 from django.test import TestCase
