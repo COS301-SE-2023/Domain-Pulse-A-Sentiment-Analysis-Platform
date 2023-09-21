@@ -5,6 +5,7 @@ import {
   style,
   animate,
   transition,
+  AUTO_STYLE,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
 import {
@@ -41,37 +42,32 @@ import { environment } from '../../environment';
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+       })
       ),
       state(
         'out',
         style({
           opacity: 0,
-          transform: 'scale(0.5)',
-        })
+       })
       ),
-      transition('in => out', animate('300ms ease-in')),
-      transition('out => in', animate('300ms ease-out')),
+      transition('in => out', animate('300ms linear')),
+      transition('out => in', animate('300ms linear')),
     ]),
     trigger('fullLogoSwitch', [
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+})
       ),
       state(
         'out',
         style({
-          opacity: 0,
-          transform: 'scale(0.7)',
-        })
+          opacity: 0,        })
       ),
-      transition('in => out', [animate('400ms ease-in')]),
-      transition('out => in', [animate('300ms ease-out')]),
+      transition('in => out', [animate('300ms linear')]),
+      transition('out => in', [animate('300ms linear')]),
     ]),
   ],
 })
@@ -172,6 +168,15 @@ export class SidebarComponent {
       this.domains = domains!;
     });
   }
+
+  logClick1(){
+    console.log('click1');
+  }
+
+  logClick2(){
+    console.log('click2');
+  }
+
 
   toggleDomainModal(): void {
     if (!this.showAddDomainModal) {
