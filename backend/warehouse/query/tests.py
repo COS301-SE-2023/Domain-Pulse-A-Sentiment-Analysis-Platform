@@ -196,16 +196,19 @@ class QueryEngineTests(TestCase):
         response1: JsonResponse = self.client.get(path="/query/get_source_dashboard/")
         response2: JsonResponse = self.client.get(path="/query/get_domain_dashboard/")
         response3: JsonResponse = self.client.get(path="/query/refresh_source/")
+        response4: JsonResponse = self.client.get(path="/query/try_refresh/")
 
         self.assertEqual(response1.status_code, 200)
         self.assertEqual(response2.status_code, 200)
         self.assertEqual(response3.status_code, 200)
+        self.assertEqual(response4.status_code, 200)
 
         expected_data = {"status": "FAILURE", "details": "Invalid request"}
 
         self.assertEqual(response1.json(), expected_data)
         self.assertEqual(response2.json(), expected_data)
         self.assertEqual(response3.json(), expected_data)
+        self.assertEqual(response4.json(), expected_data)
 
     @patch("requests.post")
     @patch("datamanager.sentiment_record_model.add_record")
@@ -446,5 +449,123 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["domain"]["aggregated_metrics"], {})
         self.assertEqual(data["domain"]["meta_data"], {})
         self.assertEqual(data["domain"]["individual_metrics"], {})
+
+    @mock.patch(
+        "query.views.PENDING_REFRESH",
+        {"hbfhwbgufbo724n2n7": [{"timestamp": 123, "text": "example"}]},
+    )
+    @mock.patch(
+        "requests.post",
+        return_value=mock.MagicMock(
+            status_code=200, json=lambda: {"metrics": [{"metric": 1}]}
+        ),
+    )
+    @patch("datamanager.sentiment_record_model.add_record")
+    def test_try_refresh_success(self, mock_post):
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = response = self.client.post(
+            path=url,
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(), {"status": "SUCCESS", "is_done": False, "num_remaining": 0}
+        )
+
+        # mock_post.assert_called_once_with(
+        #     mock.ANY, data=json.dumps({"data": ["example"]})
+        # )
+
+    # @mock.patch("query.views.PENDING_REFRESH", {"1": []})
+    # def test_try_refresh_success_no_remaining_data(self):
+    #     request = HttpRequest()
+    #     request.method = "POST"
+    #     request.body = json.dumps({"source_id": "1"})
+
+    #     response = try_refresh(request)
+
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.json(), {"status": "SUCCESS", "is_done": True})
+
+    @mock.patch(
+        "query.views.PENDING_REFRESH",
+        {"hbfhwbgufbo724n2n7": [{"timestamp": 123, "text": "example"}]},
+    )
+    @mock.patch(
+        "requests.post",
+        return_value=mock.MagicMock(
+            status_code=500, json=lambda: {"metrics": [{"metric": 1}]}
+        ),
+    )
+    @patch("datamanager.sentiment_record_model.add_record")
+    def test_try_refresh_analyser_failure(self, mock_post):
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = response = self.client.post(
+            path=url,
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {
+                "status": "FAILURE",
+                "details": "Could not connect to Analyser",
+            },
+        )
+
+    @mock.patch("query.views.PENDING_REFRESH", {})
+    @patch("datamanager.sentiment_record_model.add_record")
+    def test_try_refresh_failure_invalid_id(self, temp):
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = response = self.client.post(
+            path=url,
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+
+        self.assertEqual(
+            response.status_code, 200
+        )  # Assuming you want to return 200 for invalid requests
+        self.assertEqual(
+            response.json(),
+            {
+                "status": "FAILURE",
+                "details": "No source with that ID is pending processing",
+            },
+        )
+
+    @mock.patch("query.views.PENDING_REFRESH", {"hbfhwbgufbo724n2n7": []})
+    @patch("datamanager.sentiment_record_model.add_record")
+    def test_try_refresh_failure_no_remaining_data(self, temp):
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = response = self.client.post(
+            path=url,
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+
+        self.assertEqual(
+            response.status_code, 200
+        )  # Assuming you want to return 200 for invalid requests
+        self.assertEqual(
+            response.json(),
+            {"status": "SUCCESS", "is_done": True},
+        )
 
     # ----------------------------------------------------------------

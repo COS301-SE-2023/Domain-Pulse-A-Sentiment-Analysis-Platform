@@ -39,9 +39,11 @@ import {
   ToggleChangePasswordModal,
   ToggleDeleteAccountModal,
   ToggleProfileEditModal,
+  TryRefresh,
+  ToggleIsRefreshing,
 } from './app.actions';
 import { Router } from '@angular/router';
-import { catchError, map, of, switchMap, throwError } from 'rxjs';
+import { catchError, concatMap, map, of, repeatWhen, switchMap, takeWhile, tap, throwError } from 'rxjs';
 import { patch } from '@ngxs/store/operators';
 
 export interface Source {
@@ -581,12 +583,21 @@ export class AppState {
             imageUrl: domainRes.icon,
             sourceIds: domainsIDs,
             sources: AppState.formatResponseSources(domainRes.sources),
-            selected: false,
+            selected: true,
           };
   
           let domains = ctx.getState().domains;
-          if (!domains) return of(null);
-  
+
+          domains = AppState.findPatchDomain(domains!, selectedDomain);
+
+          if(AppState.checkUndefined(domains!)){
+            ctx.patchState({
+              domains: [...domains!], 
+            });
+          }
+
+          
+
           this.store.dispatch(new SetDomain(selectedDomain));
   
           let lastSource =
@@ -609,6 +620,27 @@ export class AppState {
       })
     );
     
+  }
+
+  static checkUndefined(domains: DisplayDomain[]){
+    if(domains){
+      return true;
+    }
+    return false;
+  }
+
+  static findPatchDomain(domains: DisplayDomain[], selectedDomain: DisplayDomain){
+    for (let i = 0; i < domains.length; i++) {
+      if (domains[i].id === selectedDomain.id) {
+
+        domains[i] = selectedDomain;
+
+        return domains;
+    
+      }
+    }
+
+    return undefined;
   }
 
   /*  @Action(EditSource)
@@ -762,8 +794,9 @@ export class AppState {
         new ToastSuccess('Your source has been refreshed')
       );
 
-      return;
     }
+
+
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
@@ -777,7 +810,7 @@ export class AppState {
       });
     }
 
-    console.log('refreshing with sourceID' + sourceID);
+
     this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         this.store.dispatch(
@@ -792,19 +825,86 @@ export class AppState {
 
         return;
       }
-      this.store.dispatch(new GetSourceDashBoardInfo());
 
-      if (selectedSource) {
-        selectedSource.isRefreshing = false;
-        ctx.patchState({
-          selectedSource,
-        });
-      }
+      console.log("calling try refresh in yt")
       this.store.dispatch(
-        new ToastSuccess('Your source has been refreshed')
-      );
+        new TryRefresh(sourceID)
+      ).subscribe(() => {
+
+      });        
+
+      
     });
+
+
   }
+  
+
+  @Action(TryRefresh)
+  tryRefresh(ctx: StateContext<AppStateModel>, state: TryRefresh) {
+    
+    const refreshObservable = of(null).pipe(
+      concatMap(() => this.appApi.tryRefresh(state.sourceId)),
+      repeatWhen((completed) => completed),
+      takeWhile((result) => !(result.status === 'FAILURE' || result.is_done), true), 
+      tap((result) => {
+        console.log(result);
+        if (result.status === 'FAILURE' || result.is_done) {
+          if (state.sourceId == ctx.getState().selectedSource?.id) {
+            this.store.dispatch(new GetSourceDashBoardInfo());
+          }
+          this.store.dispatch(new ToastSuccess('Your source has been refreshed'));
+          this.store.dispatch(new ToggleIsRefreshing(false, state.sourceId));
+        } else {
+          if(AppState.ifMatchingIds(state.sourceId,  ctx.getState().selectedSource?.id)){
+            this.store.dispatch(new GetSourceDashBoardInfo());
+          }
+        }
+      }),
+      catchError((error) => {
+        console.error('Error:', error);
+        return of(null); 
+      })
+    );
+
+    refreshObservable.subscribe();
+  }
+
+  static ifMatchingIds(sourceId: string, selectedSourceId?: string) {
+    if (sourceId == selectedSourceId) {
+      return true;
+    }
+    return false;
+  }
+
+  @Action(ToggleIsRefreshing)
+  toggleIsRefreshing(ctx: StateContext<AppStateModel>, state: ToggleIsRefreshing) {
+    let domains = ctx.getState().domains;
+    console.log("domains")
+    console.log(domains)
+    if (!domains) return;
+
+    console.log("1")
+
+    for (let i = 0; i < domains.length; i++) {
+
+      for (let x = 0; x < domains[i].sources.length; x++) {
+        if (domains[i].sources[x].id === state.sourceId) {
+  
+          domains[i].sources[x].isRefreshing = state.isRefreshing;
+  
+          ctx.patchState({
+            domains: [...domains], 
+          });
+    
+          break; 
+        }
+      }
+    }
+
+  }
+
+
 
   @Action(AddNewDomain)
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
