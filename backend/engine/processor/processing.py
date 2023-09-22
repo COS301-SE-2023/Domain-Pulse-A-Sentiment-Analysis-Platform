@@ -6,7 +6,6 @@ from processor.nn_models import (
     TOXIC_CLASSIFIER,
 )
 
-
 def summarize_general(general_metrics, vader):
     category = general_metrics[0]["label"]
     intensity = general_metrics[0]["score"]

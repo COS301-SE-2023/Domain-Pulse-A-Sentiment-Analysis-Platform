@@ -10,7 +10,6 @@ def add_record(new_record):
     collection = db[mongo_collection]
     collection.insert_one(new_record)
 
-
 def get_records_by_source_id(source_id):
     collection = db[mongo_collection]
 

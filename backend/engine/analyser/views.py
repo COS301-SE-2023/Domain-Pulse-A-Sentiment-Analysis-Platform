@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from utils import mock_data
 from django.views.decorators.csrf import csrf_exempt
-from processor import processing
-from postprocessor import aggregation
+# from processor import processing
+# from postprocessor import aggregation
 import json
 import socketio
 
@@ -50,31 +50,39 @@ def perform_analysis(request: HttpRequest):
         scores = []
 
         if "room_id" in raw_data:
+            
             sio = socketio.Client()
             sio.connect("http://localhost:5000")
 
             room_id = raw_data["room_id"]
 
             for item, timestamp in zip(new_records, raw_data["data_timestamps"]):
-                new_score = processing.analyse_content(item)
-                new_score["timestamp"] = timestamp
+                #will send to the socket server and that will do the heavy lifting
+                print("sending to socket server: ", item)
 
-                # compute aggregated metrics
-                aggregated_metrics = aggregation.aggregate_sentiment_data(scores)
-                new_data_to_send = {
-                    "new_individual_metrics": new_score,
-                    "aggregated_metrics": aggregated_metrics,
-                    "room_id": room_id,
-                }
+                # <--- sticky part
+                sio.emit("process_item", {"item": item, "room_id": room_id, "timestamp": timestamp, "num_items": len(new_records)})
 
-                sio.emit("new_source_data", new_data_to_send)
+                # new_score = processing.analyse_content(item)
+                # new_score["timestamp"] = timestamp
 
-                scores.append(new_score)
+                # # compute aggregated metrics
+                # aggregated_metrics = aggregation.aggregate_sentiment_data(scores)
+                # new_data_to_send = {
+                #     "new_individual_metrics": new_score,
+                #     "aggregated_metrics": aggregated_metrics,
+                #     "room_id": room_id,
+                # }
+
+                # sio.emit("new_source_data", new_data_to_send)
+
+                # scores.append(new_score)
 
             sio.disconnect()
-        else:
-            for item in new_records:
-                scores.append(processing.analyse_content(item))
+        # else:
+            # potentially remove the below because of the pwerformance hi timprting proccessing has
+            # for item in new_records:
+                # scores.append(processing.analyse_content(item))
 
         return JsonResponse({"metrics": scores})
     return JsonResponse({"status": "FAILURE"})

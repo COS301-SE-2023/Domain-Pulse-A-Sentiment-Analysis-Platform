@@ -1,4 +1,11 @@
 gevent
 motor
+
+
 python-socketio = {extras = ["client"], version = "*"}
+socketIO-client
+
 python-dotenv
+flask
+websockets
+aiohttp

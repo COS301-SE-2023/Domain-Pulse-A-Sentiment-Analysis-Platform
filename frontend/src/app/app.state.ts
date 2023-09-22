@@ -102,6 +102,7 @@ interface AppStateModel {
   allSourcesSelected: boolean;
   sourceIsLoading: boolean;
   selectedStatisticIndex: number;
+  graphAnimations: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -114,8 +115,6 @@ interface AppStateModel {
   profileDetails?: ProfileDetails;
   toasterError?: Toast;
   toasterSuccess?: Toast;
-  allSourcesSelected: boolean;
-  graphAnimations: boolean;
   pdfUrl?: string;
 }
 
