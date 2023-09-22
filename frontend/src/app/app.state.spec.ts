@@ -1452,6 +1452,59 @@ describe('AppState', () => {
     expect(AppState.platformToIcon('csv')).toEqual('csv-logo.png');
   });
 
+  it('should return true if sourceIds match', () => {
+    const sourceId = 'source1';
+    const selectedSourceId = 'source1';
+
+    const result = AppState.ifMatchingIds(sourceId, selectedSourceId);
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false if sourceIds do not match', () => {
+    const sourceId = 'source1';
+    const selectedSourceId = 'source2';
+
+    const result = AppState.ifMatchingIds(sourceId, selectedSourceId);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false if selectedSourceId is undefined', () => {
+    const sourceId = 'source1';
+
+    const result = AppState.ifMatchingIds(sourceId);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true if domains are defined', () => {
+    const domains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test1',
+        description: 'description1',
+        selected: true,
+        imageUrl: 'image1',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'test2',
+        description: 'description2',
+        selected: false,
+        imageUrl: 'image2',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+
+    const result = AppState.checkUndefined(domains);
+
+    expect(result).toBe(true);
+  });
+
   it('should dispatch ToastError and GetDomains actions on API failure', (done: DoneFn) => {
     const domainID = 'your-domain-id';
   

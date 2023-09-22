@@ -590,9 +590,9 @@ export class AppState {
 
           domains = AppState.findPatchDomain(domains!, selectedDomain);
 
-          if(domains != undefined){
+          if(AppState.checkUndefined(domains!)){
             ctx.patchState({
-              domains: [...domains], 
+              domains: [...domains!], 
             });
           }
 
@@ -620,6 +620,13 @@ export class AppState {
       })
     );
     
+  }
+
+  static checkUndefined(domains: DisplayDomain[]){
+    if(domains){
+      return true;
+    }
+    return false;
   }
 
   static findPatchDomain(domains: DisplayDomain[], selectedDomain: DisplayDomain){
@@ -849,7 +856,7 @@ export class AppState {
           this.store.dispatch(new ToastSuccess('Your source has been refreshed'));
           this.store.dispatch(new ToggleIsRefreshing(false, state.sourceId));
         } else {
-          if (state.sourceId == ctx.getState().selectedSource?.id) {
+          if(AppState.ifMatchingIds(state.sourceId,  ctx.getState().selectedSource?.id)){
             this.store.dispatch(new GetSourceDashBoardInfo());
           }
         }
@@ -861,6 +868,13 @@ export class AppState {
     );
 
     refreshObservable.subscribe();
+  }
+
+  static ifMatchingIds(sourceId: string, selectedSourceId?: string) {
+    if (sourceId == selectedSourceId) {
+      return true;
+    }
+    return false;
   }
 
   @Action(ToggleIsRefreshing)
