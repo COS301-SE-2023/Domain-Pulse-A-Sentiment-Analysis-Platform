@@ -12,7 +12,7 @@ import tempfile
 import urllib.parse
 
 GET_DOMAINS_ENDPOINT = (
-    "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
+    f"http://{str(os.getenv('DOMAINS_HOST')) }:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
 )
 
 assets_path = str(settings.ASSETS_DIR)
