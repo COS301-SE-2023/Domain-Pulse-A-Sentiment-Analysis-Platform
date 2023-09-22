@@ -198,6 +198,63 @@ def get_report_data_internal(request: HttpRequest):
         return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
+PENDING_REFRESH = {}
+
+
+@csrf_exempt
+def try_refresh(request: HttpRequest):
+    if request.method == "POST":
+        raw_data = json.loads(request.body)
+        source_id_raw = raw_data["source_id"]
+        remaining_data = PENDING_REFRESH.get(str(source_id_raw))
+
+        if len(remaining_data == 0):
+            del PENDING_REFRESH.get(str(source_id_raw))
+            return JsonResponse({"status": "SUCCESS", "is_done": True})
+        else:
+            new_data = list(PENDING_REFRESH.get(str(source_id_raw))).pop()
+
+            ts = new_data["timestamp"]
+            text = new_data["text"]
+
+            request_to_engine_body = {"data": [text]}
+            response_from_analyser = requests.post(
+                ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+            )
+
+            if response_from_analyser.status_code == 200:
+                pass
+            else:
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "Could not connect to Analyser",
+                    }
+                )
+            new_data_metrics = response_from_analyser.json()["metrics"][0]
+
+            # data_to_store = []
+            # for metrics, stamped in zip(new_data_metrics, new_data):
+            #     metrics["timestamp"] = int(stamped["timestamp"])
+            #     metrics["source_id"] = source_id_raw
+            #     data_to_store.append(metrics)
+
+            new_data_metrics["timestamp"] = int(ts)
+            new_data_metrics["source_id"] = source_id_raw
+
+            sentiment_record_model.add_record(new_data_metrics)
+
+            return JsonResponse(
+                {
+                    "status": "SUCCESS",
+                    "is_done": False,
+                    "num_remaining": len(list(PENDING_REFRESH.get(str(source_id_raw)))),
+                }
+            )
+
+    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
 @csrf_exempt
 def refresh_source(request: HttpRequest):
     # FINAL VERSION
@@ -210,14 +267,10 @@ def refresh_source(request: HttpRequest):
 
     originalRequest = request
 
-    GET_SOURCE_ENDPOINT = (
-        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
-    )
+    GET_SOURCE_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     UPDATE_LAST_REFRESHED_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/update_last_refresh"
     SOURCE_CONNECTOR_ENDPOINT = f"http://{os.getenv('SOURCECONNECTOR_HOST')}:{str(os.getenv('DJANGO_SOURCECONNECTOR_PORT'))}/refresh/source/"
-    ANALYSER_ENDPOINT = (
-        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
-    )
+    ANALYSER_ENDPOINT = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
 
     if request.method == "POST":
         raw_data = json.loads(request.body)
@@ -286,109 +339,114 @@ def refresh_source(request: HttpRequest):
                 }
             )
 
-        # 2.
-        raw_new_data = []
-        data_timestamps = []
-        for x in new_data:
-            raw_new_data.append(x["text"])
-            data_timestamps.append(x["timestamp"])
+        PENDING_REFRESH[str(source_id_raw)] = new_data
 
-        request_to_engine_body = {}
-        if "room_id" in raw_data:
-            request_to_engine_body = {
-                "data": raw_new_data,
-                "data_timestamps": data_timestamps,
-                "room_id": raw_data["room_id"],
-            }
-        else:
-            request_to_engine_body = {"data": raw_new_data}
-
-        # print(request_to_engine_body)
-
-        response_from_analyser = requests.post(
-            ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
-        )
-
-        if response_from_analyser.status_code == 200:
-            pass
-        else:
-            return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": "Could not connect to Analyser",
-                }
-            )
-        new_data_metrics = response_from_analyser.json()["metrics"]
-
-        data_to_store = []
-        for metrics, stamped in zip(new_data_metrics, new_data):
-            metrics["timestamp"] = int(stamped["timestamp"])
-            metrics["source_id"] = source_id_raw
-            data_to_store.append(metrics)
-
-        # 3.
-        for x in data_to_store:
-            sentiment_record_model.add_record(x)
-
-        # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
-
-        headers = {"Content-Type": "application/json"}
-        # ------------------- VERIFYING ACCESS -----------------------
-        checked, jwt = auth_checks.extract_token(originalRequest)
-        if not checked:
-            return JsonResponse(
-                {"status": "FAILURE", "details": "JWT not found in header of request"}
-            )
-        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-        # ------------------------------------------------------------
-
-        data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
-        response = requests.post(
-            UPDATE_LAST_REFRESHED_ENDPOINT, json=data, headers=headers
-        )
-
-        if response.status_code != 200:
-            return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": "Could not connect to Domains Service",
-                }
-            )
-        elif response.json()["status"] == "FAILURE":
-            return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": response.json()["details"],
-                }
-            )
-
-        # 4.
         return JsonResponse(
             {"status": "SUCCESS", "details": "Data source refreshed successfully"}
         )
 
-    return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+        # 2.
+    #     raw_new_data = []
+    #     data_timestamps = []
+    #     for x in new_data:
+    #         raw_new_data.append(x["text"])
+    #         data_timestamps.append(x["timestamp"])
 
+    #     request_to_engine_body = {}
+    #     if "room_id" in raw_data:
+    #         request_to_engine_body = {
+    #             "data": raw_new_data,
+    #             "data_timestamps": data_timestamps,
+    #             "room_id": raw_data["room_id"],
+    #         }
+    #     else:
+    #         request_to_engine_body = {"data": raw_new_data}
 
-# @csrf_exempt
-# def cleanup_sources(request: HttpRequest):
-#     if request.method == "POST":
-#         raw_data = json.loads(request.body)
-#         source_ids_raw = raw_data["source_ids"]
+    #     # print(request_to_engine_body)
 
-#         source_ids_to_clean = list(source_ids_raw)
+    #     response_from_analyser = requests.post(
+    #         ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+    #     )
 
-#         # ------------------- VERIFYING ACCESS -----------------------
-#         check_passed, details = auth_checks.verify_user_owns_source_ids(
-#             original_request=request, source_id_list=source_ids_to_clean
-#         )
-#         if not check_passed:
-#             return JsonResponse({"status": "FAILURE", "details": details})
-#         # ------------------------------------------------------------
+    #     if response_from_analyser.status_code == 200:
+    #         pass
+    #     else:
+    #         return JsonResponse(
+    #             {
+    #                 "status": "FAILURE",
+    #                 "details": "Could not connect to Analyser",
+    #             }
+    #         )
+    #     new_data_metrics = response_from_analyser.json()["metrics"]
 
-#         sentiment_record_model.delete_data_by_soure_ids(source_ids_to_clean)
-#         return JsonResponse(
-#             {"status": "SUCCESS", "details": "Sentiment records removed successfully"}
-#         )
-#     else:
-#         return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+    #     data_to_store = []
+    #     for metrics, stamped in zip(new_data_metrics, new_data):
+    #         metrics["timestamp"] = int(stamped["timestamp"])
+    #         metrics["source_id"] = source_id_raw
+    #         data_to_store.append(metrics)
+
+    #     # 3.
+    #     for x in data_to_store:
+    #         sentiment_record_model.add_record(x)
+
+    #     # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
+
+    #     headers = {"Content-Type": "application/json"}
+    #     # ------------------- VERIFYING ACCESS -----------------------
+    #     checked, jwt = auth_checks.extract_token(originalRequest)
+    #     if not checked:
+    #         return JsonResponse(
+    #             {"status": "FAILURE", "details": "JWT not found in header of request"}
+    #         )
+    #     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+    #     # ------------------------------------------------------------
+
+    #     data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
+    #     response = requests.post(
+    #         UPDATE_LAST_REFRESHED_ENDPOINT, json=data, headers=headers
+    #     )
+
+    #     if response.status_code != 200:
+    #         return JsonResponse(
+    #             {
+    #                 "status": "FAILURE",
+    #                 "details": "Could not connect to Domains Service",
+    #             }
+    #         )
+    #     elif response.json()["status"] == "FAILURE":
+    #         return JsonResponse(
+    #             {
+    #                 "status": "FAILURE",
+    #                 "details": response.json()["details"],
+    #             }
+    #         )
+
+    #     # 4.
+    #     return JsonResponse(
+    #         {"status": "SUCCESS", "details": "Data source refreshed successfully"}
+    #     )
+
+    # return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+    # @csrf_exempt
+    # def cleanup_sources(request: HttpRequest):
+    #     if request.method == "POST":
+    #         raw_data = json.loads(request.body)
+    #         source_ids_raw = raw_data["source_ids"]
+
+    #         source_ids_to_clean = list(source_ids_raw)
+
+    #         # ------------------- VERIFYING ACCESS -----------------------
+    #         check_passed, details = auth_checks.verify_user_owns_source_ids(
+    #             original_request=request, source_id_list=source_ids_to_clean
+    #         )
+    #         if not check_passed:
+    #             return JsonResponse({"status": "FAILURE", "details": details})
+    #         # ------------------------------------------------------------
+
+    #         sentiment_record_model.delete_data_by_soure_ids(source_ids_to_clean)
+    #         return JsonResponse(
+    #             {"status": "SUCCESS", "details": "Sentiment records removed successfully"}
+    #         )
+    else:
+        return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
