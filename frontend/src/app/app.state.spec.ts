@@ -1,5 +1,5 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
+import { Actions, NgxsModule, StateContext, Store, ofActionDispatched } from '@ngxs/store';
 import {
   AppState,
   DisplayDomain,
@@ -400,6 +400,139 @@ describe('AppState', () => {
         video_id: 'QblahQw',
       })
     );
+  });
+
+  it('should correctly find and patch the selected domain', () => {
+    const mockDomain1: DisplayDomain = {
+      id: '1',
+      name: 'Test Domain 1',
+      description: 'Description 1',
+      selected: false,
+      imageUrl: 'image1.jpg',
+      sourceIds: ['source1'],
+      sources: [
+        {
+          id: 'source1',
+          name: 'Source 1',
+          url: 'url1',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomain2: DisplayDomain = {
+      id: '2',
+      name: 'Test Domain 2',
+      description: 'Description 2',
+      selected: false,
+      imageUrl: 'image2.jpg',
+      sourceIds: ['source2'],
+      sources: [
+        {
+          id: 'source2',
+          name: 'Source 2',
+          url: 'url2',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomains: DisplayDomain[] = [mockDomain1, mockDomain2];
+
+    const selectedDomain: DisplayDomain = {
+      id: '1', // Match the ID of mockDomain1
+      name: 'Updated Domain Name',
+      description: 'Updated Description',
+      selected: true,
+      imageUrl: 'updated-image.jpg',
+      sourceIds: ['source1', 'source3'], // Adding a new source
+      sources: [
+        {
+          id: 'source1',
+          name: 'Source 1',
+          url: 'url1',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+        {
+          id: 'source3', // New source
+          name: 'Source 3',
+          url: 'url3',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const expectedPatchedDomains: DisplayDomain[] = [selectedDomain, mockDomain2]; // The selectedDomain should replace mockDomain1
+
+    const patchedDomains = AppState.findPatchDomain(mockDomains, selectedDomain);
+
+    // Ensure that the patchedDomains array matches the expectedPatchedDomains
+    expect(patchedDomains).toEqual(expectedPatchedDomains);
+  });
+
+  it('should return undefined when the selected domain is not found', () => {
+    const mockDomain1: DisplayDomain = {
+      id: '1',
+      name: 'Test Domain 1',
+      description: 'Description 1',
+      selected: false,
+      imageUrl: 'image1.jpg',
+      sourceIds: ['source1'],
+      sources: [
+        {
+          id: 'source1',
+          name: 'Source 1',
+          url: 'url1',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomain2: DisplayDomain = {
+      id: '2',
+      name: 'Test Domain 2',
+      description: 'Description 2',
+      selected: false,
+      imageUrl: 'image2.jpg',
+      sourceIds: ['source2'],
+      sources: [
+        {
+          id: 'source2',
+          name: 'Source 2',
+          url: 'url2',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomains: DisplayDomain[] = [mockDomain1, mockDomain2];
+
+    const selectedDomain: DisplayDomain = {
+      id: '3', // This ID does not exist in mockDomains
+      name: 'Nonexistent Domain',
+      description: 'Nonexistent Description',
+      selected: true,
+      imageUrl: 'new-image.jpg',
+      sourceIds: [],
+      sources: [],
+    };
+
+    const patchedDomains = AppState.findPatchDomain(mockDomains, selectedDomain);
+
+    // Ensure that the function returns undefined when the selected domain is not found
+    expect(patchedDomains).toBeUndefined();
   });
   
 

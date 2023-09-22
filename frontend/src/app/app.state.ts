@@ -589,18 +589,15 @@ export class AppState {
           let domains = ctx.getState().domains;
           if (!domains) return of(null);
 
-          for (let i = 0; i < domains.length; i++) {
-            if (domains[i].id === selectedDomain.id) {
+          domains = AppState.findPatchDomain(domains, selectedDomain);
 
-              domains[i] = selectedDomain;
-
-              ctx.patchState({
-                domains: [...domains], 
-              });
-        
-              break; 
-            }
+          if(domains != undefined){
+            ctx.patchState({
+              domains: [...domains], 
+            });
           }
+
+          
 
           this.store.dispatch(new SetDomain(selectedDomain));
   
@@ -624,6 +621,20 @@ export class AppState {
       })
     );
     
+  }
+
+  static findPatchDomain(domains: DisplayDomain[], selectedDomain: DisplayDomain){
+    for (let i = 0; i < domains.length; i++) {
+      if (domains[i].id === selectedDomain.id) {
+
+        domains[i] = selectedDomain;
+
+        return domains;
+    
+      }
+    }
+
+    return undefined;
   }
 
   /*  @Action(EditSource)

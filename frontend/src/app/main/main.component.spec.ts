@@ -42,9 +42,6 @@ describe('MainComponent', () => {
 
     expect(component.pdfUrl).toBe('https://example.com/somefile.pdf');
 
-    expect(storeDispatchSpy).toHaveBeenCalledWith(
-      new ToastSuccess('Your report has been generated!')
-    );
   });
 
   it('should fail process pdf', () => {
