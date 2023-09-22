@@ -33,7 +33,7 @@ RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
