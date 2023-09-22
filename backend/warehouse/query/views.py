@@ -222,8 +222,9 @@ def try_refresh(request: HttpRequest):
             del PENDING_REFRESH[str(source_id_raw)]
             return JsonResponse({"status": "SUCCESS", "is_done": True})
         else:
-            num_remaining = len(list(PENDING_REFRESH.get(str(source_id_raw))))
-            new_data = list(PENDING_REFRESH.get(str(source_id_raw))).pop()
+            # num_remaining = len(list(PENDING_REFRESH.get(str(source_id_raw))))
+            new_data = PENDING_REFRESH[str(source_id_raw)].pop()
+            # print("size is: " + str(PENDING_REFRESH[str(source_id_raw)]))
 
             ts = new_data["timestamp"]
             text = new_data["text"]
@@ -259,7 +260,7 @@ def try_refresh(request: HttpRequest):
                 {
                     "status": "SUCCESS",
                     "is_done": False,
-                    "num_remaining": num_remaining - 1,
+                    "num_remaining": len(list(PENDING_REFRESH.get(str(source_id_raw)))),
                 }
             )
 
