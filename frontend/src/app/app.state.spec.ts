@@ -43,7 +43,7 @@ import {
   UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
-import { Observable, combineLatest, of, zip } from 'rxjs';
+import { Observable, combineLatest, of, throwError, zip } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 
@@ -320,6 +320,99 @@ describe('AppState', () => {
       sourceIds: [],
       sources: [],
     };
+  
+    const mockSuccessfullResponse: any = {
+      status: 'SUCCESS',
+      domain: {
+        _id: '64c4dd5e9194ca8be06ba96c',
+        name: 'Tutman',
+        icon: 'f1-logo.png',
+        description: 'None',
+        sources: [
+          {
+            source_id: '2',
+            source_name: 'Fresh boat',
+            source_icon: 'youtube-logo.png',
+            last_refresh_timestamp: 1690624522.0,
+            params: {
+              source_type: 'youtube',
+              video_id: 'eYDKY6jUa4Q',
+            },
+          },
+        ],
+        new_source_id: '2',
+      },
+    };
+  
+    // Reset the state with a selected domain
+    store.reset({ app: { selectedDomain: mockDomain, domains: [mockDomain] } });
+  
+    // Mock an array of domains for ctx.getState().domains
+    const mockDomains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: 'test',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'anotherTest',
+        description: 'anotherTest',
+        selected: false,
+        imageUrl: 'anotherTest',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+  
+    apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
+  
+    actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
+      const actualSources = store.selectSnapshot(AppState.sources);
+      if (!actualSources) {
+        fail();
+        return;
+      }
+      expect(actualSources.length).toEqual(1);
+  
+      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+      if (!actaulSelectredomain) {
+        fail();
+        return;
+      }
+      expect(actaulSelectredomain.sourceIds.length).toEqual(1);
+  
+      // Now, let's mock a state update with domains so that the uncovered lines are executed
+      store.reset({ app: { selectedDomain: mockDomain, domains: mockDomains } });
+  
+      done();
+    });
+  
+    store.dispatch(
+      new AddNewSource('newSourceName', 'newSOurcePlatform', {
+        platform: 'youtube',
+        video_id: 'QblahQw',
+      })
+    );
+  });
+  
+
+  it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
+    const mockDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [],
+    };
 
     const mockSuccessfullResponse: any = {
       status: 'SUCCESS',
@@ -449,6 +542,103 @@ describe('AppState', () => {
     });
 
     store.dispatch(new RefreshSourceData());
+  });
+
+ /*  it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'SUCCESS' }));
+    apiSpy.tryRefresh.and.returnValue(of({ status: 'SUCCESS' }));
+
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    store.dispatch(new RefreshSourceData());
+  }); */
+
+  /* it("should correctly refresh source and dispatch 'GetSourceDashBoardInfo' and 'ToggleIsRefreshing' events", () => {
+    const mockTryRefreshResponse = { status: 'SUCCESS', is_done: true };
+    const state = new TryRefresh('sourceId');
+
+    // Configure the API service spy to return a successful response
+    apiSpy.tryRefresh.and.returnValue(of(mockTryRefreshResponse));
+
+    const expectedActions = [
+      new GetSourceDashBoardInfo(),
+      new ToastSuccess('Your source has been refreshed'),
+      new ToggleIsRefreshing(false, 'sourceId'),
+    ];
+
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToggleIsRefreshing)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    store.dispatch(state);
+
+    // Ensure that the expected actions have been dispatched
+    expect(apiSpy.tryRefresh).toHaveBeenCalledWith('sourceId');
+    expect(actions$.dispatchedAction).toEqual(expectedActions);
+  }); */
+
+  it("should handle an error and log it", () => {
+    const state = new TryRefresh('sourceId');
+
+    // Configure the API service spy to return an error
+    apiSpy.tryRefresh.and.returnValue(throwError('Some error'));
+
+    spyOn(console, 'error');
+
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    store.dispatch(state);
+
+    // Ensure that the error handling code is executed and console.error is called
+    expect(apiSpy.tryRefresh).toHaveBeenCalledWith('sourceId');
+    expect(console.error).toHaveBeenCalledWith('Error:', 'Some error');
+  });
+
+
+  it("should handle an error and log it", () => {
+    const state = new TryRefresh('sourceId');
+
+    // Configure the API service spy to return an error
+    apiSpy.tryRefresh.and.returnValue(throwError('Some error'));
+
+    spyOn(console, 'error');
+
+    store.dispatch(state);
+
+    // Ensure that the error handling code is executed and console.error is called
+    expect(apiSpy.tryRefresh).toHaveBeenCalledWith('sourceId');
+    expect(console.error).toHaveBeenCalledWith('Error:', 'Some error');
   });
 
   it("should correctly toggle 'isRefreshing' property for a source", () => {
