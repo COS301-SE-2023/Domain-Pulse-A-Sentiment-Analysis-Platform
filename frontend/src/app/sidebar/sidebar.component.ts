@@ -379,6 +379,8 @@ export class SidebarComponent implements OnInit {
     this.newDomainImageName = '';
     this.newDomainDescription = '';
 
+    this.imagePreviewDomain = null;
+
     
   }
 
