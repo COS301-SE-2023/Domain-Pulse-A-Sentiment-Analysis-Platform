@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import {
   AppState,
@@ -36,8 +36,10 @@ import {
   ToggleConfirmDeleteDomainModal,
   ToggleDeleteAccountModal,
   ToggleEditDomainModal,
+  ToggleIsRefreshing,
   ToggleProfileEditModal,
   ToggleProfileModal,
+  TryRefresh,
   UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
@@ -77,6 +79,7 @@ describe('AppState', () => {
       'sendCSVFile',
       'generateReport',
       'removeDomain',
+      'tryRefresh'
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -425,6 +428,7 @@ describe('AppState', () => {
     store.dispatch(new RefreshSourceData());
   });
 
+
   it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
     const mockSource: DisplaySource = {
       id: '1',
@@ -437,15 +441,58 @@ describe('AppState', () => {
     store.reset({ app: { selectedSource: mockSource } });
 
     apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'SUCCESS' }));
-    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.tryRefresh.and.returnValue(of({ status: 'FAILURE' }));
 
-    actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo)).subscribe(() => {
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
       expect(true).toBe(true);
       done();
     });
 
     store.dispatch(new RefreshSourceData());
   });
+
+  it("should correctly toggle 'isRefreshing' property for a source", () => {
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+    const initialState = [
+        {
+          id: 'domain1',
+          sources: [
+            { id: 'source1', isRefreshing: false },
+            { id: 'source2', isRefreshing: false },
+          ],
+        },
+        {
+          id: 'domain2',
+          sources: [{ id: 'source3', isRefreshing: false }],
+        },
+      ];
+
+    store.reset({ app: { domains: initialState } });
+
+    store.dispatch(new ToggleIsRefreshing(true, 'source1'));
+
+    const actualDomains = store.selectSnapshot(
+      AppState.domains
+    );
+
+
+    /* onst source1 = newState.domains[0].sources.find((s:any) => s.id === 'source1');
+    const source2 = newState.domains[0].sources.find((s:any) => s.id === 'source2');
+    const source3 = newState.domains[1].sources.find((s:any) => s.id === 'source3'); */
+
+    expect(actualDomains![0].sources[0].isRefreshing).toBe(true);
+
+  });
+
 
   it('should correctly get stats on a source', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
