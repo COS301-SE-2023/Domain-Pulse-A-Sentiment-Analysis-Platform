@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Actions, NgxsModule, StateContext, Store, ofActionDispatched } from '@ngxs/store';
 import {
   AppState,
   DisplayDomain,
@@ -36,12 +36,14 @@ import {
   ToggleConfirmDeleteDomainModal,
   ToggleDeleteAccountModal,
   ToggleEditDomainModal,
+  ToggleIsRefreshing,
   ToggleProfileEditModal,
   ToggleProfileModal,
+  TryRefresh,
   UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
-import { Observable, combineLatest, of, zip } from 'rxjs';
+import { Observable, combineLatest, of, throwError, zip } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 
@@ -77,6 +79,7 @@ describe('AppState', () => {
       'sendCSVFile',
       'generateReport',
       'removeDomain',
+      'tryRefresh'
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -317,6 +320,232 @@ describe('AppState', () => {
       sourceIds: [],
       sources: [],
     };
+  
+    const mockSuccessfullResponse: any = {
+      status: 'SUCCESS',
+      domain: {
+        _id: '64c4dd5e9194ca8be06ba96c',
+        name: 'Tutman',
+        icon: 'f1-logo.png',
+        description: 'None',
+        sources: [
+          {
+            source_id: '2',
+            source_name: 'Fresh boat',
+            source_icon: 'youtube-logo.png',
+            last_refresh_timestamp: 1690624522.0,
+            params: {
+              source_type: 'youtube',
+              video_id: 'eYDKY6jUa4Q',
+            },
+          },
+        ],
+        new_source_id: '2',
+      },
+    };
+  
+    // Reset the state with a selected domain
+    store.reset({ app: { selectedDomain: mockDomain, domains: [mockDomain] } });
+  
+    // Mock an array of domains for ctx.getState().domains
+    const mockDomains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: 'test',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'anotherTest',
+        description: 'anotherTest',
+        selected: false,
+        imageUrl: 'anotherTest',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+  
+    apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
+  
+    actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
+      const actualSources = store.selectSnapshot(AppState.sources);
+      if (!actualSources) {
+        fail();
+        return;
+      }
+      expect(actualSources.length).toEqual(1);
+  
+      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+      if (!actaulSelectredomain) {
+        fail();
+        return;
+      }
+      expect(actaulSelectredomain.sourceIds.length).toEqual(1);
+  
+      // Now, let's mock a state update with domains so that the uncovered lines are executed
+      store.reset({ app: { selectedDomain: mockDomain, domains: mockDomains } });
+  
+      done();
+    });
+  
+    store.dispatch(
+      new AddNewSource('newSourceName', 'newSOurcePlatform', {
+        platform: 'youtube',
+        video_id: 'QblahQw',
+      })
+    );
+  });
+
+  it('should correctly find and patch the selected domain', () => {
+    const mockDomain1: DisplayDomain = {
+      id: '1',
+      name: 'Test Domain 1',
+      description: 'Description 1',
+      selected: false,
+      imageUrl: 'image1.jpg',
+      sourceIds: ['source1'],
+      sources: [
+        {
+          id: 'source1',
+          name: 'Source 1',
+          url: 'url1',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomain2: DisplayDomain = {
+      id: '2',
+      name: 'Test Domain 2',
+      description: 'Description 2',
+      selected: false,
+      imageUrl: 'image2.jpg',
+      sourceIds: ['source2'],
+      sources: [
+        {
+          id: 'source2',
+          name: 'Source 2',
+          url: 'url2',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomains: DisplayDomain[] = [mockDomain1, mockDomain2];
+
+    const selectedDomain: DisplayDomain = {
+      id: '1', // Match the ID of mockDomain1
+      name: 'Updated Domain Name',
+      description: 'Updated Description',
+      selected: true,
+      imageUrl: 'updated-image.jpg',
+      sourceIds: ['source1', 'source3'], // Adding a new source
+      sources: [
+        {
+          id: 'source1',
+          name: 'Source 1',
+          url: 'url1',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+        {
+          id: 'source3', // New source
+          name: 'Source 3',
+          url: 'url3',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const expectedPatchedDomains: DisplayDomain[] = [selectedDomain, mockDomain2]; // The selectedDomain should replace mockDomain1
+
+    const patchedDomains = AppState.findPatchDomain(mockDomains, selectedDomain);
+
+    // Ensure that the patchedDomains array matches the expectedPatchedDomains
+    expect(patchedDomains).toEqual(expectedPatchedDomains);
+  });
+
+  it('should return undefined when the selected domain is not found', () => {
+    const mockDomain1: DisplayDomain = {
+      id: '1',
+      name: 'Test Domain 1',
+      description: 'Description 1',
+      selected: false,
+      imageUrl: 'image1.jpg',
+      sourceIds: ['source1'],
+      sources: [
+        {
+          id: 'source1',
+          name: 'Source 1',
+          url: 'url1',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomain2: DisplayDomain = {
+      id: '2',
+      name: 'Test Domain 2',
+      description: 'Description 2',
+      selected: false,
+      imageUrl: 'image2.jpg',
+      sourceIds: ['source2'],
+      sources: [
+        {
+          id: 'source2',
+          name: 'Source 2',
+          url: 'url2',
+          params: {},
+          selected: false,
+          isRefreshing: false,
+        },
+      ],
+    };
+
+    const mockDomains: DisplayDomain[] = [mockDomain1, mockDomain2];
+
+    const selectedDomain: DisplayDomain = {
+      id: '3', // This ID does not exist in mockDomains
+      name: 'Nonexistent Domain',
+      description: 'Nonexistent Description',
+      selected: true,
+      imageUrl: 'new-image.jpg',
+      sourceIds: [],
+      sources: [],
+    };
+
+    const patchedDomains = AppState.findPatchDomain(mockDomains, selectedDomain);
+
+    // Ensure that the function returns undefined when the selected domain is not found
+    expect(patchedDomains).toBeUndefined();
+  });
+  
+
+  it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
+    const mockDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [],
+    };
 
     const mockSuccessfullResponse: any = {
       status: 'SUCCESS',
@@ -365,6 +594,96 @@ describe('AppState', () => {
       done();
     });
 
+    store.dispatch(
+      new AddNewSource('newSourceName', 'newSOurcePlatform', {
+        platform: 'youtube',
+        video_id: 'QblahQw',
+      })
+    );
+  });
+
+
+  it('should react correctly to successful "AddNewSource" event with defined domains', (done: DoneFn) => {
+    const mockDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [],
+    };
+  
+    const mockSuccessfullResponse: any = {
+      status: 'SUCCESS',
+      domain: {
+        _id: '64c4dd5e9194ca8be06ba96c',
+        name: 'Tutman',
+        icon: 'f1-logo.png',
+        description: 'None',
+        sources: [
+          {
+            source_id: '2',
+            source_name: 'Fresh boat',
+            source_icon: 'youtube-logo.png',
+            last_refresh_timestamp: 1690624522.0,
+            params: {
+              source_type: 'youtube',
+              video_id: 'eYDKY6jUa4Q',
+            },
+          },
+        ],
+        new_source_id: '2',
+      },
+    };
+  
+    // Mock an array of domains for ctx.getState().domains
+    const mockDomains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: 'test',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'anotherTest',
+        description: 'anotherTest',
+        selected: false,
+        imageUrl: 'anotherTest',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+  
+    // Reset the state with a selected domain and defined domains
+    store.reset({ app: { selectedDomain: mockDomain, domains: mockDomains } });
+  
+    apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
+  
+    actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
+      const actualSources = store.selectSnapshot(AppState.sources);
+      if (!actualSources) {
+        fail();
+        return;
+      }
+      expect(actualSources.length).toEqual(1);
+  
+      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+      if (!actaulSelectredomain) {
+        fail();
+        return;
+      }
+      expect(actaulSelectredomain.sourceIds.length).toEqual(1);
+  
+      done();
+    });
+  
     store.dispatch(
       new AddNewSource('newSourceName', 'newSOurcePlatform', {
         platform: 'youtube',
@@ -425,6 +744,7 @@ describe('AppState', () => {
     store.dispatch(new RefreshSourceData());
   });
 
+
   it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
     const mockSource: DisplaySource = {
       id: '1',
@@ -437,15 +757,155 @@ describe('AppState', () => {
     store.reset({ app: { selectedSource: mockSource } });
 
     apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'SUCCESS' }));
-    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.tryRefresh.and.returnValue(of({ status: 'FAILURE' }));
 
-    actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo)).subscribe(() => {
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
       expect(true).toBe(true);
       done();
     });
 
     store.dispatch(new RefreshSourceData());
   });
+
+ /*  it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'SUCCESS' }));
+    apiSpy.tryRefresh.and.returnValue(of({ status: 'SUCCESS' }));
+
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    store.dispatch(new RefreshSourceData());
+  }); */
+
+  /* it("should correctly refresh source and dispatch 'GetSourceDashBoardInfo' and 'ToggleIsRefreshing' events", () => {
+    const mockTryRefreshResponse = { status: 'SUCCESS', is_done: true };
+    const state = new TryRefresh('sourceId');
+
+    // Configure the API service spy to return a successful response
+    apiSpy.tryRefresh.and.returnValue(of(mockTryRefreshResponse));
+
+    const expectedActions = [
+      new GetSourceDashBoardInfo(),
+      new ToastSuccess('Your source has been refreshed'),
+      new ToggleIsRefreshing(false, 'sourceId'),
+    ];
+
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToggleIsRefreshing)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    store.dispatch(state);
+
+    // Ensure that the expected actions have been dispatched
+    expect(apiSpy.tryRefresh).toHaveBeenCalledWith('sourceId');
+    expect(actions$.dispatchedAction).toEqual(expectedActions);
+  }); */
+
+  it("should handle an error and log it", () => {
+    const state = new TryRefresh('sourceId');
+
+    // Configure the API service spy to return an error
+    apiSpy.tryRefresh.and.returnValue(throwError('Some error'));
+
+    spyOn(console, 'error');
+
+    actions$.pipe(ofActionDispatched(TryRefresh)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    store.dispatch(state);
+
+    // Ensure that the error handling code is executed and console.error is called
+    expect(apiSpy.tryRefresh).toHaveBeenCalledWith('sourceId');
+    expect(console.error).toHaveBeenCalledWith('Error:', 'Some error');
+  });
+
+
+  it("should handle an error and log it", () => {
+    const state = new TryRefresh('sourceId');
+
+    // Configure the API service spy to return an error
+    apiSpy.tryRefresh.and.returnValue(throwError('Some error'));
+
+    spyOn(console, 'error');
+
+    store.dispatch(state);
+
+    // Ensure that the error handling code is executed and console.error is called
+    expect(apiSpy.tryRefresh).toHaveBeenCalledWith('sourceId');
+    expect(console.error).toHaveBeenCalledWith('Error:', 'Some error');
+  });
+
+  it("should correctly toggle 'isRefreshing' property for a source", () => {
+
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+    const initialState = [
+        {
+          id: 'domain1',
+          sources: [
+            { id: 'source1', isRefreshing: false },
+            { id: 'source2', isRefreshing: false },
+          ],
+        },
+        {
+          id: 'domain2',
+          sources: [{ id: 'source3', isRefreshing: false }],
+        },
+      ];
+
+    store.reset({ app: { domains: initialState } });
+
+    store.dispatch(new ToggleIsRefreshing(true, 'source1'));
+
+    const actualDomains = store.selectSnapshot(
+      AppState.domains
+    );
+
+
+    /* onst source1 = newState.domains[0].sources.find((s:any) => s.id === 'source1');
+    const source2 = newState.domains[0].sources.find((s:any) => s.id === 'source2');
+    const source3 = newState.domains[1].sources.find((s:any) => s.id === 'source3'); */
+
+    expect(actualDomains![0].sources[0].isRefreshing).toBe(true);
+
+  });
+
 
   it('should correctly get stats on a source', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
@@ -990,6 +1450,59 @@ describe('AppState', () => {
       'live-review-logo.png'
     );
     expect(AppState.platformToIcon('csv')).toEqual('csv-logo.png');
+  });
+
+  it('should return true if sourceIds match', () => {
+    const sourceId = 'source1';
+    const selectedSourceId = 'source1';
+
+    const result = AppState.ifMatchingIds(sourceId, selectedSourceId);
+
+    expect(result).toBe(true);
+  });
+
+  it('should return false if sourceIds do not match', () => {
+    const sourceId = 'source1';
+    const selectedSourceId = 'source2';
+
+    const result = AppState.ifMatchingIds(sourceId, selectedSourceId);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return false if selectedSourceId is undefined', () => {
+    const sourceId = 'source1';
+
+    const result = AppState.ifMatchingIds(sourceId);
+
+    expect(result).toBe(false);
+  });
+
+  it('should return true if domains are defined', () => {
+    const domains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test1',
+        description: 'description1',
+        selected: true,
+        imageUrl: 'image1',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'test2',
+        description: 'description2',
+        selected: false,
+        imageUrl: 'image2',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+
+    const result = AppState.checkUndefined(domains);
+
+    expect(result).toBe(true);
   });
 
   it('should dispatch ToastError and GetDomains actions on API failure', (done: DoneFn) => {

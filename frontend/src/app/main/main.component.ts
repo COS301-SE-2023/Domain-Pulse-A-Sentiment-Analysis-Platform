@@ -100,11 +100,6 @@ export class MainComponent implements OnInit {
       const result: string = res.slice(0, pdfIndex + 4);
       console.log(result);
       this.pdfUrl = result;
-      this.store.dispatch(
-        new ToastSuccess(
-          'Your report has been generated!'
-        )
-      );
     } else {
       this.store.dispatch(
         new ToastError(

@@ -114,6 +114,7 @@ describe('SidebarComponent', () => {
         expect(component.newDomainName).toBe('');
         expect(component.newDomainImageName).toBe('');
         expect(component.newDomainDescription).toBe('');
+        expect(component.imagePreviewDomain).toBeNull();
 
         done();
       }, 300);
