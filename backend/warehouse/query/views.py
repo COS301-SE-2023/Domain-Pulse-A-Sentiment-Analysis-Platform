@@ -352,10 +352,6 @@ def refresh_source(request: HttpRequest):
 
         PENDING_REFRESH[str(source_id_raw)] = new_data
 
-        return JsonResponse(
-            {"status": "SUCCESS", "details": "Data source refreshed successfully"}
-        )
-
         # 2.
         #     raw_new_data = []
         #     data_timestamps = []
@@ -401,7 +397,6 @@ def refresh_source(request: HttpRequest):
         #         sentiment_record_model.add_record(x)
 
         #     # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
-
         headers = {"Content-Type": "application/json"}
         #     # ------------------- VERIFYING ACCESS -----------------------
         checked, jwt = auth_checks.extract_token(originalRequest)
@@ -432,6 +427,10 @@ def refresh_source(request: HttpRequest):
                 }
             )
 
+        return JsonResponse(
+            {"status": "SUCCESS", "details": "Data source refreshed successfully"}
+        )
+
     #     # 4.
     #     return JsonResponse(
     #         {"status": "SUCCESS", "details": "Data source refreshed successfully"}
@@ -439,25 +438,27 @@ def refresh_source(request: HttpRequest):
 
     # return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
-    # @csrf_exempt
-    # def cleanup_sources(request: HttpRequest):
-    #     if request.method == "POST":
-    #         raw_data = json.loads(request.body)
-    #         source_ids_raw = raw_data["source_ids"]
-
-    #         source_ids_to_clean = list(source_ids_raw)
-
-    #         # ------------------- VERIFYING ACCESS -----------------------
-    #         check_passed, details = auth_checks.verify_user_owns_source_ids(
-    #             original_request=request, source_id_list=source_ids_to_clean
-    #         )
-    #         if not check_passed:
-    #             return JsonResponse({"status": "FAILURE", "details": details})
-    #         # ------------------------------------------------------------
-
-    #         sentiment_record_model.delete_data_by_soure_ids(source_ids_to_clean)
-    #         return JsonResponse(
-    #             {"status": "SUCCESS", "details": "Sentiment records removed successfully"}
-    #         )
     else:
         return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
+
+
+# @csrf_exempt
+# def cleanup_sources(request: HttpRequest):
+#     if request.method == "POST":
+#         raw_data = json.loads(request.body)
+#         source_ids_raw = raw_data["source_ids"]
+
+#         source_ids_to_clean = list(source_ids_raw)
+
+#         # ------------------- VERIFYING ACCESS -----------------------
+#         check_passed, details = auth_checks.verify_user_owns_source_ids(
+#             original_request=request, source_id_list=source_ids_to_clean
+#         )
+#         if not check_passed:
+#             return JsonResponse({"status": "FAILURE", "details": details})
+#         # ------------------------------------------------------------
+
+#         sentiment_record_model.delete_data_by_soure_ids(source_ids_to_clean)
+#         return JsonResponse(
+#             {"status": "SUCCESS", "details": "Sentiment records removed successfully"}
+#         )
