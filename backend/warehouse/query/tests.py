@@ -447,7 +447,4 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["domain"]["meta_data"], {})
         self.assertEqual(data["domain"]["individual_metrics"], {})
 
-
-    def test_try_refresh_data_left
-
     # ----------------------------------------------------------------
