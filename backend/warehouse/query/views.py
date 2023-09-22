@@ -357,80 +357,80 @@ def refresh_source(request: HttpRequest):
         )
 
         # 2.
-    #     raw_new_data = []
-    #     data_timestamps = []
-    #     for x in new_data:
-    #         raw_new_data.append(x["text"])
-    #         data_timestamps.append(x["timestamp"])
+        #     raw_new_data = []
+        #     data_timestamps = []
+        #     for x in new_data:
+        #         raw_new_data.append(x["text"])
+        #         data_timestamps.append(x["timestamp"])
 
-    #     request_to_engine_body = {}
-    #     if "room_id" in raw_data:
-    #         request_to_engine_body = {
-    #             "data": raw_new_data,
-    #             "data_timestamps": data_timestamps,
-    #             "room_id": raw_data["room_id"],
-    #         }
-    #     else:
-    #         request_to_engine_body = {"data": raw_new_data}
+        #     request_to_engine_body = {}
+        #     if "room_id" in raw_data:
+        #         request_to_engine_body = {
+        #             "data": raw_new_data,
+        #             "data_timestamps": data_timestamps,
+        #             "room_id": raw_data["room_id"],
+        #         }
+        #     else:
+        #         request_to_engine_body = {"data": raw_new_data}
 
-    #     # print(request_to_engine_body)
+        #     # print(request_to_engine_body)
 
-    #     response_from_analyser = requests.post(
-    #         ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
-    #     )
+        #     response_from_analyser = requests.post(
+        #         ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+        #     )
 
-    #     if response_from_analyser.status_code == 200:
-    #         pass
-    #     else:
-    #         return JsonResponse(
-    #             {
-    #                 "status": "FAILURE",
-    #                 "details": "Could not connect to Analyser",
-    #             }
-    #         )
-    #     new_data_metrics = response_from_analyser.json()["metrics"]
+        #     if response_from_analyser.status_code == 200:
+        #         pass
+        #     else:
+        #         return JsonResponse(
+        #             {
+        #                 "status": "FAILURE",
+        #                 "details": "Could not connect to Analyser",
+        #             }
+        #         )
+        #     new_data_metrics = response_from_analyser.json()["metrics"]
 
-    #     data_to_store = []
-    #     for metrics, stamped in zip(new_data_metrics, new_data):
-    #         metrics["timestamp"] = int(stamped["timestamp"])
-    #         metrics["source_id"] = source_id_raw
-    #         data_to_store.append(metrics)
+        #     data_to_store = []
+        #     for metrics, stamped in zip(new_data_metrics, new_data):
+        #         metrics["timestamp"] = int(stamped["timestamp"])
+        #         metrics["source_id"] = source_id_raw
+        #         data_to_store.append(metrics)
 
-    #     # 3.
-    #     for x in data_to_store:
-    #         sentiment_record_model.add_record(x)
+        #     # 3.
+        #     for x in data_to_store:
+        #         sentiment_record_model.add_record(x)
 
-    #     # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
+        #     # 3.1 Make a request to the domains service to update the last refreshed field (also get authenticated here)
 
-    #     headers = {"Content-Type": "application/json"}
-    #     # ------------------- VERIFYING ACCESS -----------------------
-    #     checked, jwt = auth_checks.extract_token(originalRequest)
-    #     if not checked:
-    #         return JsonResponse(
-    #             {"status": "FAILURE", "details": "JWT not found in header of request"}
-    #         )
-    #     headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
-    #     # ------------------------------------------------------------
+        headers = {"Content-Type": "application/json"}
+        #     # ------------------- VERIFYING ACCESS -----------------------
+        checked, jwt = auth_checks.extract_token(originalRequest)
+        if not checked:
+            return JsonResponse(
+                {"status": "FAILURE", "details": "JWT not found in header of request"}
+            )
+        headers = {"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"}
+        #     # ------------------------------------------------------------
 
-    #     data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
-    #     response = requests.post(
-    #         UPDATE_LAST_REFRESHED_ENDPOINT, json=data, headers=headers
-    #     )
+        data = {"source_id": source_id_raw, "new_last_refresh": latest_retrieval}
+        response = requests.post(
+            UPDATE_LAST_REFRESHED_ENDPOINT, json=data, headers=headers
+        )
 
-    #     if response.status_code != 200:
-    #         return JsonResponse(
-    #             {
-    #                 "status": "FAILURE",
-    #                 "details": "Could not connect to Domains Service",
-    #             }
-    #         )
-    #     elif response.json()["status"] == "FAILURE":
-    #         return JsonResponse(
-    #             {
-    #                 "status": "FAILURE",
-    #                 "details": response.json()["details"],
-    #             }
-    #         )
+        if response.status_code != 200:
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "Could not connect to Domains Service",
+                }
+            )
+        elif response.json()["status"] == "FAILURE":
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": response.json()["details"],
+                }
+            )
 
     #     # 4.
     #     return JsonResponse(
