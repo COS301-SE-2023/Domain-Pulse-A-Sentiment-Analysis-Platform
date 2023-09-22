@@ -1,0 +1,18 @@
+#the packages for most
+django
+django-cors-headers
+python-dotenv
+
+# app specific packages
+psycopg2-binary
+djangorestframework-simplejwt
+pdfkit
+requests
+azure-storage-blob
+shortuuid
+
+# move away from sshtunnel
+sshtunnel
+
+#monitoring
+elastic-apm

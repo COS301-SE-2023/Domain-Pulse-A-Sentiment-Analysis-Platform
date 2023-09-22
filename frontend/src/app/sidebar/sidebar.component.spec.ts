@@ -67,6 +67,18 @@ describe('SidebarComponent', () => {
   // Integration Test
   
   it('should fire a "AddDomain" action', (done: DoneFn) => {
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+    component.domains = [dummyDisplayDomain];
+    
     component.newDomainName = 'New Domain Name';
     component.newDomainImageName = 'New Domain Image Name';
     component.newDomainDescription = 'New Domain Description';
@@ -119,6 +131,18 @@ describe('SidebarComponent', () => {
   });
 
   it('should Toggle The domain flag', () => {
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+    component.domains = [dummyDisplayDomain];
+
     component.showAddDomainModal = false;
     component.toggleDomainModal();
     expect(component.showAddDomainModal).toBe(true);
@@ -126,6 +150,53 @@ describe('SidebarComponent', () => {
     component.showAddDomainModal = true;
     component.toggleDomainModal();
     expect(component.showAddDomainModal).toBe(false);
+  });
+
+  it('should not toggle The domain flag', () => {
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+    component.domains = [dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain,];
+
+    component.showAddDomainModal = false;
+    component.toggleDomainModal();
+    
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToastError('You have reached the maximum number of domains'));
+
+
+  });
+
+  it('should toggle domain flag if domains is undefined', () => {
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
+
+
+    component.showAddDomainModal = false;
+    component.toggleDomainModal();
+    
+    expect(component.showAddDomainModal).toBe(true);
+
+
   });
 
   it('should toggle the Edit Domain Modal flag', () => {
@@ -192,11 +263,19 @@ describe('SidebarComponent', () => {
     component.deleteDomain();
   });
 
-  it('should fire sideBarClicked event when the sidebar is clicked', () => {
+  it('should fire closeSidebarClicked event when the sidebar is clicked', () => {
     let eventFired = false;
-    component.sidebarClicked.pipe(first()).subscribe(() => (eventFired = true));
+    component.closeSidebar.pipe(first()).subscribe(() => (eventFired = true));
 
-    component.clickSidebar();
+    component.closeSidebarClicked();
+    expect(eventFired).toBeTrue();
+  });
+
+  it('should fire openSidebarClicked event when the sidebar is clicked', () => {
+    let eventFired = false;
+    component.openSidebar.pipe(first()).subscribe(() => (eventFired = true));
+
+    component.openSidebarClicked();
     expect(eventFired).toBeTrue();
   });
 
@@ -556,6 +635,54 @@ it('should show a toast error message when no image is selected during uploadIma
 
   
   expect(toastErrorSpy).toHaveBeenCalledWith(jasmine.any(ToastError));
+});
+
+it('should show error for too long domain name and domain description', () => {
+  component.newDomainName = 'New Domain Name that is way too long is way too long is way too long is way too long is way too long';
+  component.newDomainImageName = 'New Domain Image Name';
+  component.newDomainDescription = 'This description is way too long his description is way to description is way too  description is way too  description is way too  description is way too  description is way too o long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long';
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+
+  component.addNewDomain();
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain name must be less than 20 characters')
+  );
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain description must be less than 100 characters')
+  );
+});
+
+it('should show error for too long domain name for editing', () => {
+  component.editDomainName = 'New Domain Name that is way too long is way too too long';
+  component.editDomainImageName = 'New Domain Image Name';
+  component.editDomainDescription = 'This description is ws way too long';
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+
+  component.editDomain();
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain name must be less than 20 characters')
+  );
+
+});
+
+it('should show error for too long domain description for editing', () => {
+  component.editDomainName = 'New Domain';
+  component.editDomainImageName = 'New Domain Image Name';
+  component.editDomainDescription = 'This description is way too long his description is way to description is way too  description is way too  description is way too  description is way too  description is way too o long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long his description is way too long';
+
+  const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+
+  component.editDomain();
+
+
+  expect(storeDispatchSpy).toHaveBeenCalledWith(
+    new ToastError('Domain description must be less than 100 characters')
+  );
 });
 
 

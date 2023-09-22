@@ -29,10 +29,14 @@ import {
   Logout,
   EditSource,
   SetAllSourcesSelected,
+  SetIsActive,
+  UplaodCVSFile,
+  GenerateReport,
   PartialRefreshSourceData,
 } from './app.actions';
 import { Router } from '@angular/router';
-import { catchError, of, switchMap, throwError } from 'rxjs';
+import { catchError, map, of, switchMap, throwError } from 'rxjs';
+import { patch } from '@ngxs/store/operators';
 import { io } from 'socket.io-client';
 
 export interface Source {
@@ -92,6 +96,12 @@ export interface Toast {
 
 interface AppStateModel {
   authenticated: boolean;
+  pdfLoading: boolean;
+  userHasNoDomains: boolean;
+  userHasNoSources: boolean;
+  allSourcesSelected: boolean;
+  sourceIsLoading: boolean;
+  selectedStatisticIndex: number;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -100,14 +110,13 @@ interface AppStateModel {
   overallSentimentScores?: any;
   // sampleData?: Comment[];
   sampleData?: any[];
-  selectedStatisticIndex: number;
   userDetails?: UserDetails;
-  sourceIsLoading: boolean;
   profileDetails?: ProfileDetails;
   toasterError?: Toast;
   toasterSuccess?: Toast;
   allSourcesSelected: boolean;
   graphAnimations: boolean;
+  pdfUrl?: string;
 }
 
 @State<AppStateModel>({
@@ -118,6 +127,10 @@ interface AppStateModel {
     sourceIsLoading: true,
     allSourcesSelected: true,
     graphAnimations: true,
+    pdfLoading: false,
+    pdfUrl: '',
+    userHasNoDomains: false,
+    userHasNoSources: false,
   },
 })
 @Injectable()
@@ -231,6 +244,26 @@ export class AppState {
     return state.graphAnimations;
   }
 
+  @Selector()
+  static pdfUrl(state: AppStateModel) {
+    return state.pdfUrl;
+  }
+
+  @Selector()
+  static pdfLoading(state: AppStateModel) {
+    return state.pdfLoading;
+  }
+  
+  @Selector()
+  static userHasNoDomains(state: AppStateModel) {
+    return state.userHasNoDomains;
+  }
+
+  @Selector()
+  static userHasNoSources(state: AppStateModel) {
+    return state.userHasNoSources;
+  }
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -269,6 +302,10 @@ export class AppState {
       }
 
       let domainIDs: string[] = res.domainIDs;
+
+      ctx.patchState({
+        userHasNoDomains: domainIDs.length === 0,
+      });
 
       let firstDomain = true;
 
@@ -336,6 +373,10 @@ export class AppState {
       domain.selected = false;
     }
     state.domain.selected = true;
+  
+    ctx.patchState({
+      userHasNoSources: state.domain.sources.length === 0,
+    });
 
     ctx.patchState({
       domains: domains,
@@ -422,50 +463,59 @@ export class AppState {
     if (!selectedDomain) return;
 
     let domainID = selectedDomain.id;
-    this.appApi
-      .addSource(domainID, state.name, source_image_name, state.params)
-      .subscribe((res) => {
+
+    return this.appApi
+    .addSource(domainID, state.name, source_image_name, state.params)
+    .pipe(
+      switchMap((res) => {
         if (res.status === 'FAILURE') {
-          this.store.dispatch(new ToastError('Your source could not be added'));
-          return;
-        }
+          this.store.dispatch(
+            new ToastError('Your source could not be added')
+          );
+          return of(res);
+        } else {
 
-        let domainRes = res.domain;
-        let domainsIDs = domainRes.sources.map(
-          (source: any) => source.source_id
-        );
-        let selectedDomain: DisplayDomain = {
-          id: domainRes._id,
-          name: domainRes.name,
-          description: domainRes.description,
-          imageUrl: domainRes.icon,
-          sourceIds: domainsIDs,
-          sources: AppState.formatResponseSources(domainRes.sources),
-          selected: false,
-        };
-
-        let domains = ctx.getState().domains;
-        if (!domains) return;
-
-        for (let domain of domains) {
-          if (domain.id == selectedDomain.id) {
-            domain = selectedDomain;
-            ctx.patchState({
-              domains: domains,
-            });
-            break;
+          console.log("added this source: ");
+          console.log(res)
+          let domainRes = res.domain;
+          let domainsIDs = domainRes.sources.map(
+            (source: any) => source.source_id
+          );
+          let selectedDomain: DisplayDomain = {
+            id: domainRes._id,
+            name: domainRes.name,
+            description: domainRes.description,
+            imageUrl: domainRes.icon,
+            sourceIds: domainsIDs,
+            sources: AppState.formatResponseSources(domainRes.sources),
+            selected: false,
+          };
+  
+          let domains = ctx.getState().domains;
+          if (!domains) return of(null);
+  
+          this.store.dispatch(new SetDomain(selectedDomain));
+  
+          let lastSource =
+            selectedDomain.sources[selectedDomain.sources.length - 1];
+  
+          this.store.dispatch(new SetSourceIsLoading(true));
+          this.store.dispatch(new SetSource(lastSource));
+          console.log("identifier3: " + state.platform)
+          if(state.platform == "livereview" || state.platform == "csv"){
+            console.log("live review here")
+            this.store.dispatch(new GetSourceDashBoardInfo());
           }
+          else{
+            lastSource.isRefreshing = true;
+            this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
+          }
+          console.log("identifier4: " + res.domain.new_source_id)
+          return of(res.domain.new_source_id);
         }
-
-        this.store.dispatch(new SetDomain(selectedDomain));
-
-        let lastSource =
-          selectedDomain.sources[selectedDomain.sources.length - 1];
-        lastSource.isRefreshing = true;
-        this.store.dispatch(new SetSourceIsLoading(true));
-        this.store.dispatch(new SetSource(lastSource));
-        this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
-      });
+      })
+    );
+    
   }
 
   /*  @Action(EditSource)
@@ -595,6 +645,32 @@ export class AppState {
     state: RefreshSourceData
   ) {
     let selectedSource = ctx.getState().selectedSource;
+    console.log(selectedSource)
+    console.log(selectedSource?.params)
+    console.log(selectedSource?.params?.source_type)
+    if(selectedSource?.url == "live-review-logo.png" || selectedSource?.url == "csv-logo.png"){
+      console.log("live review here")
+      if (!selectedSource) return;
+
+      selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
+
+      this.store.dispatch(new GetSourceDashBoardInfo());
+
+      if (selectedSource) {
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+      }
+      this.store.dispatch(
+        new ToastSuccess('Your source has been refreshed')
+      );
+
+      return;
+    }
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
@@ -777,9 +853,8 @@ export class AppState {
   deleteDomain(ctx: StateContext<AppStateModel>, state: DeleteDomain) {
     this.appApi.removeDomain(state.domainID).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        // CHRIS ERROR HANDLE
-        alert('CHRIS ERROR HANDLE');
-        return;
+        this.store.dispatch(new ToastError('There was a problem deleting the domain'));
+
       }
 
       this.store.dispatch(new GetDomains());
@@ -799,6 +874,7 @@ export class AppState {
             overallSentimentScores: {
               aggregated_metrics: res.aggregated_metrics,
               meta_data: res.meta_data,
+              timeseries: res.timeseries,
             },
             sampleData: res.individual_metrics,
             sourceIsLoading: false,
@@ -812,7 +888,7 @@ export class AppState {
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         this.store.dispatch(new ToastError('Source data could not be loaded'));
-        return;
+
       }
 
       if (res.aggregated_metrics)
@@ -823,6 +899,8 @@ export class AppState {
             overallSentimentScores: {
               aggregated_metrics: res.aggregated_metrics,
               meta_data: res.meta_data,
+              timeseries: res.timeseries,
+
             },
             sampleData: res.individual_metrics,
             sourceIsLoading: false,
@@ -898,6 +976,7 @@ export class AppState {
               profileDetails: profileDetails,
             });
 
+            this.store.dispatch(new GetDomains());
             // localStorage.setItem('profileId', state.profileId.toString());
           }
         });
@@ -930,27 +1009,39 @@ export class AppState {
 
   @Action(Logout)
   logout(ctx: StateContext<AppStateModel>) {
-    return this.appApi.logOut().pipe(
-      switchMap((res) => {
-        if (res.status === 'SUCCESS') {
-          this.store.dispatch(new ToastSuccess('You have been logged out'));
-          localStorage.removeItem('JWT');
-          this.router.navigate(['/login']);
-
-          return of();
-        } else {
-          return throwError(() => new Error());
-        }
-      }),
-      catchError((error: any) => {
+    this.appApi.logOut().subscribe((res) => {
+      if (res.status === 'SUCCESS') {
+        localStorage.removeItem('JWT');
+        ctx.patchState({
+          authenticated: false,
+          selectedStatisticIndex: 0,
+          sourceIsLoading: true,
+          allSourcesSelected: true,
+          pdfLoading: false,
+          pdfUrl: '',
+          userHasNoDomains: false,
+          userHasNoSources: false,
+          domains: undefined,
+          selectedDomain: undefined,
+          sources: undefined,
+          selectedSource: undefined,
+          overallSentimentScores: undefined,
+          sampleData: undefined,
+          userDetails: undefined,
+          profileDetails: undefined,
+          toasterError: undefined,
+          toasterSuccess: undefined,
+        });
+        this.router.navigate(['/login']);
+        this.store.dispatch(new ToastSuccess('You have been logged out'));
+      } else {
         this.store.dispatch(new ToastError('You could not be logged out'));
-        return of(error);
-      })
-    );
+      }
+    });
   }
 
   @Action(ChangePassword)
-  changePassword(ctx: StateContext<AppStateModel>, state: UserDetails) {
+  changePassword(ctx: StateContext<AppStateModel>, state: ChangePassword) {
     //check UserDetails
 
     const userId = ctx.getState().userDetails?.userId;
@@ -961,11 +1052,6 @@ export class AppState {
     }
 
     const { oldPassword, newPassword } = state;
-
-    if (oldPassword === undefined || newPassword === undefined) {
-      console.error('oldPassword and newPassword must be provided.');
-      return;
-    }
 
     this.appApi
       .changePassword(userId, oldPassword, newPassword)
@@ -984,19 +1070,8 @@ export class AppState {
   }
 
   @Action(DeleteUser)
-  deleteUser(ctx: StateContext<AppStateModel>, state: UserDetails) {
-    const { password } = state;
-    const username = ctx.getState().userDetails?.username;
-
-    if (!username) {
-      console.error('Username is not available in the state.');
-      return;
-    }
-
-    if (password === undefined) {
-      console.error('password must be provided.');
-      return;
-    }
+  deleteUser(ctx: StateContext<AppStateModel>, state: DeleteUser) {
+    const { password, username } = state;
 
     this.appApi.deleteUser(username, password).subscribe((res) => {
       if (res.status == 'SUCCESS') {
@@ -1012,7 +1087,7 @@ export class AppState {
   }
 
   @Action(ChangeProfileIcon)
-  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ProfileDetails) {
+  changeProfileIcon(ctx: StateContext<AppStateModel>, state: ChangeProfileIcon) {
     const profileId = ctx.getState().profileDetails?.profileId;
 
     if (!profileId) {
@@ -1021,11 +1096,6 @@ export class AppState {
     }
 
     const { profileIcon } = state;
-
-    if (profileIcon === undefined) {
-      console.error('profileIcon must be provided.');
-      return;
-    }
 
     return this.appApi.changeProfileIcon(profileId, profileIcon).pipe(
       switchMap((res) => {
@@ -1049,13 +1119,6 @@ export class AppState {
             new ToastError('Your profile icon could not be changed')
           );
         }
-      }),
-      catchError((error: any) => {
-        console.error(
-          'An error occurred during the profile icon change:',
-          error
-        );
-        return throwError(() => error);
       })
     );
   }
@@ -1114,17 +1177,126 @@ export class AppState {
     });
   }
 
+  @Action(SetIsActive)
+  setIsActive(ctx: StateContext<AppStateModel>, state: SetIsActive) {
+
+    const currentState = ctx.getState();
+    const selectedSource = currentState.selectedSource;
+    const sources = currentState.sources || [];
+
+    if (!selectedSource) {
+      this.store.dispatch(new ToastError('No selected source to toggle'));
+      return;
+    }
+
+    const sourceID = selectedSource.id;
+    const activeVal = state.isActive;
+
+    this.appApi.setIsActive(sourceID, activeVal).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your live review source could not be toggled'));
+        return;
+      } else if (res.status === 'SUCCESS') {
+
+        this.store.dispatch(new ToastSuccess('Your live review source access has been toggled'));
+
+        const updatedSources = sources.map((source) => {
+          if (source.id === sourceID) {
+            return { ...source, params: activeVal };
+          }
+          return source;
+        });
+
+        ctx.patchState({
+          sources: updatedSources,
+          selectedSource: { ...selectedSource, params: activeVal },
+        });
+
+      }
+    });
+    
+  }
+
+  @Action(UplaodCVSFile)
+  uploadCVSFile(ctx: StateContext<AppStateModel>, state: UplaodCVSFile) {
+    const selectedSource = ctx.getState().selectedSource;
+
+    
+
+    if (!selectedSource) return;
+
+    selectedSource.isRefreshing = true;
+      ctx.patchState({
+        selectedSource,
+      });
+
+    const sourceID = selectedSource.id;
+    const { file } = state;
+
+    this.appApi.sendCSVFile(sourceID, file).subscribe((res) => {
+      if (res.status === 'FAILURE') {
+        this.store.dispatch(new ToastError('Your file could not be uploaded - ensure your format is correct'));
+        selectedSource.isRefreshing = false;
+      ctx.patchState({
+        selectedSource,
+      });
+        return;
+      } else if (res.status === 'SUCCESS') {
+        this.store.dispatch(new ToastSuccess('Your file has been uploaded'));
+        this.store.dispatch(new GetSourceDashBoardInfo());
+        selectedSource.isRefreshing = false;
+        ctx.patchState({
+          selectedSource,
+        });
+        }
+    });
+  }
+  @Action(GenerateReport)
+  generateReport(ctx: StateContext<AppStateModel>, state: GenerateReport) {
+    const domainID = state.domainId;
+
+    ctx.patchState({
+      pdfLoading: true,
+    });
+  
+    return this.appApi.generateReport(domainID).pipe(
+      map((res) => {
+        if (res.status === 'FAILURE') {
+          this.store.dispatch(new ToastError('Your report could not be generated'));
+          ctx.patchState({
+            pdfLoading: false,
+          });
+          return of(res);
+        } else if (res.status === 'SUCCESS') {
+          this.store.dispatch(new ToastSuccess('Your report has been generated'));
+          ctx.patchState({
+            pdfUrl: res.url,
+            pdfLoading: false,
+          });
+          return res.url;
+        }
+      }),
+      catchError((error) => {
+        // Handle error here and return an observable if needed
+        return of(error);
+      })
+    );
+  }
+
+
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
 
     for (let responseSource of responseSources) {
-      let sourceUrl = '';
+      let sourceUrl: any = '';
       if (responseSource.params.video_id) {
         sourceUrl = responseSource.params.video_id;
       } else if (responseSource.params.maps_url) {
-        sourceUrl = responseSource.params.maps_ur;
+        sourceUrl = responseSource.params.maps_url;
       } else if (responseSource.params.tripadvisor_url) {
         sourceUrl = responseSource.params.tripadvisor_url;
+      } else if (responseSource.params.is_active){
+        sourceUrl = responseSource.params.is_active;
       }
 
       console.log(responseSource);
@@ -1147,6 +1319,9 @@ export class AppState {
   static platformToIcon(platform: string): string {
     let source_image_name = '';
     switch (platform) {
+      case 'trustpilot':
+        source_image_name = 'trustpilot-logo.png';
+        break;
       case 'facebook':
         source_image_name = 'facebook-logo.png';
         break;
@@ -1163,7 +1338,13 @@ export class AppState {
         source_image_name = 'youtube-logo.png';
         break;
       case 'googlereviews':
-        source_image_name = 'google-reviews.png';
+        source_image_name = 'google-logo.png';
+        break;
+      case 'livereview':
+        source_image_name = 'live-review-logo.png';
+        break;
+      case 'csv':
+        source_image_name = 'csv-logo.png';
         break;
     }
     return source_image_name;

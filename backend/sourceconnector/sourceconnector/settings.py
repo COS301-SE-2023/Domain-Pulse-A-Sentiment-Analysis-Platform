@@ -31,7 +31,23 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "154.73.32.89",
+    ".domainpulse.app",
+    ".dp.cos301.thuthuka.me",
+    "dev-domains",
+    "dev-engine",
+    "dev-profiles",
+    "dev-sourceconnector",
+    "dev-warehouse",
+    "prod-domains",
+    "prod-engine",
+    "prod-profiles",
+    "prod-sourceconnector",
+    "prod-warehouse",
+]
 
 
 # Application definition
@@ -45,6 +61,22 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "refresh",
 ]
+
+
+def append_installed_apps(enabled):
+    if enabled == "True":
+        INSTALLED_APPS.append("elasticapm.contrib.django")
+
+
+APM_ENABLED = os.getenv("APM_ENABLED")
+append_installed_apps(APM_ENABLED)
+
+ELASTIC_APM = {
+    "LOG_LEVEL": "debug",
+    "SERVER_URL": os.getenv("APM_SERVER_URL"),
+    "SERVICE_NAME": "sourceconnector",
+    "SECRET_TOKEN": os.getenv("APM_TOKEN"),
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

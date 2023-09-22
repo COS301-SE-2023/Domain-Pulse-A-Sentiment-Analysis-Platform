@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.http import JsonResponse, HttpRequest
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, ANY
 from authchecker import auth_checks
 import json
 import os
@@ -16,6 +16,12 @@ from datamanager import sentiment_record_model
 
 class QueryEngineTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
+
+    def test_apm_enabled(self):
+        from warehouse import settings
+
+        settings.append_installed_apps("True")
+        self.assertIn("elasticapm.contrib.django", settings.INSTALLED_APPS)
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -52,6 +58,7 @@ class QueryEngineTests(TestCase):
             "overall": {},
             "metadata": {},
             "individual_data": {},
+            "timeseries": {},
         }
         mocked_response.return_value = mock_response
 
@@ -71,7 +78,7 @@ class QueryEngineTests(TestCase):
         )
         mock_get_records.assert_called_once_with(source_id)
         mocked_response.assert_called_once_with(
-            f"http://localhost:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/",
+            f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/aggregator/aggregate/",
             data=json.dumps({"metrics": mock_records}),
         )
 
@@ -123,6 +130,7 @@ class QueryEngineTests(TestCase):
             "overall": {},
             "metadata": {},
             "individual_data": {},
+            "timeseries": {},
         }
         mocked_response.return_value = mock_response
 
@@ -200,13 +208,17 @@ class QueryEngineTests(TestCase):
         self.assertEqual(response3.json(), expected_data)
 
     @patch("requests.post")
-    def test_successful_refresh(self, mocked_response):
+    @patch("datamanager.sentiment_record_model.add_record")
+    def test_successful_refresh(self, mocked_response_2, mocked_response):
         mocked_response.return_value.status_code = 200
         mocked_response.return_value.json.return_value = {
             "status": "SUCCESS",
-            "newdata": [],
+            "newdata": [
+                {"text": "test item 1", "timestamp": 123456789},
+                {"text": "test item 2", "timestamp": 123456789},
+            ],
             "latest_retrieval": 123456789,
-            "metrics": [],
+            "metrics": [{"test": 1}, {"test": 2}],
             "source": {
                 "params": {
                     "source_type": "youtube",
@@ -347,5 +359,92 @@ class QueryEngineTests(TestCase):
         status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
+
+    # @patch("pymongo.MongoClient")
+    # def test_add_record_sentiment_model(self, mock_mongo_client):
+    #     mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
+    #         "sentiment_records"
+    #     ]
+    #     mocked_insert_one = mocked_collection.insert_one
+
+    #     dummy_record = {"text": "this is some review", "timestamp": 123456789}
+    #     sentiment_record_model.add_record(dummy_record)
+    #     mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
+    #     mocked_insert_one.assert_called_once_with(dummy_record)
+    #     mock_mongo_client.return_value.close.assert_called_once()
+
+    # @patch("pymongo.MongoClient")
+    # def test_get_records_sentiment_model(self, mock_mongo_client):
+    #     mocked_collection = mock_mongo_client.return_value["domain_pulse_warehouse"][
+    #         "sentiment_records"
+    #     ]
+    #     mocked_find = mocked_collection.find
+
+    #     dummy_source_id = "bbfbekjfbkAFKAKHEBFL"
+    #     sentiment_record_model.get_records_by_source_id(dummy_source_id)
+    #     mock_mongo_client.assert_called_once_with("domainpulse.app", ANY)
+    #     mocked_find.assert_called_once_with({"source_id": dummy_source_id})
+    #     mock_mongo_client.return_value.close.assert_called_once()
+
+    def test_foreign_request_method_get_report_data_internal(self):
+        local_key = "123"
+        url = "/query/get_report_data_internal/"
+        response = self.client.post(
+            path=url,
+            data=json.dumps({"local_key": local_key}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Foreign Request")
+
+    def test_invalid_request_method_get_report_data_internal(self):
+        local_key = os.getenv("LOCAL_KEY")
+        url = "/query/get_report_data_internal/"
+        response = self.client.get(path=url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "FAILURE")
+        self.assertEqual(data["details"], "Invalid request")
+
+    @patch("authchecker.auth_checks.verify_user_owns_source_ids")
+    @patch("datamanager.sentiment_record_model.get_records_by_source_id")
+    @patch("requests.post")
+    def test_valid_request_get_report_data_internal(
+        self, mocked_response, mock_get_records, mock_verify_user
+    ):
+        url = "/query/get_report_data_internal/"
+        source_ids = ["hbfhwbgufbo724n2n7", "hbfhwbgufbo724n2n7"]
+        request_body = {"local_key": os.getenv("LOCAL_KEY"), "source_ids": source_ids}
+
+        mock_verify_user.return_value = True, ""
+
+        mock_records = [
+            {},
+            {},
+        ]
+        mock_get_records.return_value = mock_records
+
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "overall": {},
+            "metadata": {},
+            "individual_data": {},
+            "timeseries": {},
+        }
+        mocked_response.return_value = mock_response
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data["status"], "SUCCESS")
+        self.assertEqual(data["domain"]["aggregated_metrics"], {})
+        self.assertEqual(data["domain"]["meta_data"], {})
+        self.assertEqual(data["domain"]["individual_metrics"], {})
 
     # ----------------------------------------------------------------

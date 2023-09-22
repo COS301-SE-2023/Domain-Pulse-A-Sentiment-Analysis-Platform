@@ -1,8 +1,9 @@
 import json
+import os
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.test import TestCase
 from unittest import mock
-
+from unittest.mock import patch, MagicMock, ANY
 from requests import Response
 from utils import domainscrud
 from bson.objectid import ObjectId
@@ -31,6 +32,14 @@ class MockedItem:
         ]
 
 
+def mocked_find_one_with_excpetion(dummy):
+    raise Exception()
+
+
+def mocked_failing_auth(**dummy):
+    return False, "Some auth error"
+
+
 def mocked_insert_one(dummy):
     mock = MockedItem()
     mock.name = dummy["name"]
@@ -56,7 +65,7 @@ def mocked_find_one(dummy):
                 "last_refresh_timestamp": 0,
                 "source_name": "testSource",
                 "source_icon": "testSource.com",
-                "params": {"t": "t"},
+                "params": {"t": "t", "source_type": "livereview"},
             }
         ],
     }
@@ -139,6 +148,16 @@ def mocked_find_one_and_update(dummy1, dummy2):
 
 
 class DomainsTests(TestCase):
+    def test_apm_enabled(self):
+        from domains import settings
+
+        settings.append_installed_apps("True")
+        self.assertIn("elasticapm.contrib.django", settings.INSTALLED_APPS)
+
+    def test_ping(self):
+        response = self.client.get(path="/avail_ping/")
+        self.assertEqual(200, response.status_code)
+
     @mock.patch(
         "pymongo.collection.Collection.insert_one", side_effect=mocked_insert_one
     )
@@ -181,6 +200,35 @@ class DomainsTests(TestCase):
     def test_delete_domain(self, mock_delete):
         result = domainscrud.delete_domain("64a2d2a2580b40e94e42b72a")
         self.assertEqual(result["status"], "SUCCESS")
+
+    @mock.patch("pymongo.collection.Collection.delete_many")
+    def test_delete_domains_internal(self, mock_delete):
+        mock_response = MagicMock()
+        mock_response.deleted_count = 1
+        mock_delete.return_value = mock_response
+        local_key = os.getenv("LOCAL_KEY")
+
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps(
+            {"local_key": local_key, "domain_ids": ["64a2d2a2580b40e94e42b72a"]}
+        )
+
+        response = domain_views.delete_domains_internal(request)
+        result = json.loads(response.content)
+        self.assertEqual(
+            result, {"status": "SUCCESS", "details": "Domains deleted successfully"}
+        )
+
+    def test_delete_domains_internal_view(self):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps(
+            {"local_key": "fake", "domain_ids": ["64a2d2a2580b40e94e42b72a"]}
+        )
+        response = domain_views.delete_domains_internal(request)
+        result = json.loads(response.content)
+        self.assertEqual(result, {"status": "FAILURE", "details": "Foreign Request"})
 
     @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
     def test_get_domain(self, mock_find):
@@ -436,7 +484,6 @@ class DomainsTests(TestCase):
         is_valid, details = validator.handler(params)
         self.assertEqual(is_valid, False)
         self.assertEqual(details, "Missing parameter: query_url")
-    
 
     # ----------------------------------------------------------------
 
@@ -679,6 +726,18 @@ class DomainsTests(TestCase):
         response_data = json.loads(response.content)
         self.assertEqual(response_data["status"], "SUCCESS")
 
+    @mock.patch(
+        "pymongo.collection.Collection.find_one",
+        side_effect=mocked_find_one_with_excpetion,
+    )
+    def test_connection_error_cases(self, *mocks):
+        assert (
+            domainscrud.update_last_refresh(
+                ObjectId("64d5f6df18d3d3b8b648b077"), 123456789
+            )
+            == False
+        )
+
     def test_extract_token(self):
         # Valid case
         request = HttpRequest()
@@ -706,6 +765,126 @@ class DomainsTests(TestCase):
         result, error_msg = auth_checks.extract_token(request)
         self.assertFalse(result)
         self.assertEqual(error_msg, "Authorization header - Missing Bearer")
+
+    @patch("utils.domainscrud.get_source")
+    def test_verify_live_sources(self, mocked_db_function):
+        request_body = {"source_id": "some source id"}
+
+        # Case: Invalid request
+        response = self.client.get(path="/domains/verify_live_source")
+        assert response.json() == {"status": "FAILURE", "details": "Invalid request"}
+
+        # Case: no existing source
+        mocked_db_function.return_value = {}
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {"status": "FAILURE", "details": "Not a valid source"}
+
+        # Case: Source exists but wrong type
+        mocked_db_function.return_value = {
+            "params": {"source_type": "youtube", "is_active": False}
+        }
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {
+            "status": "FAILURE",
+            "details": "Not a valid live source",
+        }
+
+        # Case: Source is live but not active
+        mocked_db_function.return_value = {
+            "params": {"source_type": "livereview", "is_active": False}
+        }
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {
+            "status": "FAILURE",
+            "details": "Source is not active",
+        }
+
+        # Case: Valid case
+        mocked_db_function.return_value = {
+            "params": {"source_type": "livereview", "is_active": True}
+        }
+        response = self.client.post(
+            path="/domains/verify_live_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        assert response.json() == {
+            "status": "SUCCESS",
+            "details": "Valid live and active source",
+        }
+
+    def test_endpoints_post_only(self):
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_domains_internal",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/create_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/get_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/add_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/remove_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/create_param",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/delete_param",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/get_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/update_last_refresh",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/edit_source",
+        )
+        assert response.json()["status"] == "FAILURE"
+
+        response: JsonResponse = self.client.get(
+            path="/domains/edit_domain",
+        )
+        assert response.json()["status"] == "FAILURE"
 
     @mock.patch("requests.post")
     def test_auth_checker(self, mocked_response):
@@ -790,3 +969,142 @@ class DomainsTests(TestCase):
         status, details = auth_checks.verify_user_owns_source_ids(request, source_ids)
         self.assertEqual(status, False)
         self.assertEqual(details, "Authorization header missing")
+
+    @mock.patch(
+        "authchecker.auth_checks.verify_user_owns_source_ids",
+        side_effect=mocked_failing_auth,
+    )
+    @mock.patch(
+        "authchecker.auth_checks.verify_user_owns_domain_ids",
+        side_effect=mocked_failing_auth,
+    )
+    def test_endpoints_fail_auth(self, mock1, mock2):
+        request_body = {
+            "id": "64ef5dcb0c87c0a4316cb9ad",
+            "source_id": "64ef5dcb0c87c0a4316cb9ad",
+        }
+
+        response: JsonResponse = self.client.post(
+            path="/domains/create_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/delete_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/get_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/add_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/remove_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/create_param",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/delete_param",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/get_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/update_last_refresh",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/edit_domain",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/edit_source",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+        # response: JsonResponse = self.client.post(
+        #     path="/domains/verify_live_source",
+        #     data=json.dumps(request_body),
+        #     content_type="application/json",
+        # )
+        # self.assertEqual(
+        #     response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        # )
+
+        response: JsonResponse = self.client.post(
+            path="/domains/toggle_is_active",
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Some auth error"}
+        )
+
+    @mock.patch("pymongo.collection.Collection.find_one", side_effect=mocked_find_one)
+    @mock.patch(
+        "pymongo.collection.Collection.update_one", side_effect=mocked_update_one
+    )
+    def test_toogle_is_active(self, mock_find, mock_update):
+        result = domainscrud.set_source_active("64a2d2e0b5b66c122b03e8d2", True)
+        self.assertEqual(result, True)

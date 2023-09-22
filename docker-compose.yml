@@ -1,0 +1,117 @@
+version: "3.9"
+
+services:
+  domains:
+    build:
+      context: ./backend/domains/
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports: 
+      - "8000:8000"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini domains.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+      - "localhost:host-gateway"
+    networks:
+      - default
+
+  engine:
+    build:
+      context: ./backend/engine/
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    ports:
+      - "8001:8001"
+    restart: always
+    command: >
+      sh -c "uwsgi --ini engine.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+      - "localhost:host-gateway"
+    networks:
+    - default
+
+  profiles:
+    build:
+      context: ./backend/profiles/
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    restart: always
+    ports: 
+      - "8002:8002"
+    command: >
+      sh -c "uwsgi --ini profiles.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+      - "localhost:host-gateway"
+    networks:
+      - default
+
+  sourceconnector:
+    build:
+      context: ./backend/sourceconnector/
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    restart: always
+    ports: 
+      - "8003:8003"
+    command: >
+      sh -c "uwsgi --ini sourceconnector.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+      - "localhost:host-gateway"
+    networks:
+      - default
+
+  warehouse:
+    build:
+      context: ./backend/warehouse/
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    restart: always
+    ports: 
+      - "8004:8004"
+    command: >
+      sh -c "uwsgi --ini warehouse.uwsgi.ini"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    extra_hosts:
+      - "localhost:host-gateway"
+    networks:
+      - default
+
+  webserver:
+    build: .
+    environment:
+      - NGINX_CONF=domainpulse.app.conf
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    ports:
+      - "7998:80"
+    depends_on:
+      - engine
+      - domains
+      - profiles
+      - sourceconnector
+      - warehouse
+    networks:
+      - default
+
+volumes:
+  uwsgi_data:
+
+networks:
+  default:
+    driver: bridge

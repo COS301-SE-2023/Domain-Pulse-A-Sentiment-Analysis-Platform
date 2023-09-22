@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+  {% load static %}
+
+  <head>
+    <title>Success</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+  </head>
+  <body>
+    <div class="flex-column center container">
+      <img class="logo" src="{% static 'Centre logo white.png' %}" />
+      <div class="flex-column center block" style="gap:10%">
+        <img src="{% static 'success.svg' %}" alt="checkmark" style="width:30%">
+        <p class = "message">Your review was submitted successfully!</p>
+          
+      </div>
+
+      <div class="filler"></div>
+    </div>
+  </body>
+</html>

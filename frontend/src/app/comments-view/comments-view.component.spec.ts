@@ -182,22 +182,32 @@ describe('CommentsViewComponent', () => {
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
   });
 
-  it('should correctly sort the emotions', () => {
-    component.transformComments(mockCommentData);
+  it('should corrently transofmr the comments', () => {
+    component.reactToNewComents(mockCommentData);
 
-    expect(true).toBe(true);
+    expect(component.comments).toEqual(component.transformComments(mockCommentData));
   });
 
   it('getRatingColor() function should correctly classify the rating', () => {
+    expect(component.getRatingColor('90%')).toBe('very-positive-color');
     expect(component.getRatingColor('70%')).toBe('positive-color');
+    expect(component.getRatingColor('60%')).toBe('somewhat-positive-color');
     expect(component.getRatingColor('40%')).toBe('neutral-color');
     expect(component.getRatingColor('30%')).toBe('somewhat-negative-color');
+    expect(component.getRatingColor('10%')).toBe('negative-color');
+    expect(component.getRatingColor('1%')).toBe('very-negative-color');
     expect(component.getRatingColor('')).toBe('neutral-color');
   });
 
   it('getCategoryColor() function should correctly classify the category', () => {
     expect(component.getCategoryColor('very negative')).toBe('very-negative-color');
+    expect(component.getCategoryColor('negative')).toBe('negative-color');
     expect(component.getCategoryColor('somewhat negative')).toBe('somewhat-negative-color');
+
+    expect(component.getCategoryColor('somewhat positive')).toBe('somewhat-positive-color');
+    expect(component.getCategoryColor('positive')).toBe('positive-color');
+    expect(component.getCategoryColor('very positive')).toBe('very-positive-color');
+
     expect(component.getCategoryColor('neutral')).toBe('neutral-color');
 
   });
@@ -207,11 +217,13 @@ describe('CommentsViewComponent', () => {
     expect(component.getEmotionColor('joy')).toBe('positive-color');
     expect(component.getEmotionColor('sadness')).toBe('sad-color');
     expect(component.getEmotionColor('neutral')).toBe('neutral-color');
+    expect(component.getEmotionColor('')).toBe('neutral-color');
   });
 
   it('getToxicityColor() function should correctly classify the toxicity', () => {
     expect(component.getToxicityColor('toxic')).toBe('very-negative-color');
     expect(component.getToxicityColor('non-toxic')).toBe('very-positive-color');
+    expect(component.getToxicityColor('')).toBe('neutral-color');
   });
 
   it('getRatingClass() function should correctly return the color class based on index and score', () => {

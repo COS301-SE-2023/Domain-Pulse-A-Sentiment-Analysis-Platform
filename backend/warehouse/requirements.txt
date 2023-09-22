@@ -1,0 +1,15 @@
+#the packages for most
+django
+django-cors-headers
+python-dotenv
+
+# app specific packages
+pymongo
+requests
+bleach
+unidecode
+bleach
+datetime
+
+#monitoring
+elastic-apm

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { SourceSelectorComponent } from './source-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
@@ -10,12 +9,18 @@ import {
   AttempPsswdLogin,
   DeleteSource,
   EditSource,
+  GetSourceDashBoardInfo,
   RefreshSourceData,
   SetAllSourcesSelected,
+  SetIsActive,
   SetSource,
   SetSourceIsLoading,
+  ToastError,
+  ToastSuccess,
+  UplaodCVSFile,
 } from '../app.actions';
 import { DisplaySource, Source } from '../app.state';
+import { Data } from '@angular/router';
 
 describe('SourceSelectorComponent', () => {
   let component: SourceSelectorComponent;
@@ -32,7 +37,10 @@ describe('SourceSelectorComponent', () => {
         SourceSelectorComponent,
         { provide: AppApi, useValue: appApiSpy },
       ],
-      imports: [NgxsModule.forRoot([]), FormsModule],
+      imports: [
+        NgxsModule.forRoot([]),
+        FormsModule,
+      ],
     });
 
     component = TestBed.inject(SourceSelectorComponent);
@@ -42,14 +50,10 @@ describe('SourceSelectorComponent', () => {
 
   it('should fire a "AddNewSource" action', (done: DoneFn) => {
     component.newSourceName = 'New Domain Name';
-    component.newSourcePlatform = 'Twitter';
-    spyOn(component, 'determineSourceParams').and.returnValue({
-      source_type: 'youtube',
-      video_id: 'dQw4w9WgXcQ',
-    });
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 
     actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
-      // expect the clearing of the set variables
       setTimeout(() => {
         expect(component.newSourceName).toBe('');
         expect(component.newSourceUrl).toBe('');
@@ -62,7 +66,156 @@ describe('SourceSelectorComponent', () => {
     component.addNewSource();
   });
 
+
+  it('should show error for too long source name', () => {
+    component.newSourceName = 'New Domain Name that is way too long is way too long is way too long is way too long is way too long';
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+  
+    component.addNewSource();
+  
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Source name must be less than 25 characters')
+    );
+  });
+  
+
+  it('should fire a "AddNewSource" action for adding csv', (done: DoneFn) => {
+    component.newSourceName = 'CSV Source';
+    component.newSourcePlatform = 'csv';
+    component.newCSVFile = new File(['mock content'], 'mock.csv', {
+      type: 'text/csv',
+    });
+
+    actions$.pipe(ofActionDispatched(AddNewSource)).subscribe(() => {
+      setTimeout(() => {
+        expect(component.newSourceName).toBe('');
+        expect(component.newSourceUrl).toBe('');
+        expect(component.showAddSourcesModal).toBe(false);
+
+        done();
+      }, 300);
+    });
+
+    component.addNewSource();
+  });
+  
+ it('should dispatch actions for CSV platform with a valid CSV file', () => {
+    // Set up the test data
+    const sourceID = 'your-source-id';
+    const mockFile = new File(['mock content'], 'mock.csv', {
+      type: 'text/csv',
+    });
+    component.newSourcePlatform = 'csv';
+    component.newCSVFile = mockFile;
+    component.newSourceName = 'CSV Source';
+  
+    // Spy on the store's dispatch method and return an observable of your choice (e.g., of(null))
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of(null));
+  
+    // Use await to ensure that the asynchronous code is properly handled
+    component.addNewSource();
+  
+    // Assert that the actions were dispatched as expected
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new UplaodCVSFile(mockFile)
+    ); 
+  });
+
+  it('should show an error message when CSV platform is selected but no CSV file is uploaded', () => {
+    component.newSourcePlatform = 'csv';
+    component.newCSVFile = '';
+    component.newSourceName = 'CSV Source';
+
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+    component.addNewSource();
+
+    
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Please upload a CSV file')
+    );
+  });
+
+  it('should set newCSVFile when uploadFile is called', () => {
+    const mockFile = new File(['mock content'], 'mock.csv', {
+      type: 'text/csv',
+    });
+
+    const event = {
+      target: {
+        files: [mockFile],
+      },
+    };
+
+    component.uploadFile(event);
+
+    expect(component.newCSVFile).toBe(mockFile);
+  });
+
+  it('should show an error message when URL is not specified when adding a new source', () => {
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.newSourceName = 'New Domain Name';
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = '';
+
+    component.addNewSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Please add a URL')
+    );
+  });
+
+  it('should show an error message when .csv is not uploaded when adding a new source', () => {
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.newSourceName = 'New Domain Name';
+    component.newSourcePlatform = 'csv';
+    component.newSourceUrl = '';
+    component.newCSVFile = '';
+
+    component.addNewSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Please upload a CSV file')
+    );
+  });
+
+  it('should show an error message when details are missing when adding a new source', () => {
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.newSourceName = '';
+    component.newSourcePlatform = '';
+    component.newSourceUrl = 'fakeurl';
+
+    component.addNewSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('Please fill in all fields')
+    );
+  });
+
   it('should test "determinePlatformFromNewSourcePlatform()"', () => {
+    component.newSourcePlatform = 'trustpilot';
+    expect(component.determinePlatformFromNewSourcePlatform()).toBe(
+      'trustpilot'
+    );
+
     component.newSourcePlatform = 'googlereviews';
     expect(component.determinePlatformFromNewSourcePlatform()).toBe(
       'googlereviews'
@@ -78,6 +231,11 @@ describe('SourceSelectorComponent', () => {
 
     component.newSourcePlatform = 'test';
     expect(component.determinePlatformFromNewSourcePlatform()).toBe('');
+
+    component.newSourcePlatform = 'livereview';
+    expect(component.determinePlatformFromNewSourcePlatform()).toBe(
+      'livereview'
+    );
   });
 
   it('should fire the "SetSource" action when selectSource function called', (done) => {
@@ -109,6 +267,17 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should toggle the delete source confirmation modal', () => {
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'csv-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+
     component.showConfirmDeleteSourceModal = false;
     component.toggleConfirmDeleteSourceModal();
     expect(component.showConfirmDeleteSourceModal).toBe(true);
@@ -196,56 +365,95 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should return the correct source parameters for different platforms', () => {
-	component.newSourcePlatform = 'googlereviews';
-	component.newSourceUrl = 'https://maps.google.com/';
-	expect(component.determineSourceParams()).toEqual({
-	  source_type: 'googlereviews',
-	  maps_url: 'https://maps.google.com/',
-	});
-  
-	component.newSourcePlatform = 'tripadvisor';
-	component.newSourceUrl = 'https://www.tripadvisor.com/';
-	expect(component.determineSourceParams()).toEqual({
-	  source_type: 'TripAdvisor',
-	  tripadvisor_url: 'https://www.tripadvisor.com/',
-	});
-  
-	component.newSourcePlatform = 'youtube';
-	component.newSourceUrl = 'https://www.youtube.com/watch?v=scWj1BMRHUA';
-	expect(component.determineSourceParams()).toEqual({
-	  source_type: 'youtube',
-	  video_id: 'scWj1BMRHUA',
-	});
-  
-  
-	component.newSourcePlatform = 'youtube';
-	component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
-	expect(component.determineSourceParams()).toEqual({
-	  source_type: 'youtube',
-	  video_id: 'scWj1BMRHUA',
-	});
+    component.newSourcePlatform = 'trustpilot';
+    component.newSourceUrl =
+      'https://www.trustpilot.com/review/www.spotify.com';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'trustpilot',
+      query_url: 'www.spotify.com',
+    });
 
-  // component.newSourcePlatform = 'youtube';
-	// component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
-	// expect(component.determineSourceParams()).toEqual({
-	//   source_type: 'youtube',
-	//   video_id: 'scWj1BMRHUA',
-	// });
-  
+    component.newSourcePlatform = 'trustpilot';
+    component.newSourceUrl = 'www.spotify.com';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'trustpilot',
+      query_url: 'www.spotify.com',
+    });
 
+    component.newSourcePlatform = 'googlereviews';
+    component.newSourceUrl = 'https://maps.google.com/';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'googlereviews',
+      maps_url: 'https://maps.google.com/',
+    });
+
+    component.newSourcePlatform = 'tripadvisor';
+    component.newSourceUrl = 'https://www.tripadvisor.com/';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'TripAdvisor',
+      tripadvisor_url: 'https://www.tripadvisor.com/',
+    });
+
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://www.youtube.com/watch?v=scWj1BMRHUA';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'youtube',
+      video_id: 'scWj1BMRHUA',
+    });
+
+    /* case 'livereview':
+        return {
+          source_type: 'livereview',
+          is_active: true,
+        }
+      case 'youtube':
+
+        const url = this.newSourceUrl;
+        if (!url.includes('youtube')) {
+          return {
+            source_type: 'youtube',
+            video_id: url,
+          };
+        } */
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'youtube',
+      video_id: 'scWj1BMRHUA',
+    });
+
+    component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'scWj1BMRHUA';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'youtube',
+      video_id: 'scWj1BMRHUA',
+    });
+
+    component.newSourcePlatform = 'livereview';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'livereview',
+      is_active: true,
+    });
+
+    // component.newSourcePlatform = 'youtube';
+    // component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
+    // expect(component.determineSourceParams()).toEqual({
+    //   source_type: 'youtube',
+    //   video_id: 'scWj1BMRHUA',
+    // });
   });
-  
+
   it('should return null for unknown platforms', () => {
-	component.newSourcePlatform = 'unknown';
-	component.newSourceUrl = '';
-	expect(component.determineSourceParams()).toBeNull();
+    component.newSourcePlatform = 'unknown';
+    component.newSourceUrl = '';
+    expect(component.determineSourceParams()).toBeNull();
   });
 
-   it('should update source properties and call addNewSource when the URL is changed', () => {
+  it('should update source properties and call addNewSource when the URL is changed', () => {
     const selectedSource: Source = {
-		source_id: '1',
-		source_name: 'Source 1',
-		sourceImageUrl: 'image.png',
+      source_id: '1',
+      source_name: 'Source 1',
+      sourceImageUrl: 'image.png',
     };
     const addNewSourceSpy = spyOn(component, 'addNewSource');
     const deleteSourceSpy = spyOn(component, 'deleteSource');
@@ -265,29 +473,208 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should update the newSourcePlatform property', () => {
-  const platform = 'youtube';
+    const platform = 'youtube';
 
-  component.selectPlatform(platform);
+    component.selectPlatform(platform);
 
-  expect(component['newSourcePlatform']).toBe(platform);
-});
+    expect(component['newSourcePlatform']).toBe(platform);
+  });
 
-it('should dispatch RefreshSourceData action', () => {
-	const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.returnValue(of());
+  it('should dispatch RefreshSourceData action', () => {
+
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.refreshSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new RefreshSourceData());
+  });
+
+  it('should show error for no source selected for refresh', () => {
+
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.refreshSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('You must select a specific source to refresh')
+    );
+  });
+
   
-	component.refreshSource();
-  
-	expect(storeDispatchSpy).toHaveBeenCalledWith(new RefreshSourceData());
+
+  it('should not show error for CSV refresh', () => {
+
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'csv-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = dummyDisplaySource;
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.refreshSource();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('CSV sources cannot be refreshed')
+    );
+  });
+
+  it('should show error for no source selected for delete', () => {
+    
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.showConfirmDeleteSourceModal = false;
+    component.toggleConfirmDeleteSourceModal();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError('You must select a specific source to delete')
+    );
   });
 
   it('should dispatch SetAllSourcesSelected, SetSourceIsLoading, and SetSource actions', () => {
-	const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
-  
-	component.selectAllSources();
-  
-	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetAllSourcesSelected(true));
-	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSourceIsLoading(true));
-	expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSource(null));
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+
+    component.selectAllSources();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new SetAllSourcesSelected(true)
+    );
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSourceIsLoading(true));
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new SetSource(null));
   });
-  
+
+  it('should subscribe to selectedSource$', () => {
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    spyOn(component['store'], 'select').and.returnValue(of(dummyDisplaySource));
+
+    component.ngOnInit();
+
+    expect(component.selectedSource).toEqual(dummyDisplaySource);
+  });
+
+  it('should add a click event listener to copyIcon', () => {
+    const mockCopyIcon = document.createElement('div');
+    mockCopyIcon.id = 'copyIcon';
+    document.body.appendChild(mockCopyIcon);
+
+    const addEventListenerSpy = spyOn(mockCopyIcon, 'addEventListener');
+
+    component.ngOnInit();
+
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'click',
+      jasmine.any(Function)
+    );
+  });
+
+  it('should copy the text to clipboard when copyToClipboard is called', () => {
+    const mockLiveReviewLink = document.createElement('a');
+    mockLiveReviewLink.id = 'liveReviewLink';
+    mockLiveReviewLink.setAttribute('href', 'https://example.com');
+    document.body.appendChild(mockLiveReviewLink);
+
+    const writeTextSpy = spyOn(
+      navigator.clipboard,
+      'writeText'
+    ).and.returnValue(Promise.resolve());
+
+    component.copyToClipboard();
+
+    expect(writeTextSpy).toHaveBeenCalledWith('https://example.com');
+  });
+
+  it('should toggle info modal', () => {
+    component.showInfoModal = false;
+    component.toggleInfoModal();
+    expect(component.showInfoModal).toBe(true);
+
+    component.showInfoModal = true;
+    component.toggleInfoModal();
+    expect(component.showInfoModal).toBe(false);
+  });
+
+  it('should stop event propagation and toggle info modal', () => {
+    const event = new Event('click');
+    const stopPropagationSpy = spyOn(event, 'stopPropagation');
+    const toggleInfoModalSpy = spyOn(component, 'toggleInfoModal');
+
+    component.showInfo(event);
+
+    expect(stopPropagationSpy).toHaveBeenCalled();
+    expect(toggleInfoModalSpy).toHaveBeenCalled();
+  });
+
+  it('should toggle active and dispatch SetIsActive action', () => {
+    const selectedSource = { params: true };
+
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(selectedSource);
+
+    component.toggleActive(event);
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new SetIsActive(!selectedSource.params)
+    );
+  });
+
+  it('should return the correct live review link', () => {
+    const selectedSource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+
+    component.selectedSource = selectedSource;
+
+    component.currHost = 'localhost:4200';
+    expect(component.getLiveReviewLink()).toBe(
+      'http://localhost:8004/ingest/post-review/1/test'
+    );
+
+    component.currHost = 'localhost:8004';
+    expect(component.getLiveReviewLink()).toBe(
+      `${window.location.protocol}//localhost:8004/ingest/post-review/1/test`
+    );
+  });
 });
