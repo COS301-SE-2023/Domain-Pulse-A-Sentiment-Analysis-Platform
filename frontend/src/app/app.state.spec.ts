@@ -602,6 +602,96 @@ describe('AppState', () => {
     );
   });
 
+
+  it('should react correctly to successful "AddNewSource" event with defined domains', (done: DoneFn) => {
+    const mockDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [],
+    };
+  
+    const mockSuccessfullResponse: any = {
+      status: 'SUCCESS',
+      domain: {
+        _id: '64c4dd5e9194ca8be06ba96c',
+        name: 'Tutman',
+        icon: 'f1-logo.png',
+        description: 'None',
+        sources: [
+          {
+            source_id: '2',
+            source_name: 'Fresh boat',
+            source_icon: 'youtube-logo.png',
+            last_refresh_timestamp: 1690624522.0,
+            params: {
+              source_type: 'youtube',
+              video_id: 'eYDKY6jUa4Q',
+            },
+          },
+        ],
+        new_source_id: '2',
+      },
+    };
+  
+    // Mock an array of domains for ctx.getState().domains
+    const mockDomains: DisplayDomain[] = [
+      {
+        id: '1',
+        name: 'test',
+        description: 'test',
+        selected: true,
+        imageUrl: 'test',
+        sourceIds: [],
+        sources: [],
+      },
+      {
+        id: '2',
+        name: 'anotherTest',
+        description: 'anotherTest',
+        selected: false,
+        imageUrl: 'anotherTest',
+        sourceIds: [],
+        sources: [],
+      },
+    ];
+  
+    // Reset the state with a selected domain and defined domains
+    store.reset({ app: { selectedDomain: mockDomain, domains: mockDomains } });
+  
+    apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
+    apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
+  
+    actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
+      const actualSources = store.selectSnapshot(AppState.sources);
+      if (!actualSources) {
+        fail();
+        return;
+      }
+      expect(actualSources.length).toEqual(1);
+  
+      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+      if (!actaulSelectredomain) {
+        fail();
+        return;
+      }
+      expect(actaulSelectredomain.sourceIds.length).toEqual(1);
+  
+      done();
+    });
+  
+    store.dispatch(
+      new AddNewSource('newSourceName', 'newSOurcePlatform', {
+        platform: 'youtube',
+        video_id: 'QblahQw',
+      })
+    );
+  });
+
   it('should react correctly to failed "AddNewSource" event', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
       expect(true).toBe(true);
