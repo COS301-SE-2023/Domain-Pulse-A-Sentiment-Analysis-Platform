@@ -492,6 +492,37 @@ class QueryEngineTests(TestCase):
     #     self.assertEqual(response.status_code, 200)
     #     self.assertEqual(response.json(), {"status": "SUCCESS", "is_done": True})
 
+    @mock.patch(
+        "query.views.PENDING_REFRESH",
+        {"hbfhwbgufbo724n2n7": [{"timestamp": 123, "text": "example"}]},
+    )
+    @mock.patch(
+        "requests.post",
+        return_value=mock.MagicMock(
+            status_code=500, json=lambda: {"metrics": [{"metric": 1}]}
+        ),
+    )
+    @patch("datamanager.sentiment_record_model.add_record")
+    def test_try_refresh_analyser_failure(self, mock_post):
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = response = self.client.post(
+            path=url,
+            data=json.dumps(request_body),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {
+                "status": "FAILURE",
+                "details": "Could not connect to Analyser",
+            },
+        )
+
     @mock.patch("query.views.PENDING_REFRESH", {})
     @patch("datamanager.sentiment_record_model.add_record")
     def test_try_refresh_failure_invalid_id(self, temp):
