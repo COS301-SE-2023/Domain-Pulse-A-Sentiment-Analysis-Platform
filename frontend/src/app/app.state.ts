@@ -584,12 +584,25 @@ export class AppState {
             imageUrl: domainRes.icon,
             sourceIds: domainsIDs,
             sources: AppState.formatResponseSources(domainRes.sources),
-            selected: false,
+            selected: true,
           };
   
           let domains = ctx.getState().domains;
           if (!domains) return of(null);
-  
+
+          for (let i = 0; i < domains.length; i++) {
+            if (domains[i].id === selectedDomain.id) {
+
+              domains[i] = selectedDomain;
+
+              ctx.patchState({
+                domains: [...domains], 
+              });
+        
+              break; 
+            }
+          }
+
           this.store.dispatch(new SetDomain(selectedDomain));
   
           let lastSource =
@@ -959,34 +972,26 @@ export class AppState {
   toggleIsRefreshing(ctx: StateContext<AppStateModel>, state: ToggleIsRefreshing) {
     let domains = ctx.getState().domains;
     console.log("domains")
+    console.log(domains)
     if (!domains) return;
 
     console.log("1")
 
-    for (const domain of domains) {
-      // Iterate through sources within each domain
-      console.log("2")
-      for (const source of domain.sources) {
-        console.log("check source ids")
-        console.log(source.id)
-        console.log(state.sourceId)
-        if (source.id === state.sourceId) {
-          console.log("3")
+    for (let i = 0; i < domains.length; i++) {
 
-          console.log("found source")
-          console.log(source)
-          console.log(state.sourceId)
-
-          source.isRefreshing = state.isRefreshing;
+      for (let x = 0; x < domains[i].sources.length; x++) {
+        if (domains[i].sources[x].id === state.sourceId) {
+  
+          domains[i].sources[x].isRefreshing = state.isRefreshing;
+  
+          ctx.patchState({
+            domains: [...domains], 
+          });
+    
           break; 
         }
       }
     }
-  
-    ctx.patchState({
-      domains: domains, 
-    });
-
 
   }
 
