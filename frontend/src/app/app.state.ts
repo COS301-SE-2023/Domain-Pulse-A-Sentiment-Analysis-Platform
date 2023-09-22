@@ -587,9 +587,8 @@ export class AppState {
           };
   
           let domains = ctx.getState().domains;
-          if (!domains) return of(null);
 
-          domains = AppState.findPatchDomain(domains, selectedDomain);
+          domains = AppState.findPatchDomain(domains!, selectedDomain);
 
           if(domains != undefined){
             ctx.patchState({
@@ -788,7 +787,6 @@ export class AppState {
         new ToastSuccess('Your source has been refreshed')
       );
 
-      return;
     }
 
 
