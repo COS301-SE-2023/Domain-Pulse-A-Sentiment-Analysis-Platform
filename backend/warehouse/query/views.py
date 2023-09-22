@@ -203,15 +203,26 @@ PENDING_REFRESH = {}
 
 @csrf_exempt
 def try_refresh(request: HttpRequest):
+    ANALYSER_ENDPOINT = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+
     if request.method == "POST":
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
         remaining_data = PENDING_REFRESH.get(str(source_id_raw))
 
-        if len(remaining_data == 0):
+        if remaining_data == None:
+            return JsonResponse(
+                {
+                    "status": "FAILURE",
+                    "details": "No source with that ID is pending processing",
+                }
+            )
+
+        if len(remaining_data) == 0:
             del PENDING_REFRESH[str(source_id_raw)]
             return JsonResponse({"status": "SUCCESS", "is_done": True})
         else:
+            num_remaining = len(list(PENDING_REFRESH.get(str(source_id_raw))))
             new_data = list(PENDING_REFRESH.get(str(source_id_raw))).pop()
 
             ts = new_data["timestamp"]
@@ -248,7 +259,7 @@ def try_refresh(request: HttpRequest):
                 {
                     "status": "SUCCESS",
                     "is_done": False,
-                    "num_remaining": len(list(PENDING_REFRESH.get(str(source_id_raw)))),
+                    "num_remaining": num_remaining - 1,
                 }
             )
 
