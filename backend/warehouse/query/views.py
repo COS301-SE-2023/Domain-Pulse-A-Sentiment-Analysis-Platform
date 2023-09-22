@@ -209,7 +209,7 @@ def try_refresh(request: HttpRequest):
         remaining_data = PENDING_REFRESH.get(str(source_id_raw))
 
         if len(remaining_data == 0):
-            del PENDING_REFRESH.get(str(source_id_raw))
+            del PENDING_REFRESH[str(source_id_raw)]
             return JsonResponse({"status": "SUCCESS", "is_done": True})
         else:
             new_data = list(PENDING_REFRESH.get(str(source_id_raw))).pop()

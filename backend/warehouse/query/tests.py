@@ -447,4 +447,52 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["domain"]["meta_data"], {})
         self.assertEqual(data["domain"]["individual_metrics"], {})
 
+    @mock.patch("views.PENDING_REFRESH", {"1": [{"timestamp": 123, "text": "example"}]})
+    @mock.patch(
+        "views.requests.post",
+        return_value=mock.MagicMock(
+            status_code=200, json=lambda: {"metrics": [{"metric": 1}]}
+        ),
+    )
+    def test_try_refresh_success(self, mock_post):
+        request = HttpRequest()
+        request.method = "POST"
+        request.body = json.dumps({"source_id": "1"})
+
+        response = try_refresh(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(), {"status": "SUCCESS", "is_done": False, "num_remaining": 0}
+        )
+
+        mock_post.assert_called_once_with(
+            mock.ANY, data=json.dumps({"data": ["example"]})
+        )
+
+    @mock.patch("views.PENDING_REFRESH", {"1": []})
+    def test_try_refresh_success_no_remaining_data(self):
+        request = HttpRequest()
+        request.method = "POST"
+        request.body = json.dumps({"source_id": "1"})
+
+        response = try_refresh(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "SUCCESS", "is_done": True})
+
+    @mock.patch("views.PENDING_REFRESH", {})
+    def test_try_refresh_failure_invalid_request(self):
+        request = HttpRequest()
+        request.method = "GET"
+
+        response = try_refresh(request)
+
+        self.assertEqual(
+            response.status_code, 200
+        )  # Assuming you want to return 200 for invalid requests
+        self.assertEqual(
+            response.json(), {"status": "FAILURE", "details": "Invalid request"}
+        )
+
     # ----------------------------------------------------------------
