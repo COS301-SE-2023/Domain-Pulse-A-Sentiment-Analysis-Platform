@@ -196,16 +196,19 @@ class QueryEngineTests(TestCase):
         response1: JsonResponse = self.client.get(path="/query/get_source_dashboard/")
         response2: JsonResponse = self.client.get(path="/query/get_domain_dashboard/")
         response3: JsonResponse = self.client.get(path="/query/refresh_source/")
+        response4: JsonResponse = self.client.get(path="/query/try_refresh/")
 
         self.assertEqual(response1.status_code, 200)
         self.assertEqual(response2.status_code, 200)
         self.assertEqual(response3.status_code, 200)
+        self.assertEqual(response4.status_code, 200)
 
         expected_data = {"status": "FAILURE", "details": "Invalid request"}
 
         self.assertEqual(response1.json(), expected_data)
         self.assertEqual(response2.json(), expected_data)
         self.assertEqual(response3.json(), expected_data)
+        self.assertEqual(response4.json(), expected_data)
 
     @patch("requests.post")
     @patch("datamanager.sentiment_record_model.add_record")
