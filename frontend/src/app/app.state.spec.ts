@@ -31,6 +31,13 @@ import {
   SetUserDetails,
   ToastError,
   ToastSuccess,
+  ToggleAddDomainModal,
+  ToggleChangePasswordModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleDeleteAccountModal,
+  ToggleEditDomainModal,
+  ToggleProfileEditModal,
+  ToggleProfileModal,
   UplaodCVSFile,
 } from './app.actions';
 import { AppApi } from './app.api';
@@ -1001,4 +1008,62 @@ describe('AppState', () => {
   
     store.dispatch(new DeleteDomain(domainID));
   });
+
+  it('should toggle showAddDomainModal', () => {
+    store.dispatch(new ToggleAddDomainModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showAddDomainModal).toBe(true);
+  });
+
+  it('should toggle showProfileModal', () => {
+    store.dispatch(new ToggleProfileModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showProfileModal).toBe(true);
+  });
+
+  it('should toggle showEditDomainModal', () => {
+    store.dispatch(new ToggleEditDomainModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showEditDomainModal).toBe(true);
+  });
+
+  it('should toggle showConfirmDeleteDomainModal', () => {
+    store.dispatch(new ToggleConfirmDeleteDomainModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showConfirmDeleteDomainModal).toBe(true);
+  });
+
+  it('should toggle showDeleteAccountModal', () => {
+    store.dispatch(new ToggleDeleteAccountModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showDeleteAccountModal).toBe(true);
+  });
+
+  it('should toggle showChangePasswordModal', () => {
+    store.dispatch(new ToggleChangePasswordModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showChangePasswordModal).toBe(true);
+  });
+
+  it('should toggle showProfileEditModal', () => {
+    store.dispatch(new ToggleProfileEditModal());
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.showProfileEditModal).toBe(true);
+  });
+
+
 });
