@@ -72,6 +72,7 @@ APM_ENABLED = os.getenv("APM_ENABLED")
 append_installed_apps(APM_ENABLED)
 
 ELASTIC_APM = {
+    "DEBUG": False,
     "LOG_LEVEL": "debug",
     "SERVER_URL": os.getenv("APM_SERVER_URL"),
     "SERVICE_NAME": "sourceconnector",
@@ -79,6 +80,7 @@ ELASTIC_APM = {
 }
 
 MIDDLEWARE = [
+    'elasticapm.contrib.django.middleware.Catch404Middleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

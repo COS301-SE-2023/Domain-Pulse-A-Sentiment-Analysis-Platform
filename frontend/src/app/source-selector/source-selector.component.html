@@ -285,7 +285,7 @@
 
 <dp-modal-container [modalDisplay]="showInfoModal" (close)="toggleInfoModal()" data-cy="infoModal">
   <div class="flex-row modal"
-    style="width: 20vw; height: fit-content; color: black; margin-bottom: 1rem; margin-top: 1rem;">
+    style="width: 20vw; height: fit-content; min-height: 30vh; color: black; margin-bottom: 1rem; margin-top: 1rem;">
     <div class="flex-column center modal-contents" style="width: 100%; max-width: none">
       <div class="heading-container" style="padding-bottom: 1rem;">
         <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item"
@@ -343,7 +343,7 @@
         </ng-container>
         <ng-container *ngIf="
             selectedSource?.url !== 'live-review-logo.png' &&
-            selectedSource?.url !== 'youtube-logo.png'
+            selectedSource?.url !== 'youtube-logo.png' && selectedSource?.url !== 'csv-logo.png'
           ">
           <div class="flex-row left">
             <div class="tag flex-row center">Name</div>
@@ -361,6 +361,14 @@
               alt="Source Image" style="width: 80%;" />
           </div>
         </ng-container>
+        <ng-container *ngIf="
+        selectedSource?.url === 'csv-logo.png'
+      ">
+      <div class="flex-row left">
+        <div class="tag flex-row center">Name</div>
+        <p class="info-data">{{ selectedSource?.name }}</p>
+      </div>
+    </ng-container>
       </div>
     </div>
   </div>
