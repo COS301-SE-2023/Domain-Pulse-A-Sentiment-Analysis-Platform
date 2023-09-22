@@ -68,7 +68,6 @@ export interface DisplaySource {
   params: any;
   selected: boolean;
   isRefreshing: boolean;
-  isTryRefreshing: boolean;
 }
 
 export interface SentimentScores {
@@ -813,18 +812,8 @@ export class AppState {
 
       console.log("calling try refresh in yt")
       this.store.dispatch(
-        new TryRefresh(sourceID, selectedSource!)
+        new TryRefresh(sourceID)
       ).subscribe(() => {
-
-        console.log("try refresh returned")
-
-        console.log("stopping refresh spinner1")
-        /* if (selectedSource) {
-          selectedSource.isRefreshing = false;
-          ctx.patchState({
-            selectedSource,
-          });
-        } */
 
       });        
 
@@ -832,107 +821,8 @@ export class AppState {
     });
 
 
-
-    
-
-    /* console.log('refreshing with sourceID' + sourceID);
-    this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
-      if (res.status === 'FAILURE') {
-        this.store.dispatch(
-          new ToastError('Source data could not be refreshed')
-        );
-        if (selectedSource) {
-          selectedSource.isRefreshing = false;
-          ctx.patchState({
-            selectedSource,
-          });
-        }
-
-        return;
-      }
-      this.store.dispatch(new GetSourceDashBoardInfo());
-
-      if (selectedSource) {
-        selectedSource.isRefreshing = false;
-        ctx.patchState({
-          selectedSource,
-        });
-      }
-      this.store.dispatch(
-        new ToastSuccess('Your source has been refreshed')
-      );
-    }); */
   }
   
-
- /*  @Action(TryRefresh)
-  tryRefresh(ctx: StateContext<AppStateModel>, state: TryRefresh) {
-
-    console.log("in try refresh 1")
-
-    //disable animations for sourceID
-    //is_done
-
-
-
-
-    this.appApi.tryRefresh(state.sourceId).subscribe((res) => {
-      console.log("try refresh response")
-      console.log(res)
-      if (res.status === 'FAILURE') {
-        console.log("try refresh failed 1")
-        console.log(res)
-        this.store.dispatch(
-          new ToastError('Error in try refresh')
-        );
-
-
-        return;
-      }
-
-      if(state.sourceId == ctx.getState().selectedSource?.id){
-        this.store.dispatch(new GetSourceDashBoardInfo());
-      }
-      
-      if(res.is_done == true){
-        console.log(res)
-        console.log("try refresh done 1")
-
-
-        if(state.sourceId == ctx.getState().selectedSource?.id){
-          this.store.dispatch(new GetSourceDashBoardInfo());
-        }
-
-        this.store.dispatch(
-          new ToastSuccess('Try Refresh is done')
-        );
-
-        return;
-      }else{
-        this.store.dispatch(
-          new TryRefresh(state.sourceId)
-        ).subscribe(() => {
-          return;
-        });        
-      }
-
-    });
-
-
-
-  
-
-  
-
-    //call tryRefreshEndpoint with sourceID, subscribe to response, keep calling endpoint till response is gotNothingLeft
-        //if(selectedSource == sourceID){
-            //call getSourceDashboardInfo
-        //}
-    //if nothing left
-    //enable animations for sourceID
-    //show toast
-
-  } */
 
   @Action(TryRefresh)
   tryRefresh(ctx: StateContext<AppStateModel>, state: TryRefresh) {
@@ -940,7 +830,7 @@ export class AppState {
     const refreshObservable = of(null).pipe(
       concatMap(() => this.appApi.tryRefresh(state.sourceId)),
       repeatWhen((completed) => completed),
-      takeWhile((result) => !(result.status === 'FAILURE' || result.is_done), true), // Continue while the condition is true
+      takeWhile((result) => !(result.status === 'FAILURE' || result.is_done), true), 
       tap((result) => {
         console.log(result);
         if (result.status === 'FAILURE' || result.is_done) {
@@ -948,23 +838,19 @@ export class AppState {
             this.store.dispatch(new GetSourceDashBoardInfo());
           }
           this.store.dispatch(new ToastSuccess('Your source has been refreshed'));
-          //toggle refresh spinner for source
           this.store.dispatch(new ToggleIsRefreshing(false, state.sourceId));
         } else {
-          // Perform an HTTP request and continue refreshing
           if (state.sourceId == ctx.getState().selectedSource?.id) {
             this.store.dispatch(new GetSourceDashBoardInfo());
           }
-          console.log('Still More');
         }
       }),
       catchError((error) => {
         console.error('Error:', error);
-        return of(null); // Continue with the observable even if there's an error
+        return of(null); 
       })
     );
 
-    // Subscribe to the refreshObservable
     refreshObservable.subscribe();
   }
 
@@ -1566,7 +1452,6 @@ export class AppState {
         params: sourceUrl,
         selected: false,
         isRefreshing: false,
-        isTryRefreshing: false, //FLAG
       };
       displaySources.push(displaySource);
     }

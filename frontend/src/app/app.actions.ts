@@ -206,7 +206,7 @@ export class ToggleProfileEditModal {
 
 export class TryRefresh{
   static readonly type = '[App] Try Refresh';
-  constructor(public sourceId: string, public selectedSource: DisplaySource) {}
+  constructor(public sourceId: string) {}
 }
 
 export class ToggleIsRefreshing{
