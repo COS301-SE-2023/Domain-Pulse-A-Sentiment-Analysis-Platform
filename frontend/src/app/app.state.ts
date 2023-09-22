@@ -854,6 +854,7 @@ export class AppState {
       );
     });
   }
+  
 
   @Action(TryRefresh)
   tryRefresh(ctx: StateContext<AppStateModel>, state: TryRefresh) {
@@ -862,11 +863,8 @@ export class AppState {
 
     //disable animations for sourceID
     //is_done
-    var loop = true;
-    var count = 0;
-    while(loop){
 
-    console.log("in loop " + count++)
+
 
 
     this.appApi.tryRefresh(state.sourceId).subscribe((res) => {
@@ -882,12 +880,15 @@ export class AppState {
 
         return;
       }
+
+      if(state.sourceId == ctx.getState().selectedSource?.id){
+        this.store.dispatch(new GetSourceDashBoardInfo());
+      }
       
       if(res.is_done == true){
         console.log(res)
         console.log("try refresh done 1")
 
-        loop = false;
 
         if(state.sourceId == ctx.getState().selectedSource?.id){
           this.store.dispatch(new GetSourceDashBoardInfo());
@@ -896,12 +897,21 @@ export class AppState {
         this.store.dispatch(
           new ToastSuccess('Try Refresh is done')
         );
+
+        return;
+      }else{
+        this.store.dispatch(
+          new TryRefresh(state.sourceId)
+        ).subscribe(() => {
+          return;
+        });        
       }
+
     });
 
-    return;
 
-  }
+
+  
 
   
 
