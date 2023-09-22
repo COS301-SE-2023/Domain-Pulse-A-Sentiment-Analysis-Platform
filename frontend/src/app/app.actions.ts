@@ -204,3 +204,8 @@ export class ToggleProfileEditModal {
   static readonly type = '[App] Toggle Profile Edit Modal';
 }
 
+export class TryRefresh{
+  static readonly type = '[App] Try Refresh';
+  constructor(public sourceId: string) {}
+}
+

@@ -39,6 +39,7 @@ import {
   ToggleChangePasswordModal,
   ToggleDeleteAccountModal,
   ToggleProfileEditModal,
+  TryRefresh,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, throwError } from 'rxjs';
@@ -66,6 +67,7 @@ export interface DisplaySource {
   params: any;
   selected: boolean;
   isRefreshing: boolean;
+  isTryRefreshing: boolean;
 }
 
 export interface SentimentScores {
@@ -764,6 +766,8 @@ export class AppState {
 
       return;
     }
+
+
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
@@ -775,6 +779,51 @@ export class AppState {
       ctx.patchState({
         selectedSource,
       });
+    }
+
+    if(selectedSource?.url == "youtube-logo.png"){
+      console.log("youtube here")
+
+      this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
+        if (res.status === 'FAILURE') {
+          this.store.dispatch(
+            new ToastError('Source data could not be refreshed')
+          );
+          if (selectedSource) {
+            selectedSource.isRefreshing = false;
+            ctx.patchState({
+              selectedSource,
+            });
+          }
+  
+          return;
+        }
+
+        console.log("calling try refresh in yt")
+        this.store.dispatch(
+          new TryRefresh(sourceID)
+        ).subscribe(() => {
+
+          console.log("try refresh returned")
+
+          if (selectedSource) {
+            selectedSource.isRefreshing = false;
+            ctx.patchState({
+              selectedSource,
+            });
+          }
+          this.store.dispatch(
+            new ToastSuccess('Your source has been refreshed')
+          );
+        });        
+        //this.store.dispatch(new GetSourceDashBoardInfo());
+  
+       
+      });
+
+
+
+      return;
     }
 
     console.log('refreshing with sourceID' + sourceID);
@@ -805,6 +854,67 @@ export class AppState {
       );
     });
   }
+
+  @Action(TryRefresh)
+  tryRefresh(ctx: StateContext<AppStateModel>, state: TryRefresh) {
+
+    console.log("in try refresh 1")
+
+    //disable animations for sourceID
+    //is_done
+    var loop = true;
+    var count = 0;
+    while(loop){
+
+    console.log("in loop " + count++)
+
+
+    this.appApi.tryRefresh(state.sourceId).subscribe((res) => {
+      console.log("try refresh response")
+      console.log(res)
+      if (res.status === 'FAILURE') {
+        console.log("try refresh failed 1")
+        console.log(res)
+        this.store.dispatch(
+          new ToastError('Error in try refresh')
+        );
+
+
+        return;
+      }
+      
+      if(res.is_done == true){
+        console.log(res)
+        console.log("try refresh done 1")
+
+        loop = false;
+
+        if(state.sourceId == ctx.getState().selectedSource?.id){
+          this.store.dispatch(new GetSourceDashBoardInfo());
+        }
+
+        this.store.dispatch(
+          new ToastSuccess('Try Refresh is done')
+        );
+      }
+    });
+
+    return;
+
+  }
+
+  
+
+    //call tryRefreshEndpoint with sourceID, subscribe to response, keep calling endpoint till response is gotNothingLeft
+        //if(selectedSource == sourceID){
+            //call getSourceDashboardInfo
+        //}
+    //if nothing left
+    //enable animations for sourceID
+    //show toast
+
+  }
+
 
   @Action(AddNewDomain)
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
@@ -1375,6 +1485,7 @@ export class AppState {
         params: sourceUrl,
         selected: false,
         isRefreshing: false,
+        isTryRefreshing: false, //FLAG
       };
       displaySources.push(displaySource);
     }
