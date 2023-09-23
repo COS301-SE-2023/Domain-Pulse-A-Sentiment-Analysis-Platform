@@ -9,7 +9,7 @@ import os
 import mock
 import requests
 from . import views
-from datamanager import sentiment_record_model
+from datamanager import sentiment_record_model, refresh_queue
 
 # Create your tests here.
 
@@ -554,7 +554,7 @@ class QueryEngineTests(TestCase):
     @patch("datamanager.refresh_queue.process_batch")
     @patch("datamanager.sentiment_record_model.add_record")
     @patch("requests.post")
-    def test_try_refresh_analyyser_failure(
+    def test_try_refresh_analyser_failure(
         self, mock_post, mock_add_record, mock_process_batch
     ):
         mock_process_batch.return_value = (
@@ -583,5 +583,71 @@ class QueryEngineTests(TestCase):
         )
         self.assertEqual(response.content, expected_response.content)
         self.assertEqual(response.status_code, 200)
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_empty_queue(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = {"queue": []}
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertFalse(result[0])
+        self.assertEqual(result[1], ["source done"])
+
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_not_called()
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_no_queue(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = None
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertFalse(result[0])
+        self.assertEqual(result[1], ["no source"])
+
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_not_called()
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_sucess_five(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = {
+            "queue": ["1", "2", "3", "4", "5", "6"]
+        }
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertTrue(result[0])
+        self.assertEqual(result[1], ["1", "2", "3", "4", "5"])
+        query = {"source_id": source_id}
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_called_once_with(
+            query, {"$set": {"queue": ["6"]}}
+        )
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_sucess_less_than_five(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = {"queue": ["1", "2", "3", "4"]}
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertTrue(result[0])
+        self.assertEqual(result[1], ["1", "2", "3", "4"])
+        query = {"source_id": source_id}
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_called_once_with(
+            query, {"$set": {"queue": []}}
+        )
 
     # ----------------------------------------------------------------
