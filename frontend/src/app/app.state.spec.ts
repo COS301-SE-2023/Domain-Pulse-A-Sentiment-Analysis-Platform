@@ -230,6 +230,8 @@ describe('AppState', () => {
   });
 
   it('should select the correct domain on "SetDomain" event', () => {
+    localStorage.setItem('2', '2');
+
     const mockDomains: DisplayDomain[] = [
       {
         id: '1',
