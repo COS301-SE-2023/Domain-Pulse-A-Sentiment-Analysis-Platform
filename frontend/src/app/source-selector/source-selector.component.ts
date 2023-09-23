@@ -166,22 +166,20 @@ export class SourceSelectorComponent implements OnInit {
       case 'youtube':
 
         const url = this.newSourceUrl;
-        if (!url.includes('youtube')) {
+        if (!url.includes('youtube') && !url.includes('youtu.be')) {
           return {
             source_type: 'youtube',
             video_id: url,
           };
         }
         console.log('url: ' + url);
-        const regExp =
-          /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?&v=)([^#&?]+).*/;
         const match = url.match(regExp);
         console.log('match: ' + match);
 
-        const videoID = match && match[7].length === 11 ? match[7] : null;
         return {
           source_type: 'youtube',
-          video_id: videoID,
+          video_id:  match![1],
         };
     }
     return null;
