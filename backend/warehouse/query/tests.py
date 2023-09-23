@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.http import JsonResponse, HttpRequest
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from unittest.mock import patch, MagicMock, ANY
+from unittest.mock import patch, MagicMock, ANY, Mock
 from authchecker import auth_checks
 import json
 import os
@@ -450,122 +450,122 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["domain"]["meta_data"], {})
         self.assertEqual(data["domain"]["individual_metrics"], {})
 
-    @mock.patch(
-        "query.views.PENDING_REFRESH",
-        {"hbfhwbgufbo724n2n7": [{"timestamp": 123, "text": "example"}]},
-    )
-    @mock.patch(
-        "requests.post",
-        return_value=mock.MagicMock(
-            status_code=200, json=lambda: {"metrics": [{"metric": 1}]}
-        ),
-    )
+    @patch("datamanager.refresh_queue.process_one")
     @patch("datamanager.sentiment_record_model.add_record")
-    def test_try_refresh_success(self, mock_post):
+    @patch("requests.post")
+    def test_try_refresh_success(self, mock_post, mock_add_record, mock_process_one):
+        mock_process_one.return_value = (
+            True,
+            {"timestamp": "12345", "text": "Sample text"},
+        )
+
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_post.return_value = mock_response
+
         url = "/query/try_refresh/"
         source_id = "hbfhwbgufbo724n2n7"
         request_body = {"source_id": source_id}
 
-        response = response = self.client.post(
-            path=url,
-            data=json.dumps(request_body),
-            content_type="application/json",
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
         )
 
+        expected_response = JsonResponse({"status": "SUCCESS", "is_done": False})
+        self.assertEqual(response.content, expected_response.content)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(), {"status": "SUCCESS", "is_done": False, "num_remaining": 0}
+
+    @patch("datamanager.refresh_queue.process_one")
+    @patch("datamanager.sentiment_record_model.add_record")
+    @patch("requests.post")
+    def test_try_refresh_no_source(self, mock_post, mock_add_record, mock_process_one):
+        mock_process_one.return_value = (
+            False,
+            "no source",
         )
 
-        # mock_post.assert_called_once_with(
-        #     mock.ANY, data=json.dumps({"data": ["example"]})
-        # )
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_post.return_value = mock_response
 
-    # @mock.patch("query.views.PENDING_REFRESH", {"1": []})
-    # def test_try_refresh_success_no_remaining_data(self):
-    #     request = HttpRequest()
-    #     request.method = "POST"
-    #     request.body = json.dumps({"source_id": "1"})
-
-    #     response = try_refresh(request)
-
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(response.json(), {"status": "SUCCESS", "is_done": True})
-
-    @mock.patch(
-        "query.views.PENDING_REFRESH",
-        {"hbfhwbgufbo724n2n7": [{"timestamp": 123, "text": "example"}]},
-    )
-    @mock.patch(
-        "requests.post",
-        return_value=mock.MagicMock(
-            status_code=500, json=lambda: {"metrics": [{"metric": 1}]}
-        ),
-    )
-    @patch("datamanager.sentiment_record_model.add_record")
-    def test_try_refresh_analyser_failure(self, mock_post):
         url = "/query/try_refresh/"
         source_id = "hbfhwbgufbo724n2n7"
         request_body = {"source_id": source_id}
 
-        response = response = self.client.post(
-            path=url,
-            data=json.dumps(request_body),
-            content_type="application/json",
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
         )
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(),
-            {
-                "status": "FAILURE",
-                "details": "Could not connect to Analyser",
-            },
-        )
-
-    @mock.patch("query.views.PENDING_REFRESH", {})
-    @patch("datamanager.sentiment_record_model.add_record")
-    def test_try_refresh_failure_invalid_id(self, temp):
-        url = "/query/try_refresh/"
-        source_id = "hbfhwbgufbo724n2n7"
-        request_body = {"source_id": source_id}
-
-        response = response = self.client.post(
-            path=url,
-            data=json.dumps(request_body),
-            content_type="application/json",
-        )
-
-        self.assertEqual(
-            response.status_code, 200
-        )  # Assuming you want to return 200 for invalid requests
-        self.assertEqual(
-            response.json(),
+        expected_response = JsonResponse(
             {
                 "status": "FAILURE",
                 "details": "No source with that ID is pending processing",
-            },
+            }
+        )
+        self.assertEqual(response.content, expected_response.content)
+        self.assertEqual(response.status_code, 200)
+
+    @patch("datamanager.refresh_queue.process_one")
+    @patch("datamanager.sentiment_record_model.add_record")
+    @patch("requests.post")
+    def test_try_refresh_source_done(
+        self, mock_post, mock_add_record, mock_process_one
+    ):
+        mock_process_one.return_value = (
+            False,
+            "source done",
         )
 
-    @mock.patch("query.views.PENDING_REFRESH", {"hbfhwbgufbo724n2n7": []})
-    @patch("datamanager.sentiment_record_model.add_record")
-    def test_try_refresh_failure_no_remaining_data(self, temp):
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_post.return_value = mock_response
+
         url = "/query/try_refresh/"
         source_id = "hbfhwbgufbo724n2n7"
         request_body = {"source_id": source_id}
 
-        response = response = self.client.post(
-            path=url,
-            data=json.dumps(request_body),
-            content_type="application/json",
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
         )
 
-        self.assertEqual(
-            response.status_code, 200
-        )  # Assuming you want to return 200 for invalid requests
-        self.assertEqual(
-            response.json(),
-            {"status": "SUCCESS", "is_done": True},
+        expected_response = JsonResponse({"status": "SUCCESS", "is_done": True})
+        self.assertEqual(response.content, expected_response.content)
+        self.assertEqual(response.status_code, 200)
+
+    @patch("datamanager.refresh_queue.process_one")
+    @patch("datamanager.sentiment_record_model.add_record")
+    @patch("requests.post")
+    def test_try_refresh_analyyser_failure(
+        self, mock_post, mock_add_record, mock_process_one
+    ):
+        mock_process_one.return_value = (
+            True,
+            {"text":"hi there", "timestamp":12345}
         )
+
+        mock_response = Mock()
+        mock_response.status_code = 400
+        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_post.return_value = mock_response
+
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        expected_response = JsonResponse(
+            {
+                "status": "FAILURE",
+                "details": "Could not connect to Analyser",
+            }
+        )
+        self.assertEqual(response.content, expected_response.content)
+        self.assertEqual(response.status_code, 200)
 
     # ----------------------------------------------------------------
