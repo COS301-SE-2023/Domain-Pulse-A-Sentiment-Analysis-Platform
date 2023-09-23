@@ -14,16 +14,43 @@ export class CommentsViewComponent {
 
   comments?: any[];
   showComment: boolean[] = [];
+
+  showInitialComments = 10;
+  showAdditionalComments = 10;
+
+  positiveComments: any[] = [];
+  negativeComments: any[] = [];
+  neutralComments: any[] = [];
+
+  undecidedComments: any[] = [];
+
+  top10: any[] = [];
+  bottom10: any[] = [];
+
+  toxicComments: any[] = [];
+
+  searchTerm = "";
+
+  accordionItems: NodeListOf<Element> | undefined;
+
+
+
   constructor() {
     this.sampleData.subscribe((newSampleData) => {
+      console.log("New Sample Data:")
       this.reactToNewComents(newSampleData);
     });
     this.initializeShowCommentArray();
   }
 
   reactToNewComents(newSampleData: any) {
+    console.log("reacting to new comments:")
     if (newSampleData) {
+      console.log("transform comments:")
       this.comments = this.transformComments(newSampleData);
+      this.groupComments(this.comments);
+      console.log("Positive Comments here:")
+      console.log(this.positiveComments);
     }
   }
 
@@ -62,6 +89,55 @@ export class CommentsViewComponent {
       }
       return comment;
     });
+  }
+
+  groupComments(comments: any[]) {
+    console.log("grouping comments:")
+    console.log(comments)
+    // Sort the comments by overall scores in descending order
+    comments.sort((a, b) => {
+      const scoreA = parseFloat(a.ratings[0].replace('%', ''));
+      const scoreB = parseFloat(b.ratings[0].replace('%', ''));
+      return scoreB - scoreA;
+    });
+  
+    // Calculate the number of comments in the top and bottom 10%
+    const totalComments = comments.length;
+    const top10PercentCount = Math.ceil(totalComments * 0.1);
+    const bottom10PercentCount = Math.ceil(totalComments * 0.1);
+  
+    // Extract the top and bottom 10% of comments
+    this.top10 = comments.slice(0, top10PercentCount);
+    this.bottom10 = comments.slice(-bottom10PercentCount);
+  
+    // Initialize other comment arrays (positive, negative, neutral, undecided, and toxic)
+    this.positiveComments = [];
+    this.negativeComments = [];
+    this.neutralComments = [];
+    this.undecidedComments = [];
+    this.toxicComments = [];
+  
+    // Loop through comments and categorize them based on ratings
+    comments.forEach((comment) => {
+      console.log("comment:");
+      console.log(comment);
+      if (comment.ratings[1].includes('positive')) {
+        this.positiveComments.push(comment);
+      } else if (comment.ratings[1].includes('negative')) {
+        this.negativeComments.push(comment);
+      } else if (comment.ratings[1].includes('neutral')) {
+        this.neutralComments.push(comment);
+      } else {
+        this.undecidedComments.push(comment);
+      }
+    
+      if (comment.ratings[3] === 'toxic') {
+        this.toxicComments.push(comment);
+      }
+    });
+
+    console.log("Positive Comments here:")
+    console.log(this.positiveComments);
   }
 
   getRatingClass(index: number, score: string): string {
@@ -173,5 +249,56 @@ export class CommentsViewComponent {
     }
 
     return colorClass;
+  }
+
+  filterAccordionByText() {
+    const textToFilter = this.searchTerm;
+    const shownCategories = new Set();
+
+    if (!this.accordionItems) {
+      return;
+    }
+    if (this.searchTerm === "") {
+      this.accordionItems.forEach((item: any) => item.style.display = 'block');
+      document.querySelectorAll('.heading').forEach((item: any) => item.style.display = 'block');
+      return;
+    }
+
+    let atleastOne = false;
+    this.accordionItems.forEach((item: any) => {
+      const headerTextT = item;
+      if (!headerTextT)
+        return;
+      const text = headerTextT.innerText;
+      console.log(headerTextT, text);
+
+      if (text.toLowerCase().includes(textToFilter.toLowerCase())) {
+        item.style.display = 'block';
+        atleastOne = true;
+        shownCategories.add(item.getAttribute('data-catID'));
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    const noResultsIMG = document.querySelector('#noResults');
+    if (noResultsIMG) {
+      (noResultsIMG as any).style.display = atleastOne ? 'none' : 'flex';
+    }
+
+
+    const allCategoryElements = document.querySelectorAll('.heading');
+
+    console.log(shownCategories);
+
+    allCategoryElements.forEach((categoryElement: any) => {
+      const catID = categoryElement.getAttribute('data-catID');
+
+      if (!shownCategories.has(catID)) {
+        categoryElement.style.display = 'none';
+      } else {
+        categoryElement.style.display = 'block';
+      }
+    });
   }
 }
