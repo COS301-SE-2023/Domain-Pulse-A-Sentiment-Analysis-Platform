@@ -450,18 +450,32 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["domain"]["meta_data"], {})
         self.assertEqual(data["domain"]["individual_metrics"], {})
 
-    @patch("datamanager.refresh_queue.process_one")
+    @patch("datamanager.refresh_queue.process_batch")
     @patch("datamanager.sentiment_record_model.add_record")
     @patch("requests.post")
-    def test_try_refresh_success(self, mock_post, mock_add_record, mock_process_one):
-        mock_process_one.return_value = (
+    def test_try_refresh_success(self, mock_post, mock_add_record, mock_process_batch):
+        mock_process_batch.return_value = (
             True,
-            {"timestamp": "12345", "text": "Sample text"},
+            [
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+            ],
         )
 
         mock_response = Mock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_response.json.return_value = {
+            "metrics": [
+                {"some_metric": 42},
+                {"some_metric": 42},
+                {"some_metric": 42},
+                {"some_metric": 42},
+                {"some_metric": 42},
+            ]
+        }
         mock_post.return_value = mock_response
 
         url = "/query/try_refresh/"
@@ -476,11 +490,13 @@ class QueryEngineTests(TestCase):
         self.assertEqual(response.content, expected_response.content)
         self.assertEqual(response.status_code, 200)
 
-    @patch("datamanager.refresh_queue.process_one")
+    @patch("datamanager.refresh_queue.process_batch")
     @patch("datamanager.sentiment_record_model.add_record")
     @patch("requests.post")
-    def test_try_refresh_no_source(self, mock_post, mock_add_record, mock_process_one):
-        mock_process_one.return_value = (
+    def test_try_refresh_no_source(
+        self, mock_post, mock_add_record, mock_process_batch
+    ):
+        mock_process_batch.return_value = (
             False,
             "no source",
         )
@@ -507,13 +523,13 @@ class QueryEngineTests(TestCase):
         self.assertEqual(response.content, expected_response.content)
         self.assertEqual(response.status_code, 200)
 
-    @patch("datamanager.refresh_queue.process_one")
+    @patch("datamanager.refresh_queue.process_batch")
     @patch("datamanager.sentiment_record_model.add_record")
     @patch("requests.post")
     def test_try_refresh_source_done(
-        self, mock_post, mock_add_record, mock_process_one
+        self, mock_post, mock_add_record, mock_process_batch
     ):
-        mock_process_one.return_value = (
+        mock_process_batch.return_value = (
             False,
             "source done",
         )
@@ -535,15 +551,15 @@ class QueryEngineTests(TestCase):
         self.assertEqual(response.content, expected_response.content)
         self.assertEqual(response.status_code, 200)
 
-    @patch("datamanager.refresh_queue.process_one")
+    @patch("datamanager.refresh_queue.process_batch")
     @patch("datamanager.sentiment_record_model.add_record")
     @patch("requests.post")
     def test_try_refresh_analyyser_failure(
-        self, mock_post, mock_add_record, mock_process_one
+        self, mock_post, mock_add_record, mock_process_batch
     ):
-        mock_process_one.return_value = (
+        mock_process_batch.return_value = (
             True,
-            {"text":"hi there", "timestamp":12345}
+            [{"text": "hi there", "timestamp": 12345}],
         )
 
         mock_response = Mock()

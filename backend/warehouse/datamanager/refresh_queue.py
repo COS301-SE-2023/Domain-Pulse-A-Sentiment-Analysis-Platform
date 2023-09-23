@@ -11,7 +11,7 @@ def add_list(source_id, new_data_list):
     collection.insert_one({"source_id": source_id, "queue": new_data_list})
 
 
-def process_one(source_id):
+def process_batch(source_id):
     collection = db[mongo_collection]
 
     query = {"source_id": source_id}
@@ -19,15 +19,22 @@ def process_one(source_id):
     result = collection.find_one(query)
 
     if result is None:
-        return False, "no source"
+        return False, ["no source"]
 
     curr_queue = result["queue"]
     if len(curr_queue) == 0:
         collection.delete_one(query)
-        return False, "source done"
+        return False, ["source done"]
     else:
-        next_item = curr_queue[0]
-        new_queue = curr_queue[1:]
+        num_to_extract = min(5, len(curr_queue))
+        next_items = curr_queue[:num_to_extract]
+
+        if num_to_extract < 5:
+            new_queue = []
+        else:
+            new_queue = curr_queue[num_to_extract:]
+
+        # Update the queue in the database
         collection.update_one(query, {"$set": {"queue": new_queue}})
 
-        return True, next_item
+        return True, next_items

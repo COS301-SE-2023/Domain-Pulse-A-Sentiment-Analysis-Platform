@@ -209,23 +209,23 @@ def try_refresh(request: HttpRequest):
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
 
-        flag, item = refresh_queue.process_one(source_id_raw)
+        flag, items = refresh_queue.process_batch(source_id_raw)
 
         if not flag:
-            if item == "no source":
+            if "no source" in items:
                 return JsonResponse(
                     {
                         "status": "FAILURE",
                         "details": "No source with that ID is pending processing",
                     }
                 )
-            elif item == "source done":
+            elif "source done" in items:
                 return JsonResponse({"status": "SUCCESS", "is_done": True})
         else:
-            ts = item["timestamp"]
-            text = item["text"]
+            texts = [x["text"] for x in items]
+            timestamps = [x["timestamp"] for x in items]
 
-            request_to_engine_body = {"data": [text]}
+            request_to_engine_body = {"data": texts}
             response_from_analyser = requests.post(
                 ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
             )
@@ -239,62 +239,18 @@ def try_refresh(request: HttpRequest):
                         "details": "Could not connect to Analyser",
                     }
                 )
-            new_data_metrics = response_from_analyser.json()["metrics"][0]
+            new_data_metrics = response_from_analyser.json()["metrics"]
 
-            new_data_metrics["timestamp"] = int(ts)
-            new_data_metrics["source_id"] = source_id_raw
+            data_to_store = []
+            for metrics, stamp in zip(new_data_metrics, timestamps):
+                metrics["timestamp"] = int(stamp)
+                metrics["source_id"] = source_id_raw
+                data_to_store.append(metrics)
 
-            sentiment_record_model.add_record(new_data_metrics)
+            for x in data_to_store:
+                sentiment_record_model.add_record(x)
 
             return JsonResponse({"status": "SUCCESS", "is_done": False})
-
-        # remaining_data = PENDING_REFRESH.get(str(source_id_raw))
-
-        # if remaining_data == None:
-        #     return JsonResponse(
-        #         {
-        #             "status": "FAILURE",
-        #             "details": "No source with that ID is pending processing",
-        #         }
-        #     )
-
-        # if len(remaining_data) == 0:
-        #     del PENDING_REFRESH[str(source_id_raw)]
-        #     return JsonResponse({"status": "SUCCESS", "is_done": True})
-        # else:
-        #     new_data = PENDING_REFRESH[str(source_id_raw)].pop()
-
-        #     ts = new_data["timestamp"]
-        #     text = new_data["text"]
-
-        #     request_to_engine_body = {"data": [text]}
-        #     response_from_analyser = requests.post(
-        #         ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
-        #     )
-
-        #     if response_from_analyser.status_code == 200:
-        #         pass
-        #     else:
-        #         return JsonResponse(
-        #             {
-        #                 "status": "FAILURE",
-        #                 "details": "Could not connect to Analyser",
-        #             }
-        #         )
-        #     new_data_metrics = response_from_analyser.json()["metrics"][0]
-
-        #     new_data_metrics["timestamp"] = int(ts)
-        #     new_data_metrics["source_id"] = source_id_raw
-
-        #     sentiment_record_model.add_record(new_data_metrics)
-
-        #     return JsonResponse(
-        #         {
-        #             "status": "SUCCESS",
-        #             "is_done": False,
-        #             "num_remaining": len(list(PENDING_REFRESH.get(str(source_id_raw)))),
-        #         }
-        #     )
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
@@ -463,13 +419,6 @@ def refresh_source(request: HttpRequest):
         return JsonResponse(
             {"status": "SUCCESS", "details": "Data source refreshed successfully"}
         )
-
-    #     # 4.
-    #     return JsonResponse(
-    #         {"status": "SUCCESS", "details": "Data source refreshed successfully"}
-    #     )
-
-    # return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
     else:
         return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
