@@ -177,10 +177,9 @@ export class SourceSelectorComponent implements OnInit {
         const match = url.match(regExp);
         console.log('match: ' + match);
 
-        const videoID = match ? match[1] : null;
         return {
           source_type: 'youtube',
-          video_id: videoID,
+          video_id: match ? match[1] : null,
         };
     }
     return null;
