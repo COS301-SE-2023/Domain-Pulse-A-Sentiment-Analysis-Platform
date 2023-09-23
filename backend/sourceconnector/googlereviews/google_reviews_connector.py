@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
+from unidecode import unidecode
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -43,7 +44,8 @@ def get_google_reviews(maps_url, last_refreshed_timestamp):
 
     ret_data = []
     for review in reviews:
-        review_text = review["review_text"]
+        # Decoding unsupported characters
+        review_text = unidecode(review["review_text"])
         review_timestamp = int(review["review_timestamp"])
 
         if review_timestamp > latest_retrieval:

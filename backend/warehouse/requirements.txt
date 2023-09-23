@@ -7,3 +7,9 @@ python-dotenv
 pymongo
 requests
 bleach
+unidecode
+bleach
+datetime
+
+#monitoring
+elastic-apm

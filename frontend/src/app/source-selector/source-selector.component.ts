@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -24,12 +25,14 @@ export class SourceSelectorComponent implements OnInit {
   newSourceName = '';
   newSourcePlatform = '';
   newSourceUrl = '';
+  newCSVFile: any = '';
 
   editSourceName = '';
   editSourceUrl = '';
 
   isOpen = false;
 
+  currHost = window.location.host;
 
   constructor(private store: Store) {}
 
@@ -47,6 +50,12 @@ export class SourceSelectorComponent implements OnInit {
     
   }
 
+  uploadFile(event: any) {
+    this.newCSVFile = event.target.files[0];
+    console.log('this.newCSVFile: ')
+    console.log(this.newCSVFile)
+  }
+
   copyToClipboard() {
     const liveReviewLink = document.getElementById('liveReviewLink');
     if (liveReviewLink) {
@@ -54,8 +63,6 @@ export class SourceSelectorComponent implements OnInit {
       navigator.clipboard.writeText(textToCopy);
     }
   }
-
-  
 
   selectSource(source: DisplaySource) {
     this.store.dispatch(new SetAllSourcesSelected(false));
@@ -77,22 +84,37 @@ export class SourceSelectorComponent implements OnInit {
     console.log('platform: ' + this.newSourcePlatform);
     console.log('name: ' + this.newSourceName);
 
-    if(this.newSourcePlatform != 'livereview' && this.newSourceUrl ==''){
+    if ((this.newSourcePlatform != 'livereview' && this.newSourcePlatform != 'csv') && this.newSourceUrl == '') {
       this.store.dispatch(new ToastError('Please add a URL'));
       return;
     }
+    
 
     if (!params || !this.newSourcePlatform || !this.newSourceName) {
       this.store.dispatch(new ToastError('Please fill in all fields'));
       return;
     }
 
-    
+    if(this.newSourcePlatform == 'csv' && this.newCSVFile == ''){
+      this.store.dispatch(new ToastError('Please upload a CSV file'));
+      return;
+    }
+
+    if(this.newSourceName.length > 25){
+      this.store.dispatch(new ToastError('Source name must be less than 25 characters'));
+      return;
+    }
 
 
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
-    );
+    ).subscribe(() => {
+      if(this.newSourcePlatform == 'csv'){
+        this.store.dispatch(new UplaodCVSFile(this.newCSVFile));
+        this.newCSVFile = '';
+      }
+    });
+    
     this.newSourceName = '';
     this.newSourceUrl = '';
     this.showAddSourcesModal = false;
@@ -105,6 +127,10 @@ export class SourceSelectorComponent implements OnInit {
  */
   determineSourceParams(): any | null {
     switch (this.newSourcePlatform) {
+      case 'csv':
+        return {
+          source_type: 'csv',
+        };
       case 'trustpilot':
         const tpurl = this.newSourceUrl;
         if (!tpurl.includes('trustpilot')) {
@@ -140,22 +166,20 @@ export class SourceSelectorComponent implements OnInit {
       case 'youtube':
 
         const url = this.newSourceUrl;
-        if (!url.includes('youtube')) {
+        if (!url.includes('youtube') && !url.includes('youtu.be')) {
           return {
             source_type: 'youtube',
             video_id: url,
           };
         }
         console.log('url: ' + url);
-        const regExp =
-          /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?&v=)([^#&?]+).*/;
         const match = url.match(regExp);
         console.log('match: ' + match);
 
-        const videoID = match && match[7].length === 11 ? match[7] : null;
         return {
           source_type: 'youtube',
-          video_id: videoID,
+          video_id:  match![1],
         };
     }
     return null;
@@ -200,6 +224,15 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   refreshSource() {
+    
+    if(this.selectedSource == null){
+      this.store.dispatch(new ToastError('You must select a specific source to refresh'));
+      return;
+    }
+    else if(this.selectedSource?.url == 'csv-logo.png'){
+      this.store.dispatch(new ToastError('CSV sources cannot be refreshed'));
+      return;
+    }
     this.store.dispatch(new RefreshSourceData());
   }
 
@@ -231,6 +264,10 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleConfirmDeleteSourceModal() {
+    if(this.selectedSource == null){
+      this.store.dispatch(new ToastError('You must select a specific source to delete'));
+      return;
+    }
     if (!this.showConfirmDeleteSourceModal) {
       this.showConfirmDeleteSourceModal = true;
     } else {
@@ -256,5 +293,14 @@ export class SourceSelectorComponent implements OnInit {
     const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
     
     this.store.dispatch(new SetIsActive(!selectedSource?.params));
+  }
+
+  getLiveReviewLink(): string {
+    if (this.currHost == 'localhost:4200') {
+      // the below should not be hardcoded
+      return `http://localhost:8004/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
+    } else {
+      return `${window.location.protocol}//${this.currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
+    }
   }
 }

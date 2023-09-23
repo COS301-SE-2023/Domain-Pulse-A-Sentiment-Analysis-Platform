@@ -93,17 +93,13 @@ export class MainComponent implements OnInit {
   }
 
   processpdfUrl(res: string) {
+    if(!res || res=='') return;
     const pdfIndex: number = res.lastIndexOf('.pdf');
 
     if (pdfIndex !== -1) {
       const result: string = res.slice(0, pdfIndex + 4);
       console.log(result);
       this.pdfUrl = result;
-      this.store.dispatch(
-        new ToastSuccess(
-          'Your report has been generated!'
-        )
-      );
     } else {
       this.store.dispatch(
         new ToastError(
@@ -117,12 +113,26 @@ export class MainComponent implements OnInit {
     this.selectedDomain = domain;
   }
 
-  toggleSidebar() {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
+  setSideBarClosed() {
+    this.sidebarCollapsed = true;
+  }
+
+  setSideBarOpen() {
+    this.sidebarCollapsed = false;
   }
 
   toggleReportModal() {
+
+    if(this.selectedDomain?.sources.length === 0) {
+      this.store.dispatch(
+        new ToastError(
+          'You have no sources to generate a report from. Please add a source.'
+        )
+      );
+      return;
+    }
     if (!this.showReportModal) {
+      this.generateReport();
       this.showReportModal = true;
     } else {
       this.showReportModal = false;

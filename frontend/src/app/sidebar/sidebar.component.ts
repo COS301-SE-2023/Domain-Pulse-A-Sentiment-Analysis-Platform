@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   trigger,
   state,
   style,
   animate,
   transition,
+  AUTO_STYLE,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
 import {
@@ -29,6 +30,13 @@ import {
   ToastError,
   Logout,
   SetAllSourcesSelected,
+  ToggleAddDomainModal,
+  ToggleProfileModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleEditDomainModal,
+  ToggleChangePasswordModal,
+  ToggleDeleteAccountModal,
+  ToggleProfileEditModal,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -41,45 +49,45 @@ import { environment } from '../../environment';
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+       })
       ),
       state(
         'out',
         style({
           opacity: 0,
-          transform: 'scale(0.5)',
-        })
+       })
       ),
-      transition('in => out', animate('300ms ease-in')),
-      transition('out => in', animate('300ms ease-out')),
+      transition('in => out', animate('300ms linear')),
+      transition('out => in', animate('300ms linear')),
     ]),
     trigger('fullLogoSwitch', [
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+})
       ),
       state(
         'out',
         style({
-          opacity: 0,
-          transform: 'scale(0.7)',
-        })
+          opacity: 0,        })
       ),
-      transition('in => out', [animate('400ms ease-in')]),
-      transition('out => in', [animate('300ms ease-out')]),
+      transition('in => out', [animate('300ms linear')]),
+      transition('out => in', [animate('300ms linear')]),
     ]),
   ],
 })
-export class SidebarComponent {
-  @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
+export class SidebarComponent implements OnInit {
+  @Output() closeSidebar: EventEmitter<void> = new EventEmitter<void>();
+  @Output() openSidebar: EventEmitter<void> = new EventEmitter<void>();
 
-  clickSidebar() {
-    this.sidebarClicked.emit();
+  closeSidebarClicked() {
+    this.closeSidebar.emit();
+  }
+
+  openSidebarClicked() {
+    this.openSidebar.emit();
   }
 
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
@@ -88,7 +96,19 @@ export class SidebarComponent {
   @Select(AppState.profileDetails)
   profileDetails$!: Observable<ProfileDetails | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  @Select(AppState.showAddDomainModal) showAddDomainModal$!: Observable<boolean>;
+  @Select(AppState.showProfileModal) showProfileModal$!: Observable<boolean>;
+  @Select(AppState.showEditDomainModal) showEditDomainModal$!: Observable<boolean>;
+  @Select(AppState.showConfirmDeleteDomainModal) showConfirmDeleteDomainModal$!: Observable<boolean>;
+  @Select(AppState.showChangePasswordModal) showChangePasswordModal$!: Observable<boolean>;
+  @Select(AppState.showDeleteAccountModal) showDeleteAccountModal$!: Observable<boolean>;
+  @Select(AppState.showProfileEditModal) showProfileEditModal$!: Observable<boolean>;
 
+
+
+
+
+  domains: DisplayDomain[] = [];
   smallLogoState = 'in';
   showSmallLogo = true;
   fullLogoState = 'out';
@@ -146,7 +166,6 @@ export class SidebarComponent {
   showProfileEditModal = false;
   showChangePasswordModal = false;
   showDeleteAccountModal = false;
-  showConfirmDeleteAccountModal = false;
   showConfirmDeleteDomainModal = false;
 
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
@@ -160,19 +179,92 @@ export class SidebarComponent {
   constructor(
     private store: Store,
     public blobStorageService: AzureBlobStorageService
-  ) {}
+  ) {
 
-  toggleDomainModal(): void {
-    if (!this.showAddDomainModal) {
-      this.showAddDomainModal = true;
-    } else {
-      this.showAddDomainModal = false;
+    this.domains$.subscribe((domains) => {
+      this.domains = domains!;
+    });
+  }
+
+  ngOnInit() {
+    this.store.select(AppState.showAddDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showAddDomainModal = value;
+    }); 
+
+    
+    this.store.select(AppState.showProfileModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showProfileModal = value;
+    }); 
+
+    this.store.select(AppState.showEditDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showEditDomainModal = value;
+    });
+
+    this.store.select(AppState.showConfirmDeleteDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showConfirmDeleteDomainModal = value;
+    });
+
+    this.store.select(AppState.showChangePasswordModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showChangePasswordModal = value;
+    });
+
+    this.store.select(AppState.showDeleteAccountModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showDeleteAccountModal = value;
+    });
+
+    this.store.select(AppState.showProfileEditModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showProfileEditModal = value;
+    });
+
+
+
+
+  
+  }
+
+
+  toggleDomainModalOff(): void {
+
+    this.store.dispatch(new ToggleAddDomainModal());
+
+  }
+
+  toggleDomainModalOn(): void {
+    if(this.domains == undefined){
+      this.store.dispatch(new ToggleAddDomainModal());
+      return;
     }
+    if(this.domains.length > 8){
+      this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
+      return;
+    }
+    this.store.dispatch(new ToggleAddDomainModal());
   }
 
   toggleEditDomainModal(): void {
     if (!this.showEditDomainModal) {
-      this.showEditDomainModal = true;
+      this.store.dispatch(new ToggleEditDomainModal());
       const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
       if (!selectedDomain) return;
       this.editDomainName = selectedDomain.name;
@@ -181,61 +273,35 @@ export class SidebarComponent {
       this.selectIconEdit(selectedDomain.imageUrl);
       
     } else {
-      this.showEditDomainModal = false;
+      this.store.dispatch(new ToggleEditDomainModal());
     }
   }
 
   toggleProfileModal(): void {
-    if (!this.showProfileModal) {
-      this.showProfileModal = true;
-    } else {
-      this.showProfileModal = false;
-    }
+    this.store.dispatch(new ToggleProfileModal());
   }
 
   toggleProfileEditModal(): void {
-    if (!this.showProfileEditModal) {
-      this.showProfileEditModal = true;
-    } else {
-      this.showProfileEditModal = false;
-    }
+    this.store.dispatch(new ToggleProfileEditModal());
+
   }
 
   toggleChangePasswordModal(): void {
-    if (!this.showChangePasswordModal) {
-      this.showChangePasswordModal = true;
-    } else {
-      this.showChangePasswordModal = false;
-    }
+    this.store.dispatch(new ToggleChangePasswordModal());
   }
 
   toggleDeleteAccountModal(): void {
-    if (!this.showDeleteAccountModal) {
-      this.showDeleteAccountModal = true;
-    } else {
-      this.showDeleteAccountModal = false;
-      this.toggleConfirmDeleteAccountModal();
-    }
+    this.store.dispatch(new ToggleDeleteAccountModal());
+
   }
 
-  toggleConfirmDeleteAccountModal(): void {
-    if (!this.showConfirmDeleteAccountModal) {
-      this.showConfirmDeleteAccountModal = true;
-    } else {
-      this.showConfirmDeleteAccountModal = false;
-    }
-  }
+
 
   toggleConfirmDeleteDomainModal(id?: string): void {
     if(id){
       this.deleteDomainId = id;
     }
-    if (!this.showConfirmDeleteDomainModal) {      
-      this.showConfirmDeleteDomainModal = true;
-    } else {
-      
-      this.showConfirmDeleteDomainModal = false;
-    }
+    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
   }
 
   /* closeAllModals(): void {
@@ -249,8 +315,23 @@ export class SidebarComponent {
   }
  */
   addNewDomain(): void {
+
+    
     this.addDomainSpinner = true;
     let valid = true;
+
+    if(this.newDomainName.length > 20){
+      this.addDomainSpinner = false;
+      this.store.dispatch(new ToastError('Domain name must be less than 20 characters'));
+      valid = false;
+    }
+
+    if(this.newDomainDescription.length > 100){
+
+      this.addDomainSpinner = false;
+      this.store.dispatch(new ToastError('Domain description must be less than 100 characters'));
+      valid = false;
+    }
 
     if (!this.selectedFileDomain && !this.newDomainImageName) {
       this.addDomainSpinner = false;
@@ -292,11 +373,13 @@ export class SidebarComponent {
       })
     ).subscribe((result) => {
       this.addDomainSpinner = false;
-      this.toggleDomainModal();
+      this.toggleDomainModalOff();
     });
     this.newDomainName = '';
     this.newDomainImageName = '';
     this.newDomainDescription = '';
+
+    this.imagePreviewDomain = null;
 
     
   }
@@ -312,6 +395,20 @@ export class SidebarComponent {
   }
 
   editDomain() {
+
+    if(this.editDomainName.length > 20){
+      this.addDomainSpinner = false;
+      this.store.dispatch(new ToastError('Domain name must be less than 20 characters'));
+      return;
+    }
+
+    if(this.editDomainDescription.length > 100){
+
+      this.addDomainSpinner = false;
+      this.store.dispatch(new ToastError('Domain description must be less than 100 characters'));
+      return;
+      
+    }
     this.editDomainSpinner = true;
     const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
     if (!selectedDomain) return;
@@ -336,7 +433,7 @@ export class SidebarComponent {
       })
     ).subscribe((result) => {
       this.editDomainSpinner = false;
-      this.toggleEditDomainModal();
+      this.store.dispatch(new ToggleEditDomainModal());
     });
 
     
@@ -349,7 +446,7 @@ export class SidebarComponent {
 
   deleteDomain() {
     this.store.dispatch(new DeleteDomain(this.deleteDomainId));
-    this.toggleConfirmDeleteDomainModal();
+    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
   }
 
   selectDomain(domain: DisplayDomain) {

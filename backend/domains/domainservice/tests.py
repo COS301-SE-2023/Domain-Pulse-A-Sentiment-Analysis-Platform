@@ -148,6 +148,16 @@ def mocked_find_one_and_update(dummy1, dummy2):
 
 
 class DomainsTests(TestCase):
+    def test_apm_enabled(self):
+        from domains import settings
+
+        settings.append_installed_apps("True")
+        self.assertIn("elasticapm.contrib.django", settings.INSTALLED_APPS)
+
+    def test_ping(self):
+        response = self.client.get(path="/avail_ping/")
+        self.assertEqual(200, response.status_code)
+
     @mock.patch(
         "pymongo.collection.Collection.insert_one", side_effect=mocked_insert_one
     )

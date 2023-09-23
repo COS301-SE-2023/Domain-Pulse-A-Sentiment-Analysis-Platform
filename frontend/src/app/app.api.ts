@@ -144,6 +144,25 @@ export class AppApi {
     return this.http.post(refreshSourceInfoUrl, body, { withCredentials: true });
   }
 
+  tryRefresh(sourceID: string): Observable<any> {
+    const tryRefreshUrl = this.warehouseBaseUrl + 'query/try_refresh/';
+    const body = {
+      source_id: sourceID,
+    }
+
+    return this.http.post(tryRefreshUrl, body, { withCredentials: true });
+  }
+
+  sendCSVFile(sourceID: string, file: File): Observable<any> {
+    const sendCSVFileUrl = this.warehouseBaseUrl + 'ingest/ingest_csv/';
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('source_id', sourceID);
+
+    return this.http.post(sendCSVFileUrl, formData, { withCredentials: true });
+  }
+
   getSourceInfo(sourceID: number): Observable<any> {
     const getSourceInfoUrl = this.domainBaseUrl + 'domains/get_source';
     return this.http.post(
@@ -285,5 +304,7 @@ export class AppApi {
     };
     return this.http.post(generateReportUrl, body, { withCredentials: true });
   }
+
+
 
 }

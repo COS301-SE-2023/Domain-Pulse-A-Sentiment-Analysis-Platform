@@ -6,4 +6,8 @@ python-dotenv
 # app specific packages
 requests
 outscraper
+unidecode
+
+#monitoring
+elastic-apm
 pytz

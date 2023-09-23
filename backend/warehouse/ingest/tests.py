@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import StringIO
 import json
 from django.test import TestCase
@@ -42,12 +43,8 @@ def mocked_analyser_request(dummy1, **kwargs):
 
 
 def mocked_down_analyser_request(dummy1, json=None, headers=None, data=None):
-    ANALYSER_ENDPOINT = (
-        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
-    )
-    GET_SOURCE_ENDPOINT = (
-        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
-    )
+    ANALYSER_ENDPOINT = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    GET_SOURCE_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     DOMAINS_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
     if dummy1 == ANALYSER_ENDPOINT:
         mock_response = MagicMock()
@@ -92,7 +89,7 @@ def mocked_handle_request(dummy1):
     return {
         "status": "SUCCESS",
         "newdata": [{"text": "some text", "timestamp": 1234567890}],
-        "latest_retrieval": "2021-01-01T00:00:00Z",
+        "latest_retrieval": datetime.now().timestamp(),
     }
 
 
@@ -101,6 +98,10 @@ def mocked_handle_request_fail(dummy1):
 
 
 class LiveIngestionTests(TestCase):
+    def test_ping(self):
+        response = self.client.get(path="/avail_ping/")
+        self.assertEqual(200, response.status_code)
+
     def setUp(self):
         self.factory = RequestFactory()
 

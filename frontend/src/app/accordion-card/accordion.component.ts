@@ -33,6 +33,7 @@ export class AccordionComponent implements AfterViewInit {
    * In collapsing mode, toggling one would collapse others
    */
   @Input() collapsing = true;
+  @Input('catID') categoryID: string | undefined;
 
   @ContentChildren(AccordionItem) items!: QueryList<AccordionItem>;
 

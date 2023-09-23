@@ -1,0 +1,131 @@
+version: "3.9"
+
+services:
+  dev-domains:
+    image: thuthuka111/domain-pulse-domains:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
+    ports: 
+      - "7000:8000"
+    restart: always
+    command: >
+      sh -c "python manage.py runserver"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev-network
+
+  dev-engine:
+    image: thuthuka111/domain-pulse-engine:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
+    ports:
+      - "7001:8001"
+    restart: always
+    command: >
+      sh -c "python manage.py runserver"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev-network
+
+  dev-profiles:
+    image: thuthuka111/domain-pulse-profiles:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
+    ports:
+      - "7002:8002"
+    restart: always
+    command: >
+      sh -c "python manage.py runserver"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev-network
+
+  dev-sourceconnector:
+    image: thuthuka111/domain-pulse-sourceconnector:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
+    ports:
+      - "7003:8003"
+    restart: always
+    command: >
+      sh -c "python manage.py runserver"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev-network
+
+  dev-warehouse:
+    image: thuthuka111/domain-pulse-warehouse:dev-latest
+    env_file:
+      - ./backend/.env
+      - ./backend/.postgresql.env
+    environment:
+      - DOMAINS_HOST=dev-domains
+      - ENGINE_HOST=dev-engine
+      - PROFILES_HOST=dev-profiles
+      - SOURCECONNECTOR_HOST=dev-sourceconnector
+      - WAREHOUSE_HOST=dev-warehouse
+    ports:
+      - "7004:8004"
+    restart: always
+    command: >
+      sh -c "python manage.py runserver"
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    networks:
+      - dev-network
+
+  dev-webserver:
+    image: thuthuka111/domain-pulse-webserver:dev-latest
+    environment:
+      - NGINX_CONF=dev-domainpulse.app.conf
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+    ports:
+      - "5000:80"
+    depends_on:
+      - dev-engine
+      - dev-domains
+      - dev-profiles
+      - dev-sourceconnector
+      - dev-warehouse
+    networks:
+      - dev-network
+
+volumes:
+  uwsgi_data:
+
+networks:
+  dev-network:

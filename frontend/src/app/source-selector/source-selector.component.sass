@@ -58,7 +58,7 @@
 
 .button-div
     display: grid
-    grid-template-columns: repeat(2, 1fr)
+    grid-template-columns: repeat(1, 1fr)
     align-content: center
     justify-content: center
     width: 60%
@@ -142,6 +142,7 @@
     border: solid rgb(133, 133, 133) 2px
     height: 30px
     border-radius: 10px
+    width: 100%
 
 .new-source-btn
     width: 130px
@@ -358,4 +359,25 @@
 
 .info-data
     color: var(--text-color)
+
+input[type=file]::file-selector-button 
+  margin-right: 20px
+  border: none
+  background: var(--primary)
+  padding: 10px 20px
+  border-radius: 10px
+  color: #fff
+  cursor: pointer
+  transition: background .2s ease-in-out
+
+
+input[type=file]::file-selector-button:hover 
+  background: #0d45a5
+
+.file-block
+    color: #444
+    padding: 5px
+    background: #fff
+    border-radius: 10px
+    border: 1px solid #555
 

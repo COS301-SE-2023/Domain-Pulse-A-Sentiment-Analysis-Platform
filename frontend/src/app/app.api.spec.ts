@@ -601,7 +601,7 @@ describe('AppApi', () => {
     const sourceID = '123';
     const isActive = true;
 
-    const expectedResponse = { /* Define your expected response here */ };
+    const expectedResponse = {};
 
     appApi.setIsActive(sourceID, isActive).subscribe((response) => {
       expect(response).toEqual(expectedResponse);
@@ -625,7 +625,7 @@ describe('AppApi', () => {
   it('should send a POST request to get a profile by ID', () => {
     const profileID = 456;
 
-    const expectedResponse = { /* Define your expected response here */ };
+    const expectedResponse = {};
 
     appApi.getProfile(profileID).subscribe((response) => {
       expect(response).toEqual(expectedResponse);
@@ -670,9 +670,83 @@ describe('AppApi', () => {
 
     req.flush(expectedResponse);
   });
-  
-  
+
   
 
+    it('should send a POST request to upload a CSV file', () => {
+      const sourceID = '123';
+      const file = new File(['sample CSV content'], 'sample.csv', { type: 'text/csv' });
+  
+      const expectedResponse = {};
+  
+      appApi.sendCSVFile(sourceID, file).subscribe((response) => {
+        expect(response).toEqual(expectedResponse);
+        console.log("flag response csv");
+        console.log(response);
+      });
+  
+      const expectedUrl = '/api/warehouse/ingest/ingest_csv/';
+      const expectedMethod = 'POST';
+  
+      const req = httpTestingController.expectOne(expectedUrl);
+      expect(req.request.method).toEqual(expectedMethod);
+  
+      // Check the request body (form data)
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('source_id', sourceID);
+      expect(req.request.body).toEqual(formData);
+  
+      req.flush(expectedResponse);
+    });
+
+  it('should send a POST request to try refresh a source', () => {
+    const sourceID = '123';
+
+    const expectedResponse = {status: 'SUCCESS', is_done: false,
+    num_remaining: jasmine.stringMatching(
+      /[0-9]+/
+    ),};
+
+    appApi.tryRefresh(sourceID).subscribe((response) => {
+      expect(response).toEqual(expectedResponse);
+    });
+
+    const expectedUrl = '/api/warehouse/query/try_refresh/';
+    const expectedMethod = 'POST';
+    const expectedBody = {
+      source_id: sourceID,
+    };
+
+    const req = httpTestingController.expectOne(expectedUrl);
+    expect(req.request.method).toEqual(expectedMethod);
+    expect(req.request.body).toEqual(expectedBody);
+
+    req.flush(expectedResponse);
+  });
+  
+  // put this in the api file btw
+  // it('should send a file with sourceID when sendFile is called', () => {
+  //   const sourceID = '65034fff5aff62e633eb690b';
+  //   const mockFile = new File(['mock content'], 'mock.csv', {
+  //     type: 'text/csv',
+  //   });
+
+  //   spyOn(storeSpy, 'selectSnapshot').and.returnValue({ id: sourceID });
+
+  //   component.newCSVFile = mockFile;
+
+  //   component.sendFile(sourceID);
+
+  //   const testUrl = '/api/warehouse/ingest/ingest_csv/';
+  //   const testData = {};
+
+  //   httpClient.get<Data>(testUrl).subscribe((data) => {
+  //     console.log('test data: ' + data);
+  //     expect(data).toEqual(testData);
+
+  //     httpTestingController.verify();
+  //   });
+  // });
   
 });

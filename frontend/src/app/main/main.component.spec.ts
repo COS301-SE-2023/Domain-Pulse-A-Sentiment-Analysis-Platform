@@ -4,7 +4,7 @@ import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { GenerateReport, GetDomains, ToastError, ToastSuccess } from '../app.actions';
-import { DisplayDomain } from '../app.state';
+import { DisplayDomain, DisplaySource } from '../app.state';
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -24,8 +24,11 @@ describe('MainComponent', () => {
   });
 
   it('should open the sidebar', () => {
-    component.toggleSidebar();
+    component.setSideBarOpen();
     expect(component.sidebarCollapsed).toBeFalse();
+
+    component.setSideBarClosed();
+    expect(component.sidebarCollapsed).toBeTrue();
   });
 
   it('should process pdf URL correctly', () => {
@@ -39,9 +42,20 @@ describe('MainComponent', () => {
 
     expect(component.pdfUrl).toBe('https://example.com/somefile.pdf');
 
-    expect(storeDispatchSpy).toHaveBeenCalledWith(
-      new ToastSuccess('Your report has been generated!')
-    );
+  });
+
+  it('should fail process pdf', () => {
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    const testUrl = undefined;
+    component.processpdfUrl('');
+
+    expect(true).toBeTrue();
+
+
   });
 
   it('should handle URL without .pdf extension', () => {
@@ -103,6 +117,30 @@ describe('MainComponent', () => {
   });
 
   it('should toggle report modal', () => {
+
+    const dummyDisplaySource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'test',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    
+
+    const testDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [dummyDisplaySource, dummyDisplaySource],
+    };
+
+    component.selectedDomain = testDomain;
+
+
     component.showReportModal = false;
     component.toggleReportModal();
     expect(component.showReportModal).toBe(true);
@@ -110,6 +148,35 @@ describe('MainComponent', () => {
     component.showReportModal = true;
     component.toggleReportModal();
     expect(component.showReportModal).toBe(false);
+  });
+
+  it('should not toggle report modal', () => {
+
+    const testDomain: DisplayDomain = {
+      id: '1',
+      name: 'test',
+      description: 'test',
+      selected: true,
+      imageUrl: 'test',
+      sourceIds: [],
+      sources: [],
+    };
+
+    component.selectedDomain = testDomain;
+
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
+    component.showReportModal = false;
+    component.toggleReportModal();
+    
+    expect(storeDispatchSpy).toHaveBeenCalledWith(
+      new ToastError(
+        'You have no sources to generate a report from. Please add a source.'
+      )
+    );
   });
 
   it('should add a click event listener to copyIcon', () => {

@@ -10,3 +10,6 @@ vadersentiment
 nltk
 python-socketio
 pytz
+
+#monitoring
+elastic-apm

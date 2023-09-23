@@ -1,2 +1,4 @@
 ignore:
   - "**/*test*.py"
+  - "**/asgi.py"
+  - "**/wsgi.py"
