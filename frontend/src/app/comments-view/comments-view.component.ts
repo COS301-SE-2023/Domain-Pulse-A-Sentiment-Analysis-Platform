@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppState } from '../app.state';
 import { Select } from '@ngxs/store';
@@ -8,14 +8,22 @@ import { Select } from '@ngxs/store';
   templateUrl: './comments-view.component.html',
   styleUrls: ['./comments-view.component.sass'],
 })
-export class CommentsViewComponent {
+export class CommentsViewComponent implements AfterViewInit{
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   comments?: any[];
   showComment: boolean[] = [];
 
-  showInitialComments = 10;
+  showInitialCommentsPositive = 10;
+  showInitialCommentsNegative= 10;
+  showInitialCommentsNeutral = 10;
+  showInitialCommentsUndecided = 10;
+  showInitialCommentsToxic = 10;
+  showInitialComments=10;
+
+
+
   showAdditionalComments = 10;
 
   positiveComments: any[] = [];
@@ -41,6 +49,12 @@ export class CommentsViewComponent {
       this.reactToNewComents(newSampleData);
     });
     this.initializeShowCommentArray();
+  }
+
+  ngAfterViewInit() {
+    this.accordionItems = document.querySelectorAll('[commentsAccordion]');
+    console.log("accordion items initialized")
+    console.log(this.accordionItems)
   }
 
   reactToNewComents(newSampleData: any) {
@@ -254,6 +268,9 @@ export class CommentsViewComponent {
   filterAccordionByText() {
     const textToFilter = this.searchTerm;
     const shownCategories = new Set();
+
+    console.log("accordion items")
+    console.log(this.accordionItems)
 
     if (!this.accordionItems) {
       return;

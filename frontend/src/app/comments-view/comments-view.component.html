@@ -10,9 +10,9 @@
       src="../../assets/icons/comments.svg"
       width="8%"
       alt="Positive Icon"
-      style="padding-right: 1rem"
+      style="padding-right: 0.8rem"
     />
-    <h3 style="margin:0; margin-right: 2rem; text-wrap: nowrap;">Comments</h3>
+    <h3 style="margin:0; margin-right: 1.5rem; text-wrap: nowrap;">Reviews</h3>
     <div class="search-container flex-row center">
       <input
         class="search-bar"
@@ -30,20 +30,22 @@
     </div>  </div>
 
   <div class="flex-column" style="gap: 1rem">
-    <commentsAccordion [collapsing]="true">
+    <commentsAccordion data-catID="0" [collapsing]="true">
       <commentsAccordion-item [expanded]="false">
         <ng-template commentsAccordionTitle>
           <div class="flex-row" style="gap:1rem;">
-            <img
-              src="../../assets/icons/positive.svg"
-              width="6%"
-              alt="Positive Icon"/>
+            <div class="flex-row center" style="width: 6%;">
+              <img
+                src="../../assets/icons/positive.svg"
+                width="100%"
+                alt="Positive Icon"/>
+            </div>
             <p>Positive</p>
           </div>
         </ng-template>
         <ng-template commentsAccordionContent>
           <div class="accordion-container">
-            <div class="flex-column" *ngFor="let comment of positiveComments.slice(0, showInitialComments); let i = index">
+            <div class="flex-column" *ngFor="let comment of positiveComments.slice(0, showInitialCommentsPositive); let i = index">
               <div class="comment">
                 <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
                   <p class="comment-text">{{ comment.comment }}</p>
@@ -94,13 +96,13 @@
             </div>
             <ng-container *ngIf="positiveComments.length == 0; else loadMoreBlock">
               <div>
-                <p>nothing to see here</p>
+                <p>👀 nothing to see here</p>
               </div>
             </ng-container>
             
             <ng-template #loadMoreBlock>
-              <div *ngIf="showInitialComments < positiveComments.length">
-                <button (click)="showInitialComments = showInitialComments + showAdditionalComments">Load More</button>
+              <div class="flex-row center" *ngIf="showInitialCommentsPositive < positiveComments.length">
+                <button class= "button clickable-item flex-row center" (click)="showInitialCommentsPositive  = showInitialCommentsPositive  + showAdditionalComments">Load More</button>
               </div>
             </ng-template>
           </div>
@@ -111,10 +113,12 @@
       <commentsAccordion-item [expanded]="false">
         <ng-template commentsAccordionTitle>
           <div class="flex-row" style="gap:1rem;">
-            <img
-              src="../../assets/icons/positive.svg"
-              width="6%"
-              alt="Positive Icon"/>
+            <div class="flex-row center" style="width: 6%;">
+              <img
+                src="../../assets/icons/negative.svg"
+                width="100%"
+                alt="Negative Icon"/>
+            </div>
             <p>Negative</p>
           </div>
         </ng-template>
@@ -169,6 +173,17 @@
               </div>
               <hr />
             </div>
+            <ng-container *ngIf="negativeComments.length == 0; else loadMoreBlock">
+              <div>
+                <p>👀 nothing to see here</p>
+              </div>
+            </ng-container>
+            
+            <ng-template #loadMoreBlock>
+              <div class="flex-row center" *ngIf="showInitialCommentsNegative < negativeComments.length">
+                <button class= "button clickable-item flex-row center" (click)="showInitialCommentsNegative  = showInitialCommentsNegative  + showAdditionalComments">Load More</button>
+              </div>
+            </ng-template>
           </div>
         </ng-template>
       </commentsAccordion-item>
@@ -177,10 +192,12 @@
       <commentsAccordion-item [expanded]="false">
         <ng-template commentsAccordionTitle>
           <div class="flex-row" style="gap:1rem;">
-            <img
-              src="../../assets/icons/positive.svg"
-              width="6%"
-              alt="Positive Icon"/>
+            <div class="flex-row center" style="width: 6%;">
+              <img
+                src="../../assets/icons/neutral-score.svg"
+                width="100%"
+                alt="Neutral Icon"/>
+            </div>
             <p>Neutral</p>
           </div>
         </ng-template>
@@ -237,13 +254,13 @@
             </div>
             <ng-container *ngIf="neutralComments.length == 0; else loadMoreBlock">
               <div>
-                <p >👀 no comments to see here</p>
+                <p>👀 nothing to see here</p>
               </div>
             </ng-container>
             
             <ng-template #loadMoreBlock>
-              <div *ngIf="showInitialComments < negativeComments.length">
-                <button (click)="showInitialComments = showInitialComments + showAdditionalComments">Load More</button>
+              <div class="flex-row center" *ngIf="showInitialCommentsNeutral < neutralComments.length">
+                <button class= "button clickable-item flex-row center" (click)="showInitialCommentsNeutral  = showInitialCommentsNeutral  + showAdditionalComments">Load More</button>
               </div>
             </ng-template>
           </div>
@@ -254,10 +271,12 @@
       <commentsAccordion-item [expanded]="false">
         <ng-template commentsAccordionTitle>
           <div class="flex-row" style="gap:1rem;">
-            <img
-              src="../../assets/icons/positive.svg"
-              width="6%"
-              alt="Positive Icon"/>
+            <div class="flex-row center" style="width: 8%; margin-left: 0.2rem; margin-right: 0.2rem;">
+              <img
+                src="../../assets/icons/undecided.png"
+                width="100%"
+                alt="Undecided Icon"/>
+            </div>
             <p>Undecided</p>
           </div>
         </ng-template>        <ng-template commentsAccordionContent>
@@ -311,6 +330,17 @@
               </div>
               <hr />
             </div>
+            <ng-container *ngIf="undecidedComments.length == 0; else loadMoreBlock">
+              <div>
+                <p>👀 nothing to see here</p>
+              </div>
+            </ng-container>
+            
+            <ng-template #loadMoreBlock>
+              <div class="flex-row center" *ngIf="showInitialCommentsUndecided < undecidedComments.length">
+                <button class= "button clickable-item flex-row center" (click)="showInitialCommentsUndecided  = showInitialCommentsUndecided  + showAdditionalComments">Load More</button>
+              </div>
+            </ng-template>
           </div>
         </ng-template>
       </commentsAccordion-item>
@@ -319,10 +349,12 @@
       <commentsAccordion-item [expanded]="false">
         <ng-template commentsAccordionTitle>
           <div class="flex-row" style="gap:1rem;">
-            <img
-              src="../../assets/icons/positive.svg"
-              width="6%"
-              alt="Positive Icon"/>
+            <div class="flex-row center" style="width: 6%;">
+              <img
+                src="../../assets/icons/toxic.svg"
+                width="100%"
+                alt="Toxic Icon"/>
+            </div>
             <p>Toxic</p>
           </div>
         </ng-template>        <ng-template commentsAccordionContent>
@@ -384,10 +416,12 @@
       <commentsAccordion-item [expanded]="false">
         <ng-template commentsAccordionTitle>
           <div class="flex-row" style="gap:1rem;">
-            <img
-              src="../../assets/icons/positive.svg"
-              width="6%"
-              alt="Positive Icon"/>
+            <div class="flex-row center" style="width: 10%;">
+              <img
+                src="../../assets/icons/top10.png"
+                width="100%"
+                alt="Upwards trend arrow"/>
+            </div>
             <p>Top 10%</p>
           </div>
         </ng-template>        <ng-template commentsAccordionContent>
@@ -449,10 +483,12 @@
       <commentsAccordion-item [expanded]="false">
         <ng-template commentsAccordionTitle>
           <div class="flex-row" style="gap:1rem;">
-            <img
-              src="../../assets/icons/positive.svg"
-              width="6%"
-              alt="Positive Icon"/>
+            <div class="flex-row center" style="width: 10%;">
+              <img
+                src="../../assets/icons/bottom10.png"
+                width="100%"
+                alt="Downward trend icon"/>
+            </div>
             <p>Bottom 10%</p>
           </div>
         </ng-template>        <ng-template commentsAccordionContent>
