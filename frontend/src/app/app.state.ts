@@ -1157,7 +1157,9 @@ export class AppState {
         switchMap((res) => {
           if (res.status === 'SUCCESS') {
             localStorage.setItem('JWT', res.JWT);
-            console.log('register success');
+            this.store.dispatch(new ToastSuccess('Account created successfully!'));
+            this.store.dispatch(new SetUserDetails(res.id));
+            this.router.navigate(['']);
             return of();
           } else {
             return throwError(() => new Error());
