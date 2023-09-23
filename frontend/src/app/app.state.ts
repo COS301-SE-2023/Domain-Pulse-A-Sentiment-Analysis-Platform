@@ -486,7 +486,7 @@ export class AppState {
     });
 
     const selectedSourceId = localStorage.getItem(state.domain.id);
-    if (selectedSourceId == '') {
+    if (selectedSourceId === null) {
       this.store.dispatch(new SetSource(null));
     } else {
       const selectedSource = sources.find(
