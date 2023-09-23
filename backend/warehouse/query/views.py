@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
-from datamanager import sentiment_record_model
+from datamanager import sentiment_record_model, refresh_queue
 import json
 import requests
 from authchecker import auth_checks
@@ -198,7 +198,7 @@ def get_report_data_internal(request: HttpRequest):
         return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
 
-PENDING_REFRESH = {}
+# PENDING_REFRESH = {}
 
 
 @csrf_exempt
@@ -208,26 +208,22 @@ def try_refresh(request: HttpRequest):
     if request.method == "POST":
         raw_data = json.loads(request.body)
         source_id_raw = raw_data["source_id"]
-        remaining_data = PENDING_REFRESH.get(str(source_id_raw))
 
-        if remaining_data == None:
-            return JsonResponse(
-                {
-                    "status": "FAILURE",
-                    "details": "No source with that ID is pending processing",
-                }
-            )
+        flag, item = refresh_queue.process_one(source_id_raw)
 
-        if len(remaining_data) == 0:
-            del PENDING_REFRESH[str(source_id_raw)]
-            return JsonResponse({"status": "SUCCESS", "is_done": True})
+        if not flag:
+            if item == "no source":
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "No source with that ID is pending processing",
+                    }
+                )
+            elif item == "source done":
+                return JsonResponse({"status": "SUCCESS", "is_done": True})
         else:
-            # num_remaining = len(list(PENDING_REFRESH.get(str(source_id_raw))))
-            new_data = PENDING_REFRESH[str(source_id_raw)].pop()
-            # print("size is: " + str(PENDING_REFRESH[str(source_id_raw)]))
-
-            ts = new_data["timestamp"]
-            text = new_data["text"]
+            ts = item["timestamp"]
+            text = item["text"]
 
             request_to_engine_body = {"data": [text]}
             response_from_analyser = requests.post(
@@ -245,24 +241,60 @@ def try_refresh(request: HttpRequest):
                 )
             new_data_metrics = response_from_analyser.json()["metrics"][0]
 
-            # data_to_store = []
-            # for metrics, stamped in zip(new_data_metrics, new_data):
-            #     metrics["timestamp"] = int(stamped["timestamp"])
-            #     metrics["source_id"] = source_id_raw
-            #     data_to_store.append(metrics)
-
             new_data_metrics["timestamp"] = int(ts)
             new_data_metrics["source_id"] = source_id_raw
 
             sentiment_record_model.add_record(new_data_metrics)
 
-            return JsonResponse(
-                {
-                    "status": "SUCCESS",
-                    "is_done": False,
-                    "num_remaining": len(list(PENDING_REFRESH.get(str(source_id_raw)))),
-                }
-            )
+            return JsonResponse({"status": "SUCCESS", "is_done": False})
+
+        # remaining_data = PENDING_REFRESH.get(str(source_id_raw))
+
+        # if remaining_data == None:
+        #     return JsonResponse(
+        #         {
+        #             "status": "FAILURE",
+        #             "details": "No source with that ID is pending processing",
+        #         }
+        #     )
+
+        # if len(remaining_data) == 0:
+        #     del PENDING_REFRESH[str(source_id_raw)]
+        #     return JsonResponse({"status": "SUCCESS", "is_done": True})
+        # else:
+        #     new_data = PENDING_REFRESH[str(source_id_raw)].pop()
+
+        #     ts = new_data["timestamp"]
+        #     text = new_data["text"]
+
+        #     request_to_engine_body = {"data": [text]}
+        #     response_from_analyser = requests.post(
+        #         ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
+        #     )
+
+        #     if response_from_analyser.status_code == 200:
+        #         pass
+        #     else:
+        #         return JsonResponse(
+        #             {
+        #                 "status": "FAILURE",
+        #                 "details": "Could not connect to Analyser",
+        #             }
+        #         )
+        #     new_data_metrics = response_from_analyser.json()["metrics"][0]
+
+        #     new_data_metrics["timestamp"] = int(ts)
+        #     new_data_metrics["source_id"] = source_id_raw
+
+        #     sentiment_record_model.add_record(new_data_metrics)
+
+        #     return JsonResponse(
+        #         {
+        #             "status": "SUCCESS",
+        #             "is_done": False,
+        #             "num_remaining": len(list(PENDING_REFRESH.get(str(source_id_raw)))),
+        #         }
+        #     )
 
     return JsonResponse({"status": "FAILURE", "details": "Invalid request"})
 
@@ -351,7 +383,7 @@ def refresh_source(request: HttpRequest):
                 }
             )
 
-        PENDING_REFRESH[str(source_id_raw)] = new_data
+        refresh_queue.add_list(source_id_raw, new_data)
 
         # 2.
         #     raw_new_data = []
