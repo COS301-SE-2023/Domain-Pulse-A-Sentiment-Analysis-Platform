@@ -179,7 +179,7 @@ export class SourceSelectorComponent implements OnInit {
 
         return {
           source_type: 'youtube',
-          video_id: match ? match[1] : null,
+          video_id:  match![1],
         };
     }
     return null;

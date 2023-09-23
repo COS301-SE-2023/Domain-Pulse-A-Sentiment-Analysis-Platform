@@ -443,6 +443,13 @@ describe('SourceSelectorComponent', () => {
       is_active: true,
     });
 
+    component.newSourcePlatform = 'youtube';
+  component.newSourceUrl = 'https://example.com'; // A URL that doesn't match the regex
+  expect(component.determineSourceParams()).toEqual({
+    source_type: 'youtube',
+    video_id: 'https://example.com', // Expecting video_id to be null
+  });
+
     // component.newSourcePlatform = 'youtube';
     // component.newSourceUrl = 'https://www.youtube.com/embed/scWj1BMRHUA';
     // expect(component.determineSourceParams()).toEqual({
