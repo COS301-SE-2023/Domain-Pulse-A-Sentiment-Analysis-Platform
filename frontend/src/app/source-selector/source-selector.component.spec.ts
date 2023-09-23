@@ -423,11 +423,19 @@ describe('SourceSelectorComponent', () => {
     });
 
     component.newSourcePlatform = 'youtube';
+    component.newSourceUrl = 'https://youtu.be/bsyY9m7Q2KI?si=Ae1iTsFkxq3oDhok';
+    expect(component.determineSourceParams()).toEqual({
+      source_type: 'youtube',
+      video_id: 'bsyY9m7Q2KI',
+    });
+
+    component.newSourcePlatform = 'youtube';
     component.newSourceUrl = 'scWj1BMRHUA';
     expect(component.determineSourceParams()).toEqual({
       source_type: 'youtube',
       video_id: 'scWj1BMRHUA',
     });
+
 
     component.newSourcePlatform = 'livereview';
     expect(component.determineSourceParams()).toEqual({
