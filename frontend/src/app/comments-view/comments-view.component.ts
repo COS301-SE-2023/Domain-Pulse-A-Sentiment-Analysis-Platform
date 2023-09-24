@@ -11,7 +11,6 @@ import { Select } from '@ngxs/store';
 export class CommentsViewComponent{
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   comments?: any[];
   showComment: boolean[] = [];
@@ -42,17 +41,10 @@ export class CommentsViewComponent{
 
   accordionItems: NodeListOf<Element> | undefined;
 
-  constructor(private hostElement: ElementRef) {
+  constructor() {
     this.sampleData.subscribe((newSampleData) => {
       this.reactToNewComents(newSampleData);
-      this.initializeShowCommentArray();
-
-      this.searchTerm = '';
-      setTimeout(() => {
-        this.accordionItems = document.querySelectorAll('commentsAccordion');
-      }, 100); 
-
-    });
+     });
   }
 
 
@@ -61,11 +53,18 @@ export class CommentsViewComponent{
     if (newSampleData) {
       this.comments = this.transformComments(newSampleData);
       this.groupComments(this.comments);
+
+      this.initializeShowCommentArray();
+
+      this.searchTerm = '';
+      setTimeout(() => {
+        this.accordionItems = document.querySelectorAll('commentsAccordion');
+      }, 100); 
     }
   }
 
   initializeShowCommentArray() {
-    if (this.comments) {
+    if (this.toxicComments) {
       this.showComment = Array(this.toxicComments.length).fill(false);
     } else {
       this.showComment = [];
