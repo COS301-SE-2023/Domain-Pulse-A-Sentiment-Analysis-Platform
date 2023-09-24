@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import {
   trigger,
   state,
@@ -61,7 +61,11 @@ export class MainComponent implements OnInit {
   showReportModal = false;
   pdfUrl!: string;
 
-  constructor(private store: Store) {
+  modalTimeout = false;
+
+  lastOpenedModal: any[] = [];
+
+  constructor(private store: Store,  private el: ElementRef) {
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
     });
@@ -134,8 +138,21 @@ export class MainComponent implements OnInit {
     if (!this.showReportModal) {
       this.generateReport();
       this.showReportModal = true;
+
+      this.lastOpenedModal.push('report');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
       this.showReportModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
@@ -149,5 +166,26 @@ export class MainComponent implements OnInit {
       const textToCopy = reportLink.getAttribute('href')!;
       navigator.clipboard.writeText(textToCopy);
     }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    console.log('click');
+    if(!this.modalTimeout){
+      switch(this.lastOpenedModal[this.lastOpenedModal.length - 1]){
+        case 'report':
+          var modalDiv1 = this.el.nativeElement.querySelector('#addSourceModal');
+          if (modalDiv1 && !modalDiv1.contains(event.target)) {
+            if(this.showReportModal){
+              this.toggleReportModal();
+            }
+          }
+          break;
+      
+
+      }
+
+    }
+    
   }
 }

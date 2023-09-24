@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
@@ -22,6 +22,11 @@ export class SourceSelectorComponent implements OnInit {
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
   showInfoModal = false;
+
+  modalTimeout = false;
+
+  lastOpenedModal: any[] = [];
+
   newSourceName = '';
   newSourcePlatform = '';
   newSourceUrl = '';
@@ -34,7 +39,9 @@ export class SourceSelectorComponent implements OnInit {
 
   currHost = window.location.host;
 
-  constructor(private store: Store) {}
+  isEditing = false;
+
+  constructor(private store: Store, private el: ElementRef) {}
 
   ngOnInit(): void {
     this.selectedSource$.subscribe(source => {
@@ -207,6 +214,32 @@ export class SourceSelectorComponent implements OnInit {
     }
   }
 
+  editSourceNew(){
+
+    if(this.editSourceName == ''){
+      this.store.dispatch(new ToastError('Please enter a name for your source'));
+      return;
+    }
+
+    if(this.editSourceName.length > 25){
+      this.store.dispatch(new ToastError('Source name must be less than 25 characters'));
+      return;
+    }
+
+    const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
+    if(this.editSourceName != selectedSource?.name){
+      this.store.dispatch(new EditSource(this.editSourceName));
+      this.isEditing = false;
+      return;
+    }
+    else{
+      this.isEditing = false;
+      return;
+    }
+
+
+  }
+
   determinePlatformFromNewSourcePlatform(): string {
     switch (this.newSourcePlatform) {
       case 'googlereviews':
@@ -248,8 +281,21 @@ export class SourceSelectorComponent implements OnInit {
   toggleAddSourcesModal() {
     if (!this.showAddSourcesModal) {
       this.showAddSourcesModal = true;
+
+      this.lastOpenedModal.push('addSource');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
       this.showAddSourcesModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
@@ -258,8 +304,19 @@ export class SourceSelectorComponent implements OnInit {
       this.editSourceName = this.store.selectSnapshot(AppState.selectedSource)?.name || '';
       this.editSourceUrl = this.store.selectSnapshot(AppState.selectedSource)?.params || '';
       this.showEditSourceModal = true;
+
+      /* this.lastOpenedModal.push('editSource');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300); */
     } else {
       this.showEditSourceModal = false;
+      /* this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300); */
     }
   }
 
@@ -270,16 +327,44 @@ export class SourceSelectorComponent implements OnInit {
     }
     if (!this.showConfirmDeleteSourceModal) {
       this.showConfirmDeleteSourceModal = true;
+
+      this.lastOpenedModal.push('confirmDeleteSource');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
       this.showConfirmDeleteSourceModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
   toggleInfoModal() {
     if (!this.showInfoModal) {
       this.showInfoModal = true;
+
+      this.lastOpenedModal.push('info');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
+      this.isEditing = false;
       this.showInfoModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     }
   }
 
@@ -302,5 +387,47 @@ export class SourceSelectorComponent implements OnInit {
     } else {
       return `${window.location.protocol}//${this.currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
     }
+  }
+
+  editName(){
+    this.editSourceName = this.store.selectSnapshot(AppState.selectedSource)?.name || '';
+    this.isEditing = true;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    console.log('click');
+    if(!this.modalTimeout){
+      switch(this.lastOpenedModal[this.lastOpenedModal.length - 1]){
+        case 'addSource':
+          var modalDiv1 = this.el.nativeElement.querySelector('#addSourceModal');
+          if (modalDiv1 && !modalDiv1.contains(event.target)) {
+            if(this.showAddSourcesModal){
+              this.toggleAddSourcesModal();
+            }
+          }
+          break;
+        case 'confirmDeleteSource':
+          const modalDiv2 = this.el.nativeElement.querySelector('#confirmDeleteSourceModal');
+          if (modalDiv2 && !modalDiv2.contains(event.target)) {
+            if(this.showConfirmDeleteSourceModal){
+              this.toggleConfirmDeleteSourceModal();
+            }
+          }
+          break;
+        case 'info':
+          const modalDiv3 = this.el.nativeElement.querySelector('#infoModal');
+          if (modalDiv3 && !modalDiv3.contains(event.target)) {
+            if(this.showInfoModal){
+              this.toggleInfoModal();
+            }
+          }
+
+          break;
+
+      }
+
+    }
+    
   }
 }

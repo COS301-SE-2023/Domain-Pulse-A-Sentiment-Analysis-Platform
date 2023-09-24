@@ -159,7 +159,7 @@
   [modalDisplay]="showAddDomainModal"
   (close)="toggleDomainModalOff()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="addDomainModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -284,7 +284,7 @@
   [modalDisplay]="showEditDomainModal"
   (close)="toggleEditDomainModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="editDomainModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -411,7 +411,7 @@
   [modalDisplay]="showProfileModal"
   (close)="toggleProfileModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="profileModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -497,7 +497,7 @@
   [modalDisplay]="showChangePasswordModal"
   (close)="toggleChangePasswordModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="changePasswordModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -556,7 +556,7 @@
   [modalDisplay]="showProfileEditModal"
   (close)="toggleProfileEditModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="profileEditModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -614,6 +614,7 @@
   (close)="toggleConfirmDeleteDomainModal();"
 >
   <div
+  id="confirmDeleteDomainModal"
     class="flex-row modal"
     style="width: 30vw; height: 25vh; color: black; border-radius: 10px"
   >
@@ -648,6 +649,7 @@
   (close)="toggleDeleteAccountModal()"
 >
   <div
+  id="deleteAccountModal"
     class="flex-row modal"
     style="width: 30vw; height: 25vh; color: black; border-radius: 10px"
   >
