@@ -64,11 +64,8 @@ export class CommentsViewComponent{
   }
 
   initializeShowCommentArray() {
-    if (this.toxicComments) {
-      this.showComment = Array(this.toxicComments.length).fill(false);
-    } else {
-      this.showComment = [];
-    }
+    this.showComment = Array(this.toxicComments.length).fill(false);
+
   }
 
   toggleShowComment(index: number) {
