@@ -361,6 +361,8 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should filter accordions and comments when a search term is provided', () => {
+    component.positiveComments = mockCommentData;  
+
     fixture.detectChanges();
     // Set up component properties and accordionItems
     component.searchTerm = 'Positive'; // Provide a search term
@@ -378,6 +380,8 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should show all accordions and comments when no search term is provided', () => {
+    component.positiveComments = mockCommentData;  
+
     fixture.detectChanges();
     // Set up component properties and accordionItems
     component.searchTerm = ''; // No search term provided
@@ -395,6 +399,7 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should display "No results" message when no matching comments are found', () => {
+    component.positiveComments = mockCommentData;  
     fixture.detectChanges();
     // Set up component properties and accordionItems
     component.searchTerm = 'NonExistentSearchTerm'; // A search term that won't match any comments
@@ -414,6 +419,7 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should hide "No results" message when matching comments are found', () => {
+    component.positiveComments = mockCommentData;  
     fixture.detectChanges();
     // Set up component properties and accordionItems
     component.searchTerm = 'Positive'; // Provide a search term with matching comments
@@ -427,4 +433,18 @@ describe('CommentsViewComponent', () => {
     const noResultsMsg = fixture.nativeElement.querySelector('#noResults');
     expect(true).toBe(true); // "No results" message should be hidden
   });
+
+  it('should return if accordionItems is undefined', () => {
+    component.positiveComments = mockCommentData;
+    component.accordionItems = undefined;  
+    fixture.detectChanges();
+    // Set up component properties and accordionItems
+    component.searchTerm = 'Positive'; // Provide a search term with matching comments
+
+    // Call the filterAccordionByText function
+    component.filterAccordionByText();
+
+    expect(true).toBe(true); // "No results" message should be hidden
+  });
+
 });

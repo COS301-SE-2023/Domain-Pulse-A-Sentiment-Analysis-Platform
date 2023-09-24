@@ -291,10 +291,6 @@ export class CommentsViewComponent{
         });
       });
 
-      document.querySelectorAll('.heading').forEach((categoryElement: any) => {
-        categoryElement.classList.remove('hide-element');
-      });
-
       return;
     }
 
@@ -311,9 +307,6 @@ export class CommentsViewComponent{
       item.classList.add('hide-element');
     });
 
-    document.querySelectorAll('.heading').forEach((item: any) => {
-      item.classList.add('hide-element');
-    });
 
     this.accordionItems.forEach((item: any) => {
       const comments = item.querySelectorAll('.comment'); 
@@ -336,14 +329,6 @@ export class CommentsViewComponent{
       if (accordionHasMatchingComment) {
         item.classList.remove('hide-element');
         shownCategories.add(item.getAttribute('data-catID'));
-      }
-    });
-
-    // Show categories that have matching comments
-    document.querySelectorAll('.heading').forEach((categoryElement: any) => {
-      const catID = categoryElement.getAttribute('data-catID');
-      if (shownCategories.has(catID)) {
-        categoryElement.classList.remove('hide-element');
       }
     });
 
