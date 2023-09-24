@@ -280,6 +280,21 @@ describe('CommentsViewComponent', () => {
     ]);
   });
 
+  it('should toggle the showComment array', () => {
+    component.showComment = [false, false, false, false, false, false, false];
+
+    component.toggleShowComment(0);
+
+    expect(component.showComment).toEqual([
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ]);
+  });
 
   it('should correctly group non-toxic comments and set toxicComments array', () => {
     const comments = [
@@ -361,7 +376,7 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should filter accordions and comments when a search term is provided', () => {
-    component.positiveComments = mockCommentData;  
+    component.positiveComments = mockCommentData;
 
     fixture.detectChanges();
     // Set up component properties and accordionItems
@@ -380,7 +395,7 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should show all accordions and comments when no search term is provided', () => {
-    component.positiveComments = mockCommentData;  
+    component.positiveComments = mockCommentData;
 
     fixture.detectChanges();
     // Set up component properties and accordionItems
@@ -399,7 +414,7 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should display "No results" message when no matching comments are found', () => {
-    component.positiveComments = mockCommentData;  
+    component.positiveComments = mockCommentData;
     fixture.detectChanges();
     // Set up component properties and accordionItems
     component.searchTerm = 'NonExistentSearchTerm'; // A search term that won't match any comments
@@ -419,7 +434,7 @@ describe('CommentsViewComponent', () => {
   });
 
   it('should hide "No results" message when matching comments are found', () => {
-    component.positiveComments = mockCommentData;  
+    component.positiveComments = mockCommentData;
     fixture.detectChanges();
     // Set up component properties and accordionItems
     component.searchTerm = 'Positive'; // Provide a search term with matching comments
@@ -436,7 +451,7 @@ describe('CommentsViewComponent', () => {
 
   it('should return if accordionItems is undefined', () => {
     component.positiveComments = mockCommentData;
-    component.accordionItems = undefined;  
+    component.accordionItems = undefined;
     fixture.detectChanges();
     // Set up component properties and accordionItems
     component.searchTerm = 'Positive'; // Provide a search term with matching comments
@@ -446,5 +461,157 @@ describe('CommentsViewComponent', () => {
 
     expect(true).toBe(true); // "No results" message should be hidden
   });
+
+  it('should show matching comments and update DOM elements', () => {
+    // Create actual DOM elements for comments
+    const comment1 = document.createElement('div');
+    comment1.innerText = 'This is a positive comment';
+    const comment2 = document.createElement('div');
+    comment2.innerText = 'This is another positive comment';
+
+    // Prepare mock data
+    const comments = [comment1, comment2];
+    const textToFilter = 'positive';
+    const shownCategories = new Set();
+    const item = document.createElement('div');
+    item.setAttribute('data-catID', '1');
+    const accordionHasMatchingComment = false;
+
+    // Call the function
+    const [atleastOne, updatedAccordionFlag] = component.showComments(
+      comments,
+      textToFilter,
+      shownCategories,
+      item,
+      accordionHasMatchingComment
+    );
+
+    // Assertions
+    expect(atleastOne).toBe(true);
+    expect(updatedAccordionFlag).toBe(true);
+
+    // Verify that comments are displayed and have the correct classes
+    expect(comment1.classList.contains('hide-element')).toBe(false);
+    expect(comment2.classList.contains('hide-element')).toBe(false);
+
+    // Verify that the accordion item is displayed and added to shownCategories
+    expect(item.classList.contains('hide-element')).toBe(false);
+    expect(shownCategories.has('1')).toBe(true);
+  });
+
+  it('should return false and not update accordion when no comments match', () => {
+    // Create a temporary container to hold the comments
+    const container = document.createElement('div');
+  
+    // Create actual DOM elements for comments
+    const comment1 = document.createElement('div');
+    comment1.innerText = 'This is a neutral comment';
+    const comment2 = document.createElement('div');
+    comment2.innerText = 'This is another neutral comment';
+  
+    // Append comments to the container
+    container.appendChild(comment1);
+    container.appendChild(comment2);
+  
+    const textToFilter = 'positive'; // No matching comments
+    const shownCategories = new Set();
+  
+    // Create an actual DOM element for the item
+    const item = document.createElement('div');
+    item.setAttribute('data-catID', '1');
+    
+    const accordionHasMatchingComment = false;
+  
+    // Call the function
+    const [atleastOne, updatedAccordionFlag] = component.showComments(
+      Array.from(container.children), // Convert container's children to an array
+      textToFilter,
+      shownCategories,
+      item,
+      accordionHasMatchingComment
+    );
+  
+    // Assertions
+    expect(atleastOne).toBe(false);
+    expect(updatedAccordionFlag).toBe(false);
+  
+    // Verify that no comments are displayed and remain hidden
+    expect(comment1.classList.contains('hide-element')).toBe(true);
+    expect(comment2.classList.contains('hide-element')).toBe(true);
+  
+    expect(shownCategories.has('1')).toBe(false);
+  });
+  
+
+  it('should return false and not update accordion when no comments match', () => {
+    // Create actual DOM elements for comments
+    const comments = [
+      document.createElement('div'),
+      document.createElement('div'),
+    ];
+    comments[0].innerText = 'This is a neutral comment';
+    comments[1].innerText = 'This is another neutral comment';
+  
+    const textToFilter = 'positive'; // No matching comments
+    const shownCategories = new Set();
+    
+    // Create an actual DOM element for the item
+    const item = document.createElement('div');
+    item.setAttribute('data-catID', '1');
+    
+    const accordionHasMatchingComment = false;
+  
+    // Call the function
+    const [atleastOne, updatedAccordionFlag] = component.showComments(
+      comments,
+      textToFilter,
+      shownCategories,
+      item,
+      accordionHasMatchingComment
+    );
+  
+    // Assertions
+    expect(atleastOne).toBe(false);
+    expect(updatedAccordionFlag).toBe(false);
+  
+    // Verify that no comments are displayed and remain hidden
+    comments.forEach((comment) => {
+      expect(comment.classList.contains('hide-element')).toBe(true);
+    });
+  
+    // Verify that the accordion item remains hidden and is not added to shownCategories
+    expect(shownCategories.has('1')).toBe(false);
+  });
+
+  it('should show all comments and add item to shownCategories', () => {
+    // Create actual DOM elements for comments
+    const comment1 = document.createElement('div');
+    const comment2 = document.createElement('div');
+  
+    // Prepare mock data with actual DOM elements
+    const comments = [comment1, comment2];
+    const shownCategories = new Set();
+  
+    // Create an actual DOM element for the item
+    const item = document.createElement('div');
+    item.setAttribute('data-catID', '1');
+  
+    // Add a class to simulate hidden comments
+    comment1.classList.add('hide-element');
+    comment2.classList.add('hide-element');
+  
+    // Call the function
+    component.hideComments(comments, shownCategories, item);
+  
+    // Assertions
+  
+    // Verify that both comments are shown
+    expect(comment1.classList.contains('hide-element')).toBe(false);
+    expect(comment2.classList.contains('hide-element')).toBe(false);
+  
+    // Verify that the item is added to shownCategories
+    expect(shownCategories.has('1')).toBe(true);
+  });
+  
 
 });

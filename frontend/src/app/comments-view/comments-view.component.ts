@@ -284,11 +284,7 @@ export class CommentsViewComponent{
       this.accordionItems.forEach((item: any) => {
         item.classList.remove('hide-element'); 
         const comments = item.querySelectorAll('.comment'); 
-
-        comments.forEach((comment: any) => {
-          comment.classList.remove('hide-element'); 
-          shownCategories.add(item.getAttribute('data-catID'));
-        });
+        this.hideComments(comments, shownCategories, item);
       });
 
       return;
@@ -312,29 +308,52 @@ export class CommentsViewComponent{
       const comments = item.querySelectorAll('.comment'); 
       let accordionHasMatchingComment = false;
 
-      comments.forEach((comment: any) => {
-        const commentText = comment.innerText.toLowerCase();
-        if (commentText.includes(textToFilter.toLowerCase())) {
-          console.log('comment text includes text to filter:' + commentText + ' ' + textToFilter)
-          atleastOne = true;
-          comment.classList.remove('hide-element');
-          accordionHasMatchingComment = true;
-          shownCategories.add(item.getAttribute('data-catID'));
-        } else {
-          comment.classList.add('hide-element');
-        }
-      });
+      let arr = this.showComments(comments, textToFilter, shownCategories, item, accordionHasMatchingComment, atleastOne);
 
-      // Show or hide the accordion based on whether it has matching comments
-      if (accordionHasMatchingComment) {
-        item.classList.remove('hide-element');
-        shownCategories.add(item.getAttribute('data-catID'));
-      }
+      atleastOne = arr[0];
+      accordionHasMatchingComment = arr[1];
+      console.log('text to filter: ' + textToFilter)
+
+      console.log('showComments returned:')
+      console.log(arr)
+
     });
 
     noResultsIMG = document.querySelector('#noResults');
     if (noResultsIMG) {
       (noResultsIMG as any).style.display = atleastOne ? 'none' : 'flex';
     }
+  }
+
+  showComments(comments: any, textToFilter: string, shownCategories: any, item: any, accordionHasMatchingComment: boolean, atleastOne: boolean = false){
+
+    comments.forEach((comment: any) => {
+      const commentText = comment.innerText.toLowerCase();
+      if (commentText.includes(textToFilter.toLowerCase())) {
+        console.log('comment text includes text to filter:' + commentText + ' ' + textToFilter)
+        atleastOne = true;
+        comment.classList.remove('hide-element');
+        accordionHasMatchingComment = true;
+        shownCategories.add(item.getAttribute('data-catID'));
+      } else {
+        comment.classList.add('hide-element');
+      }
+    });
+
+    if (accordionHasMatchingComment) {
+      item.classList.remove('hide-element');
+      shownCategories.add(item.getAttribute('data-catID'));
+    }
+
+    return [atleastOne, accordionHasMatchingComment];
+  }
+
+  hideComments(comments: any, shownCategories: any, item: any){
+
+    comments.forEach((comment: any) => {
+      comment.classList.remove('hide-element'); 
+      shownCategories.add(item.getAttribute('data-catID'));
+    });
+
   }
 }
