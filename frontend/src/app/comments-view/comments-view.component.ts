@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppState } from '../app.state';
 import { Select } from '@ngxs/store';
@@ -9,6 +9,9 @@ import { Select } from '@ngxs/store';
   styleUrls: ['./comments-view.component.sass'],
 })
 export class CommentsViewComponent{
+  @Input() commentsExpanded = false;
+  @Output() commentsExpandedChange = new EventEmitter<boolean>();
+
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
@@ -47,7 +50,12 @@ export class CommentsViewComponent{
      });
   }
 
-
+  changeCommentState() {
+    if (this.commentsExpanded)
+      this.commentsExpandedChange.emit(false);
+    else
+      this.commentsExpandedChange.emit(true);
+  }
 
   reactToNewComents(newSampleData: any) {
     if (newSampleData) {
