@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppState } from '../app.state';
 import { Select } from '@ngxs/store';
@@ -8,7 +8,7 @@ import { Select } from '@ngxs/store';
   templateUrl: './comments-view.component.html',
   styleUrls: ['./comments-view.component.sass'],
 })
-export class CommentsViewComponent implements AfterViewInit {
+export class CommentsViewComponent{
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -44,31 +44,29 @@ export class CommentsViewComponent implements AfterViewInit {
 
   constructor(private hostElement: ElementRef) {
     this.sampleData.subscribe((newSampleData) => {
-      console.log('New Sample Data:');
       this.reactToNewComents(newSampleData);
-      this.accordionItems = document.querySelectorAll('commentsAccordion');
-      console.log('accordion items initialized');
-      console.log(this.accordionItems);
+      this.initializeShowCommentArray();
+
+      this.searchTerm = '';
+      setTimeout(() => {
+        this.accordionItems = document.querySelectorAll('commentsAccordion');
+      }, 100); 
+
     });
-    this.initializeShowCommentArray();
   }
 
-  ngAfterViewInit() {}
+
 
   reactToNewComents(newSampleData: any) {
-    console.log('reacting to new comments:');
     if (newSampleData) {
-      console.log('transform comments:');
       this.comments = this.transformComments(newSampleData);
       this.groupComments(this.comments);
-      console.log('Positive Comments here:');
-      console.log(this.positiveComments);
     }
   }
 
   initializeShowCommentArray() {
     if (this.comments) {
-      this.showComment = Array(this.comments.length).fill(false);
+      this.showComment = Array(this.toxicComments.length).fill(false);
     } else {
       this.showComment = [];
     }
@@ -90,7 +88,7 @@ export class CommentsViewComponent implements AfterViewInit {
         Object.keys(metric.emotions).reduce((a, b) =>
           metric.emotions[a] > metric.emotions[b] ? a : b
         ),
-        metric.toxicity.level_of_toxic,
+        metric.toxicity.level_of_toxic.toLowerCase(),
       ],
       ratingColour: [],
     }));
@@ -105,53 +103,49 @@ export class CommentsViewComponent implements AfterViewInit {
   }
 
   groupComments(comments: any[]) {
-    console.log('grouping comments:');
-    console.log(comments);
-    // Sort the comments by overall scores in descending order
-    comments.sort((a, b) => {
-      const scoreA = parseFloat(a.ratings[0].replace('%', ''));
-      const scoreB = parseFloat(b.ratings[0].replace('%', ''));
-      return scoreB - scoreA;
-    });
 
-    // Calculate the number of comments in the top and bottom 10%
-    const totalComments = comments.length;
-    const top10PercentCount = Math.ceil(totalComments * 0.1);
-    const bottom10PercentCount = Math.ceil(totalComments * 0.1);
 
-    // Extract the top and bottom 10% of comments
-    this.top10Comments = comments.slice(0, top10PercentCount);
-    this.bottom10Comments = comments.slice(-bottom10PercentCount);
+  const nonToxicComments = comments.filter(comment => comment.ratings[3] !== 'toxic');
+  this.toxicComments = comments.filter(comment => comment.ratings[3] === 'toxic');
 
-    // Initialize other comment arrays (positive, negative, neutral, undecided, and toxic)
-    this.positiveComments = [];
-    this.negativeComments = [];
-    this.neutralComments = [];
-    this.undecidedComments = [];
-    this.toxicComments = [];
+  this.positiveComments = [];
+  this.negativeComments = [];
+  this.neutralComments = [];
+  this.undecidedComments = [];
 
-    // Loop through comments and categorize them based on ratings
-    comments.forEach((comment) => {
-      console.log('comment:');
-      console.log(comment);
-      if (comment.ratings[1].includes('positive')) {
-        this.positiveComments.push(comment);
-      } else if (comment.ratings[1].includes('negative')) {
-        this.negativeComments.push(comment);
-      } else if (comment.ratings[1].includes('neutral')) {
-        this.neutralComments.push(comment);
-      } else {
-        this.undecidedComments.push(comment);
-      }
+  // Categorize the non-toxic comments
+  nonToxicComments.forEach((comment) => {
+    console.log('comment:');
+    console.log(comment);
 
-      if (comment.ratings[3] === 'toxic') {
-        this.toxicComments.push(comment);
-      }
-    });
+    if (comment.ratings[1].includes('positive')) {
+      this.positiveComments.push(comment);
+    } else if (comment.ratings[1].includes('negative')) {
+      this.negativeComments.push(comment);
+    } else if (comment.ratings[1].includes('neutral')) {
+      this.neutralComments.push(comment);
+    } else {
+      this.undecidedComments.push(comment);
+    }
+  });
 
-    console.log('Positive Comments here:');
-    console.log(this.positiveComments);
-  }
+  // Sort the non-toxic comments by overall scores in descending order
+  nonToxicComments.sort((a, b) => {
+    const scoreA = parseFloat(a.ratings[0].replace('%', ''));
+    const scoreB = parseFloat(b.ratings[0].replace('%', ''));
+    return scoreB - scoreA;
+  });
+
+  // Calculate the number of non-toxic comments in the top and bottom 10%
+  const totalNonToxicComments = nonToxicComments.length;
+  const top10PercentCount = Math.ceil(totalNonToxicComments * 0.1);
+  const bottom10PercentCount = Math.ceil(totalNonToxicComments * 0.1);
+
+  // Extract the top and bottom 10% of non-toxic comments
+  this.top10Comments = nonToxicComments.slice(0, top10PercentCount);
+  this.bottom10Comments = nonToxicComments.slice(-bottom10PercentCount).reverse();
+
+}
 
   getRatingClass(index: number, score: string): string {
     let colorClass = 'neutral-color';
@@ -246,7 +240,6 @@ export class CommentsViewComponent implements AfterViewInit {
     return colorClass;
   }
 
-  //Toxic, Non-toxic
   getToxicityColor(toxicity: string): string {
     let colorClass = '';
     toxicity = toxicity.toLowerCase();
@@ -265,6 +258,9 @@ export class CommentsViewComponent implements AfterViewInit {
   }
 
   filterAccordionByText() {
+
+    console.log('filtering accordion by text:' + this.searchTerm)
+
     const textToFilter = this.searchTerm;
     const shownCategories = new Set();
 
@@ -276,9 +272,11 @@ export class CommentsViewComponent implements AfterViewInit {
       }
 
     if (!this.accordionItems) return;
+    console.log('accordion items:')
+    console.log(this.accordionItems)
 
-    // If the search term is empty, show all comments and accordions
     if (!textToFilter) {
+      console.log('no text to filter')
       this.showInitialCommentsPositive = 10;
       this.showInitialCommentsNegative = 10;
       this.showInitialCommentsNeutral = 10;
@@ -288,24 +286,22 @@ export class CommentsViewComponent implements AfterViewInit {
       this.showInitialCommentsBottom10 = 10;
 
       this.accordionItems.forEach((item: any) => {
-        item.classList.remove('hide-element'); // Show the accordion
-        const comments = item.querySelectorAll('.comment'); // Select all comments within the accordion
+        item.classList.remove('hide-element'); 
+        const comments = item.querySelectorAll('.comment'); 
 
         comments.forEach((comment: any) => {
-          comment.classList.remove('hide-element'); // Show the individual comment
+          comment.classList.remove('hide-element'); 
           shownCategories.add(item.getAttribute('data-catID'));
         });
       });
 
-      // Show all categories
       document.querySelectorAll('.heading').forEach((categoryElement: any) => {
         categoryElement.classList.remove('hide-element');
       });
 
-      
-
       return;
     }
+
 
     this.showInitialCommentsPositive = this.positiveComments.length;
     this.showInitialCommentsNegative = this.negativeComments.length;
@@ -315,7 +311,6 @@ export class CommentsViewComponent implements AfterViewInit {
     this.showInitialCommentsTop10 = this.top10Comments.length;
     this.showInitialCommentsBottom10 = this.bottom10Comments.length;
 
-    // Hide all accordions and categories initially
     this.accordionItems.forEach((item: any) => {
       item.classList.add('hide-element');
     });
@@ -325,18 +320,19 @@ export class CommentsViewComponent implements AfterViewInit {
     });
 
     this.accordionItems.forEach((item: any) => {
-      const comments = item.querySelectorAll('.comment'); // Select all comments within the accordion
+      const comments = item.querySelectorAll('.comment'); 
       let accordionHasMatchingComment = false;
 
       comments.forEach((comment: any) => {
         const commentText = comment.innerText.toLowerCase();
         if (commentText.includes(textToFilter.toLowerCase())) {
+          console.log('comment text includes text to filter:' + commentText + ' ' + textToFilter)
           atleastOne = true;
-          comment.classList.remove('hide-element'); // Show the individual comment
-          accordionHasMatchingComment = true; // Mark that the accordion has a matching comment
+          comment.classList.remove('hide-element');
+          accordionHasMatchingComment = true;
           shownCategories.add(item.getAttribute('data-catID'));
         } else {
-          comment.classList.add('hide-element'); // Hide the individual comment
+          comment.classList.add('hide-element');
         }
       });
 

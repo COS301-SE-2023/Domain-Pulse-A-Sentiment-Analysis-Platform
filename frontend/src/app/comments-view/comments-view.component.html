@@ -15,7 +15,7 @@
       alt="Positive Icon"
       style="padding-right: 0.8rem"
     />
-    <h3 style="margin: 0; margin-right: 1.5rem; text-wrap: nowrap">Reviews</h3>
+    <h3 style="margin: 0; margin-right: 1.5rem; text-wrap: nowrap; margin-top: auto; margin-bottom: auto; font-size: 1.4rem;">Reviews</h3>
     <div class="search-container flex-row center">
       <input
         class="search-bar"
@@ -34,7 +34,11 @@
   </div>
 
   <div class="flex-column" style="gap: 1rem">
-    <div class="flex-row center" id="noResults" style="display: none; opacity: 0.6; margin-top: 1.3rem">
+    <div
+      class="flex-row center"
+      id="noResults"
+      style="display: none; opacity: 0.6; margin-top: 1.3rem"
+    >
       <h3>😕 No Search Results</h3>
     </div>
     <commentsAccordion data-catID="0" [collapsing]="true">
@@ -63,11 +67,10 @@
                 let i = index
               "
             >
-            <div [attr.data-comment-id]="comment.id">
-              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
+              <div [attr.data-comment-id]="comment.id">
                 <div class="comment">
                   <p class="comment-text">{{ comment.comment }}</p>
-                  
+
                   <div class="flex-row" style="padding-top: 10px">
                     <div class="tag-container">
                       <div class="tag" [class]="comment.ratingCssClass[0]">
@@ -86,70 +89,7 @@
                   </div>
                   <hr />
                 </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="hideComment"
-                  >
-                    Hide Comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
-                <div class="blur-text">
-                  <p>{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="toxicComment"
-                  >
-                    Click to view toxic comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            </div>
+              </div>
             </div>
             <ng-container
               *ngIf="positiveComments.length == 0; else loadMoreBlock"
@@ -164,13 +104,16 @@
                 class="flex-row center"
                 *ngIf="showInitialCommentsPositive < positiveComments.length"
               >
-              <a
-              href="javascript:void(0);"
-              class="button clickable-item flex-row center"
-              (click)="showInitialCommentsPositive = showInitialCommentsPositive + showAdditionalComments;"
-            >
-              Load More
-            </a>
+                <a
+                  href="javascript:void(0);"
+                  class="button clickable-item flex-row center"
+                  (click)="
+                    showInitialCommentsPositive =
+                      showInitialCommentsPositive + showAdditionalComments
+                  "
+                >
+                  Load More
+                </a>
               </div>
             </ng-template>
           </div>
@@ -203,93 +146,31 @@
                 let i = index
               "
             >
-            <div [attr.data-comment-id]="comment.id">
-              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="hideComment"
-                  >
-                    Hide Comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
+              <div [attr.data-comment-id]="comment.id">
+                  <div class="comment">
+                    <p class="comment-text">{{ comment.comment }}</p>
+
+                    <div class="flex-row" style="padding-top: 10px">
+                      <div class="tag-container">
+                        <div class="tag" [class]="comment.ratingCssClass[0]">
+                          {{ comment.ratings[0] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[1]">
+                          {{ comment.ratings[1] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[2]">
+                          {{ comment.ratings[2] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[3]">
+                          {{ comment.ratings[3] }}
+                        </div>
                       </div>
                     </div>
+                    <hr />
                   </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
-                <div class="blur-text">
-                  <p>{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="toxicComment"
-                  >
-                    Click to view toxic comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            </div>
+
+                
+              </div>
             </div>
             <ng-container
               *ngIf="negativeComments.length == 0; else loadMoreBlock"
@@ -304,13 +185,16 @@
                 class="flex-row center"
                 *ngIf="showInitialCommentsNegative < negativeComments.length"
               >
-              <a
-              href="javascript:void(0);"
-              class="button clickable-item flex-row center"
-              (click)="showInitialCommentsNegative= showInitialCommentsNegative+ showAdditionalComments;"
-            >
-              Load More
-            </a>
+                <a
+                  href="javascript:void(0);"
+                  class="button clickable-item flex-row center"
+                  (click)="
+                    showInitialCommentsNegative =
+                      showInitialCommentsNegative + showAdditionalComments
+                  "
+                >
+                  Load More
+                </a>
               </div>
             </ng-template>
           </div>
@@ -343,93 +227,32 @@
                 let i = index
               "
             >
-            <div [attr.data-comment-id]="comment.id">
-              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="hideComment"
-                  >
-                    Hide Comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
+              <div [attr.data-comment-id]="comment.id">
+                  <div class="comment">
+                    <p class="comment-text">{{ comment.comment }}</p>
+
+                    <div class="flex-row" style="padding-top: 10px">
+                      <div class="tag-container">
+                        <div class="tag" [class]="comment.ratingCssClass[0]">
+                          {{ comment.ratings[0] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[1]">
+                          {{ comment.ratings[1] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[2]">
+                          {{ comment.ratings[2] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[3]">
+                          {{ comment.ratings[3] }}
+                        </div>
                       </div>
                     </div>
+                    <hr />
                   </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
-                <div class="blur-text">
-                  <p>{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="toxicComment"
-                  >
-                    Click to view toxic comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            </div>
+                
+
+                
+              </div>
             </div>
             <ng-container
               *ngIf="neutralComments.length == 0; else loadMoreBlock"
@@ -444,13 +267,16 @@
                 class="flex-row center"
                 *ngIf="showInitialCommentsNeutral < neutralComments.length"
               >
-              <a
-              href="javascript:void(0);"
-              class="button clickable-item flex-row center"
-              (click)="showInitialCommentsNeutral = showInitialCommentsNeutral + showAdditionalComments;"
-            >
-              Load More
-            </a>
+                <a
+                  href="javascript:void(0);"
+                  class="button clickable-item flex-row center"
+                  (click)="
+                    showInitialCommentsNeutral =
+                      showInitialCommentsNeutral + showAdditionalComments
+                  "
+                >
+                  Load More
+                </a>
               </div>
             </ng-template>
           </div>
@@ -486,93 +312,32 @@
                 let i = index
               "
             >
-            <div [attr.data-comment-id]="comment.id">
-              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="hideComment"
-                  >
-                    Hide Comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
+              <div [attr.data-comment-id]="comment.id">
+                  <div class="comment">
+                    <p class="comment-text">{{ comment.comment }}</p>
+
+                    <div class="flex-row" style="padding-top: 10px">
+                      <div class="tag-container">
+                        <div class="tag" [class]="comment.ratingCssClass[0]">
+                          {{ comment.ratings[0] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[1]">
+                          {{ comment.ratings[1] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[2]">
+                          {{ comment.ratings[2] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[3]">
+                          {{ comment.ratings[3] }}
+                        </div>
                       </div>
                     </div>
+                    <hr />
                   </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
-                <div class="blur-text">
-                  <p>{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="toxicComment"
-                  >
-                    Click to view toxic comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            </div>
+                
+
+                
+              </div>
             </div>
             <ng-container
               *ngIf="undecidedComments.length == 0; else loadMoreBlock"
@@ -587,13 +352,16 @@
                 class="flex-row center"
                 *ngIf="showInitialCommentsUndecided < undecidedComments.length"
               >
-              <a
-              href="javascript:void(0);"
-              class="button clickable-item flex-row center"
-              (click)="showInitialCommentsUndecided = showInitialCommentsUndecided + showAdditionalComments;"
-            >
-              Load More
-            </a>
+                <a
+                  href="javascript:void(0);"
+                  class="button clickable-item flex-row center"
+                  (click)="
+                    showInitialCommentsUndecided =
+                      showInitialCommentsUndecided + showAdditionalComments
+                  "
+                >
+                  Load More
+                </a>
               </div>
             </ng-template>
           </div>
@@ -619,104 +387,66 @@
             <div
               class="flex-column"
               *ngFor="
-                let comment of toxicComments.slice(
-                  0,
-                  showInitialCommentsToxic
-                );
+                let comment of toxicComments.slice(0, showInitialCommentsToxic);
                 let i = index
               "
             >
-            <div [attr.data-comment-id]="comment.id">
-              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
+              <div [attr.data-comment-id]="comment.id">
+                <ng-container
+                  *ngIf="comment.ratings[3] == 'toxic' && showComment[i]"
+                >
+                  <div class="comment">
+                    <p class="comment-text">{{ comment.comment }}</p>
+                    <p
+                      (click)="toggleShowComment(i)"
+                      class="warning-text comment-text"
+                      data-cy="hideComment"
+                    >
+                      Hide Comment
+                    </p>
+
+                    
+                  </div>
+                </ng-container>
+
+                <ng-container
+                  *ngIf="comment.ratings[3] == 'toxic' && !showComment[i]"
+                >
+                  <div class="comment blur-text">
+                    <p  class="comment-text">{{ comment.comment }}</p>
+                  </div>
+                    <p
+                      (click)="toggleShowComment(i)"
+                      class="warning-text comment-text"
+                      data-cy="toxicComment"
+                    >
                   
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
+                      Click to view toxic comment
+                    </p>
+
+                    
+                  
+                </ng-container>
+                <div class="flex-row" style="padding-top: 10px">
+                  <div class="tag-container">
+                    <div class="tag" [class]="comment.ratingCssClass[0]">
+                      {{ comment.ratings[0] }}
+                    </div>
+                    <div class="tag" [class]="comment.ratingCssClass[1]">
+                      {{ comment.ratings[1] }}
+                    </div>
+                    <div class="tag" [class]="comment.ratingCssClass[2]">
+                      {{ comment.ratings[2] }}
+                    </div>
+                    <div class="tag" [class]="comment.ratingCssClass[3]">
+                      {{ comment.ratings[3] }}
                     </div>
                   </div>
-                  <hr />
                 </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="hideComment"
-                  >
-                    Hide Comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
-                <div class="blur-text">
-                  <p>{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="toxicComment"
-                  >
-                    Click to view toxic comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
+                <hr />
+              </div>
             </div>
-            </div>
-            <ng-container
-              *ngIf="toxicComments.length == 0; else loadMoreBlock"
-            >
+            <ng-container *ngIf="toxicComments.length == 0; else loadMoreBlock">
               <div>
                 <p>👀 no reviews to see here</p>
               </div>
@@ -727,13 +457,16 @@
                 class="flex-row center"
                 *ngIf="showInitialCommentsToxic < toxicComments.length"
               >
-              <a
-              href="javascript:void(0);"
-              class="button clickable-item flex-row center"
-              (click)="showInitialCommentsToxic = showInitialCommentsToxic + showAdditionalComments;"
-            >
-              Load More
-            </a>
+                <a
+                  href="javascript:void(0);"
+                  class="button clickable-item flex-row center"
+                  (click)="
+                    showInitialCommentsToxic =
+                      showInitialCommentsToxic + showAdditionalComments
+                  "
+                >
+                  Load More
+                </a>
               </div>
             </ng-template>
           </div>
@@ -759,104 +492,38 @@
             <div
               class="flex-column"
               *ngFor="
-                let comment of top10Comments.slice(
-                  0,
-                  showInitialCommentsTop10
-                );
+                let comment of top10Comments.slice(0, showInitialCommentsTop10);
                 let i = index
               "
             >
-            <div [attr.data-comment-id]="comment.id">
-              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="hideComment"
-                  >
-                    Hide Comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
+              <div [attr.data-comment-id]="comment.id">
+                  <div class="comment">
+                    <p class="comment-text">{{ comment.comment }}</p>
+
+                    <div class="flex-row" style="padding-top: 10px">
+                      <div class="tag-container">
+                        <div class="tag" [class]="comment.ratingCssClass[0]">
+                          {{ comment.ratings[0] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[1]">
+                          {{ comment.ratings[1] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[2]">
+                          {{ comment.ratings[2] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[3]">
+                          {{ comment.ratings[3] }}
+                        </div>
                       </div>
                     </div>
+                    <hr />
                   </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
-                <div class="blur-text">
-                  <p>{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="toxicComment"
-                  >
-                    Click to view toxic comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
+                
+
+                
+              </div>
             </div>
-            </div>
-            <ng-container
-              *ngIf="top10Comments.length == 0; else loadMoreBlock"
-            >
+            <ng-container *ngIf="top10Comments.length == 0; else loadMoreBlock">
               <div>
                 <p>👀 no reviews to see here</p>
               </div>
@@ -867,13 +534,16 @@
                 class="flex-row center"
                 *ngIf="showInitialCommentsTop10 < top10Comments.length"
               >
-              <a
-              href="javascript:void(0);"
-              class="button clickable-item flex-row center"
-              (click)="showInitialCommentsTop10 = showInitialCommentsTop10 + showAdditionalComments;"
-            >
-              Load More
-            </a>
+                <a
+                  href="javascript:void(0);"
+                  class="button clickable-item flex-row center"
+                  (click)="
+                    showInitialCommentsTop10 =
+                      showInitialCommentsTop10 + showAdditionalComments
+                  "
+                >
+                  Load More
+                </a>
               </div>
             </ng-template>
           </div>
@@ -906,93 +576,32 @@
                 let i = index
               "
             >
-            <div [attr.data-comment-id]="comment.id">
-              <ng-container *ngIf="comment.ratings[3] == 'Non-toxic'">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && showComment[i]">
-                <div class="comment">
-                  <p class="comment-text">{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="hideComment"
-                  >
-                    Hide Comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
+              <div [attr.data-comment-id]="comment.id">
+                  <div class="comment">
+                    <p class="comment-text">{{ comment.comment }}</p>
+
+                    <div class="flex-row" style="padding-top: 10px">
+                      <div class="tag-container">
+                        <div class="tag" [class]="comment.ratingCssClass[0]">
+                          {{ comment.ratings[0] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[1]">
+                          {{ comment.ratings[1] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[2]">
+                          {{ comment.ratings[2] }}
+                        </div>
+                        <div class="tag" [class]="comment.ratingCssClass[3]">
+                          {{ comment.ratings[3] }}
+                        </div>
                       </div>
                     </div>
+                    <hr />
                   </div>
-                  <hr />
-                </div>
-              </ng-container>
-            
-              <ng-container *ngIf="comment.ratings[3] == 'Toxic' && !showComment[i]">
-                <div class="blur-text">
-                  <p>{{ comment.comment }}</p>
-                  <p
-                    (click)="toggleShowComment(i)"
-                    class="warning-text comment-text"
-                    data-cy="toxicComment"
-                  >
-                    Click to view toxic comment
-                  </p>
-                  
-                  <div class="flex-row" style="padding-top: 10px">
-                    <div class="tag-container">
-                      <div class="tag" [class]="comment.ratingCssClass[0]">
-                        {{ comment.ratings[0] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[1]">
-                        {{ comment.ratings[1] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[2]">
-                        {{ comment.ratings[2] }}
-                      </div>
-                      <div class="tag" [class]="comment.ratingCssClass[3]">
-                        {{ comment.ratings[3] }}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                </div>
-              </ng-container>
-            </div>
+                
+
+                
+              </div>
             </div>
             <ng-container
               *ngIf="bottom10Comments.length == 0; else loadMoreBlock"
@@ -1007,13 +616,16 @@
                 class="flex-row center"
                 *ngIf="showInitialCommentsBottom10 < bottom10Comments.length"
               >
-              <a
-              href="javascript:void(0);"
-              class="button clickable-item flex-row center"
-              (click)="showInitialCommentsBottom10 = showInitialCommentsBottom10 + showAdditionalComments;"
-            >
-              Load More
-            </a>
+                <a
+                  href="javascript:void(0);"
+                  class="button clickable-item flex-row center"
+                  (click)="
+                    showInitialCommentsBottom10 =
+                      showInitialCommentsBottom10 + showAdditionalComments
+                  "
+                >
+                  Load More
+                </a>
               </div>
             </ng-template>
           </div>
