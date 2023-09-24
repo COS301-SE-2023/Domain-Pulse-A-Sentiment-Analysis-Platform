@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+
+\title{Testing Policy}
+\author{Ctrl Alt Defeat}
+
+\begin{document}
+\include{cover}
+\tableofcontents
+\newpage
+
+\newpage
+\section{Quality Requirements Testing}
+\subsection{Usability}
+\subsection{Security}
+\subsection{Performance}
+\subsection{Scalability}
+\subsection{Modifiability}
+
+\newpage
+\section{Code Coverage}
+Any commit made to a branch causes automated tests to be run on the codebase of that branch, thereafter the code coverage of said branch is calculated.
+Any branch being merged via pull request into the development branch (dev) needs to have the coverage of changes to the codebase to match or better the coverage of the development branch.
+Furthermore, the coverage of the newly commited code (ie: patch) must match or exceed the coverage percentage of the project.
+This ensures that the coverage of the codebase is never decreasing, and that sufficient testing is being done on the codebase.
+Furthermore any time the development branch is merged into the master branch, the coverage of the development branch must match or be higher than that of the master branch, ensuring an increasing coverage and sufficient testing.
+
+\newpage
+
+\end{document}
