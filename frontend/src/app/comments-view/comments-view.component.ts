@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppState } from '../app.state';
 import { Select } from '@ngxs/store';
@@ -8,21 +8,22 @@ import { Select } from '@ngxs/store';
   templateUrl: './comments-view.component.html',
   styleUrls: ['./comments-view.component.sass'],
 })
-export class CommentsViewComponent implements AfterViewInit{
+export class CommentsViewComponent implements AfterViewInit {
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   comments?: any[];
   showComment: boolean[] = [];
 
   showInitialCommentsPositive = 10;
-  showInitialCommentsNegative= 10;
+  showInitialCommentsNegative = 10;
   showInitialCommentsNeutral = 10;
   showInitialCommentsUndecided = 10;
   showInitialCommentsToxic = 10;
-  showInitialComments=10;
-
-
+  showInitialCommentsTop10 = 10;
+  showInitialCommentsBottom10 = 10;
+  showInitialComments = 10;
 
   showAdditionalComments = 10;
 
@@ -32,38 +33,35 @@ export class CommentsViewComponent implements AfterViewInit{
 
   undecidedComments: any[] = [];
 
-  top10: any[] = [];
-  bottom10: any[] = [];
+  top10Comments: any[] = [];
+  bottom10Comments: any[] = [];
 
   toxicComments: any[] = [];
 
-  searchTerm = "";
+  searchTerm = '';
 
   accordionItems: NodeListOf<Element> | undefined;
 
-
-
-  constructor() {
+  constructor(private hostElement: ElementRef) {
     this.sampleData.subscribe((newSampleData) => {
-      console.log("New Sample Data:")
+      console.log('New Sample Data:');
       this.reactToNewComents(newSampleData);
+      this.accordionItems = document.querySelectorAll('commentsAccordion');
+      console.log('accordion items initialized');
+      console.log(this.accordionItems);
     });
     this.initializeShowCommentArray();
   }
 
-  ngAfterViewInit() {
-    this.accordionItems = document.querySelectorAll('[commentsAccordion]');
-    console.log("accordion items initialized")
-    console.log(this.accordionItems)
-  }
+  ngAfterViewInit() {}
 
   reactToNewComents(newSampleData: any) {
-    console.log("reacting to new comments:")
+    console.log('reacting to new comments:');
     if (newSampleData) {
-      console.log("transform comments:")
+      console.log('transform comments:');
       this.comments = this.transformComments(newSampleData);
       this.groupComments(this.comments);
-      console.log("Positive Comments here:")
+      console.log('Positive Comments here:');
       console.log(this.positiveComments);
     }
   }
@@ -83,7 +81,8 @@ export class CommentsViewComponent implements AfterViewInit{
   transformComments(jsonData: any): any[] {
     const individualMetrics = jsonData;
 
-    const temp = individualMetrics.map((metric: any) => ({
+    const temp = individualMetrics.map((metric: any, index: number) => ({
+      id: `comment-${index + 1}`,
       comment: metric.data,
       ratings: [
         `${Math.floor(metric.general.score * 100)}%`,
@@ -106,34 +105,34 @@ export class CommentsViewComponent implements AfterViewInit{
   }
 
   groupComments(comments: any[]) {
-    console.log("grouping comments:")
-    console.log(comments)
+    console.log('grouping comments:');
+    console.log(comments);
     // Sort the comments by overall scores in descending order
     comments.sort((a, b) => {
       const scoreA = parseFloat(a.ratings[0].replace('%', ''));
       const scoreB = parseFloat(b.ratings[0].replace('%', ''));
       return scoreB - scoreA;
     });
-  
+
     // Calculate the number of comments in the top and bottom 10%
     const totalComments = comments.length;
     const top10PercentCount = Math.ceil(totalComments * 0.1);
     const bottom10PercentCount = Math.ceil(totalComments * 0.1);
-  
+
     // Extract the top and bottom 10% of comments
-    this.top10 = comments.slice(0, top10PercentCount);
-    this.bottom10 = comments.slice(-bottom10PercentCount);
-  
+    this.top10Comments = comments.slice(0, top10PercentCount);
+    this.bottom10Comments = comments.slice(-bottom10PercentCount);
+
     // Initialize other comment arrays (positive, negative, neutral, undecided, and toxic)
     this.positiveComments = [];
     this.negativeComments = [];
     this.neutralComments = [];
     this.undecidedComments = [];
     this.toxicComments = [];
-  
+
     // Loop through comments and categorize them based on ratings
     comments.forEach((comment) => {
-      console.log("comment:");
+      console.log('comment:');
       console.log(comment);
       if (comment.ratings[1].includes('positive')) {
         this.positiveComments.push(comment);
@@ -144,13 +143,13 @@ export class CommentsViewComponent implements AfterViewInit{
       } else {
         this.undecidedComments.push(comment);
       }
-    
+
       if (comment.ratings[3] === 'toxic') {
         this.toxicComments.push(comment);
       }
     });
 
-    console.log("Positive Comments here:")
+    console.log('Positive Comments here:');
     console.log(this.positiveComments);
   }
 
@@ -232,7 +231,7 @@ export class CommentsViewComponent implements AfterViewInit{
         break;
       case 'joy':
       case 'surprise':
-        colorClass = 'positive-color';
+        colorClass = 'very-positive-color';
         break;
       case 'sadness':
         colorClass = 'sad-color';
@@ -269,53 +268,96 @@ export class CommentsViewComponent implements AfterViewInit{
     const textToFilter = this.searchTerm;
     const shownCategories = new Set();
 
-    console.log("accordion items")
-    console.log(this.accordionItems)
-
-    if (!this.accordionItems) {
-      return;
-    }
-    if (this.searchTerm === "") {
-      this.accordionItems.forEach((item: any) => item.style.display = 'block');
-      document.querySelectorAll('.heading').forEach((item: any) => item.style.display = 'block');
-      return;
-    }
-
     let atleastOne = false;
-    this.accordionItems.forEach((item: any) => {
-      const headerTextT = item;
-      if (!headerTextT)
-        return;
-      const text = headerTextT.innerText;
-      console.log(headerTextT, text);
 
-      if (text.toLowerCase().includes(textToFilter.toLowerCase())) {
-        item.style.display = 'block';
-        atleastOne = true;
+    let noResultsIMG = document.querySelector('#noResults');
+      if (noResultsIMG) {
+        (noResultsIMG as any).style.display = 'none';
+      }
+
+    if (!this.accordionItems) return;
+
+    // If the search term is empty, show all comments and accordions
+    if (!textToFilter) {
+      this.showInitialCommentsPositive = 10;
+      this.showInitialCommentsNegative = 10;
+      this.showInitialCommentsNeutral = 10;
+      this.showInitialCommentsUndecided = 10;
+      this.showInitialCommentsToxic = 10;
+      this.showInitialCommentsTop10 = 10;
+      this.showInitialCommentsBottom10 = 10;
+
+      this.accordionItems.forEach((item: any) => {
+        item.classList.remove('hide-element'); // Show the accordion
+        const comments = item.querySelectorAll('.comment'); // Select all comments within the accordion
+
+        comments.forEach((comment: any) => {
+          comment.classList.remove('hide-element'); // Show the individual comment
+          shownCategories.add(item.getAttribute('data-catID'));
+        });
+      });
+
+      // Show all categories
+      document.querySelectorAll('.heading').forEach((categoryElement: any) => {
+        categoryElement.classList.remove('hide-element');
+      });
+
+      
+
+      return;
+    }
+
+    this.showInitialCommentsPositive = this.positiveComments.length;
+    this.showInitialCommentsNegative = this.negativeComments.length;
+    this.showInitialCommentsNeutral = this.neutralComments.length;
+    this.showInitialCommentsUndecided = this.undecidedComments.length;
+    this.showInitialCommentsToxic = this.toxicComments.length;
+    this.showInitialCommentsTop10 = this.top10Comments.length;
+    this.showInitialCommentsBottom10 = this.bottom10Comments.length;
+
+    // Hide all accordions and categories initially
+    this.accordionItems.forEach((item: any) => {
+      item.classList.add('hide-element');
+    });
+
+    document.querySelectorAll('.heading').forEach((item: any) => {
+      item.classList.add('hide-element');
+    });
+
+    this.accordionItems.forEach((item: any) => {
+      const comments = item.querySelectorAll('.comment'); // Select all comments within the accordion
+      let accordionHasMatchingComment = false;
+
+      comments.forEach((comment: any) => {
+        const commentText = comment.innerText.toLowerCase();
+        if (commentText.includes(textToFilter.toLowerCase())) {
+          atleastOne = true;
+          comment.classList.remove('hide-element'); // Show the individual comment
+          accordionHasMatchingComment = true; // Mark that the accordion has a matching comment
+          shownCategories.add(item.getAttribute('data-catID'));
+        } else {
+          comment.classList.add('hide-element'); // Hide the individual comment
+        }
+      });
+
+      // Show or hide the accordion based on whether it has matching comments
+      if (accordionHasMatchingComment) {
+        item.classList.remove('hide-element');
         shownCategories.add(item.getAttribute('data-catID'));
-      } else {
-        item.style.display = 'none';
       }
     });
 
-    const noResultsIMG = document.querySelector('#noResults');
+    // Show categories that have matching comments
+    document.querySelectorAll('.heading').forEach((categoryElement: any) => {
+      const catID = categoryElement.getAttribute('data-catID');
+      if (shownCategories.has(catID)) {
+        categoryElement.classList.remove('hide-element');
+      }
+    });
+
+    noResultsIMG = document.querySelector('#noResults');
     if (noResultsIMG) {
       (noResultsIMG as any).style.display = atleastOne ? 'none' : 'flex';
     }
-
-
-    const allCategoryElements = document.querySelectorAll('.heading');
-
-    console.log(shownCategories);
-
-    allCategoryElements.forEach((categoryElement: any) => {
-      const catID = categoryElement.getAttribute('data-catID');
-
-      if (!shownCategories.has(catID)) {
-        categoryElement.style.display = 'none';
-      } else {
-        categoryElement.style.display = 'block';
-      }
-    });
   }
 }

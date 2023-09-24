@@ -38,6 +38,23 @@
   font-family: 'Open Sans'
   font-weight: 800
   color: var(--primary)
+  transition: transform 0.4s ease 
+  will-change: transform
+
+
+.accordion__header:not(:active)
+    animation: slight-click-animation 0.4s ease 
+
+.accordion__header:hover
+    transform: scale(1.03)
+
+@keyframes slight-click-animation
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(1.03)
+    100%
+        transform: scale(1)
   
 
 .accordion__toggle-btn
