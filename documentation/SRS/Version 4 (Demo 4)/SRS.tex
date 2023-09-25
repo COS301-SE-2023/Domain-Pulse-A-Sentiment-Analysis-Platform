@@ -731,6 +731,8 @@ The following is an outline of the structure of the data to be persisted and rel
 
 \section{Technology Requirements}
 
+Below the technology requirements of the system are presented. Alll the mentioned technologies (with the exception of Azure and Outscraper) are free and open source. The justification of technology choices can be found in the Architectural Design Document.
+
 \subsection{Development Environment}
 For development, our team members shall be developing within VS Code in an Ubuntu Linux enivronment to ensure consistency within the produced code and testing of our software. Having all members using VS Code also allows for the use of software such as Live Share for collaborative development to improve efficiency within development.
 
@@ -738,7 +740,7 @@ For development, our team members shall be developing within VS Code in an Ubunt
 Git will be used for version control, using a clear and simple branching strategy that allows members to easily work on distinct components of our system while also allowing the reverting to previous versions as a 'fail-safe'. Meanwhile, GitHub will be used to host the Git repository.
 
 \subsection{Programming Languages}
-Within our team, many (if not all) members have a high proficiency in coding in Python. Python is considered one of the best programming languages for Machine Learning and data analysis, which are aspects on which our system will heavily rely. Therefore, Python is our programming language of choice.
+Within our team, all members have a high proficiency in coding in Python. Python is considered one of the best programming languages for Machine Learning and data analysis, which are aspects on which our system will heavily rely. Therefore, Python is our backend programming language of choice - along with the appropriate libraries for NLP, importing models, and other utility tasks. Frontend development will make use of standard languages: Typescript, CSS and HTML.
 
 \subsection{Frameworks and Libraries}
 We have decided to use Django as our web framework for the creation of our app due to its simplicity, efficiency, and secure data transmission capabilities. Within our Django project, we will be utilizing Python's proficiency in data analysis and machine learning by using a variety of powerful libraries for sentiment analysis and Natural Language Processing. For the front-end development, we will be using Angular due to its versatility and ability to create high-quality user interfaces.
@@ -747,10 +749,13 @@ We have decided to use Django as our web framework for the creation of our app d
 For our database systems, we will be using MongoDB as a document-based NoSQL database for data collection of comments, posts, and other content related to user data. Additionally, PostgreSQL will be used as an SQL database for storing user profiles and authentication data for ease of access and querying.
 
 \subsection{Testing and Quality Assurance Tools}
-We will perform various forms of testing to ensure the quality of our software. For front-end testing, Cypress will be used, and for unit testing, we will utilize the built-in Unittest library of Python, which is recommended for Django.
+We will perform various forms of automated testing to ensure the quality of our software. For integration and E2E testing, Cypress will be used, and for unit testing, we will utilize the built-in Unittest library of Django Python, which is recommended for Django.
 
 \subsection{Deployment and Infrastructure}
 For deployment, our clients have provided a Linux-based virtual machine where we can deploy our software. We will use one virtual machine for the testing environment and another for the production environment (accessible with different domain names) to ensure a separation of concerns. Additionally, a domain may be acquired for ease of customer access to the software.
+
+\subsection{Machine Learning and AI}
+We will make use of a variety of open source, freely available, pretrained sentiment analysis models. The BERT-style models are to be sourced from Hugging Face, while VADER is already available through the "vader" Python library.
 
 \subsection{Collaboration and Communication Tools}
 To ensure effective communication within our team, we have a private WhatsApp group for important announcements, a private Discord server for more specific announcements and discussions, and a private Signal group for sharing sensitive information such as secret keys, and a GitHub Project Board to track work progress. For communication with our clients, we have set up a Slack workspace for quick communication.
@@ -760,6 +765,12 @@ Our system is secured using technologies such as Django's authentication system,
 
 \subsection{Continuous Integration and Deployment Tools}
 We will utilize CI/CD technologies such as Codecov and GitHub Actions to ensure thorough testing and checking before deployment. GitHub Actions will automate the building, testing, and deployment processes, while Codecov will provide insights into test results and failures. We have been provided with separate production and testing environments to deploy and check the application's functionality.
+
+\subsection{Hosting and Deployment}
+Our clients, Southern Cross Solutions, have provisioned a virtual machine for us to host our application. Furthermore, we will be making use of Microsoft Azure cloud services for resource hosting and backup application hosting.
+
+\subsection{Web Scraping}
+In order to comply with the terms of service of the platforms from which Domain Pulse collects data, we will make use of Outscraper, a third party web scraping tool, to perform scraping on various review platforms such as Google Reviews and Tripadvisor. To retrieve data from Youtube, we will make use of the freely available Youtube Data v3 API, which allows us to retrieve comments on videos. 
 
 \newpage
 
