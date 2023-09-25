@@ -1136,6 +1136,11 @@ export class AppState {
             localStorage.setItem('canEdit', 'false');
 
             this.store.dispatch(new ToastSuccess('You are currenly viewing a preview'));
+          } else {
+            ctx.patchState({
+              canEdit: true
+            });
+            localStorage.setItem('canEdit', 'true');
           }
 
           this.store.dispatch(new SetUserDetails(res.id));
