@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import {
   trigger,
   state,
@@ -92,11 +92,16 @@ export class MainComponent implements OnInit {
   commentsExpanded = false;
   pdfUrl!: string;
 
-  constructor(private store: Store) {
+  modalTimeout = false;
+
+  lastOpenedModal: any[] = [];
+
+  constructor(private store: Store,  private el: ElementRef) {
     const commentsExpanded = window.localStorage.getItem('commentsExpanded');
     if (commentsExpanded) {
       this.commentsExpanded = commentsExpanded === 'true' ? true : false;
     }
+    
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
     });
@@ -176,8 +181,21 @@ export class MainComponent implements OnInit {
     if (!this.showReportModal) {
       this.generateReport();
       this.showReportModal = true;
+
+      this.lastOpenedModal.push('reportModal');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
       this.showReportModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
@@ -192,4 +210,35 @@ export class MainComponent implements OnInit {
       navigator.clipboard.writeText(textToCopy);
     }
   }
+
+
+  @HostListener('document:click', ['$event'])
+onClick(event: MouseEvent) {
+  if (!this.modalTimeout) {
+    var modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length-1]); // Use a separate method
+    if (!this.checkIfClickIn(event, modalDiv!)) {
+      this.handleModalClick();
+    }
+  }
+}
+
+checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement): boolean {
+  if(!modalDiv) return false;
+  var result =  modalDiv && modalDiv.contains(event.target as Node);
+  return result;
+}
+
+public getModalElement(search: string): HTMLElement | null {
+  return this.el.nativeElement.querySelector('#' + search );
+}
+
+public handleModalClick() {
+  switch (this.lastOpenedModal[this.lastOpenedModal.length - 1]) {
+    case 'reportModal':
+      if (this.showReportModal) {
+        this.toggleReportModal();
+      }
+      break;
+  }
+}
 }
