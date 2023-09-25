@@ -150,15 +150,30 @@ describe('MainComponent', () => {
     };
 
     component.selectedDomain = testDomain;
+    component.lastOpenedModal = [];
 
 
     component.showReportModal = false;
     component.toggleReportModal();
     expect(component.showReportModal).toBe(true);
 
+    expect(component.lastOpenedModal).toEqual(['reportModal']);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
+
     component.showReportModal = true;
     component.toggleReportModal();
     expect(component.showReportModal).toBe(false);
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
   });
 
   it('should not toggle report modal', () => {
@@ -225,5 +240,23 @@ describe('MainComponent', () => {
     expect(storeDispatchSpy).toHaveBeenCalledWith(
       new GenerateReport(component.selectedDomain!.id)
     );
+  });
+
+  it('should call handleModalClick when clicking outside the profileEditModal', () => {
+    component.modalTimeout = false;
+    component.showReportModal = true;
+    component.lastOpenedModal.push('reportModal');
+  
+    const fakeEvent = {
+      target: document.createElement('div'),
+    } as unknown as MouseEvent;
+  
+    spyOn(component, 'getModalElement').and.returnValue(null);
+    spyOn(component, 'checkIfClickIn').and.returnValue(false);
+    spyOn(component, 'handleModalClick');
+  
+    component.onClick(fakeEvent);
+  
+    expect(component.handleModalClick).toHaveBeenCalled();
   });
 });

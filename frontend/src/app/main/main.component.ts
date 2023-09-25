@@ -139,7 +139,7 @@ export class MainComponent implements OnInit {
       this.generateReport();
       this.showReportModal = true;
 
-      this.lastOpenedModal.push('report');
+      this.lastOpenedModal.push('reportModal');
       this.modalTimeout = true;
       setTimeout(() => {
         this.modalTimeout = false;
@@ -168,24 +168,34 @@ export class MainComponent implements OnInit {
     }
   }
 
+
   @HostListener('document:click', ['$event'])
-  onClick(event: MouseEvent) {
-    console.log('click');
-    if(!this.modalTimeout){
-      switch(this.lastOpenedModal[this.lastOpenedModal.length - 1]){
-        case 'report':
-          var modalDiv1 = this.el.nativeElement.querySelector('#addSourceModal');
-          if (modalDiv1 && !modalDiv1.contains(event.target)) {
-            if(this.showReportModal){
-              this.toggleReportModal();
-            }
-          }
-          break;
-      
-
-      }
-
+onClick(event: MouseEvent) {
+  if (!this.modalTimeout) {
+    var modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length-1]); // Use a separate method
+    if (!this.checkIfClickIn(event, modalDiv!)) {
+      this.handleModalClick();
     }
-    
   }
+}
+
+checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement): boolean {
+  if(!modalDiv) return false;
+  var result =  modalDiv && modalDiv.contains(event.target as Node);
+  return result;
+}
+
+public getModalElement(search: string): HTMLElement | null {
+  return this.el.nativeElement.querySelector('#' + search );
+}
+
+public handleModalClick() {
+  switch (this.lastOpenedModal[this.lastOpenedModal.length - 1]) {
+    case 'reportModal':
+      if (this.showReportModal) {
+        this.toggleReportModal();
+      }
+      break;
+  }
+}
 }

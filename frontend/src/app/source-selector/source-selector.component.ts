@@ -10,7 +10,6 @@ import { AsyncPipe, CommonModule } from '@angular/common';
   selector: 'source-selector',
   templateUrl: './source-selector.component.html',
   styleUrls: ['./source-selector.component.sass'],
-  imports: [AsyncPipe, CommonModule],
 })
 export class SourceSelectorComponent implements OnInit {
   @Select(AppState.sources) sources$!: Observable<DisplaySource[] | null>;
@@ -43,7 +42,7 @@ export class SourceSelectorComponent implements OnInit {
 
   isEditing = false;
 
-  constructor(private store: Store, private el: ElementRef) {}
+  constructor(private store: Store, public el: ElementRef) {}
 
   ngOnInit(): void {
     this.selectedSource$.subscribe(source => {
@@ -284,7 +283,7 @@ export class SourceSelectorComponent implements OnInit {
     if (!this.showAddSourcesModal) {
       this.showAddSourcesModal = true;
 
-      this.lastOpenedModal.push('addSource');
+      this.lastOpenedModal.push('addSourceModal');
       this.modalTimeout = true;
       setTimeout(() => {
         this.modalTimeout = false;
@@ -330,7 +329,7 @@ export class SourceSelectorComponent implements OnInit {
     if (!this.showConfirmDeleteSourceModal) {
       this.showConfirmDeleteSourceModal = true;
 
-      this.lastOpenedModal.push('confirmDeleteSource');
+      this.lastOpenedModal.push('confirmDeleteSourceModal');
       this.modalTimeout = true;
       setTimeout(() => {
         this.modalTimeout = false;
@@ -351,7 +350,7 @@ export class SourceSelectorComponent implements OnInit {
     if (!this.showInfoModal) {
       this.showInfoModal = true;
 
-      this.lastOpenedModal.push('info');
+      this.lastOpenedModal.push('infoModal');
       this.modalTimeout = true;
       setTimeout(() => {
         this.modalTimeout = false;
@@ -396,7 +395,7 @@ export class SourceSelectorComponent implements OnInit {
     this.isEditing = true;
   }
 
-  @HostListener('document:click', ['$event'])
+ /*  @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     console.log('click');
     if(!this.modalTimeout){
@@ -431,5 +430,46 @@ export class SourceSelectorComponent implements OnInit {
 
     }
     
+  } */
+
+@HostListener('document:click', ['$event'])
+onClick(event: MouseEvent) {
+  if (!this.modalTimeout) {
+    var modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length-1]); // Use a separate method
+    if (!this.checkIfClickIn(event, modalDiv!)) {
+      this.handleModalClick();
+    }
   }
+}
+
+checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement): boolean {
+  if(!modalDiv) return false;
+  var result =  modalDiv && modalDiv.contains(event.target as Node);
+  return result;
+}
+
+public getModalElement(search: string): HTMLElement | null {
+  return this.el.nativeElement.querySelector('#' + search );
+}
+
+public handleModalClick() {
+  switch (this.lastOpenedModal[this.lastOpenedModal.length - 1]) {
+    case 'addSourceModal':
+      if (this.showAddSourcesModal) {
+        this.toggleAddSourcesModal();
+      }
+      break;
+    case 'confirmDeleteSourceModal':
+      if (this.showConfirmDeleteSourceModal) {
+        this.toggleConfirmDeleteSourceModal();
+      }
+      break;
+    case 'infoModal':
+      if (this.showInfoModal) {
+        this.toggleInfoModal();
+      }
+      break;
+  }
+}
+
 }

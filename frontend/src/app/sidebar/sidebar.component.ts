@@ -264,7 +264,7 @@ export class SidebarComponent implements OnInit {
     if(this.domains == undefined){
       this.store.dispatch(new ToggleAddDomainModal());
 
-      this.lastOpenedModal.push('addDomain');
+      this.lastOpenedModal.push('addDomainModal');
       this.modalTimeout = true;
       setTimeout(() => {
         this.modalTimeout = false;
@@ -277,7 +277,7 @@ export class SidebarComponent implements OnInit {
     }
 
     this.store.dispatch(new ToggleAddDomainModal());
-    this.lastOpenedModal.push('addDomain');
+    this.lastOpenedModal.push('addDomainModal');
     this.modalTimeout = true;
     setTimeout(() => {
       this.modalTimeout = false;
@@ -294,7 +294,7 @@ export class SidebarComponent implements OnInit {
       this.editDomainDescription = selectedDomain.description;
       this.selectIconEdit(selectedDomain.imageUrl);
 
-      this.lastOpenedModal.push('editDomain');
+      this.lastOpenedModal.push('editDomainModal');
 
       this.modalTimeout = true;
       setTimeout(() => {
@@ -741,7 +741,7 @@ export class SidebarComponent implements OnInit {
     this.store.dispatch(new Logout());
   }
 
-  @HostListener('document:click', ['$event'])
+  /* @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     if(!this.modalTimeout){
       switch(this.lastOpenedModal[this.lastOpenedModal.length - 1]){
@@ -797,5 +797,51 @@ export class SidebarComponent implements OnInit {
 
     }
     
+  } */
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    if (!this.modalTimeout) {
+      const modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length - 1]);
+      if (!this.checkIfClickIn(event, modalDiv)) {
+        this.handleModalClick();
+      }
+    }
+  }
+  
+  checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement | null): boolean {
+    return !!modalDiv && modalDiv.contains(event.target as Node);
+  }
+  
+  public getModalElement(search: string): HTMLElement | null {
+    return this.el.nativeElement.querySelector('#' + search);
+  }
+  
+  public handleModalClick() {
+    const lastOpenedModal = this.lastOpenedModal[this.lastOpenedModal.length - 1];
+  
+    switch (lastOpenedModal) {
+      case 'addDomainModal':
+        this.toggleDomainModalOff();
+        break;
+      case 'profileModal':
+        this.toggleProfileModal();
+        break;
+      case 'editDomainModal':
+        this.toggleEditDomainModal();
+        break;
+      case 'profileEditModal':
+        this.toggleProfileEditModal();
+        break;
+      case 'changePasswordModal':
+        this.toggleChangePasswordModal();
+        break;
+      case 'deleteAccountModal':
+        this.toggleDeleteAccountModal();
+        break;
+      case 'confirmDeleteDomainModal':
+        this.toggleConfirmDeleteDomainModal();
+        break;
+    }
   }
 }
