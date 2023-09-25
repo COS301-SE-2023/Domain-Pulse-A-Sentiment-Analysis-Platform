@@ -30,10 +30,15 @@ This ensures that the coverage of the codebase is never decreasing, and that suf
 Furthermore any time the development branch is merged into the master branch, the coverage of the development branch must match or be higher than that of the master branch, ensuring an increasing coverage and sufficient testing.
 \begin{itemize}
     \item A code coverage report is included in the below image:
+    \item A link to our code cov profile can be found \href{https://codecov.io/gh/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform}{HERE.}
 \end{itemize}
 \includegraphics[width=\textwidth]{codecovReport.png}
 
 \newpage
+\section{Types of testing}
+\begin{itemize}
+    \item \textbf{Unit testing} - Unit testing 
+\end{itemize}
 \section{Choice of testing tools/frameworks}
 \subsection{Frontend Testing}
 For our frontend testing frameworks and tools we decided to use the following:
@@ -63,5 +68,14 @@ Process of Usability Testing:
 \end{itemize}
 It is understood that the environment in which the users completed the testing in were all up to the users choice which allows for skewed results in terms of the environment variable not being kept constant and things like noise pollution etc can all have effects on how one would use the app but we belive that this bias of an inconstant environment is neutralised by the adaptability of the app to be used in any environment.
 
+\subsection{Github Actions and workflows}
+Github actions were used to aid in the automatic testing and generating of code coverage reports for our application. Github actions are workflows that are activated by certain events such as a merge, push or pull to certain branches of the repository. The workflows are defined in a yaml file and are run on a virtual machine hosted by github, Github actions ensure that all tests pass before a branch is merged into main/master. The workflows that we have defined are as follows:
+\begin{itemize}
+    \item backend build
+    \item frontend build
+    \item coverage report
+    \item automatic deployment
+    \item automatic testing
+\end{itemize}
 
 \end{document}
