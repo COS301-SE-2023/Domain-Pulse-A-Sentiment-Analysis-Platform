@@ -10,6 +10,7 @@ import {
   DeleteSource,
   EditSource,
   GetSourceDashBoardInfo,
+  GuestModalChange,
   RefreshSourceData,
   SetAllSourcesSelected,
   SetIsActive,
@@ -690,6 +691,23 @@ describe('SourceSelectorComponent', () => {
     component.currHost = 'localhost:8004';
     expect(component.getLiveReviewLink()).toBe(
       `${window.location.protocol}//localhost:8004/ingest/post-review/1/test`
+    );
+  });
+
+  // test 3 functions that are prevented with the canEdit flag
+  it('should dispatch "new GuestModalChange(true)" when some functions are called', () => {
+    spyOn(component['store'], 'dispatch').and.stub();
+
+    component.canEdit = false;
+
+    component.toggleAddSourcesModal();
+    component.toggleConfirmDeleteSourceModal();
+    component.refreshSource();
+
+    // expect newGuestModalChange(true) to be dispatched 3 times
+    expect(component['store'].dispatch).toHaveBeenCalledTimes(3);
+    expect(component['store'].dispatch).toHaveBeenCalledWith(
+      new GuestModalChange(true)
     );
   });
 });
