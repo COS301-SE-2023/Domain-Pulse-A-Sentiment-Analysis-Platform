@@ -65,6 +65,12 @@ This promise of credit refund, shows a high level of confidence in the availabil
 
 \newpage
 \subsection{Security}
+Security is a very important quality requirement for any application as peoples information is at risk if the application is not secure. The security of our application is of utmost importance as we are dealing with peoples personal information and we need to ensure that this information is kept safe and secure. The security of our application with relation to the OWASP top 10 security risks is as follows:
+\begin{itemize}
+    \item \textbf{Broken access control} - We are using Djangos support for user authentication which has been thoroughly tested and is highly secure, with this being said access control is very unlikely to be broken unless one of Djangos authentication libraries had a flaw which is unlikely. Our application only have 1 level of access which means that incorrect access control is unlikely to occur.
+    \item \textbf{Cryptographic failures} - To protect our system against cryptographic failures we are using HTTPS and for all our password storage we are using state of the art hashing with salting.
+    \item \textbf{Injection} - To protect our system against injection attacks we are using prepared statements.
+\end{itemize}
 \subsection{Performance}
 \subsection{Scalability}
 \subsection{Modifiability}
@@ -85,7 +91,7 @@ Furthermore any time the development branch is merged into the master branch, th
 \newpage
 \section{Types of testing}
 \begin{itemize}
-    \item \textbf{Unit testing} - Unit testing is when the smallest parts of the application which are known as units are tested to ensure that the correct operation occurs. An example of Unit tests and integration tests can be found in any file ending in "spec.ts" for frontend and an example is given \href {https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/dev/frontend/src/app/main/main.component.spec.ts}{HERE.}
+    \item \textbf{Unit testing} - Unit testing is when the smallest parts of the application which are known as units are tested to ensure that the correct operation occurs. An example of Unit tests and integration tests can be found in any file ending in "spec.ts" for frontend and an example is given \href {https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/dev/frontend/src/app/main/main.component.spec.ts}{HERE} and a backend example can be found \href {https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/backend/engine/analyser/tests.py}{HERE.}
     \item \textbf{Integration Testing} - Integration testing is when separate components are tested together to ensure the correct operation of these components occur. Integration tests can be mocked or unmocked, mocked tests are when the data used in the tests are not pulled in from an external API or database but rather mocked data is used to simulate the data that would be pulled in from an external API or database. Unmocked tests are when the data used in the tests are pulled in from an external API or database.
     \item \textbf{E2E Testing} - End to end testing is when the application is tested as a whole to ensure that the application is working as expected from the user interface level all the way through the application to the database level and checks all the integration between these componets work as expected. Examples of E2E tests can be found in any file ending in a ".cy.ts" for frontend and an example is given \href {https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/frontend/cypress/e2e/accountsManage.cy.ts}{HERE.}
 \end{itemize}
