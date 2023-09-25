@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
-import { GenerateReport, GetDomains, ToastError, ToastSuccess } from '../app.actions';
+import { GenerateReport, GetDomains, GuestModalChange, ToastError, ToastSuccess } from '../app.actions';
 import { DisplayDomain, DisplaySource } from '../app.state';
 
 describe('MainComponent', () => {
@@ -216,19 +216,23 @@ describe('MainComponent', () => {
     );
   });
 
+  it('should toggle showGuestModal from true to false', () => {
+    spyOn(component['store'], 'dispatch').and.stub();
+
+    component.showGuestModal = true;
+    
+    component.toggleGuestModal();
+
+    expect(storeSpy.dispatch).toHaveBeenCalledWith(new GuestModalChange(false));
+  });
+
   it('should toggle showGuestModal from false to true', () => {
+    spyOn(component['store'], 'dispatch').and.stub();
+
     component.showGuestModal = false;
 
     component.toggleGuestModal();
 
-    expect(component.showGuestModal).toBe(true);
-  });
-
-  it('should toggle showGuestModal from true to false', () => {
-    component.showGuestModal = true;
-
-    component.toggleGuestModal();
-
-    expect(component.showGuestModal).toBe(false);
+    expect(storeSpy.dispatch).toHaveBeenCalledWith(new GuestModalChange(true));
   });
 });

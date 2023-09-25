@@ -13,7 +13,12 @@ import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, filter, switchMap, take } from 'rxjs/operators';
-import { GenerateReport, GuestModalChange, ToastError, ToastSuccess } from '../app.actions';
+import {
+  GenerateReport,
+  GuestModalChange,
+  ToastError,
+  ToastSuccess,
+} from '../app.actions';
 /* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
  */ @Component({
   selector: 'app-main',
@@ -61,11 +66,15 @@ export class MainComponent implements OnInit {
   showReportModal = false;
   pdfUrl!: string;
 
-  @Select(AppState.showMakeAccountModal) showMakeAccountModal$!: Observable<boolean>;
+  @Select(AppState.showMakeAccountModal)
+  showMakeAccountModal$!: Observable<boolean>;
   showGuestModal = true;
-  canEdit!: boolean;
+  canEdit: boolean = true;
 
   constructor(private store: Store) {
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      if (canEdit !== undefined) this.canEdit = canEdit;
+    });
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
     });
@@ -77,10 +86,6 @@ export class MainComponent implements OnInit {
     });
   }
 
-  setCanEditState() {
-    this.canEdit = this.store.selectSnapshot<boolean>((state) => state.app.canEdit);
-  }
-  
   ngOnInit(): void {
     this.selectedDomain$.subscribe((domain) => {
       this.processSelectedDomain(domain!);
@@ -91,7 +96,6 @@ export class MainComponent implements OnInit {
     });
 
     this.setupClickEventListener();
-
   }
 
   setupClickEventListener(): void {
@@ -104,7 +108,7 @@ export class MainComponent implements OnInit {
   }
 
   processpdfUrl(res: string) {
-    if(!res || res=='') return;
+    if (!res || res == '') return;
     const pdfIndex: number = res.lastIndexOf('.pdf');
 
     if (pdfIndex !== -1) {
@@ -133,13 +137,12 @@ export class MainComponent implements OnInit {
   }
 
   toggleReportModal() {
-    this.setCanEditState();
-    if(!this.canEdit){
+    if (!this.canEdit) {
       this.store.dispatch(new GuestModalChange(true));
-      return
+      return;
     }
 
-    if(this.selectedDomain?.sources.length === 0) {
+    if (this.selectedDomain?.sources.length === 0) {
       this.store.dispatch(
         new ToastError(
           'You have no sources to generate a report from. Please add a source.'
@@ -168,10 +171,9 @@ export class MainComponent implements OnInit {
   }
 
   toggleGuestModal() {
-    if(this.showGuestModal){
+    if (this.showGuestModal) {
       this.store.dispatch(new GuestModalChange(false));
-    }
-    else{
+    } else {
       this.store.dispatch(new GuestModalChange(true));
     }
   }

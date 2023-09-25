@@ -168,7 +168,7 @@ export class SidebarComponent implements OnInit {
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
   domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
 
-  public canEdit!: boolean;
+  public canEdit: boolean = true;
 
   public selectedFile: File | null = null;
   public selectedFileDomain: File | null = null;
@@ -178,14 +178,14 @@ export class SidebarComponent implements OnInit {
     private store: Store,
     public blobStorageService: AzureBlobStorageService
   ) {
-    this.setCanEditState();
+    this.setCanEditStateSub();
     this.domains$.subscribe((domains) => {
       this.domains = domains!;
     });
   }
 
-  setCanEditState() {
-    this.canEdit = this.store.selectSnapshot<boolean>((state) => state.app.canEdit);
+  setCanEditStateSub() {
+    this.store.selectSnapshot((state) => {this.canEdit = state.app.canEdit});
   }
 
   ngOnInit() {
@@ -253,7 +253,7 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleDomainModalOn(): void {
-    this.setCanEditState();
+    // this.setCanEditState();
     if(!this.canEdit){
       this.store.dispatch(new GuestModalChange(true));
       return
@@ -271,7 +271,6 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleEditDomainModal(): void {
-    this.setCanEditState();
     if(!this.canEdit){
       this.store.dispatch(new GuestModalChange(true));
       return
@@ -291,7 +290,6 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleProfileModal(): void {
-    this.setCanEditState();
     if(!this.canEdit){
       this.store.dispatch(new GuestModalChange(true));
       return
@@ -312,10 +310,7 @@ export class SidebarComponent implements OnInit {
 
   }
 
-
-
   toggleConfirmDeleteDomainModal(id?: string): void {
-    this.setCanEditState();
     if(!this.canEdit){
       this.store.dispatch(new GuestModalChange(true));
       return

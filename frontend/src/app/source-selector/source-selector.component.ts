@@ -34,7 +34,7 @@ export class SourceSelectorComponent implements OnInit {
 
   currHost = window.location.host;
 
-  canEdit!: boolean;
+  canEdit: boolean = true;
 
   constructor(private store: Store) {}
 
@@ -49,11 +49,10 @@ export class SourceSelectorComponent implements OnInit {
         this.copyToClipboard();
       });
     }
-    
-  }
 
-  setCanEditState() {
-    this.canEdit = this.store.selectSnapshot<boolean>((state) => state.app.canEdit);
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      if (canEdit !== undefined) this.canEdit = canEdit;
+    });
   }
 
   uploadFile(event: any) {
@@ -230,7 +229,6 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   refreshSource() {
-    this.setCanEditState();
     if(!this.canEdit){
       this.store.dispatch(new GuestModalChange(true));
       return
@@ -257,7 +255,6 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleAddSourcesModal() {
-    this.setCanEditState();
     if(!this.canEdit){
       this.store.dispatch(new GuestModalChange(true));
       return
@@ -281,7 +278,6 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleConfirmDeleteSourceModal() {
-    this.setCanEditState();
     if(!this.canEdit){
       this.store.dispatch(new GuestModalChange(true));
       return

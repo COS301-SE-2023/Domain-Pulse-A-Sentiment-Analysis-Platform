@@ -220,7 +220,6 @@ describe('SidebarComponent', () => {
       sources: [],
     };
 
-
     component.showAddDomainModal = false;
     component.toggleDomainModalOn();
     
@@ -368,8 +367,6 @@ describe('SidebarComponent and AppState', () => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
-    
-    
 
     actions$ = TestBed.inject(Actions);
     TestBed.inject(ToastrService);
@@ -448,7 +445,6 @@ describe('SidebarComponent and AppState', () => {
   it('should toggle the edit domain modal without setting editDomain properties if selectedDomain is not available', () => {
     spyOn(component['store'], 'selectSnapshot').and.returnValue(null);
     const storeDispatchSpy = spyOn(component['store'], 'dispatch');
-
 
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();

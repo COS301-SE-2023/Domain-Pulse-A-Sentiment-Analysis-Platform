@@ -310,6 +310,10 @@ export class AppState {
     return state.showProfileEditModal;
   }
 
+  @Selector()
+  static canEdit(state: AppStateModel) {
+    return state.canEdit;
+  }
 
 
 
