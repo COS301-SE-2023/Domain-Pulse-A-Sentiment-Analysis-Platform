@@ -235,4 +235,26 @@ describe('MainComponent', () => {
 
     expect(storeSpy.dispatch).toHaveBeenCalledWith(new GuestModalChange(true));
   });
+
+  it('should dispatch "new GuestModalChange(true)" when some functions are called', () => {
+    spyOn(component['store'], 'dispatch').and.stub();
+
+    component.canEdit = false;
+
+    component.toggleReportModal();
+    
+    expect(component['store'].dispatch).toHaveBeenCalledTimes(1);
+    expect(component['store'].dispatch).toHaveBeenCalledWith(
+      new GuestModalChange(true)
+    );
+  });
+
+  it('should set canEdit to true', () => {
+    component.canEditChanged(true);
+    expect(component.canEdit).toBeTrue();
+
+    component.canEditChanged(undefined);
+    expect(component.canEdit).toBeTrue();
+  });
+
 });

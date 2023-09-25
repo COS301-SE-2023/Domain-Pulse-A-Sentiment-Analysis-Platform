@@ -72,8 +72,10 @@ export class MainComponent implements OnInit {
   canEdit: boolean = true;
 
   constructor(private store: Store) {
+    
+
     this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
-      if (canEdit !== undefined) this.canEdit = canEdit;
+      this.canEditChanged(canEdit);
     });
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
@@ -84,6 +86,10 @@ export class MainComponent implements OnInit {
     this.showMakeAccountModal$.subscribe((showMakeAccountModal: boolean) => {
       this.showGuestModal = showMakeAccountModal;
     });
+  }
+
+  canEditChanged(canEdit: boolean | undefined) {
+    if (canEdit !== undefined) this.canEdit = canEdit;
   }
 
   ngOnInit(): void {
