@@ -279,18 +279,11 @@ def check_logged_in(request):
 @csrf_exempt
 def try_guest_login(request):
     if request.method == "POST":
-        if request.user.is_authenticated:
-            if str(request.user) == "thugger" or str(request.user) == "chris":
-                return JsonResponse({"status": "SUCCESS", "can_edit": True, "id": request.user.id, "guest_token": str(os.getenv("GUEST_PASS"))})
-            elif str(request.user) == "guest":
-                return JsonResponse({"status": "SUCCESS", "can_edit": False, "id": request.user.id, "guest_token": str(os.getenv("GUEST_PASS"))})
-
-            return JsonResponse({"status": "FAILURE", "message": f"User {request.user} is already logged in"})
+        guest_enabled = str(os.getenv("PREVIEW_ENABLED")) == "True"
+        if not guest_enabled:
+            return JsonResponse({"status": "FAILURE", "message": "Guest login is disabled"})
         else:
-            user = authenticate(username="guest", password=str(os.getenv("GUEST_PASS")))
-
-            return JsonResponse({"status": "SUCCESS", "id": request.user.id, "can_edit": False, "guest_token": str(os.getenv("GUEST_PASS"))})
-
+            return JsonResponse({"status": "SUCCESS", "guest_token": str(os.getenv("GUEST_PASS"))})
 
 def get_address(request):
     return request.META.get("REMOTE_ADDR")

@@ -117,6 +117,11 @@ export class AttempPsswdLogin {
   constructor(public username: string, public password: string) {}
 }
 
+export class AttempGuestLogin {
+  static readonly type = '[Auth] Attemp Guest Login';
+  constructor() {}
+}
+
 export class DeleteUser {
   static readonly type = '[Auth] Delete User';
   constructor(public username: string, public password: string) {}

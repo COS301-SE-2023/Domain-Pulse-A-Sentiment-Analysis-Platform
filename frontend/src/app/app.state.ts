@@ -31,7 +31,8 @@ import {
   SetAllSourcesSelected,
   SetIsActive,
   UplaodCVSFile,
-  GenerateReport
+  GenerateReport,
+  AttempGuestLogin
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, throwError } from 'rxjs';
@@ -100,6 +101,7 @@ interface AppStateModel {
   allSourcesSelected: boolean;
   sourceIsLoading: boolean;
   selectedStatisticIndex: number;
+  canEdit: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -126,6 +128,7 @@ interface AppStateModel {
     pdfUrl: '',
     userHasNoDomains: false,
     userHasNoSources: false,
+    canEdit: false,
   },
 })
 @Injectable()
@@ -876,7 +879,16 @@ export class AppState {
     });
   }
 
-  // ...
+  @Action(AttempGuestLogin)
+  attempGuestLogin(ctx: StateContext<AppStateModel>, state: AttempGuestLogin) {
+    this.appApi.attemptGuestLogin().subscribe((res) => {
+      if(res.status === "SUCCESS") {
+        this.store.dispatch(new AttempPsswdLogin('guest', res.guest_token));
+      } else {
+        this.store.dispatch(new ToastError('Preview disabled, please try again later'));
+      }
+    });
+  }
 
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
@@ -887,6 +899,23 @@ export class AppState {
         if (res.status === 'SUCCESS') {
           // set jwt in local storage
           localStorage.setItem('JWT', res.JWT);
+
+          if(state.username == 'guest') {
+            const canEditFlag = localStorage.getItem('canEdit');
+            if(canEditFlag && canEditFlag == 'true') {
+              ctx.patchState({
+                canEdit: true
+              });
+            } else {
+              ctx.patchState({
+                canEdit: false
+              });
+            }
+
+            localStorage.setItem('canEdit', ctx.getState().canEdit.toString());
+
+            this.store.dispatch(new ToastSuccess('You are currenly viewing a preview'));
+          }
 
           this.store.dispatch(new SetUserDetails(res.id));
           this.store.dispatch(new GetDomains());

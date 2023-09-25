@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { AttempPsswdLogin } from '../app.actions';
+import { AttempGuestLogin, AttempPsswdLogin } from '../app.actions';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -13,7 +14,13 @@ export class LoginPageComponent {
   username = '';
   password = '';
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private activatedRoute: ActivatedRoute) {
+    // if the parameter u is present, check if it equals guest
+    const u = this.activatedRoute.snapshot.queryParamMap.get('u');
+    if (u && u === 'guest') {
+      this.store.dispatch(new AttempGuestLogin());
+    }
+  }
 
   login() {
     this.isSpinning = true;

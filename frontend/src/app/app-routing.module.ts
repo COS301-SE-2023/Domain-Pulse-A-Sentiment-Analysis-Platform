@@ -11,7 +11,7 @@ import { GuestGuard } from './guest.guard';
 
 const routes: Routes = [
   {
-    path: 'guest',
+    path: 'preview',
     component: MainComponent,
     canActivate: [GuestGuard],
   },
