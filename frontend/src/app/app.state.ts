@@ -41,6 +41,7 @@ import {
   ToggleProfileEditModal,
   TryRefresh,
   ToggleIsRefreshing,
+  ToggleReportGeneratorModal,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, concatMap, map, of, repeatWhen, switchMap, takeWhile, tap, throwError } from 'rxjs';
@@ -129,6 +130,7 @@ interface AppStateModel {
   showChangePasswordModal?: boolean;
   showDeleteAccountModal?: boolean;
   showProfileEditModal?: boolean;
+  showReportGeneratorModal?: boolean;
   noData?: boolean;
 }
 
@@ -147,6 +149,7 @@ interface AppStateModel {
     showProfileModal: false,
     showEditDomainModal: false,
     showConfirmDeleteDomainModal: false,
+    showReportGeneratorModal: false,
     noData: false,
   },
 })
@@ -302,6 +305,11 @@ export class AppState {
   }
 
   @Selector()
+  static showReportGeneratorModal(state: AppStateModel) {
+    return state.showReportGeneratorModal;
+  }
+
+  @Selector()
   static noData(state: AppStateModel) {
     return state.noData;
   }
@@ -386,6 +394,14 @@ export class AppState {
     const state = ctx.getState();
     ctx.patchState({
       showProfileEditModal: !state.showProfileEditModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleReportGeneratorModal)
+  toggleReportGeneratorModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showReportGeneratorModal: !state.showReportGeneratorModal, // Toggle the value
     });
   }
   
@@ -1473,23 +1489,33 @@ export class AppState {
   
     return this.appApi.generateReport(domainID).pipe(
       map((res) => {
-        if (res.status === 'FAILURE') {
-          this.store.dispatch(new ToastError('Your report could not be generated'));
-          ctx.patchState({
-            pdfLoading: false,
-          });
-          return of(res);
-        } else if (res.status === 'SUCCESS') {
-          this.store.dispatch(new ToastSuccess('Your report has been generated'));
-          ctx.patchState({
-            pdfUrl: res.url,
-            pdfLoading: false,
-          });
-          return res.url;
+        if(ctx.getState().showReportGeneratorModal){
+          if (res.status === 'FAILURE') {
+          
+            this.store.dispatch(new ToastError('Your report could not be generated'));
+            ctx.patchState({
+              showReportGeneratorModal: false,
+            });
+            return of(res);
+          } else if (res.status === 'SUCCESS') {
+            this.store.dispatch(new ToastSuccess('Your report has been generated'));
+            ctx.patchState({
+              pdfUrl: res.url,
+              pdfLoading: false,
+            });
+            return res.url;
+          }
         }
+        
       }),
       catchError((error) => {
-        // Handle error here and return an observable if needed
+        if(ctx.getState().showReportGeneratorModal){
+          this.store.dispatch(new ToastError('Your report could not be generated'));
+
+          ctx.patchState({
+            showReportGeneratorModal: false,
+          });
+        }
         return of(error);
       })
     );

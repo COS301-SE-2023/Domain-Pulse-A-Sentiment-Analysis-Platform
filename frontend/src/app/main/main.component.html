@@ -106,7 +106,7 @@
               class="copy-icon clickable-item" (click)="copyToClipboard()" />
           </div>
 
-          <img *ngIf="pdfUrl != null" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{pdfUrl}}"
+          <img *ngIf="pdfUrl != null || pdfUrl != ''" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{pdfUrl}}"
             alt="Report QR Code" style="width: 70%;" />
         </ng-template>
       </div>

@@ -204,6 +204,10 @@ export class ToggleProfileEditModal {
   static readonly type = '[App] Toggle Profile Edit Modal';
 }
 
+export class ToggleReportGeneratorModal{
+  static readonly type = '[App] Toggle Report Generator Modal';
+}
+
 export class TryRefresh{
   static readonly type = '[App] Try Refresh';
   constructor(public sourceId: string) {}
@@ -213,4 +217,6 @@ export class ToggleIsRefreshing{
   static readonly type = '[App] Toggle Is Refreshing';
   constructor(public isRefreshing: boolean, public sourceId: string) {}
 }
+
+
 

@@ -33,30 +33,63 @@
         />
 
         <label for="password" class="password">Password</label>
-        <input
-          [(ngModel)]="password"
-          type="password"
-          class="inputBar2"
-          name="password"
-          data-cy="password"
-        />
+        <div class="flex-row" style="gap: 0.5rem">
+          <input
+            [(ngModel)]="password"
+            [type]="getPasswordType()"
+            class="inputBar2"
+            name="password"
+            data-cy="password"
+          />
+          <img
+            src="../assets/icons/show-password.svg"
+            class="eye clickable-item"
+            (click)="togglePasswordVisibility()"
+            [ngClass]="{ 'eye-open': passwordVisible }"
+          />
+          <img
+            src="../assets/icons/hide-password.svg"
+            class="eye clickable-item"
+            (click)="togglePasswordVisibility()"
+            [ngClass]="{ 'eye-open': !passwordVisible }"
+          />
+        </div>
 
         <label for="password" class="password">Confirm Password</label>
-        <input
-          [(ngModel)]="confirmPassword"
-          type="password"
-          class="inputBar2"
-          name="password"
-          data-cy="confirmPassword"
-        />
+        <div class="flex-row" style="gap: 0.5rem">
+          <input
+            [(ngModel)]="confirmPassword"
+            [type]="getConfirmPasswordType()"
+            class="inputBar2"
+            name="password"
+            data-cy="confirmPassword"
+          />
+          <img
+            src="../assets/icons/show-password.svg"
+            class="eye clickable-item"
+            (click)="toggleConfirmPasswordVisibility()"
+            [ngClass]="{ 'eye-open': confirmPasswordVisible }"
+          />
+          <img
+            src="../assets/icons/hide-password.svg"
+            class="eye clickable-item"
+            (click)="toggleConfirmPasswordVisibility()"
+            [ngClass]="{ 'eye-open': !confirmPasswordVisible }"
+          />
+        </div>
 
         <div class="flex-row" style="margin-top: 12px">
-          <button (click)="register()" class="button clickable-item" data-cy="registerButton">Register<div [ngClass]="{ 'button-spinner': isSpinning }"></div></button>
+          <button
+            (click)="register()"
+            class="button clickable-item"
+            data-cy="registerButton"
+          >
+            Register
+            <div [ngClass]="{ 'button-spinner': isSpinning }"></div>
+          </button>
         </div>
       </div>
     </div>
-
-    
 
     <div
       class="flex-row content center"
@@ -64,9 +97,14 @@
     >
       <div class="flex-column" style="width: 100%">
         <div>
-          
           <div class="alternative-option">
-            <p class="clickable-item"  routerLink="/login" data-cy="switchForAcc">Already have an account?</p>
+            <p
+              class="clickable-item"
+              routerLink="/login"
+              data-cy="switchForAcc"
+            >
+              Already have an account?
+            </p>
           </div>
         </div>
         <!-- <div>
@@ -76,5 +114,5 @@
     </div>
   </div>
   <div class="right-side"></div>
-  <img class="wave-art" src="../assets/wave-squished.svg" alt="Wave Art">
+  <img class="wave-art" src="../assets/wave-squished.svg" alt="Wave Art" />
 </div>

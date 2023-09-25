@@ -26,13 +26,19 @@
         />
 
         <label for="password" class="password">Password</label>
-        <input
+        <div class="flex-row" style="gap:0.5rem">
+          <input
           [(ngModel)]="password"
-          type="password"
+          [type]="getPasswordType()"
           class="inputBar2"
           name="password"
           data-cy="password"
         />
+        <img src="../assets/icons/show-password.svg" class="eye clickable-item" (click)="togglePasswordVisibility()" [ngClass]="{ 'eye-open': passwordVisible }">
+        <img src="../assets/icons/hide-password.svg" class="eye clickable-item" (click)="togglePasswordVisibility()" [ngClass]="{ 'eye-open': !passwordVisible }">
+
+        </div>
+        
         <div class="forgot">
           <p class="clickable-item" style="width: fit-content;" [mul]="0.9" [tooltipPosition]="'right'" [searchTerm]="'forgot password'" [tooltip]="'contact domainpulse.help@gmail.com for assistance'" >Forgot your password?</p>
         </div>

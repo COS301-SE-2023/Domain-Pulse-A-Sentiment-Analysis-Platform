@@ -13,7 +13,7 @@ import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, filter, switchMap, take } from 'rxjs/operators';
-import { GenerateReport, ToastError, ToastSuccess } from '../app.actions';
+import { GenerateReport, ToastError, ToastSuccess, ToggleReportGeneratorModal } from '../app.actions';
 /* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
  */ @Component({
   selector: 'app-main',
@@ -52,6 +52,8 @@ export class MainComponent implements OnInit {
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
   @Select(AppState.pdfLoading) pdfLoading$!: Observable<boolean>;
   @Select(AppState.pdfUrl) pdfUrl$!: Observable<string>;
+  @Select(AppState.showReportGeneratorModal)
+  showReportGeneratorModal$!: Observable<boolean>;
 
   selectedDomain!: DisplayDomain | null;
   @Select(AppState.userHasNoDomains) userHasNoDomains$!: Observable<boolean>;
@@ -90,6 +92,13 @@ export class MainComponent implements OnInit {
       this.processpdfUrl(res);
     });
 
+    this.store.select(AppState.showReportGeneratorModal).subscribe((value) => {
+      if (value == undefined) {
+        return;
+      }
+      this.showReportModal = value;
+    });
+
     this.setupClickEventListener();
 
   }
@@ -109,7 +118,6 @@ export class MainComponent implements OnInit {
 
     if (pdfIndex !== -1) {
       const result: string = res.slice(0, pdfIndex + 4);
-      console.log(result);
       this.pdfUrl = result;
     } else {
       this.store.dispatch(
@@ -144,9 +152,10 @@ export class MainComponent implements OnInit {
     }
     if (!this.showReportModal) {
       this.generateReport();
-      this.showReportModal = true;
+      this.store.dispatch(new ToggleReportGeneratorModal());
     } else {
-      this.showReportModal = false;
+      this.pdfUrl = '';
+      this.store.dispatch(new ToggleReportGeneratorModal());
     }
   }
 
