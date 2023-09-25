@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
-import { Observable } from 'rxjs';
+import { Observable, timeout, timer } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
 
@@ -27,6 +27,8 @@ export class SourceSelectorComponent implements OnInit {
   newSourcePlatform = '';
   newSourceUrl = '';
   newCSVFile: any = '';
+
+  addSourceSpinner = false;
 
   editSourceName = '';
   editSourceUrl = '';
@@ -80,6 +82,7 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   addNewSource() {
+
     var params = this.determineSourceParams();
     console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
@@ -107,18 +110,31 @@ export class SourceSelectorComponent implements OnInit {
     }
 
 
+    this.addSourceSpinner = true;
+
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
-    ).subscribe(() => {
+    ).subscribe((res) => {
       if(this.newSourcePlatform == 'csv'){
         this.store.dispatch(new UplaodCVSFile(this.newCSVFile));
         this.newCSVFile = '';
+        
       }
+
+      
+      timer(100).subscribe(() => {
+        this.addSourceSpinner = false;
+        this.newSourceName = '';
+        this.newSourceUrl = '';
+        this.showAddSourcesModal = false;
+
+      });
+      return;
     });
     
-    this.newSourceName = '';
+    /* this.newSourceName = '';
     this.newSourceUrl = '';
-    this.showAddSourcesModal = false;
+    this.showAddSourcesModal = false; */
   }
 
   /* elif type_of_source.lower() == "livereview":

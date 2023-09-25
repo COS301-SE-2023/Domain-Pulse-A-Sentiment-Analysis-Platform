@@ -316,7 +316,7 @@ export class GraphSelectorComponent implements OnInit {
         colors: [
           'rgba(255, 88, 88, 0.8)',
           'rgba(212, 116, 78, 0.8)',
-          'rgba(42, 45, 54, 0.8)',
+          'rgba(53, 92, 209, 0.8)',
           'rgba(119, 228, 105, 0.8)',
           'rgba(224, 101, 187, 0.8)',
           'rgba(60, 113, 211, 0.8)',
@@ -396,7 +396,7 @@ export class GraphSelectorComponent implements OnInit {
         colors: [
           'rgba(255, 88, 88, 0.8)',
           'rgba(212, 116, 78, 0.8)',
-          'rgba(42, 45, 54, 0.8)',
+          'rgba(53, 92, 209, 0.8)',
           'rgba(119, 228, 105, 0.8)',
           'rgba(224, 101, 187, 0.8)',
           'rgba(60, 113, 211, 0.8)',

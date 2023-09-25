@@ -241,6 +241,7 @@
         <div class="bottom-div">
           <button class="new-source-btn clickable-item" (click)="addNewSource()" data-cy="confirmAddSource">
             Confirm
+            <div [ngClass]="{ 'button-spinner': addSourceSpinner }"></div>
           </button>
         </div>
       </div>
