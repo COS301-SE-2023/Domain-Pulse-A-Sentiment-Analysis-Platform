@@ -1,6 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{hyperref}
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 
 \title{Testing Policy}
@@ -35,6 +36,8 @@ For our frontend testing frameworks and tools we decided to use the following:
     \item \textbf{Karma and Jasmine} - Jasmine is the testing framework that is used to write actual tests and are typed in Javascript, Karma is the test runner that executes the tests. Karma is run from a CLI(Command Line Interface) and it will open up a browser window and run the tests in that browser. Karma will then report the results of the tests back to the CLI and can be used to generate a coverage report. Karma and Jasmine are recommended by Angular which is what our frontend is primarily built upon and they are the most popular testing frameworks for Angular applications. The advantages of using Karma and Jasmine over other testing frameworks is that they are easy to set up and use, they are well documented and they are popular amongst Angular developers which means there is a extensive amount of resources available online for help if need be.
     \item \textbf{Cypress} - Cypress is a testing framework that is used to write end to end tests which are tests that try and simulate a user using the application. End to end tests are needed to ensure that the application is working exactly as expected from the user interface level all the way through the application to the database level and checks all the integration between these componets work as expected. Cypress runs in a browser which makes it easy to setup and follow the tests as they excute in the browser. Cypress is documented well with a thriving community which allows for easy access to information if any problems arise.
 \end{itemize}
+
+\subsection{Backend Testing}
 For our backend testing framework and tools we decided to use the following:
 \begin{itemize}
     \item \textbf{Django built in testing module} - Django has a built in testing module which allows for the testing of Django applications, this is yet another reason why we decided to use django as it has amazing functionality out of the box. The django testing module allows for extensive testing of the application. The advantages of using django testing framework over an external framework is that one is already used to the syntax of django since our backend is primarily built on django and hence saves valuable time trying to learn syntax of another backend testing framework. Django allows for fast pace development which is much needed in certain situations such as in ours when following an agile development strategy. Django testing framework is also well documented and has a large community which allows for easy access to information if any problems arise and help is needed.
@@ -47,7 +50,7 @@ Process of Usability Testing:
     \item \textbf{Recruiting} - The next step is to recruit participants to test the application. The participants should be representative of the target audience of the application but should also be diverse enough to get a wide range of feedback.
     \item \textbf{Testing} - The next step is the actual testing of the application, the way in which we facilitated the testing of the application was as follows:
     \begin{itemize}
-        \item We sent all participents of our usability testing a pdf explaining all aspects of navigating to the app and a list of tasks in which they could try.
+        \item We sent all participants of our usability testing a pdf explaining all aspects of navigating to the app and a list of tasks in which they could try. The pdf can be found \href{https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Testing%20Policy/Testing_Assistance_Domain_Pulse.pdf}{Open this PDF}
         \item The participant will access the application in their own time in the environment of their liking and use the application to perform tasks that were suggested on the pdf.
         \item Once the user has completed the testing of the app, a questionaire was then to be filled out by all participants.
     \end{itemize}
