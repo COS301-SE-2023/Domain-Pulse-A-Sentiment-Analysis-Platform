@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\graphicspath{ {./} }
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 
 \title{Testing Policy}
@@ -27,6 +28,10 @@ Any branch being merged via pull request into the development branch (dev) needs
 Furthermore, the coverage of the newly commited code (ie: patch) must match or exceed the coverage percentage of the project.
 This ensures that the coverage of the codebase is never decreasing, and that sufficient testing is being done on the codebase.
 Furthermore any time the development branch is merged into the master branch, the coverage of the development branch must match or be higher than that of the master branch, ensuring an increasing coverage and sufficient testing.
+\begin{itemize}
+    \item A code coverage report is included in the below image:
+\end{itemize}
+\includegraphics[width=\textwidth]{codecovReport.png}
 
 \newpage
 \section{Choice of testing tools/frameworks}
@@ -50,13 +55,13 @@ Process of Usability Testing:
     \item \textbf{Recruiting} - The next step is to recruit participants to test the application. The participants should be representative of the target audience of the application but should also be diverse enough to get a wide range of feedback.
     \item \textbf{Testing} - The next step is the actual testing of the application, the way in which we facilitated the testing of the application was as follows:
     \begin{itemize}
-        \item We sent all participants of our usability testing a pdf explaining all aspects of navigating to the app and a list of tasks in which they could try. The pdf can be found \href{https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Testing%20Policy/Testing_Assistance_Domain_Pulse.pdf}{Open this PDF}
+        \item We sent all participants of our usability testing a pdf explaining all aspects of navigating to the app and a list of tasks in which they could try. The pdf can be found \href{https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Testing%20Policy/Testing_Assistance_Domain_Pulse.pdf}{HERE.}
         \item The participant will access the application in their own time in the environment of their liking and use the application to perform tasks that were suggested on the pdf.
-        \item Once the user has completed the testing of the app, a questionaire was then to be filled out by all participants.
+        \item Once the user has completed the testing of the app, a questionaire was then to be filled out by all participants the questionaire can be found \href{https://forms.gle/P6EC4iyg7ZD93LNfA}{HERE.}
     \end{itemize}
     \item \textbf{Feedback implementation} - We collect all data from the questionaire that the testing participants filled out and use this to modify and fix issues accordingly.
-It is understood that the environment in which the users completed the testing in were all up to the users choice which allows for skewed results in terms of the environment variable not being kept constant and things like noise pollution etc can all have effects on how one would use the app but we belive that this bias of an inconstant environment is neutralised by the adaptability of the app to be used in any environment.
 \end{itemize}
+It is understood that the environment in which the users completed the testing in were all up to the users choice which allows for skewed results in terms of the environment variable not being kept constant and things like noise pollution etc can all have effects on how one would use the app but we belive that this bias of an inconstant environment is neutralised by the adaptability of the app to be used in any environment.
 
 
 \end{document}
