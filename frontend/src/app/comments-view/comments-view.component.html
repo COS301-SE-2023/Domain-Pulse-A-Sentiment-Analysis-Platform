@@ -6,9 +6,29 @@
 
 <ng-template #loadingContent>
   <div class="flex-row icon-div" style="margin-bottom: 1rem; margin-top: 0.5rem">
-    <img src="../../assets/icons/comments.svg" width="8%" alt="Positive Icon" style="padding-right: 0.8rem" (click)="changeCommentState()">
+    <div class="logo-container">
+    <img 
+    src="../../assets/icons/comments.svg"
+    style="width:8%"
+    alt="Positive Icon" style="padding-right: 0.8rem" 
+      (click)="changeCommentState()"      class="transition-icon logo"
+    />
+
+    <img *ngIf="!commentsExpanded"
+      src="../assets/icons/expand.svg"
+      alt="Positive Icon" style="padding-right: 0.8rem" 
+      class="transition-icon icon clickable-item"
+      (click)="changeCommentState()"      />
+
+    <img *ngIf="commentsExpanded"
+      src="../assets/icons/contract.svg"
+    alt="Positive Icon" style="padding-right: 0.8rem" 
+      class="transition-icon icon clickable-item"
+      (click)="changeCommentState()"    />
+    </div>
+    <!-- <img src="../../assets/icons/comments.svg" width="8%" alt="Positive Icon" style="padding-right: 0.8rem" (click)="changeCommentState()"> -->
     <h3
-      style="margin: 0; margin-right: 1.5rem; text-wrap: nowrap; margin-top: auto; margin-bottom: auto; font-size: 1.4rem;">
+      style="margin: 0; margin-right: 1.5rem; margin-left:2.5rem; text-wrap: nowrap; margin-top: auto; margin-bottom: auto; font-size: 1.4rem;">
       Reviews</h3>
     <div class="search-container flex-row center">
       <input class="search-bar" type="text" placeholder="Search reviews..." name="search" [(ngModel)]="searchTerm"
