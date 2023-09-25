@@ -63,6 +63,7 @@ export class MainComponent implements OnInit {
 
   @Select(AppState.showMakeAccountModal) showMakeAccountModal$!: Observable<boolean>;
   showGuestModal = true;
+  canEdit!: boolean;
 
   constructor(private store: Store) {
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
@@ -74,6 +75,10 @@ export class MainComponent implements OnInit {
     this.showMakeAccountModal$.subscribe((showMakeAccountModal: boolean) => {
       this.showGuestModal = showMakeAccountModal;
     });
+  }
+
+  setCanEditState() {
+    this.canEdit = this.store.selectSnapshot<boolean>((state) => state.app.canEdit);
   }
   
   ngOnInit(): void {
@@ -128,6 +133,11 @@ export class MainComponent implements OnInit {
   }
 
   toggleReportModal() {
+    this.setCanEditState();
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
 
     if(this.selectedDomain?.sources.length === 0) {
       this.store.dispatch(

@@ -37,6 +37,7 @@ import {
   ToggleChangePasswordModal,
   ToggleDeleteAccountModal,
   ToggleProfileEditModal,
+  GuestModalChange,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -104,10 +105,6 @@ export class SidebarComponent implements OnInit {
   @Select(AppState.showDeleteAccountModal) showDeleteAccountModal$!: Observable<boolean>;
   @Select(AppState.showProfileEditModal) showProfileEditModal$!: Observable<boolean>;
 
-
-
-
-
   domains: DisplayDomain[] = [];
   smallLogoState = 'in';
   showSmallLogo = true;
@@ -171,6 +168,7 @@ export class SidebarComponent implements OnInit {
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
   domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
 
+  public canEdit!: boolean;
 
   public selectedFile: File | null = null;
   public selectedFileDomain: File | null = null;
@@ -180,10 +178,14 @@ export class SidebarComponent implements OnInit {
     private store: Store,
     public blobStorageService: AzureBlobStorageService
   ) {
-
+    this.setCanEditState();
     this.domains$.subscribe((domains) => {
       this.domains = domains!;
     });
+  }
+
+  setCanEditState() {
+    this.canEdit = this.store.selectSnapshot<boolean>((state) => state.app.canEdit);
   }
 
   ngOnInit() {
@@ -251,6 +253,12 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleDomainModalOn(): void {
+    this.setCanEditState();
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
+
     if(this.domains == undefined){
       this.store.dispatch(new ToggleAddDomainModal());
       return;
@@ -263,6 +271,11 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleEditDomainModal(): void {
+    this.setCanEditState();
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     if (!this.showEditDomainModal) {
       this.store.dispatch(new ToggleEditDomainModal());
       const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
@@ -278,12 +291,16 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleProfileModal(): void {
+    this.setCanEditState();
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     this.store.dispatch(new ToggleProfileModal());
   }
 
   toggleProfileEditModal(): void {
     this.store.dispatch(new ToggleProfileEditModal());
-
   }
 
   toggleChangePasswordModal(): void {
@@ -298,6 +315,11 @@ export class SidebarComponent implements OnInit {
 
 
   toggleConfirmDeleteDomainModal(id?: string): void {
+    this.setCanEditState();
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     if(id){
       this.deleteDomainId = id;
     }

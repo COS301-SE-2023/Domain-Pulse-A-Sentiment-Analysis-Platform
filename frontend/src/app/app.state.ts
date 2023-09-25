@@ -146,7 +146,7 @@ interface AppStateModel {
     pdfUrl: '',
     userHasNoDomains: false,
     userHasNoSources: false,
-    canEdit: false,
+    canEdit: true,
     showMakeAccountModal: false,
     showAddDomainModal: false,
     showProfileModal: false,
@@ -1118,7 +1118,6 @@ export class AppState {
 
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
-    console.log('attempting password login');
 
     return this.appApi.attemptPsswdLogin(state.username, state.password).pipe(
       switchMap((res) => {
@@ -1127,18 +1126,10 @@ export class AppState {
           localStorage.setItem('JWT', res.JWT);
 
           if(state.username == 'guest') {
-            const canEditFlag = localStorage.getItem('canEdit');
-            if(canEditFlag && canEditFlag == 'true') {
-              ctx.patchState({
-                canEdit: true
-              });
-            } else {
-              ctx.patchState({
-                canEdit: false
-              });
-            }
-
-            localStorage.setItem('canEdit', ctx.getState().canEdit.toString());
+            ctx.patchState({
+              canEdit: false
+            });
+            localStorage.setItem('canEdit', 'false');
 
             this.store.dispatch(new ToastSuccess('You are currenly viewing a preview'));
           }
@@ -1160,6 +1151,13 @@ export class AppState {
 
   @Action(SetUserDetails)
   setUserDetails(ctx: StateContext<AppStateModel>, state: SetUserDetails) {
+    const couldEdit = localStorage.getItem('canEdit');
+    if(couldEdit != null) {
+      ctx.patchState({
+        canEdit: couldEdit == 'true'
+      });
+    }
+
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         const profileDetails: ProfileDetails = {
