@@ -57,4 +57,15 @@ describe('LoginPageComponent', () => {
     component.toggleForgotPasswordModal();
     expect(component.showForgotPasswordModal).toBe(false);
   });
+
+  it('should evaluate user', () => {
+    spyOn(storeSpy, 'dispatch');
+
+    component.evaluateUser('guest');
+    expect(storeSpy.dispatch).toHaveBeenCalled();
+
+    component.evaluateUser(null);
+    expect(storeSpy.dispatch).toHaveBeenCalledTimes(1);
+  });
+
 });

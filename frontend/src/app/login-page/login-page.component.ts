@@ -17,6 +17,10 @@ export class LoginPageComponent {
   constructor(private store: Store, private activatedRoute: ActivatedRoute) {
     // if the parameter u is present, check if it equals guest
     const u = this.activatedRoute.snapshot.queryParamMap.get('u');
+    this.evaluateUser(u);
+  }
+
+  evaluateUser(u: string | null) {
     if (u && u === 'guest') {
       this.store.dispatch(new AttempGuestLogin());
     }
