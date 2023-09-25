@@ -61,6 +61,8 @@ export class MainComponent implements OnInit {
   showReportModal = false;
   pdfUrl!: string;
 
+  showGuestModal = true;
+
   constructor(private store: Store) {
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
@@ -149,6 +151,15 @@ export class MainComponent implements OnInit {
     if (reportLink) {
       const textToCopy = reportLink.getAttribute('href')!;
       navigator.clipboard.writeText(textToCopy);
+    }
+  }
+
+  toggleGuestModal() {
+    if(this.showGuestModal){
+      this.showGuestModal = false;
+    }
+    else{
+      this.showGuestModal = true;
     }
   }
 }

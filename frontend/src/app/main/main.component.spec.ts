@@ -215,4 +215,20 @@ describe('MainComponent', () => {
       new GenerateReport(component.selectedDomain!.id)
     );
   });
+
+  it('should toggle showGuestModal from false to true', () => {
+    component.showGuestModal = false;
+
+    component.toggleGuestModal();
+
+    expect(component.showGuestModal).toBe(true);
+  });
+
+  it('should toggle showGuestModal from true to false', () => {
+    component.showGuestModal = true;
+
+    component.toggleGuestModal();
+
+    expect(component.showGuestModal).toBe(false);
+  });
 });
