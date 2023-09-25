@@ -459,11 +459,6 @@ export class SidebarComponent implements OnInit {
     this.store.dispatch(new ChangeMode());
     document.body.classList.toggle('light');
     document.body.classList.toggle('dark');
-    /* if(document.body.classList.contains('light')){
-      localStorage.setItem('theme', 'dark');
-    }else{
-      localStorage.setItem('theme', 'light');
-    } */
   }
 
   imagePreview: string | ArrayBuffer | null = null;
@@ -629,13 +624,11 @@ export class SidebarComponent implements OnInit {
     const userDetails = this.store.selectSnapshot(AppState.userDetails);
     const username = userDetails?.username;
 
-    console.log(username);
-    console.log(this.password)
-
     if(!username) return;
 
     this.store.dispatch(new DeleteUser(username, this.password ));
-    /* this.closeAllModals(); */
+
+    this.toggleDeleteAccountModal();
     
   }
 

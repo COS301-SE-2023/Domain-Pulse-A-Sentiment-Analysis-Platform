@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
@@ -17,6 +17,7 @@ export class SourceSelectorComponent implements OnInit {
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
   @Select(AppState.allSourcesSelected) allSources$!: Observable<number>;
   selectedSource?: DisplaySource;
+
 
   showAddSourcesModal = false;
   showEditSourceModal = false;

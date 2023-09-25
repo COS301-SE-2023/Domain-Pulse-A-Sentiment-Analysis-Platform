@@ -47,6 +47,8 @@ import { GenerateReport, ToastError, ToastSuccess } from '../app.actions';
 export class MainComponent implements OnInit {
   @Select(AppState.selectedDomain)
   selectedDomain$!: Observable<DisplayDomain | null>;
+  @Select(AppState.noData)
+  noData$!: Observable<boolean>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
   @Select(AppState.pdfLoading) pdfLoading$!: Observable<boolean>;
   @Select(AppState.pdfUrl) pdfUrl$!: Observable<string>;
@@ -56,6 +58,10 @@ export class MainComponent implements OnInit {
   @Select(AppState.userHasNoSources) userHasNoSources$!: Observable<boolean>;
   userHasNoDomains = false;
   userHasNoSources = false;
+
+  noData = false;
+
+  selectedSource!: DisplaySource | undefined;
 
   sidebarCollapsed = true;
   showReportModal = false;
@@ -68,6 +74,11 @@ export class MainComponent implements OnInit {
     this.userHasNoSources$.subscribe((userHasNoSources: boolean) => {
       this.userHasNoSources = userHasNoSources;
     });
+
+    this.noData$.subscribe((res) => {
+      this.noData = res;
+    });
+
   }
   
   ngOnInit(): void {

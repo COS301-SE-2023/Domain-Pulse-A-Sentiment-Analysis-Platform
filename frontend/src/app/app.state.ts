@@ -129,6 +129,7 @@ interface AppStateModel {
   showChangePasswordModal?: boolean;
   showDeleteAccountModal?: boolean;
   showProfileEditModal?: boolean;
+  noData?: boolean;
 }
 
 @State<AppStateModel>({
@@ -146,6 +147,7 @@ interface AppStateModel {
     showProfileModal: false,
     showEditDomainModal: false,
     showConfirmDeleteDomainModal: false,
+    noData: false,
   },
 })
 @Injectable()
@@ -297,6 +299,11 @@ export class AppState {
   @Selector()
   static showProfileEditModal(state: AppStateModel) {
     return state.showProfileEditModal;
+  }
+
+  @Selector()
+  static noData(state: AppStateModel) {
+    return state.noData;
   }
 
 
@@ -777,19 +784,18 @@ export class AppState {
       console.log("live review here")
       if (!selectedSource) return;
 
-      selectedSource.isRefreshing = true;
-      ctx.patchState({
-        selectedSource,
-      });
+      this.store.dispatch(new ToggleIsRefreshing(true, selectedSource?.id));
+
 
       this.store.dispatch(new GetSourceDashBoardInfo());
 
-      if (selectedSource) {
+      this.store.dispatch(new ToggleIsRefreshing(false, selectedSource?.id));
+      /* if (selectedSource) {
         selectedSource.isRefreshing = false;
         ctx.patchState({
           selectedSource,
         });
-      }
+      } */
       this.store.dispatch(
         new ToastSuccess('Your source has been refreshed')
       );
@@ -1030,10 +1036,14 @@ export class AppState {
   getSourceDashBoardInfo(ctx: StateContext<AppStateModel>) {
     let selectedSource = ctx.getState().selectedSource;
     if (!selectedSource) {
+      console.log("getting stuff1")
+
       let selectedDomain = ctx.getState().selectedDomain;
       if (!selectedDomain) return;
       const sourceIds = selectedDomain.sourceIds;
+      console.log("getting stuff")
       this.appApi.getAggregatedDomainData(sourceIds).subscribe((res) => {
+        console.log(res)
         if (res.status == 'SUCCESS') {
           ctx.patchState({
             overallSentimentScores: {
@@ -1043,6 +1053,7 @@ export class AppState {
             },
             sampleData: res.individual_metrics,
             sourceIsLoading: false,
+            noData: false,
           });
         }
       });
@@ -1051,6 +1062,8 @@ export class AppState {
     let selectedSourceID = selectedSource.id;
 
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
+      console.log("getting stuff2")
+
       if (res.status === 'FAILURE') {
         this.store.dispatch(new ToastError('Source data could not be loaded'));
 
@@ -1058,8 +1071,15 @@ export class AppState {
 
       if (res.aggregated_metrics)
         if (res.aggregated_metrics.general.category == 'No data') {
+          console.log("no data")
+          if(ctx.getState().selectedSource?.url == "live-review-logo.png" || ctx.getState().selectedSource?.url == "csv-logo.png"){
+            ctx.patchState({
+              noData: true,
+            });
+          }
           this.store.dispatch(new SetSourceIsLoading(true));
         } else {
+          
           ctx.patchState({
             overallSentimentScores: {
               aggregated_metrics: res.aggregated_metrics,
@@ -1069,6 +1089,7 @@ export class AppState {
             },
             sampleData: res.individual_metrics,
             sourceIsLoading: false,
+            noData: false,
           });
         }
     });
@@ -1246,6 +1267,28 @@ export class AppState {
       if (res.status == 'SUCCESS') {
         this.store.dispatch(new ToastSuccess('Your account has been deleted'));
         localStorage.removeItem('JWT');
+        ctx.patchState({
+          authenticated: false,
+          selectedStatisticIndex: 0,
+          sourceIsLoading: true,
+          allSourcesSelected: true,
+          pdfLoading: false,
+          pdfUrl: '',
+          userHasNoDomains: false,
+          userHasNoSources: false,
+          domains: undefined,
+          selectedDomain: undefined,
+          sources: undefined,
+          selectedSource: undefined,
+          overallSentimentScores: undefined,
+          sampleData: undefined,
+          userDetails: undefined,
+          profileDetails: undefined,
+          toasterError: undefined,
+          toasterSuccess: undefined,
+          showAddDomainModal: false,
+          showProfileModal: false,
+        });
         this.router.navigate(['/login']);
       } else {
         this.store.dispatch(
@@ -1323,7 +1366,7 @@ export class AppState {
     const profileId = ctx.getState().profileDetails?.profileId;
 
     if (!profileId) {
-      this.store.dispatch(new ToastError('Your theme could not be changed'));
+      this.store.dispatch(new ToastError('Your theme was changed but could not be saved'));
       return;
     }
 
@@ -1341,7 +1384,7 @@ export class AppState {
 
         this.store.dispatch(new ToastSuccess('Your theme has been updated'));
       } else {
-        this.store.dispatch(new ToastError('Your theme could not be changed'));
+        this.store.dispatch(new ToastError('Your theme was changed but could not be saved'));
       }
     });
   }
