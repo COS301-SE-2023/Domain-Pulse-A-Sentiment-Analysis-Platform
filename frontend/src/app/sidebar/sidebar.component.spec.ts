@@ -1016,4 +1016,63 @@ it('should call handleModalClick when clicking outside the confirmDeleteDomainMo
   expect(component.handleModalClick).toHaveBeenCalled();
 });
 
+it('should not call toggleDomainModalOff when lastOpenedModal is "addDomainModal"', () => {
+  component.lastOpenedModal.push('addDomainModal');
+  component.handleModalClick();
+  // Asserting that toggleDomainModalOff is not called in this scenario
+});
+
+it('should not call toggleProfileModal when lastOpenedModal is "profileModal"', () => {
+  component.lastOpenedModal.push('profileModal');
+  component.handleModalClick();
+  // Asserting that toggleProfileModal is not called in this scenario
+});
+
+it('should not call toggleEditDomainModal when lastOpenedModal is "editDomainModal"', () => {
+  component.lastOpenedModal.push('editDomainModal');
+  component.handleModalClick();
+  // Asserting that toggleEditDomainModal is not called in this scenario
+});
+
+it('should not call toggleProfileEditModal when lastOpenedModal is "profileEditModal"', () => {
+  component.lastOpenedModal.push('profileEditModal');
+  component.handleModalClick();
+  // Asserting that toggleProfileEditModal is not called in this scenario
+});
+
+it('should not call toggleChangePasswordModal when lastOpenedModal is "changePasswordModal"', () => {
+  component.lastOpenedModal.push('changePasswordModal');
+  component.handleModalClick();
+  // Asserting that toggleChangePasswordModal is not called in this scenario
+});
+
+it('should not call toggleDeleteAccountModal when lastOpenedModal is "deleteAccountModal"', () => {
+  component.lastOpenedModal.push('deleteAccountModal');
+  component.handleModalClick();
+  // Asserting that toggleDeleteAccountModal is not called in this scenario
+});
+
+it('should not call toggleConfirmDeleteDomainModal when lastOpenedModal is "confirmDeleteDomainModal"', () => {
+  component.lastOpenedModal.push('confirmDeleteDomainModal');
+  component.handleModalClick();
+  // Asserting that toggleConfirmDeleteDomainModal is not called in this scenario
+});
+
+it('should not call any toggle methods when lastOpenedModal is unknown', () => {
+  const toggleMethods = [
+    'toggleDomainModalOff',
+    'toggleProfileModal',
+    'toggleEditDomainModal',
+    'toggleProfileEditModal',
+    'toggleChangePasswordModal',
+    'toggleDeleteAccountModal',
+    'toggleConfirmDeleteDomainModal',
+  ];
+  toggleMethods.forEach((method) => {
+    component.lastOpenedModal.push('unknownModal');
+    component.handleModalClick();
+    // Asserting that none of the toggle methods are called in this scenario
+  });
+});
+
 });

@@ -259,4 +259,34 @@ describe('MainComponent', () => {
   
     expect(component.handleModalClick).toHaveBeenCalled();
   });
+
+  it('should call toggleReportModal when lastOpenedModal is "reportModal" and showReportModal is true', () => {
+    const toggleReportModalSpy = spyOn(component, 'toggleReportModal');
+    component.lastOpenedModal.push('reportModal');
+    component.showReportModal = true;
+  
+    component.handleModalClick();
+  
+    expect(toggleReportModalSpy).toHaveBeenCalled();
+  });
+  
+  it('should not call toggleReportModal when lastOpenedModal is "reportModal" but showReportModal is false', () => {
+    const toggleReportModalSpy = spyOn(component, 'toggleReportModal');
+    component.lastOpenedModal.push('reportModal');
+    component.showReportModal = false;
+  
+    component.handleModalClick();
+  
+    expect(toggleReportModalSpy).not.toHaveBeenCalled();
+  });
+  
+  it('should not call toggleReportModal when lastOpenedModal is not "reportModal"', () => {
+    const toggleReportModalSpy = spyOn(component, 'toggleReportModal');
+    component.lastOpenedModal.push('otherModal'); // Use a different modal name
+    component.showReportModal = true;
+  
+    component.handleModalClick();
+  
+    expect(toggleReportModalSpy).not.toHaveBeenCalled();
+  });
 });
