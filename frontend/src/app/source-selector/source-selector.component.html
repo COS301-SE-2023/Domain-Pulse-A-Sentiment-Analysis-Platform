@@ -208,14 +208,22 @@
             </div>  
           </div>
 
-          <div class="flex-column" style="width: 100%; opacity: 0;" *ngIf="newSourcePlatform === 'livereview'">
-            <p class="step-heading">LiveReview Url</p>
-            <input class="default-input" [(ngModel)]="newSourceUrl" type="text" data-cy="newSourceUrlInp" />
+          <div class="flex-column" style="width: 100%;" *ngIf="newSourcePlatform === 'livereview'">
+            <p>Learn more about how live-review works <a href="/help?q=live reviews" target="_blank">here</a></p>
           </div>
 
           <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'csv'">
-            <p class="step-heading">CSV Upload:</p>
+            <p class="step-heading">CSV Upload (in correct format):</p>
+            <div class="flex-row">
             <input type="file" class="file-block" (change)="uploadFile($event)">
+              <span style = "padding-left: 0.5rem;"class="flex-row center" [searchTerm]="'csv'" [tooltip]="'Upload a .csv (excel) file'">      
+                <img
+                  src="../../assets/icons/tooltip.svg"
+                  
+                  style="width: 1.5rem;"
+                />
+              </span>
+            </div>
           </div>
 
           <div class="flex-column center" style="width: 100%" *ngIf="newSourcePlatform === ''">
@@ -277,7 +285,7 @@
 
 <dp-modal-container [modalDisplay]="showInfoModal" (close)="toggleInfoModal()" data-cy="infoModal">
   <div class="flex-row modal"
-    style="width: 20vw; height: fit-content; color: black; margin-bottom: 1rem; margin-top: 1rem;">
+    style="width: 20vw; height: fit-content; min-height: 30vh; color: black; margin-bottom: 1rem; margin-top: 1rem;">
     <div class="flex-column center modal-contents" style="width: 100%; max-width: none">
       <div class="heading-container" style="padding-bottom: 1rem;">
         <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item"
@@ -335,7 +343,7 @@
         </ng-container>
         <ng-container *ngIf="
             selectedSource?.url !== 'live-review-logo.png' &&
-            selectedSource?.url !== 'youtube-logo.png'
+            selectedSource?.url !== 'youtube-logo.png' && selectedSource?.url !== 'csv-logo.png'
           ">
           <div class="flex-row left">
             <div class="tag flex-row center">Name</div>
@@ -353,6 +361,14 @@
               alt="Source Image" style="width: 80%;" />
           </div>
         </ng-container>
+        <ng-container *ngIf="
+        selectedSource?.url === 'csv-logo.png'
+      ">
+      <div class="flex-row left">
+        <div class="tag flex-row center">Name</div>
+        <p class="info-data">{{ selectedSource?.name }}</p>
+      </div>
+    </ng-container>
       </div>
     </div>
   </div>

@@ -24,8 +24,11 @@ describe('MainComponent', () => {
   });
 
   it('should open the sidebar', () => {
-    component.toggleSidebar();
+    component.setSideBarOpen();
     expect(component.sidebarCollapsed).toBeFalse();
+
+    component.setSideBarClosed();
+    expect(component.sidebarCollapsed).toBeTrue();
   });
 
   it('should process pdf URL correctly', () => {
@@ -39,9 +42,6 @@ describe('MainComponent', () => {
 
     expect(component.pdfUrl).toBe('https://example.com/somefile.pdf');
 
-    expect(storeDispatchSpy).toHaveBeenCalledWith(
-      new ToastSuccess('Your report has been generated!')
-    );
   });
 
   it('should fail process pdf', () => {

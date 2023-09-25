@@ -6,5 +6,10 @@ python-dotenv
 # app specific packages
 pymongo
 requests
+bleach
 unidecode
 bleach
+datetime
+
+#monitoring
+elastic-apm

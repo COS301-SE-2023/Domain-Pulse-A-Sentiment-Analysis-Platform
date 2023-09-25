@@ -15,6 +15,13 @@ import {
   SetDomain,
   SetUserDetails,
   ToastError,
+  ToggleAddDomainModal,
+  ToggleChangePasswordModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleDeleteAccountModal,
+  ToggleEditDomainModal,
+  ToggleProfileEditModal,
+  ToggleProfileModal,
 } from '../app.actions';
 import { AppState, DisplayDomain, UserDetails } from '../app.state';
 import { ModalContainerComponent } from '../modal-container/modal-container.component';
@@ -64,6 +71,24 @@ describe('SidebarComponent', () => {
     fixture.detectChanges();
   });
 
+  it('should initialize component properties from store', () => {
+    // Set up mock data for the store observables
+    const mockShowAddDomainModal = false;
+    const mockShowProfileModal = false;
+    const mockShowEditDomainModal = false;
+    const mockShowConfirmDeleteDomainModal = false;
+
+
+    // Trigger ngOnInit
+    component.ngOnInit();
+
+    // Expect component properties to be updated based on mock data
+    expect(component.showAddDomainModal).toBe(mockShowAddDomainModal);
+    expect(component.showProfileModal).toBe(mockShowProfileModal);
+    expect(component.showEditDomainModal).toBe(mockShowEditDomainModal);
+    expect(component.showConfirmDeleteDomainModal).toBe(mockShowConfirmDeleteDomainModal);
+  });
+
   // Integration Test
   
   it('should fire a "AddDomain" action', (done: DoneFn) => {
@@ -89,6 +114,7 @@ describe('SidebarComponent', () => {
         expect(component.newDomainName).toBe('');
         expect(component.newDomainImageName).toBe('');
         expect(component.newDomainDescription).toBe('');
+        expect(component.imagePreviewDomain).toBeNull();
 
         done();
       }, 300);
@@ -131,6 +157,9 @@ describe('SidebarComponent', () => {
   });
 
   it('should Toggle The domain flag', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    
     const dummyDisplayDomain: DisplayDomain = {
       id: '1',
       name: 'Dummy Domain',
@@ -144,12 +173,13 @@ describe('SidebarComponent', () => {
     component.domains = [dummyDisplayDomain];
 
     component.showAddDomainModal = false;
-    component.toggleDomainModal();
-    expect(component.showAddDomainModal).toBe(true);
+    component.toggleDomainModalOn();
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
+
 
     component.showAddDomainModal = true;
-    component.toggleDomainModal();
-    expect(component.showAddDomainModal).toBe(false);
+    component.toggleDomainModalOff();
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
   });
 
   it('should not toggle The domain flag', () => {
@@ -169,7 +199,7 @@ describe('SidebarComponent', () => {
     component.domains = [dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain, dummyDisplayDomain,];
 
     component.showAddDomainModal = false;
-    component.toggleDomainModal();
+    component.toggleDomainModalOn();
     
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToastError('You have reached the maximum number of domains'));
 
@@ -192,41 +222,50 @@ describe('SidebarComponent', () => {
 
 
     component.showAddDomainModal = false;
-    component.toggleDomainModal();
+    component.toggleDomainModalOn();
     
-    expect(component.showAddDomainModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
+
 
 
   });
 
   it('should toggle the Edit Domain Modal flag', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();
-    expect(component.showEditDomainModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleEditDomainModal());
 
     component.showEditDomainModal = true;
     component.toggleEditDomainModal();
-    expect(component.showEditDomainModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleEditDomainModal());
   });
 
   it('should toggle the Profile Modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+    
     component.showProfileModal = false;
     component.toggleProfileModal();
-    expect(component.showProfileModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileModal());
 
     component.showProfileModal = true;
     component.toggleProfileModal();
-    expect(component.showProfileModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileModal());
   });
 
   it('toggle the edit profile modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
     component.showProfileEditModal = false;
     component.toggleProfileEditModal();
-    expect(component.showProfileEditModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileEditModal());
 
     component.showProfileEditModal = true;
     component.toggleProfileEditModal();
-    expect(component.showProfileEditModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileEditModal());
   });
 
   // Integration Test
@@ -263,11 +302,19 @@ describe('SidebarComponent', () => {
     component.deleteDomain();
   });
 
-  it('should fire sideBarClicked event when the sidebar is clicked', () => {
+  it('should fire closeSidebarClicked event when the sidebar is clicked', () => {
     let eventFired = false;
-    component.sidebarClicked.pipe(first()).subscribe(() => (eventFired = true));
+    component.closeSidebar.pipe(first()).subscribe(() => (eventFired = true));
 
-    component.clickSidebar();
+    component.closeSidebarClicked();
+    expect(eventFired).toBeTrue();
+  });
+
+  it('should fire openSidebarClicked event when the sidebar is clicked', () => {
+    let eventFired = false;
+    component.openSidebar.pipe(first()).subscribe(() => (eventFired = true));
+
+    component.openSidebarClicked();
     expect(eventFired).toBeTrue();
   });
 
@@ -372,6 +419,9 @@ describe('SidebarComponent and AppState', () => {
   });
 
   it('should toggle the edit domain modal and set editDomain properties if selectedDomain is available', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+
     const dummyDisplayDomain: DisplayDomain = {
       id: '1',
       name: 'Dummy Domain',
@@ -383,11 +433,13 @@ describe('SidebarComponent and AppState', () => {
     };
 
     spyOn(component['store'], 'selectSnapshot').and.returnValue(dummyDisplayDomain);
+    
 
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();
 
-    expect(component.showEditDomainModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleEditDomainModal());
+
     expect(component.editDomainName).toBe(dummyDisplayDomain.name);
     expect(component.editDomainImageName).toBe(dummyDisplayDomain.imageUrl);
     expect(component.editDomainDescription).toBe(dummyDisplayDomain.description);
@@ -395,68 +447,70 @@ describe('SidebarComponent and AppState', () => {
 
   it('should toggle the edit domain modal without setting editDomain properties if selectedDomain is not available', () => {
     spyOn(component['store'], 'selectSnapshot').and.returnValue(null);
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
 
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();
 
-    expect(component.showEditDomainModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleEditDomainModal());
     expect(component.editDomainName).toBe(''); 
     expect(component.editDomainImageName).toBe('');
     expect(component.editDomainDescription).toBe('');
   });
 
   it('should set showEditDomainModal to false when calling toggleEditDomainModal if it was true', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
     component.showEditDomainModal = true;
 
     component.toggleEditDomainModal();
 
-    expect(component.showEditDomainModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleEditDomainModal());
   });
 
 
   it('should toggle the change password modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
+
     component.showChangePasswordModal = false;
     component.toggleChangePasswordModal();
-    expect(component.showChangePasswordModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
 
     component.showChangePasswordModal = true;
     component.toggleChangePasswordModal();
-    expect(component.showChangePasswordModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
   });
 
   it('should toggle the delete account modal', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
     component.showDeleteAccountModal = false;
     component.toggleDeleteAccountModal();
-    expect(component.showDeleteAccountModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleDeleteAccountModal());
 
     component.showDeleteAccountModal = true;
     component.toggleDeleteAccountModal();
-    expect(component.showDeleteAccountModal).toBe(false);
-    expect(component.showConfirmDeleteAccountModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleDeleteAccountModal());
   });
 
-  it('should toggle the confirm delete account modal', () => {
-    component.showConfirmDeleteAccountModal = false;
-    component.toggleConfirmDeleteAccountModal();
-    expect(component.showConfirmDeleteAccountModal).toBe(true);
-
-    component.showConfirmDeleteAccountModal = true;
-    component.toggleConfirmDeleteAccountModal();
-    expect(component.showConfirmDeleteAccountModal).toBe(false);
-  });
 
   it('should toggle the confirm delete domain modal and set deleteDomainId if id is provided', () => {
     const dummyDomainId = '123';
     component.deleteDomainId = ''; 
 
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+    
+
     component.showConfirmDeleteDomainModal = true;
     component.toggleConfirmDeleteDomainModal();
-    expect(component.showConfirmDeleteDomainModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleConfirmDeleteDomainModal());
     expect(component.deleteDomainId).toBe('');
 
     component.showConfirmDeleteDomainModal = false;
     component.toggleConfirmDeleteDomainModal(dummyDomainId);
-    expect(component.showConfirmDeleteDomainModal).toBe(true);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleConfirmDeleteDomainModal());
     expect(component.deleteDomainId).toBe(dummyDomainId);
 
     
@@ -701,7 +755,8 @@ it('should dispatch ChangePassword action and reset passwords', () => {
   expect(storeDispatchSpy).toHaveBeenCalledWith(new ChangePassword('oldpassword', 'newpassword'));
   expect(component.oldPassword).toBe('');
   expect(component.newPassword).toBe('');
-  expect(component['showChangePasswordModal']).toBe(true);
+  expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
+
 });
 
 it('should dispatch DeleteUser action when username is available', () => {

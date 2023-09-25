@@ -8,7 +8,7 @@ fi
 
 #Check for .env and .postgres.env in currend directory
 if [ ! -f .env ] || [ ! -f .postgresql.env ]; then
-  echo "Missing .env or .postgres.env file in current directory."
+  echo "Missing .env or .postgresql.env file in current directory."
   exit 1
 fi
 
@@ -34,7 +34,7 @@ compose_dir="/home/rocky/domain-pulse"
 
 # Define the commands to execute on each node
 # make space on the server because there isnt enough, there will be some downtime
-delete_command="cd $compose_dir && docker compose -f ${compose_prefix}server-compose.yml down && docker image prune -all --force && sudo rm -rf /var/lib/docker/overlay2"
+delete_command="cd $compose_dir && docker compose -f ${compose_prefix}server-compose.yml down && docker image prune --all --force && sudo rm -rf /var/lib/docker/overlay2"
 
 pull_command="cd $compose_dir && git pull && git checkout $branch && docker compose -f ${compose_prefix}server-compose.yml pull"
 up_command="cd $compose_dir && docker compose -f ${compose_prefix}server-compose.yml up -d"
@@ -42,9 +42,17 @@ up_command="cd $compose_dir && docker compose -f ${compose_prefix}server-compose
 # Iterate through the nodes and execute the commands
 for node in "${nodes[@]}"; do
   echo "Connecting to $node..."
+  echo "Deleteing images and containers on $node..."
+  ssh "$node" "$delete_command"
+  echo "Done deleting images and containers on $node."
+
+  echo "Restarting Docker"
+  ssh "$node" "sudo systemctl restart docker"
+  
+  echo "Pulling images on $node..."
   ssh "$node" "$pull_command"
   scp .env "$node:$compose_dir/backend/.env"
-  scp .postgres.env "$node:$compose_dir/backend/.postgres.env"
+  scp .postgresql.env "$node:$compose_dir/backend/.postgresql.env"
   ssh "$node" "$up_command"
   echo "Finished on $node."
 done

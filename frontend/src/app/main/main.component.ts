@@ -106,11 +106,6 @@ export class MainComponent implements OnInit {
       const result: string = res.slice(0, pdfIndex + 4);
       console.log(result);
       this.pdfUrl = result;
-      this.store.dispatch(
-        new ToastSuccess(
-          'Your report has been generated!'
-        )
-      );
     } else {
       this.store.dispatch(
         new ToastError(
@@ -124,8 +119,12 @@ export class MainComponent implements OnInit {
     this.selectedDomain = domain;
   }
 
-  toggleSidebar() {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
+  setSideBarClosed() {
+    this.sidebarCollapsed = true;
+  }
+
+  setSideBarOpen() {
+    this.sidebarCollapsed = false;
   }
 
   toggleReportModal() {

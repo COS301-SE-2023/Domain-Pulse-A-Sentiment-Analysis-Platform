@@ -37,7 +37,6 @@ export class RegisterPageComponent {
               },
             }); */
             this.isSpinning = false;
-            this.store.dispatch(new ToastSuccess('Account created successfully!'));
         },
         error: (error) => {
           console.log(error);

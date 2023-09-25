@@ -2,20 +2,26 @@ from django.test import TestCase
 from django.http import JsonResponse, HttpRequest
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from unittest.mock import patch, MagicMock, ANY
+from unittest.mock import patch, MagicMock, ANY, Mock
 from authchecker import auth_checks
 import json
 import os
 import mock
 import requests
 from . import views
-from datamanager import sentiment_record_model
+from datamanager import sentiment_record_model, refresh_queue
 
 # Create your tests here.
 
 
 class QueryEngineTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
+
+    def test_apm_enabled(self):
+        from warehouse import settings
+
+        settings.append_installed_apps("True")
+        self.assertIn("elasticapm.contrib.django", settings.INSTALLED_APPS)
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -190,16 +196,19 @@ class QueryEngineTests(TestCase):
         response1: JsonResponse = self.client.get(path="/query/get_source_dashboard/")
         response2: JsonResponse = self.client.get(path="/query/get_domain_dashboard/")
         response3: JsonResponse = self.client.get(path="/query/refresh_source/")
+        response4: JsonResponse = self.client.get(path="/query/try_refresh/")
 
         self.assertEqual(response1.status_code, 200)
         self.assertEqual(response2.status_code, 200)
         self.assertEqual(response3.status_code, 200)
+        self.assertEqual(response4.status_code, 200)
 
         expected_data = {"status": "FAILURE", "details": "Invalid request"}
 
         self.assertEqual(response1.json(), expected_data)
         self.assertEqual(response2.json(), expected_data)
         self.assertEqual(response3.json(), expected_data)
+        self.assertEqual(response4.json(), expected_data)
 
     @patch("requests.post")
     @patch("datamanager.sentiment_record_model.add_record")
@@ -440,5 +449,205 @@ class QueryEngineTests(TestCase):
         self.assertEqual(data["domain"]["aggregated_metrics"], {})
         self.assertEqual(data["domain"]["meta_data"], {})
         self.assertEqual(data["domain"]["individual_metrics"], {})
+
+    @patch("datamanager.refresh_queue.process_batch")
+    @patch("datamanager.sentiment_record_model.add_record")
+    @patch("requests.post")
+    def test_try_refresh_success(self, mock_post, mock_add_record, mock_process_batch):
+        mock_process_batch.return_value = (
+            True,
+            [
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+                {"timestamp": 12345, "text": "Sample text"},
+            ],
+        )
+
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "metrics": [
+                {"some_metric": 42},
+                {"some_metric": 42},
+                {"some_metric": 42},
+                {"some_metric": 42},
+                {"some_metric": 42},
+            ]
+        }
+        mock_post.return_value = mock_response
+
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        expected_response = JsonResponse({"status": "SUCCESS", "is_done": False})
+        self.assertEqual(response.content, expected_response.content)
+        self.assertEqual(response.status_code, 200)
+
+    @patch("datamanager.refresh_queue.process_batch")
+    @patch("datamanager.sentiment_record_model.add_record")
+    @patch("requests.post")
+    def test_try_refresh_no_source(
+        self, mock_post, mock_add_record, mock_process_batch
+    ):
+        mock_process_batch.return_value = (
+            False,
+            "no source",
+        )
+
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_post.return_value = mock_response
+
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        expected_response = JsonResponse(
+            {
+                "status": "FAILURE",
+                "details": "No source with that ID is pending processing",
+            }
+        )
+        self.assertEqual(response.content, expected_response.content)
+        self.assertEqual(response.status_code, 200)
+
+    @patch("datamanager.refresh_queue.process_batch")
+    @patch("datamanager.sentiment_record_model.add_record")
+    @patch("requests.post")
+    def test_try_refresh_source_done(
+        self, mock_post, mock_add_record, mock_process_batch
+    ):
+        mock_process_batch.return_value = (
+            False,
+            "source done",
+        )
+
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_post.return_value = mock_response
+
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        expected_response = JsonResponse({"status": "SUCCESS", "is_done": True})
+        self.assertEqual(response.content, expected_response.content)
+        self.assertEqual(response.status_code, 200)
+
+    @patch("datamanager.refresh_queue.process_batch")
+    @patch("datamanager.sentiment_record_model.add_record")
+    @patch("requests.post")
+    def test_try_refresh_analyser_failure(
+        self, mock_post, mock_add_record, mock_process_batch
+    ):
+        mock_process_batch.return_value = (
+            True,
+            [{"text": "hi there", "timestamp": 12345}],
+        )
+
+        mock_response = Mock()
+        mock_response.status_code = 400
+        mock_response.json.return_value = {"metrics": [{"some_metric": 42}]}
+        mock_post.return_value = mock_response
+
+        url = "/query/try_refresh/"
+        source_id = "hbfhwbgufbo724n2n7"
+        request_body = {"source_id": source_id}
+
+        response = self.client.post(
+            path=url, data=json.dumps(request_body), content_type="application/json"
+        )
+
+        expected_response = JsonResponse(
+            {
+                "status": "FAILURE",
+                "details": "Could not connect to Analyser",
+            }
+        )
+        self.assertEqual(response.content, expected_response.content)
+        self.assertEqual(response.status_code, 200)
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_empty_queue(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = {"queue": []}
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertFalse(result[0])
+        self.assertEqual(result[1], ["source done"])
+
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_not_called()
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_no_queue(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = None
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertFalse(result[0])
+        self.assertEqual(result[1], ["no source"])
+
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_not_called()
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_sucess_five(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = {
+            "queue": ["1", "2", "3", "4", "5", "6"]
+        }
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertTrue(result[0])
+        self.assertEqual(result[1], ["1", "2", "3", "4", "5"])
+        query = {"source_id": source_id}
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_called_once_with(
+            query, {"$set": {"queue": ["6"]}}
+        )
+
+    @patch("datamanager.refresh_queue.db")
+    def test_batch_process_sucess_less_than_five(self, mock_db):
+        mock_collection = mock_db["refresh_queue"]
+        mock_collection.find_one.return_value = {"queue": ["1", "2", "3", "4"]}
+
+        source_id = "anfhbehbfksebf"
+
+        result = refresh_queue.process_batch(source_id)
+
+        self.assertTrue(result[0])
+        self.assertEqual(result[1], ["1", "2", "3", "4"])
+        query = {"source_id": source_id}
+        mock_collection.find_one.assert_called_once_with({"source_id": source_id})
+        mock_collection.update_one.assert_called_once_with(
+            query, {"$set": {"queue": []}}
+        )
 
     # ----------------------------------------------------------------

@@ -13,3 +13,6 @@ shortuuid
 
 # move away from sshtunnel
 sshtunnel
+
+#monitoring
+elastic-apm
