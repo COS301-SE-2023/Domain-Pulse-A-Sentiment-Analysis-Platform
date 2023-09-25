@@ -786,4 +786,20 @@ it('should dispatch Logout action', () => {
   expect(storeDispatchSpy).toHaveBeenCalledWith(new Logout());
 });
 
+it('should dispatch "new GuestModalChange(true)" when some functions are called', () => {
+  spyOn(component['store'], 'dispatch').and.stub();
+
+  component.canEdit = false;
+
+  component.toggleEditDomainModal();
+  component.toggleProfileModal();
+  component.toggleConfirmDeleteDomainModal();
+
+  // expect newGuestModalChange(true) to be dispatched 3 times
+  expect(component['store'].dispatch).toHaveBeenCalledTimes(3);
+  expect(component['store'].dispatch).toHaveBeenCalledWith(
+    new GuestModalChange(true)
+  );
+});
+
 });
