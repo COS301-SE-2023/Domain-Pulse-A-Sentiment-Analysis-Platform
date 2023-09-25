@@ -32,7 +32,8 @@ import {
   SetIsActive,
   UplaodCVSFile,
   GenerateReport,
-  AttempGuestLogin
+  AttempGuestLogin,
+  GuestModalChange
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, throwError } from 'rxjs';
@@ -102,6 +103,7 @@ interface AppStateModel {
   sourceIsLoading: boolean;
   selectedStatisticIndex: number;
   canEdit: boolean;
+  showMakeAccountModal: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -129,6 +131,7 @@ interface AppStateModel {
     userHasNoDomains: false,
     userHasNoSources: false,
     canEdit: false,
+    showMakeAccountModal: false,
   },
 })
 @Injectable()
@@ -245,6 +248,11 @@ export class AppState {
   @Selector()
   static userHasNoSources(state: AppStateModel) {
     return state.userHasNoSources;
+  }
+
+  @Selector()
+  static showMakeAccountModal(state: AppStateModel) {
+    return state.showMakeAccountModal;
   }
 
   @Action(ToastError)
@@ -535,6 +543,11 @@ export class AppState {
 
 
   } */
+
+  @Action(GuestModalChange)
+  guestModalChange(ctx: StateContext<AppStateModel>, state: GuestModalChange) {
+    ctx.patchState({ showMakeAccountModal: state.show });
+  }
 
   @Action(EditSource)
   editSource(ctx: StateContext<AppStateModel>, state: EditSource) {

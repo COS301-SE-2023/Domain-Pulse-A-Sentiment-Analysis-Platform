@@ -13,7 +13,7 @@ import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, filter, switchMap, take } from 'rxjs/operators';
-import { GenerateReport, ToastError, ToastSuccess } from '../app.actions';
+import { GenerateReport, GuestModalChange, ToastError, ToastSuccess } from '../app.actions';
 /* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
  */ @Component({
   selector: 'app-main',
@@ -61,6 +61,7 @@ export class MainComponent implements OnInit {
   showReportModal = false;
   pdfUrl!: string;
 
+  @Select(AppState.showMakeAccountModal) showMakeAccountModal$!: Observable<boolean>;
   showGuestModal = true;
 
   constructor(private store: Store) {
@@ -69,6 +70,9 @@ export class MainComponent implements OnInit {
     });
     this.userHasNoSources$.subscribe((userHasNoSources: boolean) => {
       this.userHasNoSources = userHasNoSources;
+    });
+    this.showMakeAccountModal$.subscribe((showMakeAccountModal: boolean) => {
+      this.showGuestModal = showMakeAccountModal;
     });
   }
   
@@ -156,10 +160,10 @@ export class MainComponent implements OnInit {
 
   toggleGuestModal() {
     if(this.showGuestModal){
-      this.showGuestModal = false;
+      this.store.dispatch(new GuestModalChange(false));
     }
     else{
-      this.showGuestModal = true;
+      this.store.dispatch(new GuestModalChange(true));
     }
   }
 }
