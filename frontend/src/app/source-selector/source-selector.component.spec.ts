@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SourceSelectorComponent } from './source-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { AppApi } from '../app.api';
@@ -21,29 +21,46 @@ import {
 } from '../app.actions';
 import { DisplaySource, Source } from '../app.state';
 import { Data } from '@angular/router';
+import { DebugElement } from '@angular/core';
+import {  CommonModule } from '@angular/common';
+import { ModalContainerComponent } from '../modal-container/modal-container.component';
+import { ElementRef } from '@angular/core';
+
+class MockElementRef {
+  nativeElement = {};
+}
 
 describe('SourceSelectorComponent', () => {
   let component: SourceSelectorComponent;
   let storeSpy: jasmine.SpyObj<Store>;
   let appApiSpy: jasmine.SpyObj<AppApi>;
   let actions$: Observable<any>;
+  let fixture: ComponentFixture<SourceSelectorComponent>; 
+  let el: DebugElement;
+
+
 
   beforeEach(() => {
     appApiSpy = jasmine.createSpyObj('AppApi', ['getSourceSentimentData']);
     appApiSpy.getSourceSentimentData.and.callThrough();
-
+  
     TestBed.configureTestingModule({
+      declarations: [SourceSelectorComponent, ModalContainerComponent],
       providers: [
         SourceSelectorComponent,
         { provide: AppApi, useValue: appApiSpy },
+        { provide: ElementRef, useClass: MockElementRef }, Store, Actions
       ],
       imports: [
         NgxsModule.forRoot([]),
         FormsModule,
+        CommonModule, // Import CommonModule instead of AsyncPipe
       ],
     });
-
+  
+    fixture = TestBed.createComponent(SourceSelectorComponent);
     component = TestBed.inject(SourceSelectorComponent);
+    el = fixture.debugElement;
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
     actions$ = TestBed.inject(Actions);
   });
@@ -257,13 +274,31 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should toggle the add source modal', () => {
+
+
+    component.lastOpenedModal = [];
     component.showAddSourcesModal = false;
     component.toggleAddSourcesModal();
     expect(component.showAddSourcesModal).toBe(true);
 
+    expect(component.lastOpenedModal).toEqual(['addSource']);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
+
+
     component.showAddSourcesModal = true;
     component.toggleAddSourcesModal();
     expect(component.showAddSourcesModal).toBe(false);
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
   });
 
   it('should toggle the delete source confirmation modal', () => {
@@ -276,15 +311,32 @@ describe('SourceSelectorComponent', () => {
       isRefreshing: false,
     };
 
+    component.lastOpenedModal = [];
+
     component.selectedSource = dummyDisplaySource;
 
     component.showConfirmDeleteSourceModal = false;
     component.toggleConfirmDeleteSourceModal();
     expect(component.showConfirmDeleteSourceModal).toBe(true);
 
+    expect(component.lastOpenedModal).toEqual(['confirmDeleteSource']);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
+
     component.showConfirmDeleteSourceModal = true;
     component.toggleConfirmDeleteSourceModal();
     expect(component.showConfirmDeleteSourceModal).toBe(false);
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
+
   });
 
   it('should fire a "DeleteSource" action when deleteSource function called', () => {
@@ -636,13 +688,31 @@ describe('SourceSelectorComponent', () => {
   });
 
   it('should toggle info modal', () => {
+    component.lastOpenedModal = [];
     component.showInfoModal = false;
     component.toggleInfoModal();
     expect(component.showInfoModal).toBe(true);
 
+    expect(component.lastOpenedModal).toEqual(['info']);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
+
     component.showInfoModal = true;
     component.toggleInfoModal();
     expect(component.showInfoModal).toBe(false);
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
+
+    expect(component.isEditing).toBe(false);
+
   });
 
   it('should stop event propagation and toggle info modal', () => {
@@ -692,4 +762,72 @@ describe('SourceSelectorComponent', () => {
       `${window.location.protocol}//localhost:8004/ingest/post-review/1/test`
     );
   });
+
+  it('should set editSourceName and isEditing when a selected source exists', () => {
+    const selectedSource = {
+        name: 'Test Source Name',
+    };
+
+    spyOn(storeSpy, 'selectSnapshot').and.returnValue(selectedSource);
+
+    component.editName();
+
+    expect(component.editSourceName).toBe(selectedSource.name);
+    expect(component.isEditing).toBe(true);
+});
+
+it('should set editSourceName to an empty string when no selected source exists', () => {
+    spyOn(storeSpy, 'selectSnapshot').and.returnValue(null);
+
+    component.editName();
+
+    expect(component.editSourceName).toBe('');
+    expect(component.isEditing).toBe(true); 
+});
+
+/* it('should call toggleAddSourcesModal when clicking outside addSourceModal', () => {
+  // Set appropriate component properties to simulate the condition
+  component.modalTimeout = false;
+  component.showAddSourcesModal = true;
+  component.lastOpenedModal.push('addSource');
+
+  // Create a fake event object to simulate a click outside the modal
+  const fakeEvent = {
+      target: document.createElement('div'), // Create a fake target element
+  } as MouseEvent; // Use as assertion to tell TypeScript that it's a MouseEvent
+
+  // Trigger the onClick event with the fake event
+  component.onClick(fakeEvent);
+
+  // Expect the toggleAddSourcesModal function to have been called
+  expect(component.toggleAddSourcesModal).toHaveBeenCalled();
+});
+
+// Similar tests for toggleConfirmDeleteSourceModal and toggleInfoModal, 
+// following the same pattern as the test above.
+
+it('should not call toggleAddSourcesModal when modalTimeout is true', () => {
+  // Set modalTimeout to true to simulate the condition
+  component.modalTimeout = true;
+  component.showAddSourcesModal = true;
+  component.lastOpenedModal.push('addSource');
+
+  // Create a fake event object to simulate a click outside the modal
+  const fakeEvent = {
+      target: document.createElement('div'), // Create a fake target element
+  } as MouseEvent;
+
+  // Trigger the onClick event with the fake event
+  component.onClick(fakeEvent);
+
+  // Expect the toggleAddSourcesModal function to not have been called
+  expect(component.toggleAddSourcesModal).not.toHaveBeenCalled();
+});
+
+// Similar tests for other modal types and conditions.
+
+afterEach(() => {
+  fixture.destroy();
+}); */
+
 });

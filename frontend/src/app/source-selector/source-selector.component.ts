@@ -4,11 +4,13 @@ import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'source-selector',
   templateUrl: './source-selector.component.html',
   styleUrls: ['./source-selector.component.sass'],
+  imports: [AsyncPipe, CommonModule],
 })
 export class SourceSelectorComponent implements OnInit {
   @Select(AppState.sources) sources$!: Observable<DisplaySource[] | null>;

@@ -1,25 +1,36 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { GenerateReport, GetDomains, ToastError, ToastSuccess } from '../app.actions';
 import { DisplayDomain, DisplaySource } from '../app.state';
+import { ElementRef } from '@angular/core';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ModalContainerComponent } from '../modal-container/modal-container.component';
+class MockElementRef {
+  nativeElement = {};
+}
+
 
 describe('MainComponent', () => {
   let component: MainComponent;
   let actions$: Observable<any>;
   let storeSpy: jasmine.SpyObj<Store>;
+  let fixture: ComponentFixture<MainComponent>;
+
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MainComponent],
+      declarations: [MainComponent, SidebarComponent, ModalContainerComponent],
+      providers: [MainComponent, { provide: ElementRef, useClass: MockElementRef }, Store, Actions],
       imports: [NgxsModule.forRoot([])],
     });
 
+    fixture = TestBed.createComponent(MainComponent);
     component = TestBed.inject(MainComponent);
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
-
+    //component = fixture.componentInstance;
     actions$ = TestBed.inject(Actions);
   });
 

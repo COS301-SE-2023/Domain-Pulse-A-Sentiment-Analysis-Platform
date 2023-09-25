@@ -39,7 +39,6 @@ import {
   ToggleProfileEditModal,
 } from '../app.actions';
 import { environment } from '../../environment';
-import { last } from 'cypress/types/lodash';
 
 @Component({
   selector: 'dp-sidebar',

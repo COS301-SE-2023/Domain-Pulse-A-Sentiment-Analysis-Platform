@@ -1,8 +1,8 @@
 <div class="gap-div flex-row align-center">
   <div class="sources-div flex-row align-center scrollable-div">
-    <ng-container *ngIf="sources$ | async as sources; else loadingSources">
+    <ng-container *ngIf="(sources$ | async) as sources; else loadingSources">
       <div *ngIf="sources.length > 1"class="source-cat flex-column center clickable-item-nohover" (click)="selectAllSources()"
-        [ngClass]="{ 'source-cat-selected': allSources$ | async }">
+        [ngClass]="{ 'source-cat-selected': (allSources$ | async) }">
         <img [src]="'../assets/icons/allSources.png'" height="60%" />
 
         <p class="source-name">All Sources</p>
