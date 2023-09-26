@@ -10,6 +10,8 @@ import bleach
 from CSV import csv_connector
 from datetime import datetime
 from unidecode import unidecode
+from urllib.parse import unquote
+
 
 
 # Create your views here.
@@ -105,8 +107,11 @@ def ingest_live_review(request: HttpRequest):
 
 
 def make_live_review(request: HttpRequest, source_id, source_name):
+
+    decoded_source_name = unquote(source_name)
+
     return render(
-        request, "form.html", {"source_id": source_id, "source_name": source_name}
+        request, "form.html", {"source_id": source_id, "source_name": decoded_source_name}
     )
 
 
