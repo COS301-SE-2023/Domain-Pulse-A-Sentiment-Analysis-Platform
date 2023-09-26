@@ -10,7 +10,7 @@ from unidecode import unidecode
 
 
 def handle_request(file):
-    decoded_file = file.read().decode("utf-8")
+    decoded_file = file.read().decode("utf-8-sig")
     reviews = []
     csv_reader = csv.DictReader(decoded_file.splitlines())
     current_time = datetime.now()
