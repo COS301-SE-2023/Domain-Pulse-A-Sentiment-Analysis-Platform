@@ -2,6 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{float}
+\usepackage{adjustbox}
 \graphicspath{ {./} }
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 
@@ -31,9 +33,17 @@ Process of Usability Testing:
 \begin{itemize}
     \item \textbf{Metrics for usability testing} - The metrics that we used to measure the usability of our application are as follows:
           \begin{itemize}
-              \item How insghtful the application is which is computed as an average with 10 being the most insightful and 1 being the least insightful.
-              \item The overall rating of the application which is computed as an average with 10 being the best rating and 1 being the worst rating.
-              \item The amount of responses regarding how easy the website is to use and navigate ranging from very easy to very diffucult.
+              \item How insghtful the application is which is computed as an average with 10 being the most insightful and 1 being the least insightful. As we can see from the image below the majority of the users we tested rated the insightfulness of the applications statsitics as an 8 or higher.
+              \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.9\textwidth]{piechart.png}
+              \end{figure}
+              \item The overall rating of the application which is computed as an average with 10 being the best rating and 1 being the worst rating. As we can see from the image below the majority os users rated the application on an overall scale of 8 or higher.
+              \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.9\textwidth]{Overall rating of the website.png}
+              \end{figure}
+              \item The amount of responses regarding how easyc the website is to use and navigate ranging from very easy to very diffucult.
               \item The overall sentiment of the responses regarding the application.
           \end{itemize}
 \end{itemize}
@@ -76,7 +86,7 @@ Security is a very important quality requirement for any application as peoples 
     \item \textbf{Identification and Authentication failure} - Once again we use Djangos buite lt in authentication libraries which have been thouroughly tested and are highly secure.
     \item \textbf{Software and data integrity failure} - All libraries and plugins that are used within our system are from trusted sources and hence we can be sure that there are no integrity failures that are known to us.
     \item \textbf{Security logging and monitoring failure} - We use software(Fail2ban) that bans an IP address from accessing our VM if more than 3 attemps to access the Vm are made and failed.
-    \item \textbf{Server-side request forgery} - We only allow users to choose from sources that the application trusts and hence dont allow the user to make requests to any other sources.
+    \item \textbf{Server-side request forgery} - We only allow users to choose from sources that the application trusts and hence dont allow the user to make requests to any other sources which restricts the range of allowed URLs that can be used as input by the user.
 \end{itemize}
 \subsection{Performance}
 \subsection{Scalability}
