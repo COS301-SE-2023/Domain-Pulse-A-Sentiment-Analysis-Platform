@@ -92,7 +92,7 @@ APM_ENABLED = os.getenv("APM_ENABLED")
 append_installed_apps(APM_ENABLED)
 
 ELASTIC_APM = {
-    "DEBUG": False,
+    "DEBUG": True,
     "LOG_LEVEL": "debug",
     "SERVER_URL": os.getenv("APM_SERVER_URL"),
     "SERVICE_NAME": "profiles",
