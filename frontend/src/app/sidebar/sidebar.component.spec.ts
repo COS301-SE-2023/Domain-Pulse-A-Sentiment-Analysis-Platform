@@ -794,10 +794,11 @@ it('should dispatch "new GuestModalChange(true)" when some functions are called'
 
   component.toggleEditDomainModal();
   component.toggleProfileModal();
+  component.toggleDomainModalOn();
   component.toggleConfirmDeleteDomainModal();
 
   // expect newGuestModalChange(true) to be dispatched 3 times
-  expect(component['store'].dispatch).toHaveBeenCalledTimes(3);
+  expect(component['store'].dispatch).toHaveBeenCalledTimes(4);
   expect(component['store'].dispatch).toHaveBeenCalledWith(
     new GuestModalChange(true)
   );
