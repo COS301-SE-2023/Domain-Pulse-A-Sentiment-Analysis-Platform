@@ -65,6 +65,7 @@ def produce_timeseries(individual_data: list):
     for record in individual_data:
         stamp_unix = int(record["timestamp"])
         timestamp = datetime.datetime.fromtimestamp(stamp_unix)
+        # timestamp = datetime.datetime.utcfromtimestamp(stamp_unix)
         timestamp = timestamp.astimezone(pytz.timezone("Africa/Johannesburg"))
         stamp = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
         day_stamp = timestamp.strftime("%Y-%m-%d")
