@@ -11,6 +11,7 @@ import {
   DeleteDomain,
   DeleteUser,
   EditDomain,
+  GuestModalChange,
   Logout,
   SetDomain,
   SetUserDetails,
