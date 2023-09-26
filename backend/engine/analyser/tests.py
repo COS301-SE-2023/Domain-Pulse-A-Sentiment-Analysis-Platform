@@ -41,6 +41,12 @@ def mocked_summarize_toxicity(*dummy):
 class SentimentAnalysisTests(TestCase):
     # -------------------------- UNIT TESTS --------------------------
 
+    def test_apm_enabled(self):
+        from engine import settings
+
+        settings.append_installed_apps("True")
+        self.assertIn("elasticapm.contrib.django", settings.INSTALLED_APPS)
+
     def test_summarize_general(self):
         # VERY_NEGATIVE
         general_metrics = [{"label": "NEGATIVE", "score": 0.9}]

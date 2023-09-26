@@ -12,7 +12,7 @@ import tempfile
 import urllib.parse
 
 GET_DOMAINS_ENDPOINT = (
-    "http://localhost:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
+    f"http://{str(os.getenv('DOMAINS_HOST')) }:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
 )
 
 assets_path = str(settings.ASSETS_DIR)
@@ -474,7 +474,7 @@ def generate_report(request: HttpRequest):
             source_ids.append(i["source_id"])
 
         id = shortuuid.ShortUUID().random(length=12)
-        url = f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+        url = f"http://{str(os.getenv('WAREHOUSE_HOST'))}:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
         # Fetching data from warehouse
         data = {"source_ids": source_ids, "local_key": str(os.getenv("LOCAL_KEY"))}
         response = requests.post(url, json=data)

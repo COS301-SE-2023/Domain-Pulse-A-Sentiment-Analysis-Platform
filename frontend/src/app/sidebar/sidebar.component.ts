@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import {
   trigger,
   state,
   style,
   animate,
   transition,
+  AUTO_STYLE,
 } from '@angular/animations';
 import { Select, Store } from '@ngxs/store';
 import {
@@ -29,6 +30,14 @@ import {
   ToastError,
   Logout,
   SetAllSourcesSelected,
+  ToggleAddDomainModal,
+  ToggleProfileModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleEditDomainModal,
+  ToggleChangePasswordModal,
+  ToggleDeleteAccountModal,
+  ToggleProfileEditModal,
+  GuestModalChange,
 } from '../app.actions';
 import { environment } from '../../environment';
 
@@ -41,45 +50,45 @@ import { environment } from '../../environment';
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+       })
       ),
       state(
         'out',
         style({
           opacity: 0,
-          transform: 'scale(0.5)',
-        })
+       })
       ),
-      transition('in => out', animate('300ms ease-in')),
-      transition('out => in', animate('300ms ease-out')),
+      transition('in => out', animate('300ms linear')),
+      transition('out => in', animate('300ms linear')),
     ]),
     trigger('fullLogoSwitch', [
       state(
         'in',
         style({
-          opacity: 1,
-          transform: 'scale(1)',
-        })
+          opacity: AUTO_STYLE,
+})
       ),
       state(
         'out',
         style({
-          opacity: 0,
-          transform: 'scale(0.7)',
-        })
+          opacity: 0,        })
       ),
-      transition('in => out', [animate('400ms ease-in')]),
-      transition('out => in', [animate('300ms ease-out')]),
+      transition('in => out', [animate('300ms linear')]),
+      transition('out => in', [animate('300ms linear')]),
     ]),
   ],
 })
-export class SidebarComponent {
-  @Output() sidebarClicked: EventEmitter<void> = new EventEmitter<void>();
+export class SidebarComponent implements OnInit {
+  @Output() closeSidebar: EventEmitter<void> = new EventEmitter<void>();
+  @Output() openSidebar: EventEmitter<void> = new EventEmitter<void>();
 
-  clickSidebar() {
-    this.sidebarClicked.emit();
+  closeSidebarClicked() {
+    this.closeSidebar.emit();
+  }
+
+  openSidebarClicked() {
+    this.openSidebar.emit();
   }
 
   @Select(AppState.domains) domains$!: Observable<DisplayDomain[] | null>;
@@ -88,6 +97,13 @@ export class SidebarComponent {
   @Select(AppState.profileDetails)
   profileDetails$!: Observable<ProfileDetails | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
+  @Select(AppState.showAddDomainModal) showAddDomainModal$!: Observable<boolean>;
+  @Select(AppState.showProfileModal) showProfileModal$!: Observable<boolean>;
+  @Select(AppState.showEditDomainModal) showEditDomainModal$!: Observable<boolean>;
+  @Select(AppState.showConfirmDeleteDomainModal) showConfirmDeleteDomainModal$!: Observable<boolean>;
+  @Select(AppState.showChangePasswordModal) showChangePasswordModal$!: Observable<boolean>;
+  @Select(AppState.showDeleteAccountModal) showDeleteAccountModal$!: Observable<boolean>;
+  @Select(AppState.showProfileEditModal) showProfileEditModal$!: Observable<boolean>;
 
   domains: DisplayDomain[] = [];
   smallLogoState = 'in';
@@ -147,12 +163,16 @@ export class SidebarComponent {
   showProfileEditModal = false;
   showChangePasswordModal = false;
   showDeleteAccountModal = false;
-  showConfirmDeleteAccountModal = false;
   showConfirmDeleteDomainModal = false;
+
+  modalTimeout = false;
+
+  lastOpenedModal: any[] = [];
 
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
   domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
 
+  public canEdit: boolean = true;
 
   public selectedFile: File | null = null;
   public selectedFileDomain: File | null = null;
@@ -160,96 +180,250 @@ export class SidebarComponent {
 
   constructor(
     private store: Store,
-    public blobStorageService: AzureBlobStorageService
+    public blobStorageService: AzureBlobStorageService,
+    private el: ElementRef
   ) {
-
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      this.canEditChanged(canEdit);
+    });
+    
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      this.canEditChanged(canEdit);
+    });
     this.domains$.subscribe((domains) => {
       this.domains = domains!;
     });
   }
 
-  toggleDomainModal(): void {
-    if (!this.showAddDomainModal) {
-      if(this.domains == undefined){
-        this.showAddDomainModal = true;
+  canEditChanged(canEdit: boolean | undefined) {
+    if (canEdit !== undefined) this.canEdit = canEdit;
+  }
+
+  ngOnInit() {
+    this.store.select(AppState.showAddDomainModal).subscribe((value) => {
+      if(value == undefined){
         return;
       }
-      if(this.domains.length > 8){
-        this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
+      this.showAddDomainModal = value;
+    }); 
+
+    
+    this.store.select(AppState.showProfileModal).subscribe((value) => {
+      if(value == undefined){
         return;
       }
-      this.showAddDomainModal = true;
-    } else {
-      this.showAddDomainModal = false;
+      this.showProfileModal = value;
+    }); 
+
+    this.store.select(AppState.showEditDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showEditDomainModal = value;
+    });
+
+    this.store.select(AppState.showConfirmDeleteDomainModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showConfirmDeleteDomainModal = value;
+    });
+
+    this.store.select(AppState.showChangePasswordModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showChangePasswordModal = value;
+    });
+
+    this.store.select(AppState.showDeleteAccountModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showDeleteAccountModal = value;
+    });
+
+    this.store.select(AppState.showProfileEditModal).subscribe((value) => {
+      if(value == undefined){
+        return;
+      }
+      this.showProfileEditModal = value;
+    });
+
+
+
+
+  
+  }
+
+
+  toggleDomainModalOff(): void {
+
+    this.store.dispatch(new ToggleAddDomainModal());
+    this.lastOpenedModal.pop();
+    this.modalTimeout = true;
+    setTimeout(() => {
+      this.modalTimeout = false;
+    }, 300);
+
+  }
+
+  toggleDomainModalOn(): void {
+    // this.setCanEditState();
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
     }
+
+    if(this.domains == undefined){
+      this.store.dispatch(new ToggleAddDomainModal());
+
+      this.lastOpenedModal.push('addDomainModal');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+      return;
+    }
+    if(this.domains.length > 8){
+      this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
+      return;
+    }
+
+    this.store.dispatch(new ToggleAddDomainModal());
+    this.lastOpenedModal.push('addDomainModal');
+    this.modalTimeout = true;
+    setTimeout(() => {
+      this.modalTimeout = false;
+    }, 300);
   }
 
   toggleEditDomainModal(): void {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     if (!this.showEditDomainModal) {
-      this.showEditDomainModal = true;
+      this.store.dispatch(new ToggleEditDomainModal());
       const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
       if (!selectedDomain) return;
       this.editDomainName = selectedDomain.name;
       this.editDomainImageName = selectedDomain.imageUrl;
       this.editDomainDescription = selectedDomain.description;
       this.selectIconEdit(selectedDomain.imageUrl);
+
+      this.lastOpenedModal.push('editDomainModal');
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
       
     } else {
-      this.showEditDomainModal = false;
+      this.store.dispatch(new ToggleEditDomainModal());
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
   toggleProfileModal(): void {
-    if (!this.showProfileModal) {
-      this.showProfileModal = true;
-    } else {
-      this.showProfileModal = false;
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
     }
+    if(this.showProfileModal){
+      this.lastOpenedModal.pop();
+
+    }else{
+      this.lastOpenedModal.push('profileModal');
+    }
+
+    this.store.dispatch(new ToggleProfileModal());
+
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
   }
 
+  
+
   toggleProfileEditModal(): void {
-    if (!this.showProfileEditModal) {
-      this.showProfileEditModal = true;
-    } else {
-      this.showProfileEditModal = false;
+    if(this.showProfileEditModal){
+
+      this.lastOpenedModal.pop();
+
+    }else{
+      this.lastOpenedModal.push('profileEditModal');
     }
+    this.store.dispatch(new ToggleProfileEditModal());
+
+    this.modalTimeout = true;
+    setTimeout(() => {
+      this.modalTimeout = false;
+    }, 300);
+
   }
 
   toggleChangePasswordModal(): void {
-    if (!this.showChangePasswordModal) {
-      this.showChangePasswordModal = true;
-    } else {
-      this.showChangePasswordModal = false;
+    if(this.showChangePasswordModal){
+        
+        this.lastOpenedModal.pop();
+    }else{
+      this.lastOpenedModal.push('changePasswordModal');
     }
+    this.store.dispatch(new ToggleChangePasswordModal());
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
   }
 
   toggleDeleteAccountModal(): void {
-    if (!this.showDeleteAccountModal) {
-      this.showDeleteAccountModal = true;
-    } else {
-      this.showDeleteAccountModal = false;
-      this.toggleConfirmDeleteAccountModal();
-    }
-  }
+    if(this.showDeleteAccountModal){
+          
+          this.lastOpenedModal.pop();
 
-  toggleConfirmDeleteAccountModal(): void {
-    if (!this.showConfirmDeleteAccountModal) {
-      this.showConfirmDeleteAccountModal = true;
-    } else {
-      this.showConfirmDeleteAccountModal = false;
+    }else{
+      this.lastOpenedModal.push('deleteAccountModal');
     }
+    this.store.dispatch(new ToggleDeleteAccountModal());
+
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
   }
 
   toggleConfirmDeleteDomainModal(id?: string): void {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
+    if(this.showConfirmDeleteDomainModal){
+      this.lastOpenedModal.pop();
+    }else{
+      this.lastOpenedModal.push('confirmDeleteDomainModal');
+    }
+
     if(id){
       this.deleteDomainId = id;
     }
-    if (!this.showConfirmDeleteDomainModal) {      
-      this.showConfirmDeleteDomainModal = true;
-    } else {
-      
-      this.showConfirmDeleteDomainModal = false;
-    }
+    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
   }
 
   /* closeAllModals(): void {
@@ -321,11 +495,13 @@ export class SidebarComponent {
       })
     ).subscribe((result) => {
       this.addDomainSpinner = false;
-      this.toggleDomainModal();
+      this.toggleDomainModalOff();
     });
     this.newDomainName = '';
     this.newDomainImageName = '';
     this.newDomainDescription = '';
+
+    this.imagePreviewDomain = null;
 
     
   }
@@ -379,7 +555,7 @@ export class SidebarComponent {
       })
     ).subscribe((result) => {
       this.editDomainSpinner = false;
-      this.toggleEditDomainModal();
+      this.store.dispatch(new ToggleEditDomainModal());
     });
 
     
@@ -392,7 +568,7 @@ export class SidebarComponent {
 
   deleteDomain() {
     this.store.dispatch(new DeleteDomain(this.deleteDomainId));
-    this.toggleConfirmDeleteDomainModal();
+    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
   }
 
   selectDomain(domain: DisplayDomain) {
@@ -587,5 +763,109 @@ export class SidebarComponent {
 
   logOut(){
     this.store.dispatch(new Logout());
+  }
+
+  /* @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    if(!this.modalTimeout){
+      switch(this.lastOpenedModal[this.lastOpenedModal.length - 1]){
+        case 'addDomain':
+          var modalDiv1 = this.el.nativeElement.querySelector('#addDomainModal');
+          if (modalDiv1 && !modalDiv1.contains(event.target)) {
+            this.toggleDomainModalOff();
+          }
+          break;
+        case 'profileModal':
+          const modalDiv2 = this.el.nativeElement.querySelector('#profileModal');
+          if (modalDiv2 && !modalDiv2.contains(event.target)) {
+            this.toggleProfileModal();
+          }
+          break;
+        case 'editDomain':
+          const modalDiv3 = this.el.nativeElement.querySelector('#editDomainModal');
+          if (modalDiv3 && !modalDiv3.contains(event.target)) {
+            this.toggleEditDomainModal();
+          }
+
+          break;
+        case 'profileEditModal':
+          const modalDiv4 = this.el.nativeElement.querySelector('#profileEditModal');
+          if (modalDiv4 && !modalDiv4.contains(event.target)) {
+            this.toggleProfileEditModal();
+          }
+
+          break;
+        case 'changePasswordModal':
+          const modalDiv5 = this.el.nativeElement.querySelector('#changePasswordModal');
+          if (modalDiv5 && !modalDiv5.contains(event.target)) {
+            this.toggleChangePasswordModal();
+          }
+
+          break;
+        case 'deleteAccountModal':
+          const modalDiv6 = this.el.nativeElement.querySelector('#deleteAccountModal');
+          if (modalDiv6 && !modalDiv6.contains(event.target)) {
+            this.toggleDeleteAccountModal();
+          }
+
+          break;
+        case 'confirmDeleteDomainModal':
+          const modalDiv7 = this.el.nativeElement.querySelector('#confirmDeleteDomainModal');
+          if (modalDiv7 && !modalDiv7.contains(event.target)) {
+            this.toggleConfirmDeleteDomainModal();
+          }
+
+          break;
+
+      }
+
+    }
+    
+  } */
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    if (!this.modalTimeout) {
+      const modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length - 1]);
+      if (!this.checkIfClickIn(event, modalDiv)) {
+        this.handleModalClick();
+      }
+    }
+  }
+  
+  checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement | null): boolean {
+    return !!modalDiv && modalDiv.contains(event.target as Node);
+  }
+  
+  public getModalElement(search: string): HTMLElement | null {
+    return this.el.nativeElement.querySelector('#' + search);
+  }
+  
+  public handleModalClick() {
+    const lastOpenedModal = this.lastOpenedModal[this.lastOpenedModal.length - 1];
+  
+    switch (lastOpenedModal) {
+      case 'addDomainModal':
+        this.toggleDomainModalOff();
+        break;
+      case 'profileModal':
+        this.toggleProfileModal();
+        break;
+      case 'editDomainModal':
+        this.toggleEditDomainModal();
+        break;
+      case 'profileEditModal':
+        this.toggleProfileEditModal();
+        break;
+      case 'changePasswordModal':
+        this.toggleChangePasswordModal();
+        break;
+      case 'deleteAccountModal':
+        this.toggleDeleteAccountModal();
+        break;
+      case 'confirmDeleteDomainModal':
+        this.toggleConfirmDeleteDomainModal();
+        break;
+    }
   }
 }

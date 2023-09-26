@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import StringIO
 import json
 from django.test import TestCase
@@ -88,7 +89,7 @@ def mocked_handle_request(dummy1):
     return {
         "status": "SUCCESS",
         "newdata": [{"text": "some text", "timestamp": 1234567890}],
-        "latest_retrieval": "2021-01-01T00:00:00Z",
+        "latest_retrieval": datetime.now().timestamp(),
     }
 
 

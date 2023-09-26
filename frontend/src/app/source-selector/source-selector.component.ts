@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
+import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, GuestModalChange, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -22,6 +21,11 @@ export class SourceSelectorComponent implements OnInit {
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
   showInfoModal = false;
+
+  modalTimeout = false;
+
+  lastOpenedModal: any[] = [];
+
   newSourceName = '';
   newSourcePlatform = '';
   newSourceUrl = '';
@@ -34,7 +38,10 @@ export class SourceSelectorComponent implements OnInit {
 
   currHost = window.location.host;
 
-  constructor(private store: Store) {}
+  isEditing = false;
+  canEdit: boolean = true;
+
+  constructor(private store: Store, public el: ElementRef) {}
 
   ngOnInit(): void {
     this.selectedSource$.subscribe(source => {
@@ -47,7 +54,10 @@ export class SourceSelectorComponent implements OnInit {
         this.copyToClipboard();
       });
     }
-    
+
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      if (canEdit !== undefined) this.canEdit = canEdit;
+    });
   }
 
   uploadFile(event: any) {
@@ -166,22 +176,20 @@ export class SourceSelectorComponent implements OnInit {
       case 'youtube':
 
         const url = this.newSourceUrl;
-        if (!url.includes('youtube')) {
+        if (!url.includes('youtube') && !url.includes('youtu.be')) {
           return {
             source_type: 'youtube',
             video_id: url,
           };
         }
         console.log('url: ' + url);
-        const regExp =
-          /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?&v=)([^#&?]+).*/;
         const match = url.match(regExp);
         console.log('match: ' + match);
 
-        const videoID = match && match[7].length === 11 ? match[7] : null;
         return {
           source_type: 'youtube',
-          video_id: videoID,
+          video_id:  match![1],
         };
     }
     return null;
@@ -209,6 +217,32 @@ export class SourceSelectorComponent implements OnInit {
     }
   }
 
+  editSourceNew(){
+
+    if(this.editSourceName == ''){
+      this.store.dispatch(new ToastError('Please enter a name for your source'));
+      return;
+    }
+
+    if(this.editSourceName.length > 25){
+      this.store.dispatch(new ToastError('Source name must be less than 25 characters'));
+      return;
+    }
+
+    const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
+    if(this.editSourceName != selectedSource?.name){
+      this.store.dispatch(new EditSource(this.editSourceName));
+      this.isEditing = false;
+      return;
+    }
+    else{
+      this.isEditing = false;
+      return;
+    }
+
+
+  }
+
   determinePlatformFromNewSourcePlatform(): string {
     switch (this.newSourcePlatform) {
       case 'googlereviews':
@@ -226,6 +260,10 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   refreshSource() {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     
     if(this.selectedSource == null){
       this.store.dispatch(new ToastError('You must select a specific source to refresh'));
@@ -248,10 +286,28 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleAddSourcesModal() {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
+
     if (!this.showAddSourcesModal) {
       this.showAddSourcesModal = true;
+
+      this.lastOpenedModal.push('addSourceModal');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
       this.showAddSourcesModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
@@ -260,28 +316,71 @@ export class SourceSelectorComponent implements OnInit {
       this.editSourceName = this.store.selectSnapshot(AppState.selectedSource)?.name || '';
       this.editSourceUrl = this.store.selectSnapshot(AppState.selectedSource)?.params || '';
       this.showEditSourceModal = true;
+
+      /* this.lastOpenedModal.push('editSource');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300); */
     } else {
       this.showEditSourceModal = false;
+      /* this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300); */
     }
   }
 
   toggleConfirmDeleteSourceModal() {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     if(this.selectedSource == null){
       this.store.dispatch(new ToastError('You must select a specific source to delete'));
       return;
     }
     if (!this.showConfirmDeleteSourceModal) {
       this.showConfirmDeleteSourceModal = true;
+
+      this.lastOpenedModal.push('confirmDeleteSourceModal');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
       this.showConfirmDeleteSourceModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
   toggleInfoModal() {
     if (!this.showInfoModal) {
       this.showInfoModal = true;
+
+      this.lastOpenedModal.push('infoModal');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
+      this.isEditing = false;
       this.showInfoModal = false;
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     }
   }
 
@@ -305,4 +404,87 @@ export class SourceSelectorComponent implements OnInit {
       return `${window.location.protocol}//${this.currHost}/ingest/post-review/${this.selectedSource?.id}/${this.selectedSource?.name}`;
     }
   }
+
+  editName(){
+    this.editSourceName = this.store.selectSnapshot(AppState.selectedSource)?.name || '';
+    this.isEditing = true;
+  }
+
+ /*  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    console.log('click');
+    if(!this.modalTimeout){
+      switch(this.lastOpenedModal[this.lastOpenedModal.length - 1]){
+        case 'addSource':
+          var modalDiv1 = this.el.nativeElement.querySelector('#addSourceModal');
+          if (modalDiv1 && !modalDiv1.contains(event.target)) {
+            if(this.showAddSourcesModal){
+              this.toggleAddSourcesModal();
+            }
+          }
+          break;
+        case 'confirmDeleteSource':
+          const modalDiv2 = this.el.nativeElement.querySelector('#confirmDeleteSourceModal');
+          if (modalDiv2 && !modalDiv2.contains(event.target)) {
+            if(this.showConfirmDeleteSourceModal){
+              this.toggleConfirmDeleteSourceModal();
+            }
+          }
+          break;
+        case 'info':
+          const modalDiv3 = this.el.nativeElement.querySelector('#infoModal');
+          if (modalDiv3 && !modalDiv3.contains(event.target)) {
+            if(this.showInfoModal){
+              this.toggleInfoModal();
+            }
+          }
+
+          break;
+
+      }
+
+    }
+    
+  } */
+
+@HostListener('document:click', ['$event'])
+onClick(event: MouseEvent) {
+  if (!this.modalTimeout) {
+    var modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length-1]); // Use a separate method
+    if (!this.checkIfClickIn(event, modalDiv!)) {
+      this.handleModalClick();
+    }
+  }
+}
+
+checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement): boolean {
+  if(!modalDiv) return false;
+  var result =  modalDiv && modalDiv.contains(event.target as Node);
+  return result;
+}
+
+public getModalElement(search: string): HTMLElement | null {
+  return this.el.nativeElement.querySelector('#' + search );
+}
+
+public handleModalClick() {
+  switch (this.lastOpenedModal[this.lastOpenedModal.length - 1]) {
+    case 'addSourceModal':
+      if (this.showAddSourcesModal) {
+        this.toggleAddSourcesModal();
+      }
+      break;
+    case 'confirmDeleteSourceModal':
+      if (this.showConfirmDeleteSourceModal) {
+        this.toggleConfirmDeleteSourceModal();
+      }
+      break;
+    case 'infoModal':
+      if (this.showInfoModal) {
+        this.toggleInfoModal();
+      }
+      break;
+  }
+}
+
 }

@@ -31,10 +31,21 @@ import {
   SetAllSourcesSelected,
   SetIsActive,
   UplaodCVSFile,
-  GenerateReport
+  GenerateReport,
+  AttempGuestLogin,
+  GuestModalChange,
+  ToggleAddDomainModal,
+  ToggleProfileModal,
+  ToggleConfirmDeleteDomainModal,
+  ToggleEditDomainModal,
+  ToggleChangePasswordModal,
+  ToggleDeleteAccountModal,
+  ToggleProfileEditModal,
+  TryRefresh,
+  ToggleIsRefreshing,
 } from './app.actions';
 import { Router } from '@angular/router';
-import { catchError, map, of, switchMap, throwError } from 'rxjs';
+import { catchError, concatMap, map, of, repeatWhen, switchMap, takeWhile, tap, throwError } from 'rxjs';
 import { patch } from '@ngxs/store/operators';
 
 export interface Source {
@@ -100,6 +111,8 @@ interface AppStateModel {
   allSourcesSelected: boolean;
   sourceIsLoading: boolean;
   selectedStatisticIndex: number;
+  canEdit: boolean;
+  showMakeAccountModal: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -113,6 +126,13 @@ interface AppStateModel {
   toasterError?: Toast;
   toasterSuccess?: Toast;
   pdfUrl?: string;
+  showAddDomainModal?: boolean;
+  showProfileModal?: boolean;
+  showEditDomainModal?: boolean;
+  showConfirmDeleteDomainModal?: boolean;
+  showChangePasswordModal?: boolean;
+  showDeleteAccountModal?: boolean;
+  showProfileEditModal?: boolean;
 }
 
 @State<AppStateModel>({
@@ -126,6 +146,12 @@ interface AppStateModel {
     pdfUrl: '',
     userHasNoDomains: false,
     userHasNoSources: false,
+    canEdit: true,
+    showMakeAccountModal: false,
+    showAddDomainModal: false,
+    showProfileModal: false,
+    showEditDomainModal: false,
+    showConfirmDeleteDomainModal: false,
   },
 })
 @Injectable()
@@ -244,6 +270,53 @@ export class AppState {
     return state.userHasNoSources;
   }
 
+  @Selector()
+  static showMakeAccountModal(state: AppStateModel) {
+    return state.showMakeAccountModal;
+  }
+
+  @Selector()
+  static showAddDomainModal(state: AppStateModel) {
+    return state.showAddDomainModal;
+  }
+
+  @Selector()
+  static showProfileModal(state: AppStateModel) {
+    return state.showProfileModal;
+  }
+
+  @Selector()
+  static showEditDomainModal(state: AppStateModel) {
+    return state.showEditDomainModal;
+  }
+
+  @Selector()
+  static showConfirmDeleteDomainModal(state: AppStateModel) {
+    return state.showConfirmDeleteDomainModal;
+  }
+
+  @Selector()
+  static showChangePasswordModal(state: AppStateModel) {
+    return state.showChangePasswordModal;
+  }
+
+  @Selector()
+  static showDeleteAccountModal(state: AppStateModel) {
+    return state.showDeleteAccountModal;
+  }
+
+  @Selector()
+  static showProfileEditModal(state: AppStateModel) {
+    return state.showProfileEditModal;
+  }
+
+  @Selector()
+  static canEdit(state: AppStateModel) {
+    return state.canEdit;
+  }
+
+
+
   @Action(ToastError)
   toastError(ctx: StateContext<AppStateModel>, action: ToastError) {
     const toast: Toast = {
@@ -267,6 +340,63 @@ export class AppState {
   initiliaze(ctx: StateContext<AppStateModel>) {
     this.store.dispatch(new CheckAuthenticate());
   }
+
+  @Action(ToggleAddDomainModal)
+  toggleAddDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showAddDomainModal: !state.showAddDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleProfileModal)
+  toggleProfileModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showProfileModal: !state.showProfileModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleEditDomainModal)
+  toggleEditDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showEditDomainModal: !state.showEditDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleConfirmDeleteDomainModal)
+  toggleConfirmDeleteDomainModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showConfirmDeleteDomainModal: !state.showConfirmDeleteDomainModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleChangePasswordModal)
+  toggleChangePasswordModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showChangePasswordModal: !state.showChangePasswordModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleDeleteAccountModal)
+  toggleDeleteAccountModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showDeleteAccountModal: !state.showDeleteAccountModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleProfileEditModal)
+  toggleProfileEditModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showProfileEditModal: !state.showProfileEditModal, // Toggle the value
+    });
+  }
+  
 
   @Action(GetDomains)
   getDomains(ctx: StateContext<AppStateModel>) {
@@ -371,7 +501,7 @@ export class AppState {
     });
 
     const selectedSourceId = localStorage.getItem(state.domain.id);
-    if (selectedSourceId == '') {
+    if (selectedSourceId === null) {
       this.store.dispatch(new SetSource(null));
     } else {
       const selectedSource = sources.find(
@@ -468,12 +598,21 @@ export class AppState {
             imageUrl: domainRes.icon,
             sourceIds: domainsIDs,
             sources: AppState.formatResponseSources(domainRes.sources),
-            selected: false,
+            selected: true,
           };
   
           let domains = ctx.getState().domains;
-          if (!domains) return of(null);
-  
+
+          domains = AppState.findPatchDomain(domains!, selectedDomain);
+
+          if(AppState.checkUndefined(domains!)){
+            ctx.patchState({
+              domains: [...domains!], 
+            });
+          }
+
+          
+
           this.store.dispatch(new SetDomain(selectedDomain));
   
           let lastSource =
@@ -496,6 +635,27 @@ export class AppState {
       })
     );
     
+  }
+
+  static checkUndefined(domains: DisplayDomain[]){
+    if(domains){
+      return true;
+    }
+    return false;
+  }
+
+  static findPatchDomain(domains: DisplayDomain[], selectedDomain: DisplayDomain){
+    for (let i = 0; i < domains.length; i++) {
+      if (domains[i].id === selectedDomain.id) {
+
+        domains[i] = selectedDomain;
+
+        return domains;
+    
+      }
+    }
+
+    return undefined;
   }
 
   /*  @Action(EditSource)
@@ -532,6 +692,11 @@ export class AppState {
 
 
   } */
+
+  @Action(GuestModalChange)
+  guestModalChange(ctx: StateContext<AppStateModel>, state: GuestModalChange) {
+    ctx.patchState({ showMakeAccountModal: state.show });
+  }
 
   @Action(EditSource)
   editSource(ctx: StateContext<AppStateModel>, state: EditSource) {
@@ -649,8 +814,9 @@ export class AppState {
         new ToastSuccess('Your source has been refreshed')
       );
 
-      return;
     }
+
+
     let sourceID = '';
     if (state.sourceId) {
       sourceID = state.sourceId;
@@ -664,7 +830,7 @@ export class AppState {
       });
     }
 
-    console.log('refreshing with sourceID' + sourceID);
+
     this.appApi.refreshSourceInfo(sourceID).subscribe((res) => {
       if (res.status === 'FAILURE') {
         this.store.dispatch(
@@ -679,19 +845,86 @@ export class AppState {
 
         return;
       }
-      this.store.dispatch(new GetSourceDashBoardInfo());
 
-      if (selectedSource) {
-        selectedSource.isRefreshing = false;
-        ctx.patchState({
-          selectedSource,
-        });
-      }
+      console.log("calling try refresh in yt")
       this.store.dispatch(
-        new ToastSuccess('Your source has been refreshed')
-      );
+        new TryRefresh(sourceID)
+      ).subscribe(() => {
+
+      });        
+
+      
     });
+
+
   }
+  
+
+  @Action(TryRefresh)
+  tryRefresh(ctx: StateContext<AppStateModel>, state: TryRefresh) {
+    
+    const refreshObservable = of(null).pipe(
+      concatMap(() => this.appApi.tryRefresh(state.sourceId)),
+      repeatWhen((completed) => completed),
+      takeWhile((result) => !(result.status === 'FAILURE' || result.is_done), true), 
+      tap((result) => {
+        console.log(result);
+        if (result.status === 'FAILURE' || result.is_done) {
+          if (state.sourceId == ctx.getState().selectedSource?.id) {
+            this.store.dispatch(new GetSourceDashBoardInfo());
+          }
+          this.store.dispatch(new ToastSuccess('Your source has been refreshed'));
+          this.store.dispatch(new ToggleIsRefreshing(false, state.sourceId));
+        } else {
+          if(AppState.ifMatchingIds(state.sourceId,  ctx.getState().selectedSource?.id)){
+            this.store.dispatch(new GetSourceDashBoardInfo());
+          }
+        }
+      }),
+      catchError((error) => {
+        console.error('Error:', error);
+        return of(null); 
+      })
+    );
+
+    refreshObservable.subscribe();
+  }
+
+  static ifMatchingIds(sourceId: string, selectedSourceId?: string) {
+    if (sourceId == selectedSourceId) {
+      return true;
+    }
+    return false;
+  }
+
+  @Action(ToggleIsRefreshing)
+  toggleIsRefreshing(ctx: StateContext<AppStateModel>, state: ToggleIsRefreshing) {
+    let domains = ctx.getState().domains;
+    console.log("domains")
+    console.log(domains)
+    if (!domains) return;
+
+    console.log("1")
+
+    for (let i = 0; i < domains.length; i++) {
+
+      for (let x = 0; x < domains[i].sources.length; x++) {
+        if (domains[i].sources[x].id === state.sourceId) {
+  
+          domains[i].sources[x].isRefreshing = state.isRefreshing;
+  
+          ctx.patchState({
+            domains: [...domains], 
+          });
+    
+          break; 
+        }
+      }
+    }
+
+  }
+
+
 
   @Action(AddNewDomain)
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
@@ -876,17 +1109,39 @@ export class AppState {
     });
   }
 
-  // ...
+  @Action(AttempGuestLogin)
+  attempGuestLogin(ctx: StateContext<AppStateModel>, state: AttempGuestLogin) {
+    this.appApi.attemptGuestLogin().subscribe((res) => {
+      if(res.status === "SUCCESS") {
+        this.store.dispatch(new AttempPsswdLogin('guest', res.guest_token));
+      } else {
+        this.store.dispatch(new ToastError('Preview disabled, please try again later'));
+      }
+    });
+  }
 
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
-    console.log('attempting password login');
 
     return this.appApi.attemptPsswdLogin(state.username, state.password).pipe(
       switchMap((res) => {
         if (res.status === 'SUCCESS') {
           // set jwt in local storage
           localStorage.setItem('JWT', res.JWT);
+
+          if(state.username == 'guest') {
+            ctx.patchState({
+              canEdit: false
+            });
+            localStorage.setItem('canEdit', 'false');
+
+            this.store.dispatch(new ToastSuccess('You are currenly viewing a preview'));
+          } else {
+            ctx.patchState({
+              canEdit: true
+            });
+            localStorage.setItem('canEdit', 'true');
+          }
 
           this.store.dispatch(new SetUserDetails(res.id));
           this.store.dispatch(new GetDomains());
@@ -905,6 +1160,13 @@ export class AppState {
 
   @Action(SetUserDetails)
   setUserDetails(ctx: StateContext<AppStateModel>, state: SetUserDetails) {
+    const couldEdit = localStorage.getItem('canEdit');
+    if(couldEdit != null) {
+      ctx.patchState({
+        canEdit: couldEdit == 'true'
+      });
+    }
+
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         const profileDetails: ProfileDetails = {
@@ -944,7 +1206,9 @@ export class AppState {
         switchMap((res) => {
           if (res.status === 'SUCCESS') {
             localStorage.setItem('JWT', res.JWT);
-            console.log('register success');
+            this.store.dispatch(new ToastSuccess('Account created successfully!'));
+            this.store.dispatch(new SetUserDetails(res.id));
+            this.router.navigate(['']);
             return of();
           } else {
             return throwError(() => new Error());
@@ -983,6 +1247,8 @@ export class AppState {
           profileDetails: undefined,
           toasterError: undefined,
           toasterSuccess: undefined,
+          showAddDomainModal: false,
+          showProfileModal: false,
         });
         this.router.navigate(['/login']);
         this.store.dispatch(new ToastSuccess('You have been logged out'));
@@ -1187,7 +1453,7 @@ export class AppState {
 
     this.appApi.sendCSVFile(sourceID, file).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.store.dispatch(new ToastError('Your file could not be uploaded'));
+        this.store.dispatch(new ToastError('Your file could not be uploaded - ensure your format is correct'));
         selectedSource.isRefreshing = false;
       ctx.patchState({
         selectedSource,

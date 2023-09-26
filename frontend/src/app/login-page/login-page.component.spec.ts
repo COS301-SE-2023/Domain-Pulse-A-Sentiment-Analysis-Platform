@@ -6,6 +6,7 @@ import { AppApi } from '../app.api';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AttempPsswdLogin } from '../app.actions';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -14,11 +15,22 @@ describe('LoginPageComponent', () => {
   let actions$: Observable<any>;
 
   beforeEach(() => {
+    const paramMap = jasmine.createSpyObj<ParamMap>('ParamMap', ['get']);
+    paramMap.get.and.returnValue(null); // Mock the get method to return null
+
+    const activatedRoute = {
+      snapshot: {
+        queryParamMap: paramMap,
+      },
+    };
+
+
     appApiSpy = jasmine.createSpyObj('AppApi', ['attemptPsswdLogin']);
     appApiSpy.attemptPsswdLogin.and.callThrough();
 
     TestBed.configureTestingModule({
-      providers: [LoginPageComponent, { provide: AppApi, useValue: appApiSpy }],
+      providers: [LoginPageComponent, { provide: AppApi, useValue: appApiSpy },
+        { provide: ActivatedRoute, useValue: activatedRoute },],
       imports: [NgxsModule.forRoot([]), FormsModule],
     });
 
@@ -45,4 +57,15 @@ describe('LoginPageComponent', () => {
     component.toggleForgotPasswordModal();
     expect(component.showForgotPasswordModal).toBe(false);
   });
+
+  it('should evaluate user', () => {
+    spyOn(storeSpy, 'dispatch');
+
+    component.evaluateUser('guest');
+    expect(storeSpy.dispatch).toHaveBeenCalled();
+
+    component.evaluateUser(null);
+    expect(storeSpy.dispatch).toHaveBeenCalledTimes(1);
+  });
+
 });

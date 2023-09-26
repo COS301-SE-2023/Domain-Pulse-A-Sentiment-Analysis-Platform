@@ -33,7 +33,7 @@ RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -82,7 +82,25 @@ INSTALLED_APPS = [
     "corsheaders",
 ]
 
+
+def append_installed_apps(enabled):
+    if enabled == "True":
+        INSTALLED_APPS.append("elasticapm.contrib.django")
+
+
+APM_ENABLED = os.getenv("APM_ENABLED")
+append_installed_apps(APM_ENABLED)
+
+ELASTIC_APM = {
+    "DEBUG": True,
+    "LOG_LEVEL": "debug",
+    "SERVER_URL": os.getenv("APM_SERVER_URL"),
+    "SERVICE_NAME": "profiles",
+    "SECRET_TOKEN": os.getenv("APM_TOKEN"),
+}
+
 MIDDLEWARE = [
+    'elasticapm.contrib.django.middleware.Catch404Middleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

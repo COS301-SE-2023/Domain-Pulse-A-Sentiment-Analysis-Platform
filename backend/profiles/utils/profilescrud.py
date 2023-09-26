@@ -292,7 +292,7 @@ def delete_user(request, username, password):
                     domain_list.append(i)
                 data = {"local_key": os.getenv("LOCAL_KEY"), "domain_ids": domain_list}
                 GET_DOMAINS_ENDPOINT = (
-                    "http://localhost:"
+                    f"http://{str(os.getenv('DOMAINS_HOST'))}:"
                     + str(os.getenv("DJANGO_DOMAINS_PORT"))
                     + "/domains/delete_domains_internal"
                 )

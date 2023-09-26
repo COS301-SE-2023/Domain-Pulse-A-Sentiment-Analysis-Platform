@@ -144,6 +144,15 @@ export class AppApi {
     return this.http.post(refreshSourceInfoUrl, body, { withCredentials: true });
   }
 
+  tryRefresh(sourceID: string): Observable<any> {
+    const tryRefreshUrl = this.warehouseBaseUrl + 'query/try_refresh/';
+    const body = {
+      source_id: sourceID,
+    }
+
+    return this.http.post(tryRefreshUrl, body, { withCredentials: true });
+  }
+
   sendCSVFile(sourceID: string, file: File): Observable<any> {
     const sendCSVFileUrl = this.warehouseBaseUrl + 'ingest/ingest_csv/';
 
@@ -243,6 +252,14 @@ export class AppApi {
     });
   }
 
+  attemptGuestLogin(): Observable<any> {
+    const attemptPsswdLoginUrl = this.profilesBaseUrl + 'check/try_guest_login/';
+    // send with credentials enabled
+    return this.http.post(attemptPsswdLoginUrl, {}, {
+      withCredentials: true,
+    });
+  }
+
   getProfile(profileID: number): Observable<any> {
     const getProfileUrl = this.profilesBaseUrl + 'profiles/get_profile';
     const body = {
@@ -295,5 +312,7 @@ export class AppApi {
     };
     return this.http.post(generateReportUrl, body, { withCredentials: true });
   }
+
+
 
 }
