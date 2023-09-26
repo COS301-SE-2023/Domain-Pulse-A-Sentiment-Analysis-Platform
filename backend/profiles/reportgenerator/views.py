@@ -12,7 +12,9 @@ import tempfile
 import urllib.parse
 
 GET_DOMAINS_ENDPOINT = (
-    f"http://{str(os.getenv('DOMAINS_HOST')) }:" + str(os.getenv("DJANGO_DOMAINS_PORT")) + "/domains/get_domain"
+    f"http://{str(os.getenv('DOMAINS_HOST')) }:"
+    + str(os.getenv("DJANGO_DOMAINS_PORT"))
+    + "/domains/get_domain"
 )
 
 assets_path = str(settings.ASSETS_DIR)
@@ -497,6 +499,14 @@ def generate_report(request: HttpRequest):
             )
 
         for key in response_data:
+            if response_data[key]["meta_data"]["num_analysed"] == 0:
+                return JsonResponse(
+                    {
+                        "status": "FAILURE",
+                        "details": "No data available in a source",
+                    }
+                )
+
             if key != "domain":
                 for i in domain["sources"]:
                     if (i["source_id"]) == key:
