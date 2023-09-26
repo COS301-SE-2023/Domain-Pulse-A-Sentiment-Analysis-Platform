@@ -173,7 +173,6 @@ export class AppState {
       .subscribe((res) => {
         if (!detailsSet) {
           if (res.app?.userDetails) {
-            this.store.dispatch(new GetDomains());
             detailsSet = true;
           }
         }
