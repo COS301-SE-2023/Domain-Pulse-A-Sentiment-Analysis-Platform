@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import {
   trigger,
   state,
@@ -165,6 +165,10 @@ export class SidebarComponent implements OnInit {
   showDeleteAccountModal = false;
   showConfirmDeleteDomainModal = false;
 
+  modalTimeout = false;
+
+  lastOpenedModal: any[] = [];
+
   baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
   domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
 
@@ -176,16 +180,23 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private store: Store,
-    public blobStorageService: AzureBlobStorageService
+    public blobStorageService: AzureBlobStorageService,
+    private el: ElementRef
   ) {
-    this.setCanEditStateSub();
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      this.canEditChanged(canEdit);
+    });
+    
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      this.canEditChanged(canEdit);
+    });
     this.domains$.subscribe((domains) => {
       this.domains = domains!;
     });
   }
 
-  setCanEditStateSub() {
-    this.store.selectSnapshot((state) => {this.canEdit = state.app.canEdit});
+  canEditChanged(canEdit: boolean | undefined) {
+    if (canEdit !== undefined) this.canEdit = canEdit;
   }
 
   ngOnInit() {
@@ -249,6 +260,11 @@ export class SidebarComponent implements OnInit {
   toggleDomainModalOff(): void {
 
     this.store.dispatch(new ToggleAddDomainModal());
+    this.lastOpenedModal.pop();
+    this.modalTimeout = true;
+    setTimeout(() => {
+      this.modalTimeout = false;
+    }, 300);
 
   }
 
@@ -261,13 +277,25 @@ export class SidebarComponent implements OnInit {
 
     if(this.domains == undefined){
       this.store.dispatch(new ToggleAddDomainModal());
+
+      this.lastOpenedModal.push('addDomainModal');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
       return;
     }
     if(this.domains.length > 8){
       this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
       return;
     }
+
     this.store.dispatch(new ToggleAddDomainModal());
+    this.lastOpenedModal.push('addDomainModal');
+    this.modalTimeout = true;
+    setTimeout(() => {
+      this.modalTimeout = false;
+    }, 300);
   }
 
   toggleEditDomainModal(): void {
@@ -283,9 +311,22 @@ export class SidebarComponent implements OnInit {
       this.editDomainImageName = selectedDomain.imageUrl;
       this.editDomainDescription = selectedDomain.description;
       this.selectIconEdit(selectedDomain.imageUrl);
+
+      this.lastOpenedModal.push('editDomainModal');
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
       
     } else {
       this.store.dispatch(new ToggleEditDomainModal());
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
@@ -294,19 +335,72 @@ export class SidebarComponent implements OnInit {
       this.store.dispatch(new GuestModalChange(true));
       return
     }
+    if(this.showProfileModal){
+      this.lastOpenedModal.pop();
+
+    }else{
+      this.lastOpenedModal.push('profileModal');
+    }
+
     this.store.dispatch(new ToggleProfileModal());
+
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
   }
 
+  
+
   toggleProfileEditModal(): void {
+    if(this.showProfileEditModal){
+
+      this.lastOpenedModal.pop();
+
+    }else{
+      this.lastOpenedModal.push('profileEditModal');
+    }
     this.store.dispatch(new ToggleProfileEditModal());
+
+    this.modalTimeout = true;
+    setTimeout(() => {
+      this.modalTimeout = false;
+    }, 300);
+
   }
 
   toggleChangePasswordModal(): void {
+    if(this.showChangePasswordModal){
+        
+        this.lastOpenedModal.pop();
+    }else{
+      this.lastOpenedModal.push('changePasswordModal');
+    }
     this.store.dispatch(new ToggleChangePasswordModal());
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
   }
 
   toggleDeleteAccountModal(): void {
+    if(this.showDeleteAccountModal){
+          
+          this.lastOpenedModal.pop();
+
+    }else{
+      this.lastOpenedModal.push('deleteAccountModal');
+    }
     this.store.dispatch(new ToggleDeleteAccountModal());
+
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
 
   }
 
@@ -315,10 +409,21 @@ export class SidebarComponent implements OnInit {
       this.store.dispatch(new GuestModalChange(true));
       return
     }
+    if(this.showConfirmDeleteDomainModal){
+      this.lastOpenedModal.pop();
+    }else{
+      this.lastOpenedModal.push('confirmDeleteDomainModal');
+    }
+
     if(id){
       this.deleteDomainId = id;
     }
     this.store.dispatch(new ToggleConfirmDeleteDomainModal());
+
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
   }
 
   /* closeAllModals(): void {
@@ -658,5 +763,109 @@ export class SidebarComponent implements OnInit {
 
   logOut(){
     this.store.dispatch(new Logout());
+  }
+
+  /* @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    if(!this.modalTimeout){
+      switch(this.lastOpenedModal[this.lastOpenedModal.length - 1]){
+        case 'addDomain':
+          var modalDiv1 = this.el.nativeElement.querySelector('#addDomainModal');
+          if (modalDiv1 && !modalDiv1.contains(event.target)) {
+            this.toggleDomainModalOff();
+          }
+          break;
+        case 'profileModal':
+          const modalDiv2 = this.el.nativeElement.querySelector('#profileModal');
+          if (modalDiv2 && !modalDiv2.contains(event.target)) {
+            this.toggleProfileModal();
+          }
+          break;
+        case 'editDomain':
+          const modalDiv3 = this.el.nativeElement.querySelector('#editDomainModal');
+          if (modalDiv3 && !modalDiv3.contains(event.target)) {
+            this.toggleEditDomainModal();
+          }
+
+          break;
+        case 'profileEditModal':
+          const modalDiv4 = this.el.nativeElement.querySelector('#profileEditModal');
+          if (modalDiv4 && !modalDiv4.contains(event.target)) {
+            this.toggleProfileEditModal();
+          }
+
+          break;
+        case 'changePasswordModal':
+          const modalDiv5 = this.el.nativeElement.querySelector('#changePasswordModal');
+          if (modalDiv5 && !modalDiv5.contains(event.target)) {
+            this.toggleChangePasswordModal();
+          }
+
+          break;
+        case 'deleteAccountModal':
+          const modalDiv6 = this.el.nativeElement.querySelector('#deleteAccountModal');
+          if (modalDiv6 && !modalDiv6.contains(event.target)) {
+            this.toggleDeleteAccountModal();
+          }
+
+          break;
+        case 'confirmDeleteDomainModal':
+          const modalDiv7 = this.el.nativeElement.querySelector('#confirmDeleteDomainModal');
+          if (modalDiv7 && !modalDiv7.contains(event.target)) {
+            this.toggleConfirmDeleteDomainModal();
+          }
+
+          break;
+
+      }
+
+    }
+    
+  } */
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    if (!this.modalTimeout) {
+      const modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length - 1]);
+      if (!this.checkIfClickIn(event, modalDiv)) {
+        this.handleModalClick();
+      }
+    }
+  }
+  
+  checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement | null): boolean {
+    return !!modalDiv && modalDiv.contains(event.target as Node);
+  }
+  
+  public getModalElement(search: string): HTMLElement | null {
+    return this.el.nativeElement.querySelector('#' + search);
+  }
+  
+  public handleModalClick() {
+    const lastOpenedModal = this.lastOpenedModal[this.lastOpenedModal.length - 1];
+  
+    switch (lastOpenedModal) {
+      case 'addDomainModal':
+        this.toggleDomainModalOff();
+        break;
+      case 'profileModal':
+        this.toggleProfileModal();
+        break;
+      case 'editDomainModal':
+        this.toggleEditDomainModal();
+        break;
+      case 'profileEditModal':
+        this.toggleProfileEditModal();
+        break;
+      case 'changePasswordModal':
+        this.toggleChangePasswordModal();
+        break;
+      case 'deleteAccountModal':
+        this.toggleDeleteAccountModal();
+        break;
+      case 'confirmDeleteDomainModal':
+        this.toggleConfirmDeleteDomainModal();
+        break;
+    }
   }
 }

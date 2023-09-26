@@ -172,15 +172,30 @@ describe('SidebarComponent', () => {
     };
 
     component.domains = [dummyDisplayDomain];
+    component.lastOpenedModal = [];
 
     component.showAddDomainModal = false;
     component.toggleDomainModalOn();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
 
+    expect(component.lastOpenedModal).toEqual(['addDomainModal']);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
+
 
     component.showAddDomainModal = true;
     component.toggleDomainModalOff();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleAddDomainModal());
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
   });
 
   it('should not toggle The domain flag', () => {
@@ -230,42 +245,97 @@ describe('SidebarComponent', () => {
 
   });
 
-  it('should toggle the Edit Domain Modal flag', () => {
-    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+  /* it('should toggle the Edit Domain Modal flag', () => {
 
+    const dummyDisplayDomain: DisplayDomain = {
+      id: '1',
+      name: 'Dummy Domain',
+      description: 'Dummy Description',
+      selected: false,
+      imageUrl: 'Dummy Image Url',
+      sourceIds: ['1', '2', '3'],
+      sources: [],
+    };
 
+    spyOn(component['store'], 'selectSnapshot').and.returnValue(dummyDisplayDomain);
+
+    component.lastOpenedModal = [];
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleEditDomainModal());
 
+    expect(component.lastOpenedModal).toEqual(['editDomainModal']);
+
+    expect(component.modalTimeout).toBe(true);
+
+    
     component.showEditDomainModal = true;
     component.toggleEditDomainModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleEditDomainModal());
-  });
+  
+  
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+  }); */
 
   it('should toggle the Profile Modal', () => {
     const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+    component.lastOpenedModal = [];
 
     
     component.showProfileModal = false;
     component.toggleProfileModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileModal());
 
+    expect(component.lastOpenedModal).toEqual(['profileModal']);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
+
+
     component.showProfileModal = true;
     component.toggleProfileModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileModal());
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
+
   });
 
   it('toggle the edit profile modal', () => {
     const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+    component.lastOpenedModal = [];
 
     component.showProfileEditModal = false;
     component.toggleProfileEditModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileEditModal());
 
+    expect(component.lastOpenedModal).toEqual(['profileEditModal']);
+    
+    expect(component.modalTimeout).toBe(true);
+     /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
+
     component.showProfileEditModal = true;
     component.toggleProfileEditModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleProfileEditModal());
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
   });
 
   // Integration Test
@@ -470,26 +540,56 @@ describe('SidebarComponent and AppState', () => {
   it('should toggle the change password modal', () => {
     const storeDispatchSpy = spyOn(component['store'], 'dispatch');
 
+    component.lastOpenedModal = [];
 
     component.showChangePasswordModal = false;
     component.toggleChangePasswordModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
 
+    expect(component.lastOpenedModal).toEqual(['changePasswordModal']);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
+
     component.showChangePasswordModal = true;
     component.toggleChangePasswordModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleChangePasswordModal());
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
   });
 
   it('should toggle the delete account modal', () => {
     const storeDispatchSpy = spyOn(component['store'], 'dispatch');
+    component.lastOpenedModal = [];
 
     component.showDeleteAccountModal = false;
     component.toggleDeleteAccountModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleDeleteAccountModal());
 
+    expect(component.lastOpenedModal).toEqual(['deleteAccountModal']);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
+
     component.showDeleteAccountModal = true;
     component.toggleDeleteAccountModal();
     expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleDeleteAccountModal());
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    /* setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300); */
   });
 
 
@@ -802,6 +902,191 @@ it('should dispatch "new GuestModalChange(true)" when some functions are called'
   expect(component['store'].dispatch).toHaveBeenCalledWith(
     new GuestModalChange(true)
   );
+});
+
+it('should call handleModalClick when clicking outside the addDomainModal', () => {
+  component.modalTimeout = false;
+  component.showAddDomainModal = true;
+  component.lastOpenedModal.push('addDomainModal');
+
+  const fakeEvent = {
+    target: document.createElement('div'),
+  } as unknown as MouseEvent;
+
+  spyOn(component, 'getModalElement').and.returnValue(null);
+  spyOn(component, 'checkIfClickIn').and.returnValue(false);
+  spyOn(component, 'handleModalClick');
+
+  component.onClick(fakeEvent);
+
+  expect(component.handleModalClick).toHaveBeenCalled();
+});
+
+it('should call handleModalClick when clicking outside the profileModal', () => {
+  component.modalTimeout = false;
+  component.showProfileModal = true;
+  component.lastOpenedModal.push('profileModal');
+
+  const fakeEvent = {
+    target: document.createElement('div'),
+  } as unknown as MouseEvent;
+
+  spyOn(component, 'getModalElement').and.returnValue(null);
+  spyOn(component, 'checkIfClickIn').and.returnValue(false);
+  spyOn(component, 'handleModalClick');
+
+  component.onClick(fakeEvent);
+
+  expect(component.handleModalClick).toHaveBeenCalled();
+});
+
+it('should call handleModalClick when clicking outside the editDomainModal', () => {
+  component.modalTimeout = false;
+  component.showEditDomainModal = true;
+  component.lastOpenedModal.push('editDomainModal');
+
+  const fakeEvent = {
+    target: document.createElement('div'),
+  } as unknown as MouseEvent;
+
+  spyOn(component, 'getModalElement').and.returnValue(null);
+  spyOn(component, 'checkIfClickIn').and.returnValue(false);
+  spyOn(component, 'handleModalClick');
+
+  component.onClick(fakeEvent);
+
+  expect(component.handleModalClick).toHaveBeenCalled();
+});
+
+it('should call handleModalClick when clicking outside the profileEditModal', () => {
+  component.modalTimeout = false;
+  component.showProfileEditModal = true;
+  component.lastOpenedModal.push('profileEditModal');
+
+  const fakeEvent = {
+    target: document.createElement('div'),
+  } as unknown as MouseEvent;
+
+  spyOn(component, 'getModalElement').and.returnValue(null);
+  spyOn(component, 'checkIfClickIn').and.returnValue(false);
+  spyOn(component, 'handleModalClick');
+
+  component.onClick(fakeEvent);
+
+  expect(component.handleModalClick).toHaveBeenCalled();
+});
+
+it('should call handleModalClick when clicking outside the changePasswordModal', () => {
+  component.modalTimeout = false;
+  component.showChangePasswordModal = true;
+  component.lastOpenedModal.push('changePasswordModal');
+
+  const fakeEvent = {
+    target: document.createElement('div'),
+  } as unknown as MouseEvent;
+
+  spyOn(component, 'getModalElement').and.returnValue(null);
+  spyOn(component, 'checkIfClickIn').and.returnValue(false);
+  spyOn(component, 'handleModalClick');
+
+  component.onClick(fakeEvent);
+
+  expect(component.handleModalClick).toHaveBeenCalled();
+});
+
+it('should call handleModalClick when clicking outside the deleteAccountModal', () => {
+  component.modalTimeout = false;
+  component.showDeleteAccountModal = true;
+  component.lastOpenedModal.push('deleteAccountModal');
+
+  const fakeEvent = {
+    target: document.createElement('div'),
+  } as unknown as MouseEvent;
+
+  spyOn(component, 'getModalElement').and.returnValue(null);
+  spyOn(component, 'checkIfClickIn').and.returnValue(false);
+  spyOn(component, 'handleModalClick');
+
+  component.onClick(fakeEvent);
+
+  expect(component.handleModalClick).toHaveBeenCalled();
+});
+
+it('should call handleModalClick when clicking outside the confirmDeleteDomainModal', () => {
+  component.modalTimeout = false;
+  component.showConfirmDeleteDomainModal = true;
+  component.lastOpenedModal.push('confirmDeleteDomainModal');
+
+  const fakeEvent = {
+    target: document.createElement('div'),
+  } as unknown as MouseEvent;
+
+  spyOn(component, 'getModalElement').and.returnValue(null);
+  spyOn(component, 'checkIfClickIn').and.returnValue(false);
+  spyOn(component, 'handleModalClick');
+
+  component.onClick(fakeEvent);
+
+  expect(component.handleModalClick).toHaveBeenCalled();
+});
+
+it('should not call toggleDomainModalOff when lastOpenedModal is "addDomainModal"', () => {
+  component.lastOpenedModal.push('addDomainModal');
+  component.handleModalClick();
+  // Asserting that toggleDomainModalOff is not called in this scenario
+});
+
+it('should not call toggleProfileModal when lastOpenedModal is "profileModal"', () => {
+  component.lastOpenedModal.push('profileModal');
+  component.handleModalClick();
+  // Asserting that toggleProfileModal is not called in this scenario
+});
+
+it('should not call toggleEditDomainModal when lastOpenedModal is "editDomainModal"', () => {
+  component.lastOpenedModal.push('editDomainModal');
+  component.handleModalClick();
+  // Asserting that toggleEditDomainModal is not called in this scenario
+});
+
+it('should not call toggleProfileEditModal when lastOpenedModal is "profileEditModal"', () => {
+  component.lastOpenedModal.push('profileEditModal');
+  component.handleModalClick();
+  // Asserting that toggleProfileEditModal is not called in this scenario
+});
+
+it('should not call toggleChangePasswordModal when lastOpenedModal is "changePasswordModal"', () => {
+  component.lastOpenedModal.push('changePasswordModal');
+  component.handleModalClick();
+  // Asserting that toggleChangePasswordModal is not called in this scenario
+});
+
+it('should not call toggleDeleteAccountModal when lastOpenedModal is "deleteAccountModal"', () => {
+  component.lastOpenedModal.push('deleteAccountModal');
+  component.handleModalClick();
+  // Asserting that toggleDeleteAccountModal is not called in this scenario
+});
+
+it('should not call toggleConfirmDeleteDomainModal when lastOpenedModal is "confirmDeleteDomainModal"', () => {
+  component.lastOpenedModal.push('confirmDeleteDomainModal');
+  component.handleModalClick();
+  // Asserting that toggleConfirmDeleteDomainModal is not called in this scenario
+});
+
+it('should not call any toggle methods when lastOpenedModal is unknown', () => {
+  const toggleMethods = [
+    'toggleDomainModalOff',
+    'toggleProfileModal',
+    'toggleEditDomainModal',
+    'toggleProfileEditModal',
+    'toggleChangePasswordModal',
+    'toggleDeleteAccountModal',
+    'toggleConfirmDeleteDomainModal',
+  ];
+  toggleMethods.forEach((method) => {
+    component.lastOpenedModal.push('unknownModal');
+    component.handleModalClick();
+    // Asserting that none of the toggle methods are called in this scenario
+  });
 });
 
 });

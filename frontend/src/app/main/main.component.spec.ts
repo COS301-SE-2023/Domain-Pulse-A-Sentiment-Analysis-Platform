@@ -1,25 +1,36 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { GenerateReport, GetDomains, GuestModalChange, ToastError, ToastSuccess } from '../app.actions';
 import { DisplayDomain, DisplaySource } from '../app.state';
+import { ElementRef } from '@angular/core';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ModalContainerComponent } from '../modal-container/modal-container.component';
+class MockElementRef {
+  nativeElement = {};
+}
+
 
 describe('MainComponent', () => {
   let component: MainComponent;
   let actions$: Observable<any>;
   let storeSpy: jasmine.SpyObj<Store>;
+  let fixture: ComponentFixture<MainComponent>;
+
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MainComponent],
+      declarations: [MainComponent, SidebarComponent, ModalContainerComponent],
+      providers: [MainComponent, { provide: ElementRef, useClass: MockElementRef }, Store, Actions],
       imports: [NgxsModule.forRoot([])],
     });
 
+    fixture = TestBed.createComponent(MainComponent);
     component = TestBed.inject(MainComponent);
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
-
+    //component = fixture.componentInstance;
     actions$ = TestBed.inject(Actions);
   });
 
@@ -139,15 +150,30 @@ describe('MainComponent', () => {
     };
 
     component.selectedDomain = testDomain;
+    component.lastOpenedModal = [];
 
 
     component.showReportModal = false;
     component.toggleReportModal();
     expect(component.showReportModal).toBe(true);
 
+    expect(component.lastOpenedModal).toEqual(['reportModal']);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
+
     component.showReportModal = true;
     component.toggleReportModal();
     expect(component.showReportModal).toBe(false);
+
+    expect(component.lastOpenedModal).toEqual([]);
+    
+    expect(component.modalTimeout).toBe(true);
+    setTimeout(() => {
+        expect(component.modalTimeout).toBe(false);
+    }, 300);
   });
 
   it('should not toggle report modal', () => {
@@ -257,4 +283,51 @@ describe('MainComponent', () => {
     expect(component.canEdit).toBeTrue();
   });
 
+  it('should call handleModalClick when clicking outside the profileEditModal', () => {
+    component.modalTimeout = false;
+    component.showReportModal = true;
+    component.lastOpenedModal.push('reportModal');
+  
+    const fakeEvent = {
+      target: document.createElement('div'),
+    } as unknown as MouseEvent;
+  
+    spyOn(component, 'getModalElement').and.returnValue(null);
+    spyOn(component, 'checkIfClickIn').and.returnValue(false);
+    spyOn(component, 'handleModalClick');
+  
+    component.onClick(fakeEvent);
+  
+    expect(component.handleModalClick).toHaveBeenCalled();
+  });
+
+  it('should call toggleReportModal when lastOpenedModal is "reportModal" and showReportModal is true', () => {
+    const toggleReportModalSpy = spyOn(component, 'toggleReportModal');
+    component.lastOpenedModal.push('reportModal');
+    component.showReportModal = true;
+  
+    component.handleModalClick();
+  
+    expect(toggleReportModalSpy).toHaveBeenCalled();
+  });
+  
+  it('should not call toggleReportModal when lastOpenedModal is "reportModal" but showReportModal is false', () => {
+    const toggleReportModalSpy = spyOn(component, 'toggleReportModal');
+    component.lastOpenedModal.push('reportModal');
+    component.showReportModal = false;
+  
+    component.handleModalClick();
+  
+    expect(toggleReportModalSpy).not.toHaveBeenCalled();
+  });
+  
+  it('should not call toggleReportModal when lastOpenedModal is not "reportModal"', () => {
+    const toggleReportModalSpy = spyOn(component, 'toggleReportModal');
+    component.lastOpenedModal.push('otherModal'); // Use a different modal name
+    component.showReportModal = true;
+  
+    component.handleModalClick();
+  
+    expect(toggleReportModalSpy).not.toHaveBeenCalled();
+  });
 });
