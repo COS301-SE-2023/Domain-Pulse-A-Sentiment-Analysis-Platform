@@ -181,7 +181,9 @@ export class AppState {
 
   @Selector()
   static domains(state: AppStateModel) {
-    if (state.domains && state.domains.length > 0) return state.domains;
+    if (state.domains && state.domains.length > 0){
+      return state.domains.sort((a, b) => (a.id > b.id ? 1 : -1));
+    }
     return undefined;
   }
 
