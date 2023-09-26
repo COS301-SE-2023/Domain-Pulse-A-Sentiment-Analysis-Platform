@@ -69,7 +69,10 @@ Security is a very important quality requirement for any application as peoples 
 \begin{itemize}
     \item \textbf{Broken access control} - We are using Djangos support for user authentication which has been thoroughly tested and is highly secure, with this being said access control is very unlikely to be broken unless one of Djangos authentication libraries had a flaw which is unlikely. Our application only have 1 level of access which means that incorrect access control is unlikely to occur.
     \item \textbf{Cryptographic failures} - To protect our system against cryptographic failures we are using HTTPS and for all our password storage we are using state of the art hashing with salting.
-    \item \textbf{Injection} - To protect our system against injection attacks we are using prepared statements.
+    \item \textbf{Injection} - To protect our system against injection attacks we are using prepared statements provided by Djangos built in ORM (Object Relational Mapper) which is highly secure and has been thoroughly tested. We also use built in functions to execute our queries to ensure that no injection attacks can occur.
+    \item \textbf{Insecure design} - We consistently update the architecture of our system which allowed us to identify and fix any insecure design flaws that may have been present in our system.
+    \item \textbf{Security misconfiguration} - We have tested our application extensively and have ensured that the way our security configurations work is correct and secure.
+    \item \textbf{Vunerable and outdated components} - We have a bot that updates our dependancies automatically and we have no known vunerabilites in our dependancies, we also make use of gitguardian which alerts us if any secrests within the repo somehow get leaked.
 \end{itemize}
 \subsection{Performance}
 \subsection{Scalability}
