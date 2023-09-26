@@ -435,6 +435,9 @@ export class AppState {
 
       let domainIDs: string[] = res.domainIDs;
 
+      if(domainIDs.length === 0)
+        ctx.patchState({ domains: [] });
+
       ctx.patchState({
         userHasNoDomains: domainIDs.length === 0,
       });
