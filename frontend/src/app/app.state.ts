@@ -32,6 +32,8 @@ import {
   SetIsActive,
   UplaodCVSFile,
   GenerateReport,
+  AttempGuestLogin,
+  GuestModalChange,
   ToggleAddDomainModal,
   ToggleProfileModal,
   ToggleConfirmDeleteDomainModal,
@@ -110,6 +112,8 @@ interface AppStateModel {
   allSourcesSelected: boolean;
   sourceIsLoading: boolean;
   selectedStatisticIndex: number;
+  canEdit: boolean;
+  showMakeAccountModal: boolean;
   domains?: DisplayDomain[];
   selectedDomain?: DisplayDomain;
   sources?: DisplaySource[];
@@ -145,6 +149,8 @@ interface AppStateModel {
     pdfUrl: '',
     userHasNoDomains: false,
     userHasNoSources: false,
+    canEdit: true,
+    showMakeAccountModal: false,
     showAddDomainModal: false,
     showProfileModal: false,
     showEditDomainModal: false,
@@ -270,6 +276,11 @@ export class AppState {
   }
 
   @Selector()
+  static showMakeAccountModal(state: AppStateModel) {
+    return state.showMakeAccountModal;
+  }
+
+  @Selector()
   static showAddDomainModal(state: AppStateModel) {
     return state.showAddDomainModal;
   }
@@ -304,6 +315,10 @@ export class AppState {
     return state.showProfileEditModal;
   }
 
+  @Selector()
+  static canEdit(state: AppStateModel) {
+    return state.canEdit;
+  }
   @Selector()
   static showReportGeneratorModal(state: AppStateModel) {
     return state.showReportGeneratorModal;
@@ -700,6 +715,11 @@ export class AppState {
 
 
   } */
+
+  @Action(GuestModalChange)
+  guestModalChange(ctx: StateContext<AppStateModel>, state: GuestModalChange) {
+    ctx.patchState({ showMakeAccountModal: state.show });
+  }
 
   @Action(EditSource)
   editSource(ctx: StateContext<AppStateModel>, state: EditSource) {
@@ -1126,17 +1146,39 @@ export class AppState {
     });
   }
 
-  // ...
+  @Action(AttempGuestLogin)
+  attempGuestLogin(ctx: StateContext<AppStateModel>, state: AttempGuestLogin) {
+    this.appApi.attemptGuestLogin().subscribe((res) => {
+      if(res.status === "SUCCESS") {
+        this.store.dispatch(new AttempPsswdLogin('guest', res.guest_token));
+      } else {
+        this.store.dispatch(new ToastError('Preview disabled, please try again later'));
+      }
+    });
+  }
 
   @Action(AttempPsswdLogin)
   attempPsswdLogin(ctx: StateContext<AppStateModel>, state: AttempPsswdLogin) {
-    console.log('attempting password login');
 
     return this.appApi.attemptPsswdLogin(state.username, state.password).pipe(
       switchMap((res) => {
         if (res.status === 'SUCCESS') {
           // set jwt in local storage
           localStorage.setItem('JWT', res.JWT);
+
+          if(state.username == 'guest') {
+            ctx.patchState({
+              canEdit: false
+            });
+            localStorage.setItem('canEdit', 'false');
+
+            this.store.dispatch(new ToastSuccess('You are currenly viewing a preview'));
+          } else {
+            ctx.patchState({
+              canEdit: true
+            });
+            localStorage.setItem('canEdit', 'true');
+          }
 
           this.store.dispatch(new SetUserDetails(res.id));
           this.store.dispatch(new GetDomains());
@@ -1155,6 +1197,13 @@ export class AppState {
 
   @Action(SetUserDetails)
   setUserDetails(ctx: StateContext<AppStateModel>, state: SetUserDetails) {
+    const couldEdit = localStorage.getItem('canEdit');
+    if(couldEdit != null) {
+      ctx.patchState({
+        canEdit: couldEdit == 'true'
+      });
+    }
+
     this.appApi.getProfile(state.profileId).subscribe((res: any) => {
       if (res.status == 'SUCCESS') {
         const profileDetails: ProfileDetails = {

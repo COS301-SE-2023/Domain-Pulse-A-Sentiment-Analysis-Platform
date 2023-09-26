@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import {
   trigger,
   state,
@@ -13,7 +13,12 @@ import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, filter, switchMap, take } from 'rxjs/operators';
-import { GenerateReport, ToastError, ToastSuccess, ToggleReportGeneratorModal } from '../app.actions';
+import {
+  GenerateReport,
+  GuestModalChange,
+  ToastError,
+  ToastSuccess, ToggleReportGeneratorModal,
+} from '../app.actions';
 /* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
  */ @Component({
   selector: 'app-main',
@@ -42,6 +47,36 @@ import { GenerateReport, ToastError, ToastSuccess, ToggleReportGeneratorModal } 
         ])
       ),
     ]),
+    trigger('smallComments', [
+      state('0', style({ marginTop: '0%' })),
+      state('1', style({ marginTop: '-34.7vh' })),
+      transition('0 => 1', [
+        animate('0s', style({ marginTop: '0%' })),
+        animate('0.175s', style({ marginTop: '0%' })),
+        animate('0.4s ease-in-out', style({ marginTop: '-34.7vh' })),
+      ]),
+      transition('1 => 0', animate('0.4s ease-in-out')),
+    ]),
+    trigger('sourceSel', [
+      state('0', style({ width: '97.5%' })),
+      state('1', style({ width: '62%' })),
+      transition('0 => 1', animate('0.175s ease-in-out')),
+      transition('1 => 0', [
+        animate('0s', style({ width: '62%' })),
+        animate('0.32s', style({ width: '62%' })),
+        animate('0.4s ease-in-out', style({ width: '97.5%' })),
+      ]),
+    ]),
+    trigger('statSell', [
+      state('0', style({ width: '100%' })),
+      state('1', style({ width: '64%' })),
+      transition('0 => 1', animate('0.175s ease-in-out')),
+      transition('1 => 0', [
+        animate('0s', style({ width: '64%' })),
+        animate('0.32s', style({ width: '64%' })),
+        animate('0.4s ease-in-out', style({ width: '100%' })),
+      ]),
+    ]),
   ],
 })
 export class MainComponent implements OnInit {
@@ -67,9 +102,27 @@ export class MainComponent implements OnInit {
 
   sidebarCollapsed = true;
   showReportModal = false;
+  commentsExpanded = false;
   pdfUrl!: string;
 
-  constructor(private store: Store) {
+  @Select(AppState.showMakeAccountModal)
+  showMakeAccountModal$!: Observable<boolean>;
+  showGuestModal = true;
+  canEdit: boolean = true;
+
+  modalTimeout = false;
+
+  lastOpenedModal: any[] = [];
+
+  constructor(private store: Store,  private el: ElementRef) {
+    const commentsExpanded = window.localStorage.getItem('commentsExpanded');
+    if (commentsExpanded) {
+      this.commentsExpanded = commentsExpanded === 'true' ? true : false;
+    }
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      this.canEditChanged(canEdit);
+    });
+    
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
     });
@@ -81,8 +134,19 @@ export class MainComponent implements OnInit {
       this.noData = res;
     });
 
+    this.showMakeAccountModal$.subscribe((showMakeAccountModal: boolean) => {
+      this.showGuestModal = showMakeAccountModal;
+    });
   }
-  
+
+  canEditChanged(canEdit: boolean | undefined) {
+    if (canEdit !== undefined) this.canEdit = canEdit;
+  }
+
+  saveExpandedState(val: boolean) {
+    window.localStorage.setItem('commentsExpanded', val ? 'true' : 'false');
+  }
+
   ngOnInit(): void {
     this.selectedDomain$.subscribe((domain) => {
       this.processSelectedDomain(domain!);
@@ -100,7 +164,11 @@ export class MainComponent implements OnInit {
     });
 
     this.setupClickEventListener();
+  }
 
+  expandCommentsHandler(event: boolean) {
+    alert('i received the event: ' + event);
+    this.commentsExpanded = event;
   }
 
   setupClickEventListener(): void {
@@ -113,7 +181,7 @@ export class MainComponent implements OnInit {
   }
 
   processpdfUrl(res: string) {
-    if(!res || res=='') return;
+    if (!res || res == '') return;
     const pdfIndex: number = res.lastIndexOf('.pdf');
 
     if (pdfIndex !== -1) {
@@ -141,8 +209,12 @@ export class MainComponent implements OnInit {
   }
 
   toggleReportModal() {
+    if (!this.canEdit) {
+      this.store.dispatch(new GuestModalChange(true));
+      return;
+    }
 
-    if(this.selectedDomain?.sources.length === 0) {
+    if (this.selectedDomain?.sources.length === 0) {
       this.store.dispatch(
         new ToastError(
           'You have no sources to generate a report from. Please add a source.'
@@ -153,9 +225,22 @@ export class MainComponent implements OnInit {
     if (!this.showReportModal) {
       this.generateReport();
       this.store.dispatch(new ToggleReportGeneratorModal());
+
+      this.lastOpenedModal.push('reportModal');
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
+
     } else {
       this.pdfUrl = '';
       this.store.dispatch(new ToggleReportGeneratorModal());
+
+      this.lastOpenedModal.pop();
+      this.modalTimeout = true;
+      setTimeout(() => {
+        this.modalTimeout = false;
+      }, 300);
     }
   }
 
@@ -170,4 +255,42 @@ export class MainComponent implements OnInit {
       navigator.clipboard.writeText(textToCopy);
     }
   }
+
+  toggleGuestModal() {
+    if (this.showGuestModal) {
+      this.store.dispatch(new GuestModalChange(false));
+    } else {
+      this.store.dispatch(new GuestModalChange(true));
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+onClick(event: MouseEvent) {
+  if (!this.modalTimeout) {
+    var modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length-1]); // Use a separate method
+    if (!this.checkIfClickIn(event, modalDiv!)) {
+      this.handleModalClick();
+    }
+  }
+}
+
+checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement): boolean {
+  if(!modalDiv) return false;
+  var result =  modalDiv && modalDiv.contains(event.target as Node);
+  return result;
+}
+
+public getModalElement(search: string): HTMLElement | null {
+  return this.el.nativeElement.querySelector('#' + search );
+}
+
+public handleModalClick() {
+  switch (this.lastOpenedModal[this.lastOpenedModal.length - 1]) {
+    case 'reportModal':
+      if (this.showReportModal) {
+        this.toggleReportModal();
+      }
+      break;
+  }
+}
 }

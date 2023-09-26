@@ -1,8 +1,8 @@
 <div class="gap-div flex-row align-center">
   <div id="source-scroll" class="sources-div flex-row align-center scrollable-div">
-    <ng-container *ngIf="sources$ | async as sources; else loadingSources">
+    <ng-container *ngIf="(sources$ | async) as sources; else loadingSources">
       <div *ngIf="sources.length > 1"class="source-cat flex-column center clickable-item-nohover" (click)="selectAllSources()"
-        [ngClass]="{ 'source-cat-selected': allSources$ | async }">
+        [ngClass]="{ 'source-cat-selected': (allSources$ | async) }">
         <img [src]="'../assets/icons/allSources.png'" height="60%" />
 
         <p class="source-name">All Sources</p>
@@ -82,7 +82,7 @@
 </div>
 
 <dp-modal-container [modalDisplay]="showAddSourcesModal" (close)="toggleAddSourcesModal()">
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="addSourceModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div class="flex-column center modal-contents" style="flex-basis: 55%; gap: 0.7rem">
       <div class="heading-container">
         <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item"
@@ -212,7 +212,7 @@
           </div>
 
           <div class="flex-column" style="width: 100%;" *ngIf="newSourcePlatform === 'livereview'">
-            <p>Learn more about how live-review works <a href="/help?q=live reviews" target="_blank">here</a></p>
+            <p class = "adaptive-color">Learn more about how live-review works <a href="/help?q=live reviews" target="_blank">here</a></p>
           </div>
 
           <div class="flex-column" style="width: 100%" *ngIf="newSourcePlatform === 'csv'">
@@ -289,12 +289,13 @@
 </dp-modal-container>
 
 <dp-modal-container [modalDisplay]="showInfoModal" (close)="toggleInfoModal()" data-cy="infoModal">
-  <div class="flex-row modal"
-    style="width: 20vw; height: fit-content; min-height: 30vh; color: black; margin-bottom: 1rem; margin-top: 1rem;">
+  <div id="infoModal" class="flex-row modal"
+    style="width: 25vw; height: fit-content; min-height: 20vh; color: black; margin-bottom: 1rem; margin-top: 1rem; min-width: max-content;">
     <div class="flex-column center modal-contents" style="width: 100%; max-width: none">
       <div class="heading-container" style="padding-bottom: 1rem;">
         <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item"
           (click)="toggleInfoModal()" />
+        <p class="modal-heading">Source Info</p>
       </div>
       <div class="flex-column content" style="width: 80%; gap: 1rem">
         <!-- id: string;
@@ -306,7 +307,15 @@
         <ng-container *ngIf="selectedSource?.url === 'live-review-logo.png'">
           <div class="flex-row left">
             <div class="tag flex-row center">Name</div>
-            <p class="info-data">{{ selectedSource?.name }}</p>
+            <ng-container *ngIf="!isEditing; else editMode">
+              <p class="info-data">{{ selectedSource?.name }}</p>
+              <img src="../assets/icons/pen-solid-black.svg" alt="edit" class="edit-icon pen clickable-item"
+                (click)="editName();  $event.stopPropagation();" />
+            </ng-container>
+            <ng-template #editMode>
+              <input [(ngModel)]="editSourceName" class="editInput"/>
+              <img src="../assets/icons/yes-green.svg" alt="edit" class="edit-icon clickable-item"
+              (click)="editSourceNew();  $event.stopPropagation();" />            </ng-template>
           </div>
           <div class="flex-row left">
             <div class="tag flex-row center">Live Reviewing</div>
@@ -330,7 +339,15 @@
         <ng-container *ngIf="selectedSource?.url === 'youtube-logo.png'">
           <div class="flex-row left">
             <div class="tag flex-row center">Name</div>
-            <p class="info-data">{{ selectedSource?.name }}</p>
+            <ng-container *ngIf="!isEditing; else editMode">
+              <p class="info-data">{{ selectedSource?.name }}</p>
+              <img src="../assets/icons/pen-solid-black.svg" alt="edit" class="edit-icon pen clickable-item"
+                (click)="editName();  $event.stopPropagation();" />
+            </ng-container>
+            <ng-template #editMode>
+              <input [(ngModel)]="editSourceName" class="editInput"/>
+              <img src="../assets/icons/yes-green.svg" alt="edit" class="edit-icon clickable-item"
+              (click)="editSourceNew();  $event.stopPropagation();" />            </ng-template>
           </div>
           <div class="flex-row left">
             <div class="tag flex-row center">URL</div>
@@ -352,8 +369,15 @@
           ">
           <div class="flex-row left">
             <div class="tag flex-row center">Name</div>
-            <p class="info-data">{{ selectedSource?.name }}</p>
-          </div>
+            <ng-container *ngIf="!isEditing; else editMode">
+              <p class="info-data">{{ selectedSource?.name }}</p>
+              <img src="../assets/icons/pen-solid-black.svg" alt="edit" class="edit-icon pen clickable-item"
+                (click)="editName();  $event.stopPropagation();" />
+            </ng-container>
+            <ng-template #editMode>
+              <input [(ngModel)]="editSourceName" class="editInput"/>
+              <img src="../assets/icons/yes-green.svg" alt="edit" class="edit-icon clickable-item"
+              (click)="editSourceNew();  $event.stopPropagation();" />            </ng-template>          </div>
           <div class="flex-row left">
             <div class="tag flex-row center">URL</div>
             <a id="source link" href="{{ selectedSource?.params }}" target="_blank">
@@ -371,8 +395,15 @@
       ">
       <div class="flex-row left">
         <div class="tag flex-row center">Name</div>
-        <p class="info-data">{{ selectedSource?.name }}</p>
-      </div>
+        <ng-container *ngIf="!isEditing; else editMode">
+          <p class="info-data">{{ selectedSource?.name }}</p>
+          <img src="../assets/icons/pen-solid-black.svg" alt="edit" class="edit-icon pen clickable-item"
+            (click)="editName();  $event.stopPropagation();" />
+        </ng-container>
+        <ng-template #editMode>
+          <input [(ngModel)]="editSourceName" class="editInput"/>
+          <img src="../assets/icons/yes-green.svg" alt="edit" class="edit-icon clickable-item"
+          (click)="editSourceNew();  $event.stopPropagation();; $event.stopPropagation();" />            </ng-template>      </div>
     </ng-container>
       </div>
     </div>
@@ -380,7 +411,7 @@
 </dp-modal-container>
 
 <dp-modal-container [modalDisplay]="showConfirmDeleteSourceModal" (close)="toggleConfirmDeleteSourceModal()">
-  <div class="flex-row modal" style="width: 30vw; height: 25vh; color: black; border-radius: 10px">
+  <div id="confirmDeleteSourceModal" class="flex-row modal" style="width: 30vw; height: 25vh; color: black; border-radius: 10px">
     <div class="flex-row center" style="width: 100%">
       <div class="flex-column center" style="gap: 2rem">
         <p class="confirm-text">Are you sure you want to delete your source?</p>

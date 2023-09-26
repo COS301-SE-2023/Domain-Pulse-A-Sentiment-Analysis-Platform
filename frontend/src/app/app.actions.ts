@@ -112,9 +112,19 @@ export class GetSourceDashBoardInfo {
   static readonly type = '[App] Get Source DashBoard Info';
 }
 
+export class GuestModalChange {
+  static readonly type = '[App] Guest Modal Change';
+  constructor(public show: boolean) {}
+}
+
 export class AttempPsswdLogin {
   static readonly type = '[Auth] Attemp Login';
   constructor(public username: string, public password: string) {}
+}
+
+export class AttempGuestLogin {
+  static readonly type = '[Auth] Attemp Guest Login';
+  constructor() {}
 }
 
 export class DeleteUser {

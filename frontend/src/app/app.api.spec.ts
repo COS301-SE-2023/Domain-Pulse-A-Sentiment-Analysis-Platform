@@ -550,6 +550,36 @@ describe('AppApi', () => {
     req.flush(expectedResponse);
   });
 
+  /* attemptGuestLogin(): Observable<any> {
+    const attemptPsswdLoginUrl = this.profilesBaseUrl + 'check/try_guest_login/';
+    // send with credentials enabled
+    return this.http.post(attemptPsswdLoginUrl, {}, {
+      withCredentials: true,
+    });
+  } */
+
+  it('should make a POST request for guest login', () => {
+    const username = 'testuser';
+    const password = 'testpassword';
+  
+    const expectedResponse = {
+
+    }
+      
+    appApi.attemptGuestLogin().subscribe((response) => {
+      expect(response).toEqual(expectedResponse);
+    });
+  
+    const expectedUrl = '/api/profiles/check/try_guest_login/';
+    const expectedMethod = 'POST';
+  
+    const req = httpTestingController.expectOne(expectedUrl);
+    expect(req.request.method).toEqual(expectedMethod);
+    expect(req.request.body).toEqual({});
+  
+    req.flush(expectedResponse);
+  });
+
   it('should make a POST request to get a user by ID', () => {
     const userID = 456;
   

@@ -9,4 +9,5 @@ urlpatterns = [
     path("add_source/",views.add_source),
     path("domain_ids_and_remove_domain/",views.check_domain_ids_and_remove_domain),
     path("check_logged_in/",views.check_logged_in),
+    path("try_guest_login/",views.try_guest_login),
 ]

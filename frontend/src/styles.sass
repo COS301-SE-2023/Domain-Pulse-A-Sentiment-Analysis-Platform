@@ -19,7 +19,7 @@ $modal-background-light: rgba(0, 0, 0, 0.181)
 $hover-opacity-highlight-light: rgba(0, 0, 0, 0.301)
 $button-highlight-light: #17234c
 $filter-to-black: invert(0%) sepia(93%) saturate(0%) hue-rotate(234deg) brightness(96%) contrast(107%)
-
+$search-bar-light: rgba(3, 127, 255, 0.25)
 
 
 $background-dark: #3b3b3b
@@ -38,11 +38,12 @@ $modal-background-dark: rgba(255, 255, 255, 0.181)
 $hover-opacity-highlight-dark: rgba(49, 49, 49, 0.301)
 $button-highlight-dark: #61b0ff
 $filter-to-white: invert(100%) sepia(0%) saturate(7486%) hue-rotate(104deg) brightness(99%) contrast(98%)
+$search-bar-dark: rgb(51, 51, 51)
 
 
 
 
-$confirm: rgba(0, 184, 0, 0.9)
+$confirm: rgba(0, 184, 0, 0.902)
 $reject: rgba(184, 0, 0, 0.9)
 $spinner-top-light: #178332
 $spinner-bottom-light: #55d174
@@ -89,6 +90,7 @@ body.light
     --spinner-top: #{$spinner-top-light}
     --spinner-bottom: #{$spinner-bottom-light}
     --icon-filter: #{$filter-to-black}
+    --search-bar: #{$search-bar-light}
 
 body.dark
     --background: #{$background-dark}
@@ -111,6 +113,7 @@ body.dark
     --spinner-top: #{$spinner-top-dark}
     --spinner-bottom: #{$spinner-bottom-dark}
     --icon-filter: #{$filter-to-white}
+    --search-bar: #{$search-bar-dark}
 
     a
         color: #61b0ff
