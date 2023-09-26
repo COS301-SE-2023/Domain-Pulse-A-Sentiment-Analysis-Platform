@@ -105,7 +105,7 @@
             <p class="step-heading">Source Type:</p>
             <div class="outer-flex-row sources-options">
               <div class="inner-flex-row" style="overflow-x: auto; display: flex">
-                <!-- <div class="platform-logo clickable-item" (click)="selectPlatform('googlereviews')"
+                <div class="platform-logo clickable-item" (click)="selectPlatform('googlereviews')"
                   data-cy="selectGooglePlatform">
                   <img src="../assets/google-reviews-logo.png" [ngClass]="{
                       selected: newSourcePlatform === 'googlereviews'
@@ -118,26 +118,25 @@
                       selected: newSourcePlatform === 'tripadvisor'
                     }" alt="Trip Advisor" />
                   <p class="source-type-title">Trip Advisor</p>
-                </div> -->
+                </div>
                 <div class="platform-logo clickable-item" (click)="selectPlatform('youtube')"
                   data-cy="selectYoutubePlatform">
                   <img src="../assets/youtube-logo.png" [ngClass]="{ selected: newSourcePlatform === 'youtube' }"
                     alt="Youtube" />
                   <p class="source-type-title">Youtube</p>
                 </div>
+                <div class="platform-logo clickable-item" (click)="selectPlatform('trustpilot')"
+                  data-cy="selectTrustPilotPlatform">
+                  <img src="../assets/trustpilot-logo.png" [ngClass]="{ selected: newSourcePlatform === 'trustpilot' }"
+                    alt="Trustpilot" />
+                  <p class="source-type-title">Trustpilot</p>
+                </div>
                 <div class="platform-logo clickable-item" (click)="selectPlatform('livereview')"
                   data-cy="selectLiveReviewPlatform">
                   <img src="../assets/live-review-logo.png" [ngClass]="{ selected: newSourcePlatform === 'livereview' }"
                     alt="Live Review" />
                   <p class="source-type-title">Live Review</p>
-                </div>
-                <!-- <div class="platform-logo clickable-item" (click)="selectPlatform('trustpilot')"
-                  data-cy="selectTrustPilotPlatform">
-                  <img src="../assets/trustpilot-logo.png" [ngClass]="{ selected: newSourcePlatform === 'trustpilot' }"
-                    alt="Trustpilot" />
-                  <p class="source-type-title">Trustpilot</p>
-                </div> -->
-                
+                </div>                          
                 <div class="platform-logo clickable-item" (click)="selectPlatform('csv')"
                   data-cy="selectCSV">
                   <img src="../assets/csv-logo.png" [ngClass]="{

@@ -136,8 +136,7 @@ export class SourceSelectorComponent implements OnInit {
         this.addSourceSpinner = false;
         this.newSourceName = '';
         this.newSourceUrl = '';
-        this.showAddSourcesModal = false;
-
+        this.toggleAddSourcesModal();
       });
       return;
     });
@@ -319,6 +318,10 @@ export class SourceSelectorComponent implements OnInit {
 
     } else {
       this.showAddSourcesModal = false;
+      const fileInput = this.el.nativeElement.querySelector('.file-block');
+      fileInput.value = '';
+
+      this.newCSVFile = '';
 
       this.lastOpenedModal.pop();
       this.modalTimeout = true;

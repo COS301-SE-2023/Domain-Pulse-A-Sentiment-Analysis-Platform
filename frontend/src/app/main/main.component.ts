@@ -223,6 +223,7 @@ export class MainComponent implements OnInit {
       return;
     }
     if (!this.showReportModal) {
+      this.checkForData();
       this.generateReport();
       this.store.dispatch(new ToggleReportGeneratorModal());
 
@@ -242,6 +243,15 @@ export class MainComponent implements OnInit {
         this.modalTimeout = false;
       }, 300);
     }
+  }
+
+  checkForData(){
+
+    //loop through and print all the domain sources
+    this.selectedDomain?.sources.forEach(source => {
+      console.log("source here")
+      console.log(source);
+    });
   }
 
   generateReport() {
