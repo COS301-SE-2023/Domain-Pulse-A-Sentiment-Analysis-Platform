@@ -27,14 +27,14 @@ Process of Usability Testing:
           \begin{itemize}
               \item We sent all participants of our usability testing a pdf explaining all aspects of navigating to the app and a list of tasks in which they could try. The pdf can be found \href{https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Testing%20Policy/Testing_Assistance_Domain_Pulse.pdf}{HERE.}
               \item The participant will access the application in their own time in the environment of their liking and use the application to perform tasks that were suggested on the pdf.
-              \item Once the user has completed the testing of the app, a questionaire was then to be filled out by all participants the questionaire can be found \href{https://forms.gle/P6EC4iyg7ZD93LNfA}{HERE.}
+              \item Once the user has completed the testing of the app, a questionnaire was then to be filled out by all participants, the questionnaire can be found \href{https://forms.gle/P6EC4iyg7ZD93LNfA}{HERE.}
           \end{itemize}
-    \item \textbf{Feedback implementation} - We collect all data from the questionaire that the testing participants filled out and use this to modify and fix issues accordingly.
+    \item \textbf{Feedback implementation} - We collect all data from the questionnaire that the testing participants filled out and use this to modify and fix issues accordingly.
 \end{itemize}
 \begin{itemize}
     \item \textbf{Metrics for usability testing} - The metrics that we used to measure the usability of our application are as follows:
           \begin{itemize}
-              \item How insghtful the application is which is computed as an average with 10 being the most insightful and 1 being the least insightful. As we can see from the image below the majority of the users we tested rated the insightfulness of the applications statsitics as an 8 or higher.
+              \item How insightful the application is which is computed as an average with 10 being the most insightful and 1 being the least insightful. As we can see from the image below the majority of the users we tested rated the insightfulness of the applications statistics as an 8 or higher.
               \begin{figure}[H]
                 \centering
                 \includegraphics[width=0.9\textwidth]{piechart.png}
@@ -44,7 +44,7 @@ Process of Usability Testing:
                 \centering
                 \includegraphics[width=0.9\textwidth]{Overall rating of the website.png}
               \end{figure}
-              \item The amount of responses regarding how easy the website is to use and navigate ranging from very easy to very diffucult. As we can see the majority of users rated the app as very easy and easy to use.
+              \item The amount of responses regarding how easy the website is to use and navigate ranging from very easy to very difficult. As we can see the majority of users rated the app as very easy and easy to use.
               \begin{figure}[H]
                 \centering
                 \includegraphics[width=0.9\textwidth]{How easy the website is to use.png}
@@ -63,7 +63,7 @@ Process of Usability Testing:
               \end{figure}
           \end{itemize}
 \end{itemize}
-The results of our usability testing gave view to many insights and helpful information regarding our application, The most prominent information that the usability testing brought to light was the bugs within our application that need to be rectified and the consequences of not fixing bugs within the application. 
+The results of our usability testing gave view to many insights and helpful information regarding our application, The most prominent information that the usability testing brought to light was the bugs within our application that needed to be rectified and the consequences of not fixing bugs within the application. 
 A list to some of the bigger bugs has been supplied below:
 \begin{itemize}
     \item The App was not redirecting to the login page after registering a new user.
@@ -72,8 +72,8 @@ A list to some of the bigger bugs has been supplied below:
     \item Scanning our live review source on an android device takes the user to the notes app instead of our modal for user input data.
     \item Live review loads indefinitely when there is no data.
 \end{itemize}
-All bugs that were listed above in conjuction with those not listed have been remedied and the app is in a state that is bug free to our knowledge.
-\par
+All bugs that were listed above in conjunction with those not listed have been remedied and the app is in a state that is bug free to our knowledge.
+\\
 Improvements within the app also came to light during the usability testing and these improvements have been implemented and are as follows:
 \begin{itemize}
     \item Wider scroll bars were added to aid those with visual impairments.
@@ -125,17 +125,17 @@ This promise of credit refund, shows a high level of confidence in the availabil
 
 \newpage
 \subsection{Security}
-Security is a very important quality requirement for any application as peoples information is at risk if the application is not secure. The security of our application is of utmost importance as we are dealing with peoples personal information and we need to ensure that this information is kept safe and secure. The security of our application in relation to the OWASP top 10 security vunerabilities is as follows:
+Security is a very important quality requirement for any application as peoples information is at risk if the application is not secure. The security of our application is of utmost importance as we are dealing with peoples personal information and we need to ensure that this information is kept safe and secure. The security of our application in relation to the OWASP top 10 security vulnerabilities is as follows:
 \begin{itemize}
     \item \textbf{Broken access control} - We are using Djangos support for user authentication which has been thoroughly tested and is highly secure, with this being said access control is very unlikely to be broken unless one of Djangos authentication libraries had a flaw which is unlikely. Our application only have 1 level of access which means that incorrect access control is unlikely to occur.
     \item \textbf{Cryptographic failures} - To protect our system against cryptographic failures we are using HTTPS and for all our password storage we are using state of the art hashing with salting.
     \item \textbf{Injection} - To protect our system against injection attacks we are using prepared statements provided by Djangos built in ORM (Object Relational Mapper) which is highly secure and has been thoroughly tested. We also use built in functions to execute our queries to ensure that no injection attacks can occur.
     \item \textbf{Insecure design} - We consistently update the architecture of our system which allowed us to identify and fix any insecure design flaws that may have been present in our system.
     \item \textbf{Security misconfiguration} - We have tested our application extensively and have ensured that the way our security configurations work is correct and secure.
-    \item \textbf{Vunerable and outdated components} - We have a bot that updates our dependancies automatically and we have no known vunerabilites in our dependancies, we also make use of gitguardian which alerts us if any secrets within the repo somehow get leaked.
-    \item \textbf{Identification and Authentication failure} - Once again we use Djangos buite lt in authentication libraries which have been thouroughly tested and are highly secure.
+    \item \textbf{Vunerable and outdated components} - We have a bot that updates our dependencies automatically and we have no known vulnerabilities in our dependencies, we also make use of gitguardian which alerts us if any secrets within the repo somehow get leaked.
+    \item \textbf{Identification and Authentication failure} - Once again we use Djangos built lt in authentication libraries which have been thoroughly tested and are highly secure.
     \item \textbf{Software and data integrity failure} - All libraries and plugins that are used within our system are from trusted sources and hence we can be sure that there are no integrity failures that are known to us.
-    \item \textbf{Security logging and monitoring failure} - We use software(Fail2ban) that bans an IP address from accessing our VM if more than 3 attemps to access the Vm are made and failed.
+    \item \textbf{Security logging and monitoring failure} - We use software(Fail2ban) that bans an IP address from accessing our VM if more than 3 attempts to access the Vm are made and failed.
     \item \textbf{Server-side request forgery} - We only allow users to choose from sources that the application trusts and hence dont allow the user to make requests to any other sources which restricts the range of allowed URLs that can be used as input by the user. Another added measure that we have incorporated is URL validation which ensures the user is only allowed to use URLs that are valid.
 \end{itemize}
 \newpage
@@ -147,7 +147,7 @@ Security is a very important quality requirement for any application as peoples 
 \section{Code Coverage}
 Any commit made to a branch causes automated tests to be run on the codebase of that branch, thereafter the code coverage of said branch is calculated.
 Any branch being merged via pull request into the development branch (dev) needs to have the coverage of changes to the codebase to match or better the coverage of the development branch.
-Furthermore, the coverage of the newly commited code (ie: patch) must match or exceed the coverage percentage of the project.
+Furthermore, the coverage of the newly committed code (ie: patch) must match or exceed the coverage percentage of the project.
 This ensures that the coverage of the codebase is never decreasing, and that sufficient testing is being done on the codebase.
 Furthermore any time the development branch is merged into the master branch, the coverage of the development branch must match or be higher than that of the master branch, ensuring an increasing coverage and sufficient testing.
 \begin{itemize}
@@ -169,7 +169,7 @@ Furthermore any time the development branch is merged into the master branch, th
 For our frontend testing frameworks and tools we decided to use the following:
 \begin{itemize}
     \item \textbf{Karma and Jasmine} - Jasmine is the testing framework that is used to write actual tests and are typed in Javascript, Karma is the test runner that executes the tests. Karma is run from a CLI(Command Line Interface) and it will open up a browser window and run the tests in that browser. Karma will then report the results of the tests back to the CLI and can be used to generate a coverage report. Karma and Jasmine are recommended by Angular which is what our frontend is primarily built upon and they are the most popular testing frameworks for Angular applications. The advantages of using Karma and Jasmine over other testing frameworks is that they are easy to set up and use, they are well documented and they are popular amongst Angular developers which means there is a extensive amount of resources available online for help if need be.
-    \item \textbf{Cypress} - Cypress is a testing framework that is used to write end to end tests which are tests that try and simulate a user using the application. End to end tests are needed to ensure that the application is working exactly as expected from the user interface level all the way through the application to the database level and checks all the integration between these componets work as expected. Cypress runs in a browser which makes it easy to setup and follow the tests as they excute in the browser. Cypress is documented well with a thriving community which allows for easy access to information if any problems arise.
+    \item \textbf{Cypress} - Cypress is a testing framework that is used to write end to end tests which are tests that try and simulate a user using the application. End to end tests are needed to ensure that the application is working exactly as expected from the user interface level all the way through the application to the database level and checks all the integration between these components work as expected. Cypress runs in a browser which makes it easy to setup and follow the tests as they execute in the browser. Cypress is documented well with a thriving community which allows for easy access to information if any problems arise.
 \end{itemize}
 
 \subsection{Backend Testing}
