@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
-import { GenerateReport, GetDomains, ToastError, ToastSuccess } from '../app.actions';
+import { GenerateReport, GetDomains, GuestModalChange, ToastError, ToastSuccess } from '../app.actions';
 import { DisplayDomain, DisplaySource } from '../app.state';
 import { ElementRef } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -240,6 +240,47 @@ describe('MainComponent', () => {
     expect(storeDispatchSpy).toHaveBeenCalledWith(
       new GenerateReport(component.selectedDomain!.id)
     );
+  });
+
+  it('should toggle showGuestModal from true to false', () => {
+    spyOn(component['store'], 'dispatch').and.stub();
+
+    component.showGuestModal = true;
+    
+    component.toggleGuestModal();
+
+    expect(storeSpy.dispatch).toHaveBeenCalledWith(new GuestModalChange(false));
+  });
+
+  it('should toggle showGuestModal from false to true', () => {
+    spyOn(component['store'], 'dispatch').and.stub();
+
+    component.showGuestModal = false;
+
+    component.toggleGuestModal();
+
+    expect(storeSpy.dispatch).toHaveBeenCalledWith(new GuestModalChange(true));
+  });
+
+  it('should dispatch "new GuestModalChange(true)" when some functions are called', () => {
+    spyOn(component['store'], 'dispatch').and.stub();
+
+    component.canEdit = false;
+
+    component.toggleReportModal();
+    
+    expect(component['store'].dispatch).toHaveBeenCalledTimes(1);
+    expect(component['store'].dispatch).toHaveBeenCalledWith(
+      new GuestModalChange(true)
+    );
+  });
+
+  it('should set canEdit to true', () => {
+    component.canEditChanged(true);
+    expect(component.canEdit).toBeTrue();
+
+    component.canEditChanged(undefined);
+    expect(component.canEdit).toBeTrue();
   });
 
   it('should call handleModalClick when clicking outside the profileEditModal', () => {

@@ -1,10 +1,8 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, GuestModalChange, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
 
 @Component({
   selector: 'source-selector',
@@ -41,6 +39,7 @@ export class SourceSelectorComponent implements OnInit {
   currHost = window.location.host;
 
   isEditing = false;
+  canEdit: boolean = true;
 
   constructor(private store: Store, public el: ElementRef) {}
 
@@ -55,7 +54,10 @@ export class SourceSelectorComponent implements OnInit {
         this.copyToClipboard();
       });
     }
-    
+
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      if (canEdit !== undefined) this.canEdit = canEdit;
+    });
   }
 
   uploadFile(event: any) {
@@ -258,6 +260,10 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   refreshSource() {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     
     if(this.selectedSource == null){
       this.store.dispatch(new ToastError('You must select a specific source to refresh'));
@@ -280,6 +286,11 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleAddSourcesModal() {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
+
     if (!this.showAddSourcesModal) {
       this.showAddSourcesModal = true;
 
@@ -322,6 +333,10 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleConfirmDeleteSourceModal() {
+    if(!this.canEdit){
+      this.store.dispatch(new GuestModalChange(true));
+      return
+    }
     if(this.selectedSource == null){
       this.store.dispatch(new ToastError('You must select a specific source to delete'));
       return;

@@ -9,6 +9,7 @@ import {
 } from './app.state';
 import {
   AddNewSource,
+  AttempGuestLogin,
   AttempPsswdLogin,
   ChangeMode,
   ChangePassword,
@@ -22,6 +23,7 @@ import {
   GenerateReport,
   GetDomains,
   GetSourceDashBoardInfo,
+  GuestModalChange,
   Logout,
   RefreshSourceData,
   RegisterUser,
@@ -79,7 +81,8 @@ describe('AppState', () => {
       'sendCSVFile',
       'generateReport',
       'removeDomain',
-      'tryRefresh'
+      'tryRefresh',
+      'attemptGuestLogin',
     ]);
     apiSpy.getDomainIDs.and.returnValue(
       of({ status: 'SUCCESS', domainIDs: [] })
@@ -947,6 +950,21 @@ describe('AppState', () => {
     store.dispatch(new AttempPsswdLogin('test_username', 'test_password'));
   });
 
+  it('React correctly positive "AttempPsswdLogin"  event wit guest', (done: DoneFn) => {
+    apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
+
+    zip(
+      actions$.pipe(ofActionDispatched(ToastSuccess)),
+      actions$.pipe(ofActionDispatched(GetDomains)),
+      actions$.pipe(ofActionDispatched(ToastSuccess))
+    ).subscribe((_) => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    store.dispatch(new AttempPsswdLogin('guest', 'test_password'));
+  });
+
   it('React correctly bad "AttempPsswdLogin"  event', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
       expect(true).toBe(true);
@@ -1580,5 +1598,42 @@ describe('AppState', () => {
     expect(state.showProfileEditModal).toBe(true);
   });
 
+  it('should set the change the value of showMakAccountModal ', () => {
+    store.reset({ app: { showMakAccountModal: false } });
+
+    store.dispatch(new GuestModalChange(false));
+
+    const guestModal = store.selectSnapshot((state) => state.app.showMakAccountModal);
+    expect(guestModal).toBe(false);
+  });
+
+  it('should dispatch correct events in response to Attempting Guest login', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(AttempPsswdLogin)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    const mockResponse = {
+      status: 'SUCCESS',
+      guest_token: 'test_token',
+    };
+    apiSpy.attemptGuestLogin.and.returnValue(of(mockResponse));
+
+    store.dispatch(new AttempGuestLogin());
+  });
+
+  it('should dispatch correct events in response to Attempting Guest login', (done: DoneFn) => {
+    actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
+      expect(true).toBe(true);
+      done();
+    });
+
+    const mockResponse = {
+      status: 'FAILURE',
+    };
+    apiSpy.attemptGuestLogin.and.returnValue(of(mockResponse));
+
+    store.dispatch(new AttempGuestLogin());
+  });
 
 });

@@ -252,6 +252,14 @@ export class AppApi {
     });
   }
 
+  attemptGuestLogin(): Observable<any> {
+    const attemptPsswdLoginUrl = this.profilesBaseUrl + 'check/try_guest_login/';
+    // send with credentials enabled
+    return this.http.post(attemptPsswdLoginUrl, {}, {
+      withCredentials: true,
+    });
+  }
+
   getProfile(profileID: number): Observable<any> {
     const getProfileUrl = this.profilesBaseUrl + 'profiles/get_profile';
     const body = {

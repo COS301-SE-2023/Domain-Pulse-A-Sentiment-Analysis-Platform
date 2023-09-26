@@ -13,7 +13,12 @@ import { AppState, DisplayDomain, DisplaySource } from '../app.state';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, filter, switchMap, take } from 'rxjs/operators';
-import { GenerateReport, ToastError, ToastSuccess } from '../app.actions';
+import {
+  GenerateReport,
+  GuestModalChange,
+  ToastError,
+  ToastSuccess,
+} from '../app.actions';
 /* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
  */ @Component({
   selector: 'app-main',
@@ -92,6 +97,11 @@ export class MainComponent implements OnInit {
   commentsExpanded = false;
   pdfUrl!: string;
 
+  @Select(AppState.showMakeAccountModal)
+  showMakeAccountModal$!: Observable<boolean>;
+  showGuestModal = true;
+  canEdit: boolean = true;
+
   modalTimeout = false;
 
   lastOpenedModal: any[] = [];
@@ -101,6 +111,9 @@ export class MainComponent implements OnInit {
     if (commentsExpanded) {
       this.commentsExpanded = commentsExpanded === 'true' ? true : false;
     }
+    this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
+      this.canEditChanged(canEdit);
+    });
     
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
@@ -108,6 +121,13 @@ export class MainComponent implements OnInit {
     this.userHasNoSources$.subscribe((userHasNoSources: boolean) => {
       this.userHasNoSources = userHasNoSources;
     });
+    this.showMakeAccountModal$.subscribe((showMakeAccountModal: boolean) => {
+      this.showGuestModal = showMakeAccountModal;
+    });
+  }
+
+  canEditChanged(canEdit: boolean | undefined) {
+    if (canEdit !== undefined) this.canEdit = canEdit;
   }
 
   saveExpandedState(val: boolean) {
@@ -170,6 +190,11 @@ export class MainComponent implements OnInit {
   }
 
   toggleReportModal() {
+    if (!this.canEdit) {
+      this.store.dispatch(new GuestModalChange(true));
+      return;
+    }
+
     if (this.selectedDomain?.sources.length === 0) {
       this.store.dispatch(
         new ToastError(
@@ -211,6 +236,13 @@ export class MainComponent implements OnInit {
     }
   }
 
+  toggleGuestModal() {
+    if (this.showGuestModal) {
+      this.store.dispatch(new GuestModalChange(false));
+    } else {
+      this.store.dispatch(new GuestModalChange(true));
+    }
+  }
 
   @HostListener('document:click', ['$event'])
 onClick(event: MouseEvent) {

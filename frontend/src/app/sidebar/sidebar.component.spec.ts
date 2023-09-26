@@ -11,6 +11,7 @@ import {
   DeleteDomain,
   DeleteUser,
   EditDomain,
+  GuestModalChange,
   Logout,
   SetDomain,
   SetUserDetails,
@@ -235,7 +236,6 @@ describe('SidebarComponent', () => {
       sources: [],
     };
 
-
     component.showAddDomainModal = false;
     component.toggleDomainModalOn();
     
@@ -438,8 +438,6 @@ describe('SidebarComponent and AppState', () => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
     storeSpy = TestBed.inject(Store) as jasmine.SpyObj<Store>;
-    
-    
 
     actions$ = TestBed.inject(Actions);
     TestBed.inject(ToastrService);
@@ -518,7 +516,6 @@ describe('SidebarComponent and AppState', () => {
   it('should toggle the edit domain modal without setting editDomain properties if selectedDomain is not available', () => {
     spyOn(component['store'], 'selectSnapshot').and.returnValue(null);
     const storeDispatchSpy = spyOn(component['store'], 'dispatch');
-
 
     component.showEditDomainModal = false;
     component.toggleEditDomainModal();
@@ -888,6 +885,23 @@ it('should dispatch Logout action', () => {
   component.logOut();
 
   expect(storeDispatchSpy).toHaveBeenCalledWith(new Logout());
+});
+
+it('should dispatch "new GuestModalChange(true)" when some functions are called', () => {
+  spyOn(component['store'], 'dispatch').and.stub();
+
+  component.canEdit = false;
+
+  component.toggleEditDomainModal();
+  component.toggleProfileModal();
+  component.toggleDomainModalOn();
+  component.toggleConfirmDeleteDomainModal();
+
+  // expect newGuestModalChange(true) to be dispatched 3 times
+  expect(component['store'].dispatch).toHaveBeenCalledTimes(4);
+  expect(component['store'].dispatch).toHaveBeenCalledWith(
+    new GuestModalChange(true)
+  );
 });
 
 it('should call handleModalClick when clicking outside the addDomainModal', () => {
