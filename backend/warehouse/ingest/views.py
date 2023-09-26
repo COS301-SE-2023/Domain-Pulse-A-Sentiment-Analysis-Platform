@@ -79,7 +79,8 @@ def ingest_live_review(request: HttpRequest):
 
         if response_from_analyser.status_code == 200:
             new_record = response_from_analyser.json()["metrics"][0]
-            new_record["timestamp"] = int(timestamp)
+            TIMEZONE_ADJUSTMENT = 7200
+            new_record["timestamp"] = int(timestamp) + TIMEZONE_ADJUSTMENT
             new_record["source_id"] = source_id_raw
 
             sentiment_record_model.add_record(new_record)
