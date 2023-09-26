@@ -22,8 +22,8 @@ export class AppComponent implements OnInit {
     this.profileDetails$.subscribe((profileDetails) => {
       if (profileDetails) {
         const mode = profileDetails.mode;
-        document.body.classList.toggle('light', mode);
-        document.body.classList.toggle('dark', !mode);
+        document.body.classList.toggle('light', !mode);
+        document.body.classList.toggle('dark', mode);
       }
     });
 

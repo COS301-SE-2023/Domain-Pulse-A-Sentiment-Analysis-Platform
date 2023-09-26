@@ -42,6 +42,36 @@ import { GenerateReport, ToastError, ToastSuccess } from '../app.actions';
         ])
       ),
     ]),
+    trigger('smallComments', [
+      state('0', style({ marginTop: '0%' })),
+      state('1', style({ marginTop: '-34.7vh' })),
+      transition('0 => 1', [
+        animate('0s', style({ marginTop: '0%' })),
+        animate('0.175s', style({ marginTop: '0%' })),
+        animate('0.4s ease-in-out', style({ marginTop: '-34.7vh' })),
+      ]),
+      transition('1 => 0', animate('0.4s ease-in-out')),
+    ]),
+    trigger('sourceSel', [
+      state('0', style({ width: '97.5%' })),
+      state('1', style({ width: '62%' })),
+      transition('0 => 1', animate('0.175s ease-in-out')),
+      transition('1 => 0', [
+        animate('0s', style({ width: '62%' })),
+        animate('0.32s', style({ width: '62%' })),
+        animate('0.4s ease-in-out', style({ width: '97.5%' })),
+      ]),
+    ]),
+    trigger('statSell', [
+      state('0', style({ width: '100%' })),
+      state('1', style({ width: '64%' })),
+      transition('0 => 1', animate('0.175s ease-in-out')),
+      transition('1 => 0', [
+        animate('0s', style({ width: '64%' })),
+        animate('0.32s', style({ width: '64%' })),
+        animate('0.4s ease-in-out', style({ width: '100%' })),
+      ]),
+    ]),
   ],
 })
 export class MainComponent implements OnInit {
@@ -59,6 +89,7 @@ export class MainComponent implements OnInit {
 
   sidebarCollapsed = true;
   showReportModal = false;
+  commentsExpanded = false;
   pdfUrl!: string;
 
   modalTimeout = false;
@@ -66,6 +97,11 @@ export class MainComponent implements OnInit {
   lastOpenedModal: any[] = [];
 
   constructor(private store: Store,  private el: ElementRef) {
+    const commentsExpanded = window.localStorage.getItem('commentsExpanded');
+    if (commentsExpanded) {
+      this.commentsExpanded = commentsExpanded === 'true' ? true : false;
+    }
+    
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
     });
@@ -73,7 +109,11 @@ export class MainComponent implements OnInit {
       this.userHasNoSources = userHasNoSources;
     });
   }
-  
+
+  saveExpandedState(val: boolean) {
+    window.localStorage.setItem('commentsExpanded', val ? 'true' : 'false');
+  }
+
   ngOnInit(): void {
     this.selectedDomain$.subscribe((domain) => {
       this.processSelectedDomain(domain!);
@@ -84,7 +124,11 @@ export class MainComponent implements OnInit {
     });
 
     this.setupClickEventListener();
+  }
 
+  expandCommentsHandler(event: boolean) {
+    alert('i received the event: ' + event);
+    this.commentsExpanded = event;
   }
 
   setupClickEventListener(): void {
@@ -97,7 +141,7 @@ export class MainComponent implements OnInit {
   }
 
   processpdfUrl(res: string) {
-    if(!res || res=='') return;
+    if (!res || res == '') return;
     const pdfIndex: number = res.lastIndexOf('.pdf');
 
     if (pdfIndex !== -1) {
@@ -126,8 +170,7 @@ export class MainComponent implements OnInit {
   }
 
   toggleReportModal() {
-
-    if(this.selectedDomain?.sources.length === 0) {
+    if (this.selectedDomain?.sources.length === 0) {
       this.store.dispatch(
         new ToastError(
           'You have no sources to generate a report from. Please add a source.'

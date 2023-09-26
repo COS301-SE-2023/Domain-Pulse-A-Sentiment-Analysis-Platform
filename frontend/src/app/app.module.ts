@@ -28,6 +28,7 @@ import { HelpPageComponent } from './help-page/help-page.component';
 import { TooltipDirective } from './tooltip.directive';
 import { AccordionModule } from './accordion-card/accordion.module';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { CommentsAccordionModule } from './comments-accordion-card/comments-accordion.module';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     FormsModule,
     AppRoutingModule,
     AccordionModule,
+    CommentsAccordionModule,
     HttpClientModule,
     NgApexchartsModule,
     NgxsModule.forRoot([AppState]),
