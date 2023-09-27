@@ -1,66 +1,108 @@
 <div class="flex-row app-container">
-
-  <dp-sidebar [expanded]="!sidebarCollapsed" [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
-    (closeSidebar)="setSideBarClosed()" (openSidebar)="setSideBarOpen()" data-cy="Togglesidebar2">
-
+  <dp-sidebar
+    [expanded]="!sidebarCollapsed"
+    [@collapsed]="sidebarCollapsed ? 'collapsed' : 'notCollapsed'"
+    (closeSidebar)="setSideBarClosed()"
+    (openSidebar)="setSideBarOpen()"
+    data-cy="Togglesidebar2"
+  >
   </dp-sidebar>
 
   <ng-container *ngIf="!userHasNoDomains; else hasNoDomains">
-    <ng-container *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif">
+    <ng-container
+      *ngIf="selectedDomain$ | async as selectedDomain; else loadingGif"
+    >
       <!-- Display the content when selectedDomain$ emits a value (selectedDomain is defined) -->
-      <div class="flex-column" style="width: 95%; min-width: 80%; gap: 1.3rem"
-        [style.minWidth]="commentsExpanded ? '60%' : '80%'">
+      <div
+        class="flex-column"
+        style="width: 95%; min-width: 80%; gap: 1.3rem"
+        [style.minWidth]="commentsExpanded ? '60%' : '80%'"
+      >
         <div class="header flex-row centered" style="gap: 1.2rem">
           <div class="circle-wrapper-domain flex-row center">
-            <img [src]="selectedDomain.imageUrl" alt="Domain Logo" height="80%" />
+            <img
+              [src]="selectedDomain.imageUrl"
+              alt="Domain Logo"
+              height="80%"
+            />
           </div>
           <div class="flex-column">
             <h2 class="domainTitle">{{ selectedDomain.name }}</h2>
             <p class="domainDesc">{{ selectedDomain.description }}</p>
           </div>
 
-          <div class="flex-row center" style="gap: 1.5rem; margin-left: auto; width: 10%; height: 100%">
-            <div class="flex-column center clickable-item" style="gap: 0.1rem" (click)="toggleReportModal();"
-              [tooltip]="'Generates a shareable pdf report for your current domain'" [tooltipPosition]="'left'"
-              [mul]="1.01">
+          <div
+            class="flex-row center"
+            style="gap: 1.5rem; margin-left: auto; width: 10%; height: 100%"
+          >
+            <div
+              class="flex-column center clickable-item"
+              style="gap: 0.1rem"
+              (click)="toggleReportModal()"
+              [tooltip]="
+                'Generates a shareable pdf report for your current domain'
+              "
+              [tooltipPosition]="'left'"
+              [mul]="1.01"
+            >
               <img src="../../assets/icons/report.svg" class="top-icons" />
               <p style="font-size: 0.8rem">Report</p>
             </div>
 
-            <a href="/help" class="flex-column center clickable-item"
-              style="gap: 0.1rem; text-decoration: none; color: inherit;" target="_blank">
+            <a
+              href="/help"
+              class="flex-column center clickable-item"
+              style="gap: 0.1rem; text-decoration: none; color: inherit"
+              target="_blank"
+            >
               <img src="../../assets/icons/help.svg" class="top-icons" />
               <p style="font-size: 0.8rem">Help</p>
             </a>
           </div>
         </div>
 
-        <source-selector class="flex-row align-center" [@statSell]="commentsExpanded"></source-selector>
+        <source-selector
+          class="flex-row align-center"
+          [@statSell]="commentsExpanded"
+        ></source-selector>
 
         <ng-container *ngIf="!userHasNoSources; else hasNoSources">
           <ng-container *ngIf="noData; else hasData">
             <div class="flex-column center" style="height: 60%">
-              <h1 style="opacity: 0.7; font-size: 5rem; margin-bottom: 0;">😔</h1>
-              <h2 style="opacity: 0.7; margin-top: 0.5rem">this source has no data yet</h2>
-
+              <h1 style="opacity: 0.7; font-size: 5rem; margin-bottom: 0">
+                😔
+              </h1>
+              <h2 style="opacity: 0.7; margin-top: 0.5rem">
+                this source has no data yet
+              </h2>
             </div>
           </ng-container>
 
           <ng-template #hasData>
+            <statistic-selector
+              [@sourceSel]="commentsExpanded"
+            ></statistic-selector>
 
-            
-          <statistic-selector [@sourceSel]="commentsExpanded"></statistic-selector>
-
-            <div class="source-manager flex-row" style="gap: 1rem; height: 43%; width: 100%">
+            <div
+              class="source-manager flex-row"
+              style="gap: 1rem; height: 43%; width: 100%"
+            >
               <graph-selector></graph-selector>
-              <comments-view [(commentsExpanded)]="commentsExpanded" (commentsExpandedChange)="saveExpandedState($event)" [@smallComments]="commentsExpanded"></comments-view>
+              <comments-view
+                [(commentsExpanded)]="commentsExpanded"
+                (commentsExpandedChange)="saveExpandedState($event)"
+                [@smallComments]="commentsExpanded"
+              ></comments-view>
             </div>
           </ng-template>
         </ng-container>
 
         <ng-template #hasNoSources>
           <div class="flex-column center" style="height: 100%">
-            <img src="../../assets/noSources.png" style="height: 20rem; width: auto; opacity: 0.5" />
+            <img
+              src="../../assets/noSources.png"
+              style="height: 20rem; width: auto; opacity: 0.5"
+            />
           </div>
         </ng-template>
       </div>
@@ -75,55 +117,330 @@
 
   <ng-template #loadingGif>
     <div class="loading-container">
-<!--       <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
+      <!--       <img src="../../assets/Blue-Loading.gif" class="loading-spinner" />
  -->
- <div class="general-spinner"></div>   
- </div>
+      <div class="general-spinner"></div>
+    </div>
   </ng-template>
 </div>
 
-<dp-modal-container [modalDisplay]="showReportModal" (close)="toggleReportModal()" data-cy="reportModal">
-  <div class="flex-row modal" style="width: 25vw; height: 25vw; color: black; margin-bottom: 1rem; margin-top: 1rem;">
-    <div class="flex-column center modal-contents" style="width: 100%; max-width: none">
-      <div class="heading-container" style="padding-bottom: 1rem;">
-        <img src="../assets/icons/back-arrow-right-light.svg" alt="Back Arrow" class="back-arrow clickable-item"
-          (click)="toggleReportModal()" />
+<dp-modal-container
+  [modalDisplay]="showReportModal"
+  (close)="toggleReportModal()"
+  data-cy="reportModal"
+>
+  <div
+    class="flex-row modal"
+    style="
+      width: 25vw;
+      height: 25vw;
+      color: black;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    "
+  >
+    <div
+      class="flex-column center modal-contents"
+      style="width: 100%; max-width: none"
+    >
+      <div class="heading-container" style="padding-bottom: 1rem">
+        <img
+          src="../assets/icons/back-arrow-right-light.svg"
+          alt="Back Arrow"
+          class="back-arrow clickable-item"
+          (click)="toggleReportModal()"
+        />
         <p class="modal-heading">Report Generator</p>
       </div>
       <div class="flex-column center content" style="width: 80%; gap: 1rem">
-        <ng-container class="flex-column center" *ngIf="(pdfLoading$ | async) === true; else loadingPdf">
+        <ng-container
+          class="flex-column center"
+          *ngIf="(pdfLoading$ | async) === true; else loadingPdf"
+        >
           <div class="loading"></div>
           <p class="load-text">Generating your report...</p>
         </ng-container>
         <ng-template class="flex-column center" #loadingPdf>
           <!-- <p>{{pdfUrl}}</p> -->
           <div class="flex-row">
-            <a id="reportLink" href="{{pdfUrl}}" target="_blank">
+            <a id="reportLink" href="{{ pdfUrl }}" target="_blank">
               Report URL
             </a>
-            <img id="copyIconPdf" src="../assets/icons/copy.svg" alt="copy live review link"
-              class="copy-icon clickable-item" (click)="copyToClipboard()" />
+            <img
+              id="copyIconPdf"
+              src="../assets/icons/copy.svg"
+              alt="copy live review link"
+              class="copy-icon clickable-item"
+              (click)="copyToClipboard()"
+            />
           </div>
 
-          <img *ngIf="pdfUrl != null || pdfUrl != ''" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{pdfUrl}}"
-            alt="Report QR Code" style="width: 70%;" />
+          <img
+            *ngIf="pdfUrl != null || pdfUrl != ''"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{
+              pdfUrl
+            }}"
+            alt="Report QR Code"
+            style="width: 70%"
+          />
         </ng-template>
       </div>
     </div>
   </div>
 </dp-modal-container>
 
-
-<dp-modal-container [modalDisplay]="showGuestModal" (close)="toggleGuestModal()">
-  <div class="flex-row modal"
-    style="width: 20vw; height: 8vw; color: black; margin-bottom: 1rem; margin-top: 1rem;">
-    <div class="flex-column center modal-contents" style="width: 100%; max-width: none">
+<dp-modal-container
+  [modalDisplay]="showGuestModal"
+  (close)="toggleGuestModal()"
+>
+  <div
+    class="flex-row modal"
+    style="
+      width: 20vw;
+      height: 8vw;
+      color: black;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    "
+  >
+    <div
+      class="flex-column center modal-contents"
+      style="width: 100%; max-width: none"
+    >
       <div class="flex-column center content" style="width: 80%; gap: 1rem">
-        <p class="variable-text">🔒<a href="../login">Log in</a> to use this feature😃</p>
-        <button class="close-button clickable-item" (click)="toggleGuestModal()">
+        <p class="variable-text">
+          🔒<a href="../login">Log in</a> to use this feature😃
+        </p>
+        <button
+          class="close-button clickable-item"
+          (click)="toggleGuestModal()"
+        >
           close
         </button>
       </div>
+    </div>
+  </div>
+</dp-modal-container>
+
+<dp-modal-container
+  [modalDisplay]="showTutorialModal"
+  (close)="toggleTutorialModal()"
+>
+  <div
+    class="flex-row modal"
+    style="
+      width: 60vw;
+      height: 60vh;
+      color: black;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    "
+  >
+    <div
+      class="flex-column center modal-contents"
+      style="width: 100%; max-width: none; padding:1rem;"
+    >
+      <div class="modal-container" >
+        <div
+          class="flex-row center modal-screen"
+          style="gap: 2rem"
+          [class.active]="currentScreen === 1"
+        >
+          <!-- Screen 1 Content -->
+          <img
+            src="../../assets/icons/tut-left.svg"
+            class="clickable-item"
+            style="width: 2rem;"
+            (click)="prevScreen()"
+          />
+
+          <div
+            class="flex-column start align-center scroll-div"
+            style="width: 80%; height: 100%; text-align: center; gap: 1.5rem; overflow: scroll; overflow-x: hidden; overflow-y: auto;"
+          >
+            <h1 class="modal-heading-tutorial">
+              🎉Welcome to the Domain Pulse!🥳
+            </h1>
+            <p class="tutorial-text">
+              We are so happy to assist you on your journey towards
+              <b>sentiment analysis enlightenment</b>🧘‍♂️
+            </p>
+            <p class="tutorial-text">
+              If you are completely lost😢 and have no idea what is
+              happening,<br /><b>don't worry! We got you!🤗</b>
+            </p>
+            <p class="emoji">🚀</p>
+          </div>
+          <img
+            src="../../assets/icons/tut-right.svg"
+            class="clickable-item"
+            style="width: 2rem"
+            (click)="nextScreen()"
+          />
+        </div>
+        <div
+        class="flex-row center modal-screen"
+        style="gap: 2rem"
+        [class.active]="currentScreen === 2"
+      >
+        <img
+          src="../../assets/icons/tut-left.svg"
+          class="clickable-item"
+          style="width: 2rem"
+          (click)="prevScreen()"
+        />
+
+        <div
+            class="flex-column start align-center scroll-div"
+            style="width: 80%; height: 100%; text-align: center; gap: 2rem; overflow: scroll; overflow-x: hidden; overflow-y: auto;"
+          >
+          <h1 class="modal-heading-tutorial">
+            📈Domain Pulse Starter Pack🎁
+          </h1>
+          <p class="tutorial-text-head">
+            What on earth is sentiment analysis?🤔
+          </p>
+          <p class="tutorial-text">
+            Sentiment analysis is the process of determining whether a piece
+            of text expresses <b>a positive, negative, or neutral sentiment (feeling).</b> It's
+            used to gauge opinions and emotions.
+          </p>
+          <p class="tutorial-text">
+           We hope that makes sense👀 if not, this might help: <a href="https://www.google.com/" target="_blank">useful link</a> 😅
+          </p>
+        </div>
+        <img
+          src="../../assets/icons/tut-right.svg"
+          class="clickable-item"
+          style="width: 2rem"
+          (click)="nextScreen()"
+        />
+      </div>
+        <div
+          class="flex-row center modal-screen"
+          style="gap: 2rem"
+          [class.active]="currentScreen === 3"
+        >
+          <img
+            src="../../assets/icons/tut-left.svg"
+            class="clickable-item"
+            style="width: 2rem"
+            (click)="prevScreen()"
+          />
+
+          <div
+            class="flex-column start align-center scroll-div"
+            style="width: 80%; height: 100%; text-align: center; gap: 1rem; overflow: scroll; overflow-x: hidden; overflow-y: auto;"
+          >
+            <h1 class="modal-heading-tutorial">
+              📈Domain Pulse Starter Pack🎁
+            </h1>
+            <p class="tutorial-text-head">
+              How is sentiment analysis useful?🎯
+            </p>
+              <ul class="tutorial-text" style="text-align: left;">
+                <li>📱 Social Media Monitoring</li>
+                <li>📊 Market Research</li>
+                <li>📈 Brand Monitoring</li>
+                <li>🛍️ E-commerce</li>
+                <li>🏆 Competitor Analysis</li>
+                <li>🤝 Customer Support</li>
+              </ul>
+            
+          </div>
+          <img
+            src="../../assets/icons/tut-right.svg"
+            class="clickable-item"
+            style="width: 2rem"
+            (click)="nextScreen()"
+          />
+        </div>
+
+        <div
+          class="flex-row center modal-screen"
+          style="gap: 2rem"
+          [class.active]="currentScreen === 4"
+        >
+          <!-- Screen 1 Content -->
+          <img
+            src="../../assets/icons/tut-left.svg"
+            class="clickable-item"
+            style="width: 2rem"
+            (click)="prevScreen()"
+          />
+
+          <div
+            class="flex-column start align-center scroll-div"
+            style="width: 80%; height: 100%; text-align: center; gap: 1.6rem; overflow: scroll; overflow-x: hidden; overflow-y: auto;"
+          >
+            <h1 class="modal-heading-tutorial" style="font-size: 1.7rem">
+              💬Let's get some terminology out of the way📚
+            </h1>
+            <p style="width: 85%;" class="tutorial-text">
+              <b>🌐Domain:</b> a domain is a specific <br><b>subject, industry, topic, person, or business</b>
+            </p>
+            <p style="width: 85%;" class="tutorial-text">
+              <b>📱Source:</b> a source is any <b>collection of reviews/comments/sentiments</b> that you want to analyse
+            </p>
+            <p style="width: 50%; font-size: 1.1rem;" class="tutorial-text">
+              We allow you to keep up-to-date with your online platforms. That's why we call it <b>Domain Pulse</b>!🤯
+            </p>
+          </div>
+          <img
+            src="../../assets/icons/tut-right.svg"
+            class="clickable-item"
+            style="width: 2rem"
+            (click)="nextScreen()"
+          />
+        </div>
+
+        <div
+          class="flex-row center modal-screen"
+          style="gap: 2rem"
+          [class.active]="currentScreen === 5"
+        >
+          <!-- Screen 1 Content -->
+          <img
+            src="../../assets/icons/tut-left.svg"
+            class="clickable-item"
+            style="width: 2rem"
+            (click)="prevScreen()"
+          />
+
+          <div
+            class="flex-column start align-center scroll-div"
+            style="width: 80%; height: 100%; text-align: center; gap: 1.6rem; overflow: scroll; overflow-x: hidden; overflow-y: auto;"
+          >
+            <h1 class="modal-heading-tutorial">
+              👍 That's all you need to know for now!🚀
+            </h1>
+            <p style="width: 85%;" class="tutorial-text">
+              It's time to get going!🏃‍♂️
+            </p>
+            <br>
+            <p style="width: 85%;" class="tutorial-text">
+              If you get stuck, look out for these <b>help icons</b>
+            </p>
+            <a href="/help" target="_blank">
+              <img style="width: 3rem" class="clickable-item" src="../../assets/icons/tooltip.svg" alt="Help" />
+            </a>          </div>
+          <img
+            src="../../assets/icons/tut-right.svg"
+            class="clickable-item"
+            style="width: 2rem"
+            (click)="nextScreen()"
+          />
+        </div>
+
+        
+        
+      </div>
+      <button
+        class="close-button-tut clickable-item"
+        (click)="toggleTutorialModal()"
+      >
+        close
+      </button>
     </div>
   </div>
 </dp-modal-container>

@@ -16,8 +16,11 @@ import { map, filter, switchMap, take } from 'rxjs/operators';
 import {
   GenerateReport,
   GuestModalChange,
+  SwitchTutorialScreen,
   ToastError,
-  ToastSuccess, ToggleReportGeneratorModal,
+  ToastSuccess,
+  ToggleReportGeneratorModal,
+  ToggleTutorialModal,
 } from '../app.actions';
 /* import { Demo2Setup, GetDomains, SetSourceIsLoading } from '../app.actions';
  */ @Component({
@@ -89,6 +92,10 @@ export class MainComponent implements OnInit {
   @Select(AppState.pdfUrl) pdfUrl$!: Observable<string>;
   @Select(AppState.showReportGeneratorModal)
   showReportGeneratorModal$!: Observable<boolean>;
+  @Select(AppState.showTutorialModal)
+  showTutorialModal$!: Observable<boolean>;
+  @Select(AppState.tutorialScreen)
+  tutorialScreen$!: Observable<number>;
 
   selectedDomain!: DisplayDomain | null;
   @Select(AppState.userHasNoDomains) userHasNoDomains$!: Observable<boolean>;
@@ -102,6 +109,7 @@ export class MainComponent implements OnInit {
 
   sidebarCollapsed = true;
   showReportModal = false;
+  showTutorialModal = false;
   commentsExpanded = false;
   pdfUrl!: string;
 
@@ -114,7 +122,11 @@ export class MainComponent implements OnInit {
 
   lastOpenedModal: any[] = [];
 
-  constructor(private store: Store,  private el: ElementRef) {
+  
+  currentScreen = 1;
+  totalScreens = 5; 
+
+  constructor(private store: Store, private el: ElementRef) {
     const commentsExpanded = window.localStorage.getItem('commentsExpanded');
     if (commentsExpanded) {
       this.commentsExpanded = commentsExpanded === 'true' ? true : false;
@@ -122,7 +134,7 @@ export class MainComponent implements OnInit {
     this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
       this.canEditChanged(canEdit);
     });
-    
+
     this.userHasNoDomains$.subscribe((userHasNoDomains: boolean) => {
       this.userHasNoDomains = userHasNoDomains;
     });
@@ -161,6 +173,20 @@ export class MainComponent implements OnInit {
         return;
       }
       this.showReportModal = value;
+    });
+
+    this.store.select(AppState.showTutorialModal).subscribe((value) => {
+      if (value == undefined) {
+        return;
+      }
+      this.showTutorialModal = value;
+    });
+
+    this.store.select(AppState.tutorialScreen).subscribe((value) => {
+      if (value == undefined) {
+        return;
+      }
+      this.currentScreen = value;
     });
 
     this.setupClickEventListener();
@@ -232,7 +258,6 @@ export class MainComponent implements OnInit {
       setTimeout(() => {
         this.modalTimeout = false;
       }, 300);
-
     } else {
       this.pdfUrl = '';
       this.store.dispatch(new ToggleReportGeneratorModal());
@@ -245,11 +270,10 @@ export class MainComponent implements OnInit {
     }
   }
 
-  checkForData(){
-
+  checkForData() {
     //loop through and print all the domain sources
-    this.selectedDomain?.sources.forEach(source => {
-      console.log("source here")
+    this.selectedDomain?.sources.forEach((source) => {
+      console.log('source here');
       console.log(source);
     });
   }
@@ -275,32 +299,53 @@ export class MainComponent implements OnInit {
   }
 
   @HostListener('document:click', ['$event'])
-onClick(event: MouseEvent) {
-  if (!this.modalTimeout) {
-    var modalDiv = this.getModalElement(this.lastOpenedModal[this.lastOpenedModal.length-1]); // Use a separate method
-    if (!this.checkIfClickIn(event, modalDiv!)) {
-      this.handleModalClick();
+  onClick(event: MouseEvent) {
+    if (!this.modalTimeout) {
+      var modalDiv = this.getModalElement(
+        this.lastOpenedModal[this.lastOpenedModal.length - 1]
+      ); // Use a separate method
+      if (!this.checkIfClickIn(event, modalDiv!)) {
+        this.handleModalClick();
+      }
     }
   }
-}
 
-checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement): boolean {
-  if(!modalDiv) return false;
-  var result =  modalDiv && modalDiv.contains(event.target as Node);
-  return result;
-}
-
-public getModalElement(search: string): HTMLElement | null {
-  return this.el.nativeElement.querySelector('#' + search );
-}
-
-public handleModalClick() {
-  switch (this.lastOpenedModal[this.lastOpenedModal.length - 1]) {
-    case 'reportModal':
-      if (this.showReportModal) {
-        this.toggleReportModal();
-      }
-      break;
+  checkIfClickIn(event: MouseEvent, modalDiv: HTMLElement): boolean {
+    if (!modalDiv) return false;
+    var result = modalDiv && modalDiv.contains(event.target as Node);
+    return result;
   }
-}
+
+  public getModalElement(search: string): HTMLElement | null {
+    return this.el.nativeElement.querySelector('#' + search);
+  }
+
+  public handleModalClick() {
+    switch (this.lastOpenedModal[this.lastOpenedModal.length - 1]) {
+      case 'reportModal':
+        if (this.showReportModal) {
+          this.toggleReportModal();
+        }
+        break;
+    }
+  }
+
+  toggleTutorialModal() {
+    this.store.dispatch(new ToggleTutorialModal());
+  }
+
+
+  nextScreen(): void {
+    if (this.currentScreen < this.totalScreens) {
+      this.store.dispatch(new SwitchTutorialScreen(this.currentScreen + 1));
+    }
+
+  }
+
+  prevScreen(): void {
+    if (this.currentScreen > 1) {
+      this.store.dispatch(new SwitchTutorialScreen(this.currentScreen - 1));
+    }
+
+  }
 }

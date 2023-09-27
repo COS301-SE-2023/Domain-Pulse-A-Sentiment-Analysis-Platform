@@ -596,8 +596,8 @@ export class SidebarComponent implements OnInit {
 
   deleteDomain() {
     this.store.dispatch(new DeleteDomain(this.deleteDomainId));
-    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
-  }
+    this.toggleConfirmDeleteDomainModal();
+    }
 
   selectDomain(domain: DisplayDomain) {
     this.store.dispatch(new SetAllSourcesSelected(false));

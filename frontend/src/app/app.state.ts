@@ -44,6 +44,8 @@ import {
   TryRefresh,
   ToggleIsRefreshing,
   ToggleReportGeneratorModal,
+  ToggleTutorialModal,
+  SwitchTutorialScreen,
 } from './app.actions';
 import { Router } from '@angular/router';
 import { catchError, concatMap, map, of, repeatWhen, switchMap, takeWhile, tap, throwError } from 'rxjs';
@@ -135,6 +137,8 @@ interface AppStateModel {
   showDeleteAccountModal?: boolean;
   showProfileEditModal?: boolean;
   showReportGeneratorModal?: boolean;
+  showTutorialModal?: boolean;
+  tutorialScreen?: number;
   noData?: boolean;
 }
 
@@ -156,6 +160,8 @@ interface AppStateModel {
     showEditDomainModal: false,
     showConfirmDeleteDomainModal: false,
     showReportGeneratorModal: false,
+    showTutorialModal: false,
+    tutorialScreen: 1,
     noData: false,
   },
 })
@@ -322,6 +328,15 @@ export class AppState {
   static showReportGeneratorModal(state: AppStateModel) {
     return state.showReportGeneratorModal;
   }
+  @Selector()
+  static showTutorialModal(state: AppStateModel) {
+    return state.showTutorialModal;
+  }
+
+  @Selector()
+  static tutorialScreen(state: AppStateModel) {
+    return state.tutorialScreen;
+  }
 
   @Selector()
   static noData(state: AppStateModel) {
@@ -416,6 +431,21 @@ export class AppState {
     const state = ctx.getState();
     ctx.patchState({
       showReportGeneratorModal: !state.showReportGeneratorModal, // Toggle the value
+    });
+  }
+
+  @Action(ToggleTutorialModal)
+  toggleTutorialModal(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      showTutorialModal: !state.showTutorialModal, // Toggle the value
+    });
+  }
+
+  @Action(SwitchTutorialScreen)
+  switchTutorialScreen(ctx: StateContext<AppStateModel>, state: SwitchTutorialScreen) {
+    ctx.patchState({
+      tutorialScreen: state.screenIndex, // Toggle the value
     });
   }
   
@@ -527,7 +557,12 @@ export class AppState {
 
     const selectedSourceId = localStorage.getItem(state.domain.id);
     if (selectedSourceId === null) {
-      this.store.dispatch(new SetSource(null));
+      if(state.domain.sources.length < 2 && state.domain.sources.length == 1){
+        this.store.dispatch(new SetSource(state.domain.sources[0]));
+      }
+      else{
+        this.store.dispatch(new SetSource(null));
+      }
     } else {
       const selectedSource = sources.find(
         (source) => source.id === selectedSourceId
@@ -1244,6 +1279,7 @@ export class AppState {
       .pipe(
         switchMap((res) => {
           if (res.status === 'SUCCESS') {
+            this.store.dispatch(new ToggleTutorialModal());
             localStorage.setItem('JWT', res.JWT);
             this.store.dispatch(new ToastSuccess('Account created successfully!'));
             this.store.dispatch(new SetUserDetails(res.id));
@@ -1514,14 +1550,14 @@ export class AppState {
 
     this.appApi.sendCSVFile(sourceID, file).subscribe((res) => {
       if (res.status === 'FAILURE') {
-        this.store.dispatch(new ToastError('Your file could not be uploaded - ensure your format is correct'));
+        this.store.dispatch(new ToastError('Your .csv could not be uploaded - ensure your format is correct'));
         selectedSource.isRefreshing = false;
       ctx.patchState({
         selectedSource,
       });
         return;
       } else if (res.status === 'SUCCESS') {
-        this.store.dispatch(new ToastSuccess('Your file has been uploaded'));
+        this.store.dispatch(new ToastSuccess('Your .csv has been uploaded'));
         this.store.dispatch(new GetSourceDashBoardInfo());
         selectedSource.isRefreshing = false;
         ctx.patchState({
@@ -1542,8 +1578,9 @@ export class AppState {
       map((res) => {
         if(ctx.getState().showReportGeneratorModal){
           if (res.status === 'FAILURE') {
+            console.log(res)
           
-            this.store.dispatch(new ToastError('Your report could not be generated'));
+            this.store.dispatch(new ToastError('Your report could not be generated: ' + res.details));
             ctx.patchState({
               showReportGeneratorModal: false,
             });
