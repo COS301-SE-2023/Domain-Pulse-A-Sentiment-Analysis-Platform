@@ -125,6 +125,30 @@ Note that no pattern directly addresses the quality requirement of security. Thi
 \newpage
 
 \section{Technology Choices}
+
+\subsection{Deployment Techology}
+To deploy our application we use docker and its accomppannying set of technologies.
+\subsubsection{Docker Engine}
+    For each of our backend services we define a Dockerfile which defines the python environment and dependencies needed for the service to run.
+    \newline IMAGE OF DOCKER IMAGES
+\subsubsection{Docker Compose}
+    To manage the deployment of our services and how how they communicate we use docker compose.
+    \newline Docker compose allows us to define a set of services and how they communicate with each other in a docker-compose.yml file.
+    \newline We use the docker compose file to inject the environment variables needed for our services to fucntion at run time.
+\subsection{Github workflows}
+    We use github workflows to automate the deployment of our application to the servers we use.
+    \newline For each of the services there is a workflows defined that does the following
+    \begin{itemize}
+        \item Inject the repository secrets needed to connect to our servers into the action runner
+        \item use a cache of the dependencies needed to run tests to decrease ci/cd times
+        \item run tests on the service
+        \item build the docker image for the service and push to docker hub
+    \end{itemize}
+    It is inefficent to always build the docker image and push that becuase the docker image would only change when the code in the specific service changes.
+    \newline So what we do to speed up the ci/cd process is use git diff to see whether code in the specific folder of the service has changed, only then does the image get built and pushed to docker hub.
+    \newline IMAGE OF GITHUB WOKFLOW PROCESS
+    \newline IMAGE OF DEPLOYMENT DIAGRAM (showing all the services, where they live and what they run on)
+
 \subsection{Frontend Technology}
 Our frontend consists of the use of Angular which is an open source web application development framework that was developed by google. Angular is used to build dynamic and responsive applications.
 \subsubsection{Angular}
