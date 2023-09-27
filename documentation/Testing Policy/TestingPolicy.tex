@@ -101,27 +101,27 @@ Ultimately the usability quality requirement was met and exceeded by our applica
 
 
 \newpage
-\subsection{Availability}
-Availability refers to the probability of a system functioning as intended when desired. Availability is important within our system due to the
-necessity of the live review service to be available whenever a user requires it.
-\subsubsection{Quantification}
-Domain Pulse uses Microsoft Azure App Service for hosting and therefore availability is highly reliant on the availability of the Azure App Service.
-As well as this, Domain Pulse, hosts a PostgreSQL database and several MongoDB databases on private servers. The availability of these databases
-is highly improved by redundancy across several servers, with quick switch-over time, allowing for little to no downtime should a database fail.
-A total Availability of 99.5\% per month will be the minimum requirement for the system to be considered acceptably available, whereby
-availability is calculated as follows:
-\begin{equation}
-    Availability = \frac{Uptime}{Uptime + Downtime} * 100
-\end{equation}
+% \subsection{Availability}
+% Availability refers to the probability of a system functioning as intended when desired. Availability is important within our system due to the
+% necessity of the live review service to be available whenever a user requires it.
+% \subsubsection{Quantification}
+% Domain Pulse uses Microsoft Azure App Service for hosting and therefore availability is highly reliant on the availability of the Azure App Service.
+% As well as this, Domain Pulse, hosts a PostgreSQL database and several MongoDB databases on private servers. The availability of these databases
+% is highly improved by redundancy across several servers, with quick switch-over time, allowing for little to no downtime should a database fail.
+% A total Availability of 99.5\% per month will be the minimum requirement for the system to be considered acceptably available, whereby
+% availability is calculated as follows:
+% \begin{equation}
+%     Availability = \frac{Uptime}{Uptime + Downtime} * 100
+% \end{equation}
 
-\subsubsection{Results}
-Microsoft Azure App Service calculates the Uptime Percentage, which is practically the same metric as Availability, using the equation
-\begin{equation}
-    \frac{Maximum Available Minutes-Downtime}{Maximum Available Minutes} * 100
-\end{equation}
-, where Maximum Available Minutes is the total minutes in a billing month, and Maximum Available Minutes-Downtime is the total number of minutes that the app was unavailable during the billing month.
-Within the SLA (Service Level Agreement), an Uptime Percentage of less than 99.95\% results in a credit refund of 10\%, an uptime of less than 99\%, results in a credit refund of 25\%, and an uptime of less than 95\%, resulting in a full refund.
-This promise of credit refund, shows a high level of confidence in the availability of the Azure App Service, and therefore the availability of Domain Pulse, being higher than 99.95\%.
+% \subsubsection{Results}
+% Microsoft Azure App Service calculates the Uptime Percentage, which is practically the same metric as Availability, using the equation
+% \begin{equation}
+%     \frac{Maximum Available Minutes-Downtime}{Maximum Available Minutes} * 100
+% \end{equation}
+% , where Maximum Available Minutes is the total minutes in a billing month, and Maximum Available Minutes-Downtime is the total number of minutes that the app was unavailable during the billing month.
+% Within the SLA (Service Level Agreement), an Uptime Percentage of less than 99.95\% results in a credit refund of 10\%, an uptime of less than 99\%, results in a credit refund of 25\%, and an uptime of less than 95\%, resulting in a full refund.
+% This promise of credit refund, shows a high level of confidence in the availability of the Azure App Service, and therefore the availability of Domain Pulse, being higher than 99.95\%.
 
 \newpage
 \subsection{Security}
