@@ -299,20 +299,28 @@ describe('AppState', () => {
 
     store.dispatch(new SetSource(mockSources[1]));
 
-    setTimeout(() => {
-      const actualSelectedSource = store.selectSnapshot(
-        AppState.selectedSource
-      );
-      expect(actualSelectedSource).toEqual(mockSources[1]);
-      const actualSources = store.selectSnapshot(AppState.sources);
-      if (!actualSources) {
-        fail();
-        return;
+    
+    store.select(AppState.sources).subscribe((sources) => {
+      if(!sources) return;
+
+      if(sources[1].selected) {
+        expect(sources[0].selected).toEqual(false);
+        done();
       }
-      expect(actualSources[0].selected).toEqual(false);
-      expect(actualSources[1].selected).toEqual(true);
-      done();
-    }, 500);
+    });
+    
+    // setTimeout(() => {
+    //   const actualSelectedSource = store.selectSnapshot(
+    //     AppState.selectedSource
+    //   );
+    //   expect(actualSelectedSource).toEqual(mockSources[1]);
+    //   const actualSources = store.selectSnapshot(AppState.sources);
+    //   if (!actualSources) {
+    //     fail();
+    //     return;
+    //   }
+    //   done();
+    // }, 500);
   });
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {

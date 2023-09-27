@@ -612,9 +612,10 @@ export class AppState {
     }
 
     const selectedDomain = localStorage.getItem('selectedDomain');
-    if (!selectedDomain) return;
+    if (selectedDomain)
+      localStorage.setItem(selectedDomain, state.source.id);
 
-    localStorage.setItem(selectedDomain, state.source.id);
+    // localStorage.setItem(selectedDomain, state.source.id);
     state.source.selected = true;
 
     this.store.dispatch(new GetSourceDashBoardInfo());

@@ -92,7 +92,6 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   addNewSource() {
-
     var params = this.determineSourceParams();
     console.log('params: ' + params);
     console.log('platform: ' + this.newSourcePlatform);
