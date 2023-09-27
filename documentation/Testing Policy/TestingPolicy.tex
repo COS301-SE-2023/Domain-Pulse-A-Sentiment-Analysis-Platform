@@ -147,7 +147,7 @@ The following metrics are used to quantify the performance of the system, being 
     \item \textbf{Response Time} - The time taken for the system to respond to a request, being the time taken for the system to process the request and return a response. This is of importance due to the need for data to be returned in a reasonable amount of time, heavily relating to the usability of the system.
           The metric used shall be the average response time of several frequently used requests, and comparing these results to a list of minimum requirements for each endpoint.
     \item \textbf{Accuracy and Consistency} - The accuracy and consistency of the Sentiment Analysis models used within the system are of utmost importance, such that a user receives relevant data that provides useful and precise information regarding their domains, that is consistent with in multiple requests.
-          As the models used are pre-trained, the accuracy can be determined by their reported accuracy, and F1-score. Accuracy within a model refers to percentage of correct predictions made on a class-balanced dataset (datasets with the same number of samples), while we often have varying dataset sizes, and therefore F1 score is a better metric and shall be used.
+          As the models used are pre-trained, the accuracy can be determined by their reported accuracy, and F1-score. Accuracy within a model refers to percentage of correct predictions made on a class-balanced dataset (datasets with the same number of samples), while we often have varying dataset sizes, and therefore F1 score is a better metric and shall be used. As reviewing the statistical accuracy of each model, the accuracy shall be tested by providing highly positive and highly negative test data to the system, and reporting on the results.
 \end{itemize}
 
 \subsubsection{Results}
@@ -161,7 +161,25 @@ The following results have been collected from the system, and are used to deter
           According to Google (https://developers.google.com/speed/docs/insights/Server), the response time of your server should be under 200 ms. Response times of under 200ms will provide users with, what feels like an instantaneous response. Therefore the minimum response times of endpoints used within navigation of the website, such as get\_domain\_dashboard and get\_source\_dashboard, should be under 300 ms, so as to accommodate for large amounts of data being parsed throughout the application.
           The minimum requirement of the response time for generate\_report and refresh\_source are 5000 ms and 30000 ms respectively, this is due to the large amount of data processing required in each of these endpoints, and therefore, the time taken to process the data is expected to be longer. This performance, however, does not negatively impact user experience as data will be loaded into the dashboard whilst further data is being processed, and the processing of data is expected to take a longer amount of time.
           Similarly create\_domain has a minimum requirement of 700 ms due to the necessity of creation of data. The login\_user endpoint has a requirement of 1000 ms to accommodate for authentication to be completed.
-    \item \textbf{Accuracy and Consistency} -
+    \item \textbf{Accuracy and Consistency} - The accuracy and consistency of each model is tested by their accuracy, F1 score, and differences within the resulting data after testing the same source.
+          The consistency of the models has been tested by rerunning the same analysis on the same source, 10 times, twice, whereby every result for the each source respectively is identical.
+          The accuracy of the models is determined by the metrics provided by the authors of the models, being the accuracy and F1 score, which are as follows for each model:
+    \item \textbf{VADER} - The VADER model is found to have a F1 score of 0.96, which is extremely high and extremely accurate, therefore contributing to high performing data analysis within our system.
+    \item \textbf{DistilBERT base uncased finetuned SST-2} This general model is used alongside the VADER model to calculate the general sentiment score of the given data. The reported accuracy of the model is as such:
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.9\textwidth]{GeneralAccuracy.png}
+          \end{figure}
+          These findings lead to a resultant average accuracy of 0.95, and a resultant average F1 score of 0.9515 which is an exceptionally high F1 score, and therefore, leading to highly accurate data analysis and information in our system.
+
+    \item \textbf{DistilBERT toxic-comment-model} This model is used to calculate the toxicity of a single comment, and therefore is a less significant statistic within our system, however, the accuracy of the model is still of importance. The reported accuracy of the model is an Accuracy of 94\%, and a F1-score of 0.59, which although is a slightly above average score, is not detrimental to our systems integrity, as toxicity is not a highly important statistic for our system or for users viewing it.
+    \item \textbf{emotion-english-distilroberta-base} This model is used to calculate the prevalent emotions within a review. The reported accuracy of the model is an Accuracy of 66\% which is relatively performant, due to the difficulty in detection of emotion within toneless text, and a share/spread of different emotion within a review.
+    \item \textbf{Polarized Data} As stated in the Quantification, highly, objectively, positive and negative data sources were parsed into the system, and the results were as follows:
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.9\textwidth]{PositiveAndNegative.png}
+          \end{figure}
+          The results of the polarized data show that the system performs to the desired standard, and will provide consistent, accurate data to the user.
 \end{itemize}
 \subsection{Scalability}
 \subsection{Modifiability}
