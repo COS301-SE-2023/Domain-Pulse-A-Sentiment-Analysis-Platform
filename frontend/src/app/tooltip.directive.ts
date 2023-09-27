@@ -106,8 +106,6 @@ export class TooltipDirective {
       this.renderer.setStyle(this.tooltip, 'max-width', '300px');
       this.renderer.setStyle(this.tooltip, 'border-radius', '35px');
       this.renderer.setStyle(this.tooltip, 'opacity', '1');
-      this.renderer.setStyle(this.tooltip, 'transform', 'translateX(0)');
-      this.renderer.setStyle(this.tooltip, 'transition', 'opacity 1500ms ease-in, transform 1500ms ease-in');
       this.renderer.setStyle(this.tooltip, 'position', 'absolute');
       this.renderer.setStyle(this.tooltip, 'z-index', '100');
   
@@ -193,7 +191,6 @@ export class TooltipDirective {
 
 
     this.renderer.setStyle(this.tooltip, 'opacity', '0');
-    this.renderer.setStyle(this.tooltip, 'transform', 'translateX(-20px)');
     this.tooltip.textContent = '';
     this.renderer.removeChild(this.el.nativeElement, this.tooltip);
   }

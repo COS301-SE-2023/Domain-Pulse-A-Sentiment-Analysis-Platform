@@ -39,4 +39,72 @@ done();
 
     component.register();
   });
+
+  it('should toggle password visibility', () => {
+    // Initially, passwordVisible should be falsy
+    expect(component.passwordVisible).toBeFalsy();
+
+    // Call togglePasswordVisibility to toggle it
+    component.togglePasswordVisibility();
+
+    // Now, passwordVisible should be truthy
+    expect(component.passwordVisible).toBeTruthy();
+
+    // Call togglePasswordVisibility again to toggle it back
+    component.togglePasswordVisibility();
+
+    // Now, passwordVisible should be falsy again
+    expect(component.passwordVisible).toBeFalsy();
+  });
+
+  it('should return the correct password type', () => {
+    // Initially, passwordVisible should be falsy
+    expect(component.passwordVisible).toBeFalsy();
+
+    // Call getPasswordType, it should return 'password'
+    expect(component.getPasswordType()).toBe('password');
+
+    // Toggle password visibility
+    component.togglePasswordVisibility();
+
+    // Now, passwordVisible should be truthy
+    expect(component.passwordVisible).toBeTruthy();
+
+    // Call getPasswordType again, it should return 'text'
+    expect(component.getPasswordType()).toBe('text');
+  });
+
+  it('should toggle password confirm visibility', () => {
+    // Initially, passwordVisible should be falsy
+    expect(component.confirmPasswordVisible).toBeFalsy();
+
+    // Call togglePasswordVisibility to toggle it
+    component.togglePasswordVisibility();
+
+    // Now, passwordVisible should be truthy
+    expect(component.passwordVisible).toBeTruthy();
+
+    // Call togglePasswordVisibility again to toggle it back
+    component.togglePasswordVisibility();
+
+    // Now, passwordVisible should be falsy again
+    expect(component.confirmPasswordVisible).toBeFalsy();
+  });
+
+  it('should return the correct confirm password type', () => {
+    // Initially, passwordVisible should be falsy
+    expect(component.confirmPasswordVisible).toBeFalsy();
+
+    // Call getPasswordType, it should return 'password'
+    expect(component.getConfirmPasswordType()).toBe('password');
+
+    // Toggle password visibility
+    component.toggleConfirmPasswordVisibility();
+
+    // Now, passwordVisible should be truthy
+    expect(component.confirmPasswordVisible).toBeTruthy();
+
+    // Call getPasswordType again, it should return 'text'
+    expect(component.getConfirmPasswordType()).toBe('text');
+  });
 });

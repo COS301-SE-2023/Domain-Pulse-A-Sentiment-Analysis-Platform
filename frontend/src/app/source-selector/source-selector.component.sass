@@ -109,30 +109,37 @@
     transform: rotate(360deg)
 
 .scrollable-div
-  display: flex
-  align-items: center
-  background-color: var(--main-div)
-  border-radius: 25px
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
-  overflow-x: scroll
-  border-right: solid transparent 1rem
-  border-left: solid transparent 1rem
-  border-top: solid transparent 0.5rem
-  border-bottom: solid transparent 0.5rem
+    display: flex
+    align-items: center
+    background-color: var(--main-div)
+    border-radius: 25px
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+    overflow-x: scroll
+    border-right: solid transparent 1rem
+    border-left: solid transparent 1rem
+    border-top: solid transparent 0.5rem
+    border-bottom: solid transparent 0.5rem
+    padding: 0 0 0.2rem 0
 
-  &::-webkit-scrollbar
-      height: 6px
-      width: 0
+    &::-webkit-scrollbar
+        height: 9px
+        width: 0
+        transition: height 0.3s ease
+        cursor: pointer
+        
 
-  &::-webkit-scrollbar-track
-      background-color: transparent
+    &::-webkit-scrollbar-track
+        background-color: transparent
 
-  &::-webkit-scrollbar-thumb
-      background-color: var(--grey-subtle)
-      border-radius: 3px
+    &::-webkit-scrollbar-thumb
+        background-color: var(--grey-subtle)
+        border-radius: 6px
+        cursor: pointer !important
 
-  &::-webkit-scrollbar-thumb:hover
-      background-color: var(--grey-item)
+
+    &::-webkit-scrollbar-thumb:hover
+        background-color: var(--grey-item)
+        cursor: pointer !important
 
 
 
@@ -145,7 +152,7 @@
     width: 100%
 
 .new-source-btn
-    width: 130px
+    width: 150px
     height: 40px
     border-radius: 25px
     background-color: styles.$primary-light

@@ -14,6 +14,9 @@ export class RegisterPageComponent {
   password = '';
   confirmPassword = '';
 
+  passwordVisible = false;
+  confirmPasswordVisible = false;
+
   constructor(private store: Store) {}
 
   register() {
@@ -43,5 +46,22 @@ export class RegisterPageComponent {
           this.isSpinning = false;
         },
       });
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+  getPasswordType() {
+    return this.passwordVisible ? 'text' : 'password';
+
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.confirmPasswordVisible = !this.confirmPasswordVisible;
+  }
+
+  getConfirmPasswordType() {
+    return this.confirmPasswordVisible ? 'text' : 'password';
   }
 }

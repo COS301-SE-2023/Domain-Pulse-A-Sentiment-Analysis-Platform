@@ -1,4 +1,11 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef, EventEmitter,
+  HostListener, Input,
+  OnInit,
+  Output,
+  ChangeDetectorRef,
+} from '@angular/core';
 import {
   trigger,
   state,
@@ -51,13 +58,13 @@ import { environment } from '../../environment';
         'in',
         style({
           opacity: AUTO_STYLE,
-       })
+        })
       ),
       state(
         'out',
         style({
           opacity: 0,
-       })
+        })
       ),
       transition('in => out', animate('300ms linear')),
       transition('out => in', animate('300ms linear')),
@@ -67,12 +74,13 @@ import { environment } from '../../environment';
         'in',
         style({
           opacity: AUTO_STYLE,
-})
+        })
       ),
       state(
         'out',
         style({
-          opacity: 0,        })
+          opacity: 0,
+        })
       ),
       transition('in => out', [animate('300ms linear')]),
       transition('out => in', [animate('300ms linear')]),
@@ -97,13 +105,19 @@ export class SidebarComponent implements OnInit {
   @Select(AppState.profileDetails)
   profileDetails$!: Observable<ProfileDetails | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
-  @Select(AppState.showAddDomainModal) showAddDomainModal$!: Observable<boolean>;
+  @Select(AppState.showAddDomainModal)
+  showAddDomainModal$!: Observable<boolean>;
   @Select(AppState.showProfileModal) showProfileModal$!: Observable<boolean>;
-  @Select(AppState.showEditDomainModal) showEditDomainModal$!: Observable<boolean>;
-  @Select(AppState.showConfirmDeleteDomainModal) showConfirmDeleteDomainModal$!: Observable<boolean>;
-  @Select(AppState.showChangePasswordModal) showChangePasswordModal$!: Observable<boolean>;
-  @Select(AppState.showDeleteAccountModal) showDeleteAccountModal$!: Observable<boolean>;
-  @Select(AppState.showProfileEditModal) showProfileEditModal$!: Observable<boolean>;
+  @Select(AppState.showEditDomainModal)
+  showEditDomainModal$!: Observable<boolean>;
+  @Select(AppState.showConfirmDeleteDomainModal)
+  showConfirmDeleteDomainModal$!: Observable<boolean>;
+  @Select(AppState.showChangePasswordModal)
+  showChangePasswordModal$!: Observable<boolean>;
+  @Select(AppState.showDeleteAccountModal)
+  showDeleteAccountModal$!: Observable<boolean>;
+  @Select(AppState.showProfileEditModal)
+  showProfileEditModal$!: Observable<boolean>;
 
   domains: DisplayDomain[] = [];
   smallLogoState = 'in';
@@ -149,11 +163,10 @@ export class SidebarComponent implements OnInit {
   editDomainImageName = '';
   editDomainDescription = '';
 
-
   oldPassword = '';
   newPassword = '';
 
-  password= '';
+  password = '';
 
   deleteDomainId = '';
 
@@ -169,9 +182,19 @@ export class SidebarComponent implements OnInit {
 
   lastOpenedModal: any[] = [];
 
-  baseUrl= 'https://domainpulseblob.blob.core.windows.net/blob/';
-  domainNames: string[] = [this.baseUrl+'defaultDomain1.png', this.baseUrl+'defaultDomain2.png', this.baseUrl+'defaultDomain3.png', this.baseUrl+'defaultDomain4.png', this.baseUrl+'defaultDomain5.png', this.baseUrl+'defaultDomain6.png', this.baseUrl+'defaultDomain7.png', this.baseUrl+'defaultDomain8.png', this.baseUrl+'defaultDomain9.png', this.baseUrl+'defaultDomain10.png'];
-
+  baseUrl = 'https://domainpulseblob.blob.core.windows.net/blob/';
+  domainNames: string[] = [
+    this.baseUrl + 'defaultDomain1.png',
+    this.baseUrl + 'defaultDomain2.png',
+    this.baseUrl + 'defaultDomain3.png',
+    this.baseUrl + 'defaultDomain4.png',
+    this.baseUrl + 'defaultDomain5.png',
+    this.baseUrl + 'defaultDomain6.png',
+    this.baseUrl + 'defaultDomain7.png',
+    this.baseUrl + 'defaultDomain8.png',
+    this.baseUrl + 'defaultDomain9.png',
+    this.baseUrl + 'defaultDomain10.png',
+  ];
   public canEdit: boolean = true;
 
   public selectedFile: File | null = null;
@@ -181,6 +204,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private store: Store,
     public blobStorageService: AzureBlobStorageService,
+    private cdRef: ChangeDetectorRef,
     private el: ElementRef
   ) {
     this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
@@ -201,66 +225,63 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.store.select(AppState.showAddDomainModal).subscribe((value) => {
-      if(value == undefined){
+      if (value == undefined) {
         return;
       }
       this.showAddDomainModal = value;
-    }); 
+    });
 
-    
     this.store.select(AppState.showProfileModal).subscribe((value) => {
-      if(value == undefined){
+      if (value == undefined) {
         return;
       }
       this.showProfileModal = value;
-    }); 
+    });
 
     this.store.select(AppState.showEditDomainModal).subscribe((value) => {
-      if(value == undefined){
+      if (value == undefined) {
         return;
       }
       this.showEditDomainModal = value;
     });
 
-    this.store.select(AppState.showConfirmDeleteDomainModal).subscribe((value) => {
-      if(value == undefined){
-        return;
-      }
-      this.showConfirmDeleteDomainModal = value;
-    });
+    this.store
+      .select(AppState.showConfirmDeleteDomainModal)
+      .subscribe((value) => {
+        if (value == undefined) {
+          return;
+        }
+        this.showConfirmDeleteDomainModal = value;
+      });
 
     this.store.select(AppState.showChangePasswordModal).subscribe((value) => {
-      if(value == undefined){
+      if (value == undefined) {
         return;
       }
       this.showChangePasswordModal = value;
     });
 
     this.store.select(AppState.showDeleteAccountModal).subscribe((value) => {
-      if(value == undefined){
+      if (value == undefined) {
         return;
       }
       this.showDeleteAccountModal = value;
     });
 
     this.store.select(AppState.showProfileEditModal).subscribe((value) => {
-      if(value == undefined){
+      if (value == undefined) {
         return;
       }
       this.showProfileEditModal = value;
     });
-
-
-
-
-  
   }
 
-
   toggleDomainModalOff(): void {
-
     this.store.dispatch(new ToggleAddDomainModal());
-    this.lastOpenedModal.pop();
+    this.newDomainName = '';
+    this.newDomainImageName = '';
+    this.newDomainDescription = '';
+    this.imagePreviewDomain = null;    this.lastOpenedModal.pop();
     this.modalTimeout = true;
     setTimeout(() => {
       this.modalTimeout = false;
@@ -275,7 +296,7 @@ export class SidebarComponent implements OnInit {
       return
     }
 
-    if(this.domains == undefined){
+    if (this.domains == undefined) {
       this.store.dispatch(new ToggleAddDomainModal());
 
       this.lastOpenedModal.push('addDomainModal');
@@ -285,8 +306,10 @@ export class SidebarComponent implements OnInit {
       }, 300);
       return;
     }
-    if(this.domains.length > 8){
-      this.store.dispatch(new ToastError('You have reached the maximum number of domains'));
+    if (this.domains.length > 8) {
+      this.store.dispatch(
+        new ToastError('You have reached the maximum number of domains')
+      );
       return;
     }
 
@@ -321,6 +344,7 @@ export class SidebarComponent implements OnInit {
       
     } else {
       this.store.dispatch(new ToggleEditDomainModal());
+      this.imagePreviewDomainEdit = null;
 
       this.lastOpenedModal.pop();
       this.modalTimeout = true;
@@ -362,7 +386,7 @@ export class SidebarComponent implements OnInit {
       this.lastOpenedModal.push('profileEditModal');
     }
     this.store.dispatch(new ToggleProfileEditModal());
-
+    this.imagePreview = null;
     this.modalTimeout = true;
     setTimeout(() => {
       this.modalTimeout = false;
@@ -437,21 +461,22 @@ export class SidebarComponent implements OnInit {
   }
  */
   addNewDomain(): void {
-
-    
     this.addDomainSpinner = true;
     let valid = true;
 
-    if(this.newDomainName.length > 20){
+    if (this.newDomainName.length > 20) {
       this.addDomainSpinner = false;
-      this.store.dispatch(new ToastError('Domain name must be less than 20 characters'));
+      this.store.dispatch(
+        new ToastError('Domain name must be less than 20 characters')
+      );
       valid = false;
     }
 
-    if(this.newDomainDescription.length > 100){
-
+    if (this.newDomainDescription.length > 100) {
       this.addDomainSpinner = false;
-      this.store.dispatch(new ToastError('Domain description must be less than 100 characters'));
+      this.store.dispatch(
+        new ToastError('Domain description must be less than 100 characters')
+      );
       valid = false;
     }
 
@@ -461,115 +486,118 @@ export class SidebarComponent implements OnInit {
       valid = false;
     }
 
-    if(!this.newDomainName){
+    if (!this.newDomainName) {
       this.addDomainSpinner = false;
       this.store.dispatch(new ToastError('Please enter a domain name'));
       valid = false;
     }
 
-    if(!this.newDomainDescription){
+    if (!this.newDomainDescription) {
       this.addDomainSpinner = false;
       this.store.dispatch(new ToastError('Please enter a domain description'));
       valid = false;
     }
 
-    if(!valid){
+    if (!valid) {
       return;
     }
 
-    if(this.selectedFileDomain){
+    if (this.selectedFileDomain) {
       const filenameDomain = this.uploadImageDomain();
       this.newDomainImageName = this.baseUrl + filenameDomain;
     }
 
-    this.store.dispatch(
-      new AddNewDomain(
-        this.newDomainName,
-        this.newDomainImageName,
-        this.newDomainDescription
+    this.store
+      .dispatch(
+        new AddNewDomain(
+          this.newDomainName,
+          this.newDomainImageName,
+          this.newDomainDescription
+        )
       )
-    ).pipe(
-      catchError((error) => {
+      .pipe(
+        catchError((error) => {
+          this.addDomainSpinner = false;
+          return of();
+        })
+      )
+      .subscribe((result) => {
         this.addDomainSpinner = false;
-        return of();
-      })
-    ).subscribe((result) => {
-      this.addDomainSpinner = false;
-      this.toggleDomainModalOff();
-    });
+        this.toggleDomainModalOff();
+      });
     this.newDomainName = '';
     this.newDomainImageName = '';
     this.newDomainDescription = '';
 
     this.imagePreviewDomain = null;
-
-    
   }
 
   selectIcon(icon: string) {
-    console.log("domain icon:" + icon)
+    console.log('domain icon:' + icon);
     this.newDomainImageName = icon;
   }
 
   selectIconEdit(icon: string) {
-    console.log("domain icon:" + icon)
+    console.log('domain icon:' + icon);
     this.editDomainImageName = icon;
   }
 
   editDomain() {
-
-    if(this.editDomainName.length > 20){
+    if (this.editDomainName.length > 20) {
       this.addDomainSpinner = false;
-      this.store.dispatch(new ToastError('Domain name must be less than 20 characters'));
+      this.store.dispatch(
+        new ToastError('Domain name must be less than 20 characters')
+      );
       return;
     }
 
-    if(this.editDomainDescription.length > 100){
-
+    if (this.editDomainDescription.length > 100) {
       this.addDomainSpinner = false;
-      this.store.dispatch(new ToastError('Domain description must be less than 100 characters'));
+      this.store.dispatch(
+        new ToastError('Domain description must be less than 100 characters')
+      );
       return;
-      
     }
     this.editDomainSpinner = true;
     const selectedDomain = this.store.selectSnapshot(AppState.selectedDomain);
     if (!selectedDomain) return;
     const selectedDomainId = selectedDomain.id;
 
-    if(this.selectedFileDomainEdit){
+    if (this.selectedFileDomainEdit) {
       const filenameDomain = this.uploadImageDomainEdit();
       this.editDomainImageName = this.baseUrl + filenameDomain;
     }
 
-    this.store.dispatch(
-      new EditDomain(
-        selectedDomainId,
-        this.editDomainName,
-        this.editDomainImageName,
-        this.editDomainDescription
+    this.store
+      .dispatch(
+        new EditDomain(
+          selectedDomainId,
+          this.editDomainName,
+          this.editDomainImageName,
+          this.editDomainDescription
+        )
       )
-    ).pipe(
-      catchError((error) => {
+      .pipe(
+        catchError((error) => {
+          this.editDomainSpinner = false;
+          return of();
+        })
+      )
+      .subscribe((result) => {
         this.editDomainSpinner = false;
-        return of();
-      })
-    ).subscribe((result) => {
-      this.editDomainSpinner = false;
-      this.store.dispatch(new ToggleEditDomainModal());
-    });
+        this.toggleEditDomainModal();
+        });
 
-    
-    
     this.editDomainName = '';
     this.editDomainImageName = '';
     this.editDomainDescription = '';
-
+    this.imagePreviewDomainEdit = null;
   }
 
   deleteDomain() {
     this.store.dispatch(new DeleteDomain(this.deleteDomainId));
-    this.store.dispatch(new ToggleConfirmDeleteDomainModal());
-  }
+    this.toggleConfirmDeleteDomainModal();
+    }
 
   selectDomain(domain: DisplayDomain) {
     this.store.dispatch(new SetAllSourcesSelected(false));
@@ -581,11 +609,6 @@ export class SidebarComponent implements OnInit {
     this.store.dispatch(new ChangeMode());
     document.body.classList.toggle('light');
     document.body.classList.toggle('dark');
-    /* if(document.body.classList.contains('light')){
-      localStorage.setItem('theme', 'dark');
-    }else{
-      localStorage.setItem('theme', 'light');
-    } */
   }
 
   imagePreview: string | ArrayBuffer | null = null;
@@ -598,6 +621,7 @@ export class SidebarComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreview = e.target?.result as string;
+        this.cdRef.detectChanges();
       };
       reader.readAsDataURL(this.selectedFile);
     } else {
@@ -664,6 +688,7 @@ export class SidebarComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreviewDomain = e.target?.result as string;
+        this.cdRef.detectChanges();
       };
       reader.readAsDataURL(this.selectedFileDomain);
     } else {
@@ -674,14 +699,12 @@ export class SidebarComponent implements OnInit {
   addDomainSpinner: boolean = false;
 
   uploadImageDomain() {
-    
     if (!this.selectedFileDomain) {
       this.addDomainSpinner = false;
       this.store.dispatch(new ToastError('Please select an image'));
       return;
     }
 
-    
     const filename = Math.floor(Math.random() * 100000000)
       .toString()
       .padStart(8, '0');
@@ -707,6 +730,7 @@ export class SidebarComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreviewDomainEdit = e.target?.result as string;
+        this.cdRef.detectChanges();
       };
       reader.readAsDataURL(this.selectedFileDomainEdit);
     } else {
@@ -717,14 +741,12 @@ export class SidebarComponent implements OnInit {
   editDomainSpinner: boolean = false;
 
   uploadImageDomainEdit() {
-    
     if (!this.selectedFileDomainEdit) {
       this.editDomainSpinner = false;
       this.store.dispatch(new ToastError('Please select an image'));
       return;
     }
 
-    
     const filename = Math.floor(Math.random() * 100000000)
       .toString()
       .padStart(8, '0');
@@ -747,21 +769,18 @@ export class SidebarComponent implements OnInit {
     this.toggleChangePasswordModal();
   }
 
-  deleteAccount(){
+  deleteAccount() {
     const userDetails = this.store.selectSnapshot(AppState.userDetails);
     const username = userDetails?.username;
 
-    console.log(username);
-    console.log(this.password)
+    if (!username) return;
 
-    if(!username) return;
+    this.store.dispatch(new DeleteUser(username, this.password));
 
-    this.store.dispatch(new DeleteUser(username, this.password ));
-    /* this.closeAllModals(); */
-    
+    this.toggleDeleteAccountModal();
   }
 
-  logOut(){
+  logOut() {
     this.store.dispatch(new Logout());
   }
 

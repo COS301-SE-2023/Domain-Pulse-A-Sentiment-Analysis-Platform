@@ -14,6 +14,8 @@ export class LoginPageComponent {
   username = '';
   password = '';
 
+  passwordVisible = false;
+
   constructor(private store: Store, private activatedRoute: ActivatedRoute) {
     // if the parameter u is present, check if it equals guest
     const u = this.activatedRoute.snapshot.queryParamMap.get('u');
@@ -28,8 +30,9 @@ export class LoginPageComponent {
 
   login() {
     this.isSpinning = true;
-    
-    this.store.dispatch(new AttempPsswdLogin(this.username, this.password))
+
+    this.store
+      .dispatch(new AttempPsswdLogin(this.username, this.password))
       .subscribe({
         next: (res) => {
           this.isSpinning = false;
@@ -39,11 +42,19 @@ export class LoginPageComponent {
         },
         complete: () => {
           this.isSpinning = false;
-        }
+        },
       });
   }
 
   toggleForgotPasswordModal() {
     this.showForgotPasswordModal = !this.showForgotPasswordModal;
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+  getPasswordType() {
+    return this.passwordVisible ? 'text' : 'password';
   }
 }

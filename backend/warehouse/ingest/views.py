@@ -10,6 +10,8 @@ import bleach
 from CSV import csv_connector
 from datetime import datetime
 from unidecode import unidecode
+from urllib.parse import unquote
+
 
 
 # Create your views here.
@@ -79,7 +81,8 @@ def ingest_live_review(request: HttpRequest):
 
         if response_from_analyser.status_code == 200:
             new_record = response_from_analyser.json()["metrics"][0]
-            new_record["timestamp"] = int(timestamp)
+            TIMEZONE_ADJUSTMENT = 0
+            new_record["timestamp"] = int(timestamp) + TIMEZONE_ADJUSTMENT
             new_record["source_id"] = source_id_raw
 
             sentiment_record_model.add_record(new_record)
@@ -104,8 +107,11 @@ def ingest_live_review(request: HttpRequest):
 
 
 def make_live_review(request: HttpRequest, source_id, source_name):
+
+    decoded_source_name = unquote(source_name)
+
     return render(
-        request, "form.html", {"source_id": source_id, "source_name": source_name}
+        request, "form.html", {"source_id": source_id, "source_name": decoded_source_name}
     )
 
 

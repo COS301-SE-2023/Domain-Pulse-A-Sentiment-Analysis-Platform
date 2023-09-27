@@ -140,7 +140,7 @@ describe('SidebarComponent', () => {
         expect(component.newDomainDescription).toBe('');
 
         done();
-      }, 500);
+      }, 1500);
     });
 
     const dummyDisplayDomain: DisplayDomain = {

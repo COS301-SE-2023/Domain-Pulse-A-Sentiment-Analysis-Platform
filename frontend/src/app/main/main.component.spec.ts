@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
-import { GenerateReport, GetDomains, GuestModalChange, ToastError, ToastSuccess } from '../app.actions';
+import { GenerateReport, GetDomains, GuestModalChange, SwitchTutorialScreen, ToastError, ToastSuccess, ToggleReportGeneratorModal, ToggleTutorialModal } from '../app.actions';
 import { DisplayDomain, DisplaySource } from '../app.state';
 import { ElementRef } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -129,6 +129,11 @@ describe('MainComponent', () => {
 
   it('should toggle report modal', () => {
 
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
     const dummyDisplaySource: DisplaySource = {
       id: '1',
       name: 'test',
@@ -155,8 +160,7 @@ describe('MainComponent', () => {
 
     component.showReportModal = false;
     component.toggleReportModal();
-    expect(component.showReportModal).toBe(true);
-
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleReportGeneratorModal());
     expect(component.lastOpenedModal).toEqual(['reportModal']);
     
     expect(component.modalTimeout).toBe(true);
@@ -166,7 +170,7 @@ describe('MainComponent', () => {
 
     component.showReportModal = true;
     component.toggleReportModal();
-    expect(component.showReportModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleReportGeneratorModal());
 
     expect(component.lastOpenedModal).toEqual([]);
     
@@ -329,5 +333,67 @@ describe('MainComponent', () => {
     component.handleModalClick();
   
     expect(toggleReportModalSpy).not.toHaveBeenCalled();
+  });
+
+  it('should set the commentsExpanded property to the value of the commentsExpanded localStorage item if it exists', () => {
+    
+    window.localStorage.setItem('commentsExpanded', 'true');
+    
+    component.setCommentsExpanded();
+    
+    expect(component.commentsExpanded).toBe(true);
+
+    window.localStorage.setItem('commentsExpanded', 'false');
+    
+    component.setCommentsExpanded();
+    
+    expect(component.commentsExpanded).toBe(false);
+    });
+
+    /* toggleTutorialModal() {
+    this.store.dispatch(new ToggleTutorialModal());
+  }
+
+
+  nextScreen(): void {
+    if (this.currentScreen < this.totalScreens) {
+      this.store.dispatch(new SwitchTutorialScreen(this.currentScreen + 1));
+    }
+
+  }
+
+  prevScreen(): void {
+    if (this.currentScreen > 1) {
+      this.store.dispatch(new SwitchTutorialScreen(this.currentScreen - 1));
+    }
+
+  } */
+
+  it('should dispatch ToggleTutorialModal when toggleTutorialModal is called', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+
+    component.toggleTutorialModal();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleTutorialModal());
+  });
+
+  it('should dispatch SwitchTutorialScreen when nextScreen is called', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+    component.currentScreen = 1;
+    component.totalScreens = 2;
+
+    component.nextScreen();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new SwitchTutorialScreen(2));
+  });
+
+  it('should dispatch SwitchTutorialScreen when prevScreen is called', () => {
+    const storeDispatchSpy = spyOn(component['store'], 'dispatch').and.stub();
+    component.currentScreen = 2;
+    component.totalScreens = 2;
+
+    component.prevScreen();
+
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new SwitchTutorialScreen(1));
   });
 });

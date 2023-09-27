@@ -1,6 +1,6 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AppState, DisplayDomain, DisplaySource } from '../app.state';
-import { Observable } from 'rxjs';
+import { Observable, timeout, timer } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { AddNewSource, DeleteSource, EditSource, GetSourceDashBoardInfo, GuestModalChange, RefreshSourceData, SetAllSourcesSelected, SetIsActive, SetSource, SetSourceIsLoading, ToastError, ToastSuccess, UplaodCVSFile } from '../app.actions';
 
@@ -17,6 +17,7 @@ export class SourceSelectorComponent implements OnInit {
   @Select(AppState.allSourcesSelected) allSources$!: Observable<number>;
   selectedSource?: DisplaySource;
 
+
   showAddSourcesModal = false;
   showEditSourceModal = false;
   showConfirmDeleteSourceModal = false;
@@ -30,6 +31,8 @@ export class SourceSelectorComponent implements OnInit {
   newSourcePlatform = '';
   newSourceUrl = '';
   newCSVFile: any = '';
+
+  addSourceSpinner = false;
 
   editSourceName = '';
   editSourceUrl = '';
@@ -116,18 +119,30 @@ export class SourceSelectorComponent implements OnInit {
     }
 
 
+    this.addSourceSpinner = true;
+
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
     ).subscribe(() => {
       if(this.newSourcePlatform == 'csv'){
         this.store.dispatch(new UplaodCVSFile(this.newCSVFile));
         this.newCSVFile = '';
+        
       }
+
+      
+      timer(100).subscribe(() => {
+        this.addSourceSpinner = false;
+        this.newSourceName = '';
+        this.newSourceUrl = '';
+        this.toggleAddSourcesModal();
+      });
+      return;
     });
     
-    this.newSourceName = '';
+    /* this.newSourceName = '';
     this.newSourceUrl = '';
-    this.showAddSourcesModal = false;
+    this.showAddSourcesModal = false; */
   }
 
   /* elif type_of_source.lower() == "livereview":
@@ -302,6 +317,10 @@ export class SourceSelectorComponent implements OnInit {
 
     } else {
       this.showAddSourcesModal = false;
+      this.resetCSVUpload();
+      
+
+      this.newCSVFile = '';
 
       this.lastOpenedModal.pop();
       this.modalTimeout = true;
@@ -310,6 +329,12 @@ export class SourceSelectorComponent implements OnInit {
       }, 300);
     }
   }
+
+  resetCSVUpload(){
+    const fileInput = this.el.nativeElement.querySelector('.file-block');
+    fileInput.value = '';
+  }
+
 
   toggleEditSourceModal() {
     if (!this.showEditSourceModal) {
