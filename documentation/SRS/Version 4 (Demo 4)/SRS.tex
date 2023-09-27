@@ -40,7 +40,7 @@ Introducing Domain Pulse, the ultimate sentiment analysis platform. With Domain 
 \\Domain Pulse presents the results in a visually stunning and easy-to-understand format. Our wide range of visualizations brings statistics to life, making it a breeze to grasp the online presence and sentiment for any domain. Take control of understanding public opinion like never before with Domain Pulse.
 \subsection{Objectives}
 
-The objectives of the Domain Pulse project are to develop a comprehensive web application that enables users to track and analyze data from multiple sources, perform sentiment analysis, and visualize statistics. The application aims to provide a user-centered design approach, ensuring usability, accessibility, and a clear and intuitive interface. The system will be built using a scalable and modifiable architecture, leveraging a combination of powerful architectural patterns to achive the quality requirements set out in the Architectural Design document and statement of quality requirements.
+The objectives of the Domain Pulse project are to develop a comprehensive web application that enables users to track and analyze data from multiple sources, perform sentiment analysis, and visualize statistics. The application aims to provide a user-centered design approach, ensuring usability, accessibility, and a clear and intuitive interface. The system will be built using a scalable and modifiable architecture, leveraging a combination of powerful architectural patterns to achieve the quality requirements set out in the Architectural Design document and statement of quality requirements.
 
 \newpage
 
@@ -616,11 +616,11 @@ Authentication User Functions will be controlled by Django Authentication System
 
 \subsection{AnalysisEngine}
 
-\subsubsection*{analyseData}
+\subsubsection*{analyzeData}
 \textbf{Precondition:} \textit{domain: Domain} \\
 \textbf{Postcondition:} An array of SentimentMetrics objects corresponding to the stored sentiment records relating to the domain.
 
-\subsubsection*{analyseData}
+\subsubsection*{analyzeData}
 \textbf{Precondition:} \textit{source: Source} \\
 \textbf{Postcondition:} An array of SentimentMetrics objects corresponding to the stored sentiment records relating to the specific source of the domain.
 
@@ -695,7 +695,7 @@ The following is an outline of the structure of the data to be persisted and rel
 
 \textbf{Performance Constraints}
 \begin{itemize}
-  \item Generally speaking, the following guidelines must be adhered to. Specific quantification of these requirements can be found in our ststement of quality requirements and Testing Manual:
+  \item Generally speaking, the following guidelines must be adhered to. Specific quantification of these requirements can be found in our statement of quality requirements and Testing Manual:
         \begin{itemize}
           \item The user must not wait for an inordinate amount of time for the data to be refreshed, including fetching new data from external APIs and performing analysis on that data.
           \item Viewing metrics for different sources and domains should feel seamless, with minimal waiting time involved in fetching the data.
