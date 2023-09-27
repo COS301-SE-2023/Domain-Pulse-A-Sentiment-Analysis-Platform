@@ -127,10 +127,9 @@ export class MainComponent implements OnInit {
   totalScreens = 5; 
 
   constructor(private store: Store, private el: ElementRef) {
-    const commentsExpanded = window.localStorage.getItem('commentsExpanded');
-    if (commentsExpanded) {
-      this.commentsExpanded = commentsExpanded === 'true' ? true : false;
-    }
+
+    this.setCommentsExpanded();
+
     this.store.select(AppState.canEdit).subscribe((canEdit: boolean) => {
       this.canEditChanged(canEdit);
     });
@@ -151,6 +150,14 @@ export class MainComponent implements OnInit {
     });
   }
 
+  setCommentsExpanded() {
+    const commentsExpanded = window.localStorage.getItem('commentsExpanded');
+    if (commentsExpanded) {
+      this.commentsExpanded = commentsExpanded === 'true' ? true : false;
+    }
+  
+  }
+
   canEditChanged(canEdit: boolean | undefined) {
     if (canEdit !== undefined) this.canEdit = canEdit;
   }
@@ -169,24 +176,15 @@ export class MainComponent implements OnInit {
     });
 
     this.store.select(AppState.showReportGeneratorModal).subscribe((value) => {
-      if (value == undefined) {
-        return;
-      }
-      this.showReportModal = value;
+      this.showReportModal = value!;
     });
 
     this.store.select(AppState.showTutorialModal).subscribe((value) => {
-      if (value == undefined) {
-        return;
-      }
-      this.showTutorialModal = value;
+      this.showTutorialModal = value!;
     });
 
     this.store.select(AppState.tutorialScreen).subscribe((value) => {
-      if (value == undefined) {
-        return;
-      }
-      this.currentScreen = value;
+      this.currentScreen = value!;
     });
 
     this.setupClickEventListener();

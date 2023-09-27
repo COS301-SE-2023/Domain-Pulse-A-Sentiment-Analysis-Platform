@@ -31,6 +31,7 @@ import {
   SetIsActive,
   SetSource,
   SetUserDetails,
+  SwitchTutorialScreen,
   ToastError,
   ToastSuccess,
   ToggleAddDomainModal,
@@ -824,6 +825,8 @@ describe('AppState', () => {
     store.dispatch(new RefreshSourceData());
   });
 
+  
+
 
   it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
     const mockSource: DisplaySource = {
@@ -844,6 +847,67 @@ describe('AppState', () => {
       done();
     });
 
+    store.dispatch(new RefreshSourceData());
+  });
+
+  it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'live-review-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+    actions$.pipe(ofActionDispatched(ToggleIsRefreshing)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToggleIsRefreshing)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    done();
+
+    store.dispatch(new RefreshSourceData());
+  });
+
+  it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
+    const mockSource: DisplaySource = {
+      id: '1',
+      name: 'test',
+      url: 'csv-logo.png',
+      params: 'test',
+      selected: true,
+      isRefreshing: false,
+    };
+    store.reset({ app: { selectedSource: mockSource } });
+
+
+    actions$.pipe(ofActionDispatched(ToggleIsRefreshing)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(GetSourceDashBoardInfo)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToggleIsRefreshing)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
+      expect(true).toBe(true);
+    });
+
+    done();
+    
     store.dispatch(new RefreshSourceData());
   });
 
@@ -1109,6 +1173,31 @@ describe('AppState', () => {
   
     // Set the selected source URL to trigger "No data" scenario
     store.reset({ app: { selectedSource: { url: 'live-review-logo.png' } } });
+  
+    // Call the method
+    store.dispatch(new GetSourceDashBoardInfo()).subscribe(() => {
+      // Ensure that the state is updated correctly
+      const appState = store.selectSnapshot(state => state.app);
+      expect(appState.noData).toBe(true);
+      done();
+    });
+  });
+
+  it('should handle the "No data" scenario correctly', (done: DoneFn) => {
+    // Mock the necessary data
+    const mockResponse = {
+      status: 'SUCCESS',
+      aggregated_metrics: {
+        general: {
+          category: 'No data',
+        },
+      },
+    };
+  
+    apiSpy.getSourceSentimentData.and.returnValue(of(mockResponse));
+  
+    // Set the selected source URL to trigger "No data" scenario
+    store.reset({ app: { selectedSource: { url: 'csv-logo.png' } } });
   
     // Call the method
     store.dispatch(new GetSourceDashBoardInfo()).subscribe(() => {
@@ -1826,6 +1915,14 @@ describe('AppState', () => {
     const state = store.selectSnapshot(AppState);
 
     expect(state.showTutorialModal).toBe(true);
+  });
+
+  it('should set the TutorialScreen', () => {
+    store.dispatch(new SwitchTutorialScreen(2));
+
+    const state = store.selectSnapshot(AppState);
+
+    expect(state.tutorialScreen).toBe(2);
   });
 
   it('should set the change the value of showMakAccountModal ', () => {

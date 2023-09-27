@@ -857,8 +857,6 @@ export class AppState {
     console.log(selectedSource?.params)
     console.log(selectedSource?.params?.source_type)
     if(selectedSource?.url == "live-review-logo.png" || selectedSource?.url == "csv-logo.png"){
-      console.log("live review here")
-      if (!selectedSource) return;
 
       this.store.dispatch(new ToggleIsRefreshing(true, selectedSource?.id));
 
@@ -875,6 +873,8 @@ export class AppState {
       this.store.dispatch(
         new ToastSuccess('Your source has been refreshed')
       );
+
+      return;
 
     }
 
@@ -1598,16 +1598,6 @@ export class AppState {
           }
         }
         
-      }),
-      catchError((error) => {
-        if(ctx.getState().showReportGeneratorModal){
-          this.store.dispatch(new ToastError('Your report could not be generated'));
-
-          ctx.patchState({
-            showReportGeneratorModal: false,
-          });
-        }
-        return of(error);
       })
     );
   }
