@@ -182,6 +182,18 @@ The following results have been collected from the system, and are used to deter
           The results of the polarized data show that the system performs to the desired standard, and will provide consistent, accurate data to the user.
 \end{itemize}
 \subsection{Scalability}
+Scalability testing is testing performed in order to enhanced and improve the functional and performance capabilities of the application. So that, application can meets requirements of the end users.
+
+\subsubsection{Quantification}
+The following metrics are used to quantify the scalability of the system.
+\begin{itemize}
+    \item \textbf{Replication} - Are services able to be replicated to decrease the load of on the systems at large.
+          \newline We ensure the scalability of the system by making sure that there is not a single bottleneck/entrypoint into our application.
+          \newline we do this by baking in scalability into the first networking requests that are made to our application. when a request is made to domainpulse.app, instead of immediately resolving the IPaddress of our machine that hosts the webserver,
+          we have it set to reply with one of the nameservers that we host. What this is that users in different regions will be directed to different servers that are closest to them, this ensures that the load is distributed evenly across our servers.
+          \newline this also means that if one of entrypoints go down, then there are other entrypoints into the application.
+\end{itemize}
+
 \subsection{Modifiability}
 
 \newpage
