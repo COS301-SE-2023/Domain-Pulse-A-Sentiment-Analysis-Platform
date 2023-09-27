@@ -14,7 +14,7 @@ TRUSTPILOT_API_KEY = os.getenv("TRUSTPILOT_API_KEY")
 ENDPOINT = "https://api.app.outscraper.com/trustpilot/reviews"
 # url of the place that is reviewed - not the url of the TrustPilot page (performance). This url can be found as the last part of the TrustPilot URL
 # number of reviews to return (please keep this to a small number, around 1-10 ideally)
-REVIEWS_LIMIT = 20
+REVIEWS_LIMIT = 40
 
 HEADERS = {"X-API-KEY": TRUSTPILOT_API_KEY}
 
