@@ -158,7 +158,7 @@ This will install all the necessary dependencies into a local virtual environmen
 Note: Some of the dependencies are fairly sizable. Depending on Internet speeds, this process may take a few minutes.
 
 The full list of dependencies that will be installed can be found in the the file backend/Pipfile. Furthermore, to see the specific versions you may issue the CLI command:\\
-\texttt{pipenv graph} 
+\texttt{pipenv graph}
 
 Note that each dependency may have its own sub-dependencies. These too will be installed via \texttt{pipenv install}
 
@@ -188,13 +188,16 @@ Note that each service may require some setup of its own.
 To establish connections to local database, you will need to create an environment variable file called \texttt{.postgresql.env} (in the root of the project directory). The file
 needs to have the following contents:
 \begin{lstlisting}[basicstyle=\ttfamily]
-    USE_TUNNEL=False
+    USE_TUNNEL=[True or False]
+    DB_TUNNEL_HOST=[Your PostgreSQL server host IP]
+    DB_TUNNEL_USERNAME=[Your PostgreSQL server Username]
+    DB_TUNNEL_PRIVATE_KEY=[Your PostgreSQL server private key]
     SQL_DATABASE_HOST=localhost
     SQL_DATABASE_NAME=[Your PostgreSQL database name]
     SQL_DATABASE_USER=[Your PostgreSQL server username]
     SQL_DATABASE_PASS=[Your PostgreSQL server password]
     SQL_DATABASE_PORT=[Your PostgreSQL server port]
-    MONGO_HOST=localhost
+    MONGO_HOST="domainpulse.app"
     MONGO_PORT=[Your MongoDB server port]
     MONGO_DB_NAME=[Your MongoDB database name]
 \end{lstlisting}
@@ -208,14 +211,19 @@ regarding service ports and external service API keys.
     DJANGO_PROFILES_PORT=8002
     DJANGO_SOURCECONNECTOR_PORT=8003
     DJANGO_WAREHOUSE_PORT=8004
-    MONGO_PORT = [The port on which your MongoDB server is running]
     OUTSCRAPER_API_KEY = [The API key obtained from Outscraper]
     TRIPADVISOR_API_KEY = [The API key obtained from Outscraper]
     GOOGLE_REVIEWS_API_KEY = [The API key obtained from Outscraper]
     TRUSTPILOT_API_KEY = [The API key obtained from Outscraper]
     YOUTUBE_API_KEY = [The Youtube Data API v3 key obtained]
     SECRET_KEY = [Private key string to be used for encryption]
-    AZURE_SAS = [API key for Azure Blob Storage container]
+    BLOB_URL = [API URL for Azure Blob Storage container]
+    BLOB_SAS_KEY = [SAS key for Azure Blob Storage]
+    LOCAL_KEY=[Private key string used for local verification]
+    APM_ENABLED=False
+    DJANGO_DEBUG=False
+    PREVIEW_ENABLED=True
+    GUEST_PASS=[Guest password string]
 \end{lstlisting}
 
 
