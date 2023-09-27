@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainComponent } from './main.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
-import { GenerateReport, GetDomains, GuestModalChange, ToastError, ToastSuccess } from '../app.actions';
+import { GenerateReport, GetDomains, GuestModalChange, ToastError, ToastSuccess, ToggleReportGeneratorModal } from '../app.actions';
 import { DisplayDomain, DisplaySource } from '../app.state';
 import { ElementRef } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -129,6 +129,11 @@ describe('MainComponent', () => {
 
   it('should toggle report modal', () => {
 
+    const storeDispatchSpy = spyOn(
+      component['store'],
+      'dispatch'
+    ).and.returnValue(of());
+
     const dummyDisplaySource: DisplaySource = {
       id: '1',
       name: 'test',
@@ -155,8 +160,7 @@ describe('MainComponent', () => {
 
     component.showReportModal = false;
     component.toggleReportModal();
-    expect(component.showReportModal).toBe(true);
-
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleReportGeneratorModal());
     expect(component.lastOpenedModal).toEqual(['reportModal']);
     
     expect(component.modalTimeout).toBe(true);
@@ -166,7 +170,7 @@ describe('MainComponent', () => {
 
     component.showReportModal = true;
     component.toggleReportModal();
-    expect(component.showReportModal).toBe(false);
+    expect(storeDispatchSpy).toHaveBeenCalledWith(new ToggleReportGeneratorModal());
 
     expect(component.lastOpenedModal).toEqual([]);
     

@@ -1328,12 +1328,12 @@ describe('AppState', () => {
     const domainId = '650579d05ce2576d38fcd99a';
 
     apiSpy.generateReport.and.returnValue(
-      of({ status: 'SUCCESS', url: 'https://example.com/report.pdf' })
+      of({ status: 'SUCCESS', url: 'https://example.com/report.pdf',})
     );
 
     // set the profile
 
-    store.reset({ app: { pdfLoading: true, pdfUrl: 'empty' } });
+    store.reset({ app: { pdfLoading: true, pdfUrl: 'empty', showReportGeneratorModal: true} });
 
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
       const pdfLoading = store.selectSnapshot(AppState.pdfLoading);
@@ -1350,16 +1350,21 @@ describe('AppState', () => {
 
   });
 
+  
+
 
   it('should handle failed report generation', (done: DoneFn) => {
     const domainId = '650579d05ce2576d38fcd99a';
 
-    apiSpy.generateReport.and.returnValue(of({ status: 'FAILURE' }));
+    apiSpy.generateReport.and.returnValue(of({ status: 'FAILURE', details: "Report could not be generated" }));
+
+    store.reset({ app: { showReportGeneratorModal: true} });
+
 
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
       const state = store.selectSnapshot((state) => state);
 
-      expect(state.app.pdfLoading).toBe(false);
+      expect(state.app.showReportGeneratorModal).toBe(false);
 
       done();
     });

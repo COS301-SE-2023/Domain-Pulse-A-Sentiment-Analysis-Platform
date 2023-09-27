@@ -124,7 +124,7 @@ export class SourceSelectorComponent implements OnInit {
 
     this.store.dispatch(
       new AddNewSource(this.newSourceName, this.newSourcePlatform, params)
-    ).subscribe((res) => {
+    ).subscribe(() => {
       if(this.newSourcePlatform == 'csv'){
         this.store.dispatch(new UplaodCVSFile(this.newCSVFile));
         this.newCSVFile = '';
@@ -318,8 +318,8 @@ export class SourceSelectorComponent implements OnInit {
 
     } else {
       this.showAddSourcesModal = false;
-      const fileInput = this.el.nativeElement.querySelector('.file-block');
-      fileInput.value = '';
+      this.resetCSVUpload();
+      
 
       this.newCSVFile = '';
 
@@ -330,6 +330,12 @@ export class SourceSelectorComponent implements OnInit {
       }, 300);
     }
   }
+
+  resetCSVUpload(){
+    const fileInput = this.el.nativeElement.querySelector('.file-block');
+    fileInput.value = '';
+  }
+
 
   toggleEditSourceModal() {
     if (!this.showEditSourceModal) {

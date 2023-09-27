@@ -1,4 +1,10 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
 
 import { GraphSelectorComponent } from './graph-selector.component';
 import { Actions, NgxsModule, Store, ofActionDispatched } from '@ngxs/store';
@@ -8,8 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { ChartComponent } from 'ng-apexcharts';
 import { ElementRef } from '@angular/core';
 import { AttempPsswdLogin, ChooseStatistic } from '../app.actions';
-
-
 
 const mockAggregatedMetricsData = {
   general: {
@@ -36,156 +40,64 @@ const mockAggregatedMetricsData = {
   },
 };
 
-const mockTimeSeriesData = 
-  {
-    "overall": [
-        [
-            "2023-09-08T11:17:20",
-            10.72
-        ],
-        [
-            "2023-09-08T11:18:07",
-            22.876
-        ],
-
+const mockTimeSeriesData = {
+  overall: [
+    ['2023-09-08T11:17:20', 10.72],
+    ['2023-09-08T11:18:07', 22.876],
+  ],
+  emotions: {
+    anger: [
+      ['2023-09-08T11:17:20', 65.66],
+      ['2023-09-08T11:17:41', 62.377],
     ],
-    "emotions": {
-        "anger": [
-            [
-                "2023-09-08T11:17:20",
-                65.66
-            ],
-            [
-                "2023-09-08T11:17:41",
-                62.377
-            ],
-
-        ],
-        "sadness": [
-            [
-                "2023-09-08T11:17:20",
-                3.56
-            ],
-            [
-                "2023-09-08T11:17:41",
-                16.4552
-            ],
-
-        ],
-        "joy": [
-            [
-                "2023-09-08T11:17:20",
-                0
-            ],
-            [
-                "2023-09-08T11:17:41",
-                0
-            ],
-
-        ],
-        "disgust": [
-            [
-                "2023-09-08T11:17:20",
-                30.78
-            ],
-            [
-                "2023-09-08T11:17:41",
-                29.241
-            ],
-
-        ],
-        "fear": [
-            [
-                "2023-09-08T11:17:20",
-                0
-            ],
-            [
-                "2023-09-08T11:17:41",
-                0.594
-            ],
-
-        ],
-        "surprise": [
-            [
-                "2023-09-08T11:17:20",
-                0
-            ],
-            [
-                "2023-09-08T11:17:41",
-                3.8718
-            ],
-
-        ]
-    },
-    "toxicity": {
-        "toxic_count": [
-            {
-                "x": "2023-09-08",
-                "y": 1
-            }
-        ],
-        "overall_helper": [
-            {
-                "x": "2023-09-08T11:17:20",
-                "y": 10.72
-            },
-            {
-                "x": "2023-09-08T11:18:07",
-                "y": 22.876
-            },
-
-        ]
-    },
-    "ratios": {
-        "pos": [
-            [
-                "2023-09-08T11:17:20",
-                2
-            ],
-            [
-                "2023-09-08T11:17:41",
-                5.45
-            ],
-        ],
-        "neu": [
-            [
-                "2023-09-08T11:17:20",
-                22
-            ],
-            [
-                "2023-09-08T11:17:41",
-                26.2
-            ]
-        ],
-        "neg": [
-            [
-                "2023-09-08T11:17:20",
-                75
-            ],
-            [
-                "2023-09-08T11:17:41",
-                67.5
-            ]
-        ]
-    },
-    "num_records": [
-        [
-            "2023-09-08T11:17:20",
-            1
-        ],
-        [
-            "2023-09-08T11:17:41",
-            2
-        ],
-        [
-            "2023-09-08T11:17:55",
-            3
-        ],
-    ]
+    sadness: [
+      ['2023-09-08T11:17:20', 3.56],
+      ['2023-09-08T11:17:41', 16.4552],
+    ],
+    joy: [
+      ['2023-09-08T11:17:20', 0],
+      ['2023-09-08T11:17:41', 0],
+    ],
+    disgust: [
+      ['2023-09-08T11:17:20', 30.78],
+      ['2023-09-08T11:17:41', 29.241],
+    ],
+    fear: [
+      ['2023-09-08T11:17:20', 0],
+      ['2023-09-08T11:17:41', 0.594],
+    ],
+    surprise: [
+      ['2023-09-08T11:17:20', 0],
+      ['2023-09-08T11:17:41', 3.8718],
+    ],
+  },
+  toxicity: [
+    ['2023-09-08T11:17:20', 1],
+    ['2023-09-08T11:17:41', 2],
+    ['2023-09-08T11:17:55', 3],
+  ],
+  ratios: {
+    pos: [
+      ['2023-09-08T11:17:20', 2],
+      ['2023-09-08T11:17:41', 5.45],
+    ],
+    neu: [
+      ['2023-09-08T11:17:20', 22],
+      ['2023-09-08T11:17:41', 26.2],
+    ],
+    neg: [
+      ['2023-09-08T11:17:20', 75],
+      ['2023-09-08T11:17:41', 67.5],
+    ],
+  },
+  num_records: [
+    ['2023-09-08T11:17:20', 1],
+    ['2023-09-08T11:17:41', 2],
+    ['2023-09-08T11:17:55', 3],
+  ],
 };
 
-const mockGraphData = 
-[
+const mockGraphData = [
   [
     {
       //1.1 overall score
@@ -198,7 +110,6 @@ const mockGraphData =
         toolbar: {
           show: true,
         },
-        
       },
       plotOptions: {
         radialBar: {
@@ -215,10 +126,10 @@ const mockGraphData =
               color: '#61d478',
             },
             value: {
-              formatter: function(val:any) {
-                return parseInt(val.toFixed(2)) + "%";
+              formatter: function (val: any) {
+                return parseInt(val.toFixed(2)) + '%';
               },
-            }
+            },
           },
         },
       },
@@ -236,15 +147,12 @@ const mockGraphData =
       series: [
         {
           name: 'Overall Score',
-          data: [
-
-          ],
+          data: [],
         },
       ],
       chart: {
         height: '100%',
         type: 'area',
-        
       },
       title: {
         text: 'Overall Score over time',
@@ -258,13 +166,12 @@ const mockGraphData =
       yaxis: [
         {
           labels: {
-            formatter: function(val:any) {
+            formatter: function (val: any) {
               return val.toFixed(0);
-            }
-          }
-        }
-      ]
-
+            },
+          },
+        },
+      ],
     },
   ],
   [
@@ -279,7 +186,6 @@ const mockGraphData =
         toolbar: {
           show: true,
         },
-        
       },
       labels: ['Postive', 'Negative', 'Neutral'],
       colors: [
@@ -300,33 +206,27 @@ const mockGraphData =
       yaxis: [
         {
           labels: {
-            formatter: function(val:any) {
+            formatter: function (val: any) {
               return val.toFixed(0);
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     },
     {
       //2.2pos-neg-neu ratio
       series: [
         {
           name: 'Positive',
-          data: [
-
-          ],
+          data: [],
         },
         {
           name: 'Negative',
-          data: [
-
-          ],
+          data: [],
         },
         {
           name: 'Neutral',
-          data: [
-
-          ],
+          data: [],
         },
       ],
       chart: {
@@ -338,7 +238,6 @@ const mockGraphData =
             console.log(new Date(e.xaxis.min));
           },
         }, */
-        
       },
       colors: [
         'rgba(63, 231, 133, 0.8)',
@@ -367,12 +266,12 @@ const mockGraphData =
       yaxis: [
         {
           labels: {
-            formatter: function(val:any) {
+            formatter: function (val: any) {
               return val.toFixed(0);
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     },
   ],
   [
@@ -390,7 +289,6 @@ const mockGraphData =
       chart: {
         type: 'bar',
         height: '100%',
-        
       },
       plotOptions: {
         bar: {
@@ -406,14 +304,7 @@ const mockGraphData =
         title: {
           text: 'Percentage',
         },
-        categories: [
-          'anger',
-          'disgust',
-          'fear',
-          'joy',
-          'surprise',
-          'sadness',
-        ],
+        categories: ['anger', 'disgust', 'fear', 'joy', 'surprise', 'sadness'],
       },
       title: {
         text: 'Bar Chart of Emotion Ratings',
@@ -432,44 +323,32 @@ const mockGraphData =
       series: [
         {
           name: 'Anger',
-          data: [
-
-          ],
+          data: [],
         },
         {
           name: 'Disgust',
-          data: [
-
-          ],
+          data: [],
         },
         {
           name: 'Fear',
-          data: [
-
-          ],
+          data: [],
         },
         {
           name: 'Joy',
-          data: [
-
-          ],
+          data: [],
         },
         {
           name: 'Surprise',
-          data: [
-
-          ],
+          data: [],
         },
         {
           name: 'Sadness',
-          data: [
-          ]
+          data: [],
         },
       ],
       chart: {
         height: '100%',
         type: 'area',
-        
       },
       title: {
         text: 'Emotion Ratings over time',
@@ -501,50 +380,39 @@ const mockGraphData =
       yaxis: [
         {
           labels: {
-            formatter: function(val:any) {
+            formatter: function (val: any) {
               return val.toFixed(0);
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     },
     {
       //3.3 radar emotions
       series: [
         {
           name: 'Emotion Ratings',
-          data: [
-          ],
+          data: [],
         },
       ],
       chart: {
         height: '100%',
         type: 'radar',
-        
       },
       title: {
         text: 'Emotions Radar Chart',
       },
       xaxis: {
-        categories: [
-          'anger',
-          'disgust',
-          'fear',
-          'joy',
-          'surprise',
-          'sadness',
-        ],
+        categories: ['anger', 'disgust', 'fear', 'joy', 'surprise', 'sadness'],
       },
       yaxis: {
         show: false,
 
         labels: {
-          formatter: function(val:any) {
+          formatter: function (val: any) {
             return val.toFixed(0);
-          }
-        }
-          
-
+          },
+        },
       },
       plotOptions: {
         radar: {
@@ -571,7 +439,6 @@ const mockGraphData =
         toolbar: {
           show: true,
         },
-        
       },
       plotOptions: {
         radialBar: {
@@ -588,10 +455,10 @@ const mockGraphData =
               color: '#cf5050',
             },
             value: {
-              formatter: function(val:any) {
-                return parseInt(val.toFixed(2)) + "%";
+              formatter: function (val: any) {
+                return parseInt(val.toFixed(2)) + '%';
               },
-            }
+            },
           },
         },
       },
@@ -606,97 +473,58 @@ const mockGraphData =
     },
 
     {
+      //3.2emotional ratios time series
       series: [
         {
-          name: 'toxicity',
-          type: 'column',
+          name: 'Total Reviews',
           data: [
-
+            ['2023-08-20T00:00', 10],
+            ['2023-08-21T03:00', 10],
+            ['2023-08-22T06:00', 40],
+            ['2023-08-23T00:00', 0],
+            ['2023-08-23T03:00', 10],
           ],
         },
         {
-          name: 'Overall Score',
-          type: 'line',
+          name: 'Toxic Reviews',
           data: [
+            ['2023-08-20T00:00', 5],
+            ['2023-08-21T03:00', 6],
+            ['2023-08-22T06:00', 7],
+            ['2023-08-23T00:00', 8],
+            ['2023-08-23T03:00', 9],
           ],
         },
       ],
       chart: {
         height: '100%',
-        type: 'line',
-        colors: ['#fb2600', '#30a800'],
-        
-      },
-      all_series_config: {
-        stroke_width: 10,
-      },
-      plotOptions: {
-        bar: {
-          columnWidth: '70%', // Adjust the column width as needed
-        },
-      },
-      colors: ['#fb2600', '#30a800'], // Specify the colors for the line and columns
-      stroke: {
-        curve: 'smooth',
-        lineCap: 'round',
+        type: 'area',
       },
       title: {
-        text: 'Toxicity over time',
+        text: 'Proportion of Toxic Reviews over time',
+      },
+      colors: ['rgba(48, 168, 0, 0.8)', 'rgba(251, 38, 0, 0.8)'],
+      dataLabels: {
+        enabled: false,
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          opacityFrom: 0.6,
+          opacityTo: 0.8,
+        },
+      },
+      legend: {
+        position: 'bottom',
       },
       xaxis: {
         type: 'datetime',
       },
-
       yaxis: [
         {
-          seriesName: 'toxicity',
-          axisTicks: {
-            show: true,
-          },
-          axisBorder: {
-            show: true,
-            color: '#fb3200',
-          },
           labels: {
-            style: {
-              color: '#fb2600',
-            },
-            formatter: function(val:any) {
+            formatter: function (val: any) {
               return val.toFixed(0);
-            }
-          },
-          title: {
-            text: 'Number of Toxic Comments',
-            style: {
-              color: '#fb2600',
-            },
-          },
-          tooltip: {
-            enabled: true,
-          },
-        },
-        {
-          seriesName: 'Overall Score',
-          opposite: true,
-          axisTicks: {
-            show: true,
-          },
-          axisBorder: {
-            show: true,
-            color: '#30a800',
-          },
-          labels: {
-            style: {
-              color: '#30a800',
-            },
-            formatter: function(val:any) {
-              return val.toFixed(0);
-            }
-          },
-          title: {
-            text: 'Overall Score',
-            style: {
-              color: '#30a800',
             },
           },
         },
@@ -733,7 +561,6 @@ const mockGraphData =
       chart: {
         height: '100%',
         type: 'area',
-        
       },
       title: {
         text: 'Number of Reviews over time',
@@ -746,10 +573,7 @@ const mockGraphData =
       },
     },
   ],
-
 ];
-
-
 
 describe('GraphSelectorComponent', () => {
   let component: GraphSelectorComponent;
@@ -801,7 +625,8 @@ describe('GraphSelectorComponent', () => {
 
   it('should format the value using the formatter function (1)', () => {
     const chartOptions = component.chartOptionsArray[0][0];
-    const formatterFunction = chartOptions.plotOptions.radialBar.dataLabels.value.formatter;
+    const formatterFunction =
+      chartOptions.plotOptions.radialBar.dataLabels.value.formatter;
 
     const sampleValue = 123.456;
 
@@ -867,7 +692,8 @@ describe('GraphSelectorComponent', () => {
 
   it('should format the value using the formatter function (7)', () => {
     const chartOptions = component.chartOptionsArray[3][0];
-    const formatterFunction = chartOptions.plotOptions.radialBar.dataLabels.value.formatter;
+    const formatterFunction =
+      chartOptions.plotOptions.radialBar.dataLabels.value.formatter;
 
     const sampleValue = 123.456;
 
@@ -875,7 +701,6 @@ describe('GraphSelectorComponent', () => {
 
     expect(formattedValue).toBe('123%');
   });
-
 
   it('should format the value using the formatter function (8)', () => {
     const chartOptions = component.chartOptionsArray[3][1];
@@ -888,28 +713,22 @@ describe('GraphSelectorComponent', () => {
     expect(formattedValue).toBe('123');
   });
 
-  it('should format the value using the formatter function (9)', () => {
-    const chartOptions = component.chartOptionsArray[3][1];
-    const formatterFunction = chartOptions.yaxis[1].labels.formatter;
-
-    const sampleValue = 123.456;
-
-    const formattedValue = formatterFunction(sampleValue);
-
-    expect(formattedValue).toBe('123');
-  });
-
-  it('should set gepahs on new Data', () => {
-    const result = component.assignGraphData(mockAggregatedMetricsData, mockTimeSeriesData, mockGraphData);
+  it('should set grpahs on new Data', () => {
+    const result = component.assignGraphData(
+      mockAggregatedMetricsData,
+      mockTimeSeriesData,
+      mockGraphData
+    );
 
     expect(result).toBeDefined();
-    expect(result[0][0].series[0]).toEqual(mockAggregatedMetricsData.general.score * 100);
+    expect(result[0][0].series[0]).toEqual(
+      mockAggregatedMetricsData.general.score * 100
+    );
     expect(result[1][0].series).toEqual([
       Math.floor(mockAggregatedMetricsData.ratios.positive * 100),
       Math.floor(mockAggregatedMetricsData.ratios.negative * 100),
       Math.floor(mockAggregatedMetricsData.ratios.neutral * 100),
     ]);
-
 
     expect(result[2][0].series[0].data).toEqual([
       Math.floor(mockAggregatedMetricsData.emotions.anger * 100),
@@ -939,25 +758,40 @@ describe('GraphSelectorComponent', () => {
     expect(result[1][1].series[1].data).toEqual(mockTimeSeriesData.ratios.neg);
     expect(result[1][1].series[2].data).toEqual(mockTimeSeriesData.ratios.neu);
 
-    expect(result[2][1].series[0].data).toEqual(mockTimeSeriesData.emotions.anger);
-    expect(result[2][1].series[1].data).toEqual(mockTimeSeriesData.emotions.disgust);
-    expect(result[2][1].series[2].data).toEqual(mockTimeSeriesData.emotions.fear);
-    expect(result[2][1].series[3].data).toEqual(mockTimeSeriesData.emotions.joy);
-    expect(result[2][1].series[4].data).toEqual(mockTimeSeriesData.emotions.surprise);
-    expect(result[2][1].series[5].data).toEqual(mockTimeSeriesData.emotions.sadness);
+    expect(result[2][1].series[0].data).toEqual(
+      mockTimeSeriesData.emotions.anger
+    );
+    expect(result[2][1].series[1].data).toEqual(
+      mockTimeSeriesData.emotions.disgust
+    );
+    expect(result[2][1].series[2].data).toEqual(
+      mockTimeSeriesData.emotions.fear
+    );
+    expect(result[2][1].series[3].data).toEqual(
+      mockTimeSeriesData.emotions.joy
+    );
+    expect(result[2][1].series[4].data).toEqual(
+      mockTimeSeriesData.emotions.surprise
+    );
+    expect(result[2][1].series[5].data).toEqual(
+      mockTimeSeriesData.emotions.sadness
+    );
 
-    expect(result[3][1].series[0].data).toEqual(mockTimeSeriesData.toxicity.toxic_count);
-    expect(result[3][1].series[1].data).toEqual(mockTimeSeriesData.toxicity.overall_helper);
+    expect(result[3][1].series[0].data).toEqual(
+      mockTimeSeriesData.num_records
+    );
+    expect(result[3][1].series[1].data).toEqual(
+      mockTimeSeriesData.toxicity
+    );
 
     expect(result[4][0].series[0].data).toEqual(mockTimeSeriesData.num_records);
-
   });
 
   it('should switch to the previous graph', () => {
     component.chartOptionsArray = mockGraphData;
     component.currentGraphIndex = 1;
     component.currentStatisticIndex = 0;
-    
+
     component.switchToPreviousGraph();
 
     expect(component.currentGraphIndex).toBe(0);
@@ -967,7 +801,7 @@ describe('GraphSelectorComponent', () => {
     component.chartOptionsArray = mockGraphData;
     component.currentGraphIndex = 0;
     component.currentStatisticIndex = 0;
-    
+
     component.switchToNextGraph();
 
     expect(component.currentGraphIndex).toBe(1);
@@ -978,17 +812,14 @@ describe('GraphSelectorComponent', () => {
     component.chartOptionsArray = [];
     component.currentGraphIndex = 0;
     component.currentStatisticIndex = 0;
-    
+
     component.switchToPreviousGraph();
     component.switchToNextGraph();
 
     expect(component.currentGraphIndex).toBe(0);
   });
 
-
-
-
-  it('should not render graph if no \'myChart\' or \'chartContainer\'', () => {
+  it("should not render graph if no 'myChart' or 'chartContainer'", () => {
     component.renderGraph();
 
     expect(component.chart).toBeUndefined();
@@ -996,8 +827,8 @@ describe('GraphSelectorComponent', () => {
 
   it('should return an array of selected dots with the correct count', () => {
     component.dots = [3, 5, 2];
-    component.selectedDotIndex = 1; 
-    
+    component.selectedDotIndex = 1;
+
     const result = component.getSelectedDots();
 
     expect(result.length).toBe(5);
@@ -1010,19 +841,19 @@ describe('GraphSelectorComponent', () => {
     component.currentStatisticIndex = 2;
     component.selectedDotIndex = 1;
     component.currentGraphIndex = 1;
-    
+
     component.selectDot(2);
-    
+
     expect(component.selectedDotIndex).toBe(2);
     expect(component.currentGraphIndex).toBe(2);
   });
 
   it('should call renderGraph when selecting a dot', () => {
     component.dots = [2, 2, 3, 2, 1];
-    spyOn(component, 'renderGraph'); 
-    
+    spyOn(component, 'renderGraph');
+
     component.selectDot(0);
-    
+
     expect(component.renderGraph).toHaveBeenCalled();
   });
 
@@ -1032,9 +863,9 @@ describe('GraphSelectorComponent', () => {
     component.currentStatisticIndex = 2;
     component.selectedDotIndex = 1;
     component.currentGraphIndex = 1;
-    
+
     component.selectDot(-10);
-    
+
     expect(component.selectedDotIndex).toBe(1);
     expect(component.currentGraphIndex).toBe(1);
   });
@@ -1045,19 +876,16 @@ describe('GraphSelectorComponent', () => {
     component.currentStatisticIndex = 2;
     component.selectedDotIndex = 1;
     component.currentGraphIndex = 1;
-    
+
     component.selectDot(50);
-    
+
     expect(component.selectedDotIndex).toBe(1);
     expect(component.currentGraphIndex).toBe(1);
   });
 
-
   it('should update dots array when selectedIndex is valid', () => {
-
     const selectedIndex = 2;
-    const expectedDots = [0, 0, 0]; 
-    
+    const expectedDots = [0, 0, 0];
 
     component.updateDots(selectedIndex);
 
@@ -1065,10 +893,8 @@ describe('GraphSelectorComponent', () => {
   });
 
   it('should clear dots array when selectedIndex is out of range', () => {
-
     const selectedIndex = 5;
-    
-   
+
     component.updateDots(selectedIndex);
 
     expect(component.dots).toEqual([]);
@@ -1076,8 +902,7 @@ describe('GraphSelectorComponent', () => {
 
   it('should not clear dots array when selectedIndex is negative', () => {
     const selectedIndex = -1;
-    
-    
+
     component.updateDots(selectedIndex);
     expect(component.dots).toEqual([]);
   });
@@ -1086,22 +911,21 @@ describe('GraphSelectorComponent', () => {
     const mockElementRef: ElementRef = {
       nativeElement: document.createElement('div'), // You can use any HTML element here
     };
-    
 
     component.myChart = mockElementRef; // Assign the mock ElementRef
     component.chartContainer = mockElementRef;
-    
+
     const mockChartOptionsArray = component.assignGraphData(
       mockAggregatedMetricsData,
       mockTimeSeriesData,
       mockGraphData
     );
-    
+
     component.currentStatisticIndex = 0;
-    component.currentGraphIndex = 1; 
+    component.currentGraphIndex = 1;
 
     component.chartOptionsArray = mockChartOptionsArray;
-    
+
     component.renderGraph();
 
     expect(component.selectedDotIndex).toBe(0);
@@ -1109,30 +933,28 @@ describe('GraphSelectorComponent', () => {
   });
 
   it('should wrap the selectedGraphIndex if too large', () => {
-    
     const mockChartOptionsArray = component.assignGraphData(
       mockAggregatedMetricsData,
       mockTimeSeriesData,
       mockGraphData
     );
-    
+
     component.currentStatisticIndex = 0;
     component.currentGraphIndex = 4;
     component.selectedDotIndex = 1;
 
     component.chartOptionsArray = mockChartOptionsArray;
-    
+
     component.renderGraph();
 
     expect(component.currentGraphIndex).toBe(1);
     expect(component.selectedDotIndex).toBe(1);
   });
-  
 
   it('should process overall sentiment data', fakeAsync(() => {
     const mockData = {
       aggregated_metrics: mockAggregatedMetricsData,
-      timeseries: mockTimeSeriesData
+      timeseries: mockTimeSeriesData,
     };
 
     spyOn(component, 'assignGraphData').and.returnValue([]);
@@ -1169,7 +991,6 @@ describe('GraphSelectorComponent', () => {
     expect(component.updateDots).toHaveBeenCalledWith(newStatIndex);
   });
 
-
   /* it('should handle missing chart or chartContainer elements', () => {
 
     const mockChartOptionsArray = component.assignGraphData(
@@ -1191,7 +1012,4 @@ describe('GraphSelectorComponent', () => {
     expect(component.selectedDotIndex).toBe(0);
     expect(component.chartOptions).toEqual({});
   }); */
-
-  
-
 });

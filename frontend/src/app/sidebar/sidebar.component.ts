@@ -585,8 +585,8 @@ export class SidebarComponent implements OnInit {
       )
       .subscribe((result) => {
         this.editDomainSpinner = false;
-        this.store.dispatch(new ToggleEditDomainModal());
-      });
+        this.toggleEditDomainModal();
+        });
 
     this.editDomainName = '';
     this.editDomainImageName = '';
