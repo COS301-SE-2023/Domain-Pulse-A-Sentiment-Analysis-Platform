@@ -17,6 +17,13 @@ export class HelpPageComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.accordionItems = document.querySelectorAll('accordion');
 
+    this.route.queryParams
+      .subscribe(params => {
+        console.log(params);
+        this.searchTerm = params['q'];
+        this.filterAccordionByText();
+      }
+      );
   }
 
   filterAccordionByText() {

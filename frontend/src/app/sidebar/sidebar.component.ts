@@ -666,6 +666,7 @@ export class SidebarComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.uploadSpinner = false;
+          this.toggleProfileEditModal();
           this.selectedFile = null;
           const reader = new FileReader();
           reader.onload = (e) => {

@@ -1356,6 +1356,30 @@ export class AppState {
           this.store.dispatch(
             new ToastSuccess('Your password has been changed')
           );
+          localStorage.removeItem('JWT');
+        ctx.patchState({
+          authenticated: false,
+          selectedStatisticIndex: 0,
+          sourceIsLoading: true,
+          allSourcesSelected: true,
+          pdfLoading: false,
+          pdfUrl: '',
+          userHasNoDomains: false,
+          userHasNoSources: false,
+          domains: undefined,
+          selectedDomain: undefined,
+          sources: undefined,
+          selectedSource: undefined,
+          overallSentimentScores: undefined,
+          sampleData: undefined,
+          userDetails: undefined,
+          profileDetails: undefined,
+          toasterError: undefined,
+          toasterSuccess: undefined,
+          showAddDomainModal: false,
+          showProfileModal: false,
+        });
+
           this.router.navigate(['/login']);
         } else {
           this.store.dispatch(
