@@ -5,6 +5,7 @@
 \usepackage{float}
 \usepackage{pdfpages}
 \usepackage{adjustbox}
+\usepackage{amsmath}
 \graphicspath{ {./} }
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 
@@ -181,6 +182,7 @@ The following results have been collected from the system, and are used to deter
           \end{figure}
           The results of the polarized data show that the system performs to the desired standard, and will provide consistent, accurate data to the user.
 \end{itemize}
+\newpage
 \subsection{Scalability}
 Scalability testing is testing performed in order to enhanced and improve the functional and performance capabilities of the application. So that, application can meets requirements of the end users.
 
@@ -193,11 +195,51 @@ The following metrics are used to quantify the scalability of the system.
           we have it set to reply with one of the nameservers that we host. What this is that users in different regions will be directed to different servers that are closest to them, this ensures that the load is distributed evenly across our servers.
           \newline this also means that if one of entry points go down, then there are other entry points into the application.
 \end{itemize}
-
+\newpage
 \subsection{Modifiability}
-Modifiability is an important quality requirement within our project, due to the need for multiple services that perform semi-independant functions, and the need for these services to be easily maintained and extinsible.
+Modifiability is an important quality requirement within our project, due to the need for multiple services that perform semi-independent functions, and the need for these services to be easily maintained and extinsible.
 \subsubsection{Quantification}
-The metric used to quantify the Modifiability of the system will
+The metric used to quantify the Modifiability of the system will be the Maintainability index and Cyclomatic Complexity values. Cyclomatic Complexity refers to the complexity of a program and uses the number of linearly-independent paths through a program module to determine how risky, understandable and simple to modify a codebase is, where the equation is:
+\begin{equation}
+    \begin{aligned}
+         & M = E - N + 2P                                    \\
+         & N = the number of nodes in the control flow graph \\
+         & P = the number of connected components
+    \end{aligned}
+\end{equation}
+The Maintainability index is a scale from 0 to 100, with 100 being the most maintainable, and 0 being the least maintainable. The Maintainability index is calculated using the following equation:
+\begin{equation}
+    \begin{aligned}
+         & MI = MAX(0, (171 - 5.2 * ln(Halstead Volume) \\
+         & - 0.23 * (Cyclomatic Complexity)             \\
+         & - 16.2 * ln(Lines of Code)) * 100 / 171)
+    \end{aligned}
+\end{equation}
+Where Halstead Volume is calculated with:
+\begin{equation}
+    \begin{aligned}
+         & Volume = N * log_2(n)                         \\
+         & N = Total number of operators and operands    \\
+         & n = Number of distinct operators and operands
+    \end{aligned}
+\end{equation}
+Within the Maintainability index, a score above 20 is considered a good Maintainability index, and a score below 10 is considered a poor Maintainability index.
+Within Cyclomatic Complexity, a score below 4 is considered good (simple), while a score above 7 is considered bad (complex).
+
+\subsubsection{Results}
+Due to the complexity of our system, and near all computations within our system, being performed by the backend, the results are based on the backend of our system, to exclude unimportant information.
+The results, for each service within our system are as follows:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Maintainability.png}
+\end{figure}
+A Maintainability index of 30 is considered the minimum requirement, as it is considered higher than the minimum 'good' index, and our system needs a high level of extensibility and simplicity within the codebase.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Cyclomatic.png}
+\end{figure}
+Similarly to the minimum Maintainability index value, 3 is considered the maximum value for our Cyclomatic Complexity to ensure a simple and readable codebase, for ease of development.
+\\Therefore all tests have passed, and the system is considered to be highly modifiable.
 \newpage
 \section{Code Coverage}
 Any commit made to a branch causes automated tests to be run on the codebase of that branch, thereafter the code coverage of said branch is calculated.
