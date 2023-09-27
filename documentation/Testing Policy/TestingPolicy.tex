@@ -145,10 +145,24 @@ Performance is a highly important quality requirement within our application. Th
 The following metrics are used to quantify the performance of the system, being the most important metrics to the system:
 \begin{itemize}
     \item \textbf{Response Time} - The time taken for the system to respond to a request, being the time taken for the system to process the request and return a response. This is of importance due to the need for data to be returned in a reasonable amount of time, heavily relating to the usability of the system.
+          The metric used shall be the average response time of several frequently used requests, and comparing these results to a list of minimum requirements for each endpoint.
     \item \textbf{Accuracy and Consistency} - The accuracy and consistency of the Sentiment Analysis models used within the system are of utmost importance, such that a user receives relevant data that provides useful and precise information regarding their domains, that is consistent with in multiple requests.
+          As the models used are pre-trained, the accuracy can be determined by their reported accuracy, and F1-score. Accuracy within a model refers to percentage of correct predictions made on a class-balanced dataset (datasets with the same number of samples), while we often have varying dataset sizes, and therefore F1 score is a better metric and shall be used.
 \end{itemize}
 
 \subsubsection{Results}
+The following results have been collected from the system, and are used to determine the performance of the system:
+\begin{itemize}
+    \item \textbf{Response Time} - The endpoints create\_domain, refresh\_source (which is calculated from the summation of its initial call and subsequent calls for real-time data loading), generate\_report, login\_user, get\_domain\_dashboard and get\_source\_dashboard have been tested on sample data (of which has contained the same data for fair results), and the average response times have been measured as such:
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.9\textwidth]{PerfTable.png}
+          \end{figure}
+          According to Google (https://developers.google.com/speed/docs/insights/Server), the response time of your server should be under 200 ms. Response times of under 200ms will provide users with, what feels like an instantaneous response. Therefore the minimum response times of endpoints used within navigation of the website, such as get\_domain\_dashboard and get\_source\_dashboard, should be under 300 ms, so as to accommodate for large amounts of data being parsed throughout the application.
+          The minimum requirement of the response time for generate\_report and refresh\_source are 5000 ms and 30000 ms respectively, this is due to the large amount of data processing required in each of these endpoints, and therefore, the time taken to process the data is expected to be longer. This performance, however, does not negatively impact user experience as data will be loaded into the dashboard whilst further data is being processed, and the processing of data is expected to take a longer amount of time.
+          Similarly create\_domain has a minimum requirement of 700 ms due to the necessity of creation of data. The login\_user endpoint has a requirement of 1000 ms to accommodate for authentication to be completed.
+    \item \textbf{Accuracy and Consistency} -
+\end{itemize}
 \subsection{Scalability}
 \subsection{Modifiability}
 
