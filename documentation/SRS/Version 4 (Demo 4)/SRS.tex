@@ -418,7 +418,7 @@ In terms of prior knowledge and experience, users may have different levels of e
   \item The results of sentiment analysis on a grouping are returned as follows
         \begin{enumerate}
           \item The ratios of positive, negative, and neutral sentiment
-          \item The most prevelant emotions
+          \item The most prevalent emotions
           \item An overall sentiment score (from negative to positive)
           \item An overall categorization within the following groups
                 \begin{enumerate}
@@ -438,7 +438,7 @@ In terms of prior knowledge and experience, users may have different levels of e
           \item The meta-data to be returned is as follows
                 \begin{enumerate}
                   \item How many pieces of data from each source were considered
-                  \item An indication of the timeframe over which the data was produced
+                  \item An indication of the time-frame over which the data was produced
                 \end{enumerate}
         \end{enumerate}
 \end{enumerate}
@@ -461,10 +461,10 @@ In terms of prior knowledge and experience, users may have different levels of e
                 \begin{enumerate}
                   \item Stacked, cumulative area line chart showing sentiment ratios over time as an exponential moving average
                   \item Line chart showing overall sentiment score over time as an exponential moving average
-                  \item Overlayed line charts showing each emotion score over time as an exponential moving average \begin{itemize}
+                  \item Overlay-ed line charts showing each emotion score over time as an exponential moving average \begin{itemize}
                     \item A user may toggle emotions to be displayed or not
                   \end{itemize}
-                  \item Bar graph showing the number of toxic comments on each day, overlayed with overall sentiment over time line chart \begin{itemize}
+                  \item Bar graph showing the number of toxic comments on each day, overlay-ed with overall sentiment over time line chart \begin{itemize}
                     \item A user may toggle the overall sentiment line and/or bars to be displayed or not
                   \end{itemize}
                 \end{enumerate}      
@@ -520,7 +520,7 @@ In terms of prior knowledge and experience, users may have different levels of e
 \section{Service Contract}
 
 \subsection{Provided Software}
-As per the agreement between the client and development team, the software "Domain Pulse: A Sentiment Analysis Platform" shall be developed and deployed within the given timeframe. The system will allow users to register, create domains, add sources for the domains, and view aggregated and analyzed sentiment data from the sources.
+As per the agreement between the client and development team, the software "Domain Pulse: A Sentiment Analysis Platform" shall be developed and deployed within the given time-frame. The system will allow users to register, create domains, add sources for the domains, and view aggregated and analyzed sentiment data from the sources.
 
 \subsection{Technology Stack}
 The system will be developed using Django as the backend web framework and Angular for the frontend UI. MongoDB, a NoSQL database, will be used for sentiment data storage, while PostgreSQL will be employed for user data storage. The system will be deployed and hosted on a client-provided virtual machine.
@@ -532,7 +532,7 @@ The project will be managed using the Agile methodology, with weekly meetings be
 The developed system will consist of external services and libraries within the codebase, comprising no more than 15\% of the total developed codebase. The team will ensure compliance with The University of Pretoria's Plagiarism and Code of Conduct policies, ensuring the originality and ownership of the produced code.
 
 \subsection{Timeline}
-The project will be completed within the provided timeframes of the COS 301 Capstone Project, and all required information and progress updates will be provided during the respective demos.
+The project will be completed within the provided time-frames of the COS 301 Capstone Project, and all required information and progress updates will be provided during the respective demos.
 
 \subsection{Security}
 Encryption will be implemented on all endpoints within the project to ensure secure data transmission between the server and the client. The virtual machine hosting the system will be secured and protected using measures such as firewalls. POST requests will be preferred over GET requests for enhanced data security.
@@ -695,7 +695,7 @@ The following is an outline of the structure of the data to be persisted and rel
 
 \textbf{Performance Constraints}
 \begin{itemize}
-  \item Generally speaking, the following guidelines must be adhered to. Specific quantificiation of these requirements can be found in our ststement of quality requirements and Testing Manual:
+  \item Generally speaking, the following guidelines must be adhered to. Specific quantification of these requirements can be found in our ststement of quality requirements and Testing Manual:
         \begin{itemize}
           \item The user must not wait for an inordinate amount of time for the data to be refreshed, including fetching new data from external APIs and performing analysis on that data.
           \item Viewing metrics for different sources and domains should feel seamless, with minimal waiting time involved in fetching the data.
@@ -718,7 +718,7 @@ The following is an outline of the structure of the data to be persisted and rel
 
 \textbf{Cost Constraints}
 \begin{itemize}
-  \item Budget allocated for Project Day materials as well as an amount of no more than R300 towarda making use of 3rd party webscraping services.
+  \item Budget allocated for Project Day materials as well as an amount of no more than R300 towards making use of 3rd party web-scraping services.
 \end{itemize}
 
 \textbf{Time Constraints}
@@ -731,10 +731,10 @@ The following is an outline of the structure of the data to be persisted and rel
 
 \section{Technology Requirements}
 
-Below the technology requirements of the system are presented. Alll the mentioned technologies (with the exception of Azure and Outscraper) are free and open source. The justification of technology choices can be found in the Architectural Design Document.
+Below the technology requirements of the system are presented. All the mentioned technologies (with the exception of Azure and Outscraper) are free and open source. The justification of technology choices can be found in the Architectural Design Document.
 
 \subsection{Development Environment}
-For development, our team members shall be developing within VS Code in an Ubuntu Linux enivronment to ensure consistency within the produced code and testing of our software. Having all members using VS Code also allows for the use of software such as Live Share for collaborative development to improve efficiency within development.
+For development, our team members shall be developing within VS Code in an Ubuntu Linux environment to ensure consistency within the produced code and testing of our software. Having all members using VS Code also allows for the use of software such as Live Share for collaborative development to improve efficiency within development.
 
 \subsection{Version Control}
 Git will be used for version control, using a clear and simple branching strategy that allows members to easily work on distinct components of our system while also allowing the reverting to previous versions as a 'fail-safe'. Meanwhile, GitHub will be used to host the Git repository.
@@ -755,7 +755,7 @@ We will perform various forms of automated testing to ensure the quality of our 
 For deployment, our clients have provided a Linux-based virtual machine where we can deploy our software. We will use one virtual machine for the testing environment and another for the production environment (accessible with different domain names) to ensure a separation of concerns. Additionally, a domain may be acquired for ease of customer access to the software.
 
 \subsection{Machine Learning and AI}
-We will make use of a variety of open source, freely available, pretrained sentiment analysis models. The BERT-style models are to be sourced from Hugging Face, while VADER is already available through the "vader" Python library.
+We will make use of a variety of open source, freely available, pre-trained sentiment analysis models. The BERT-style models are to be sourced from Hugging Face, while VADER is already available through the "vader" Python library.
 
 \subsection{Collaboration and Communication Tools}
 To ensure effective communication within our team, we have a private WhatsApp group for important announcements, a private Discord server for more specific announcements and discussions, and a private Signal group for sharing sensitive information such as secret keys, and a GitHub Project Board to track work progress. For communication with our clients, we have set up a Slack workspace for quick communication.

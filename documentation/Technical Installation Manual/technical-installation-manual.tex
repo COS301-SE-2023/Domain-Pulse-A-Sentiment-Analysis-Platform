@@ -17,7 +17,7 @@
 
 \section{Introduction}
 The following is a Technical Installation Manual for COS301 capstone project, Domain Pulse - A Sentiment Analysis Platform. Domain Pulse is
-a system designed to fetch, analyse, aggregate, and present results of sentiment analysis on publically available data pertaining to
+a system designed to fetch, analyse, aggregate, and present results of sentiment analysis on publicly available data pertaining to
 businesses, products, places, and more! Sources of data include (but are not limited to) Google reviews, TripAdvisor and Youtube.
 
 This installation guide details how to setup and install the system locally. The system uses a Django backend (consisting of 5 independently deployable projects),
@@ -29,13 +29,13 @@ security purposes, this guide will not provide details or keys for connecting to
 of the application.
 
 Once again, this is not the recommended approach for using the application. Instead, is it recommended that one interacts with the hosted web
-application available at: \texttt{www.domainpulse.app}
+application available at: \texttt{domainpulse.app}
 
 \subsection{Recommended - Using the Domain Pulse web app}
-In order to interact with the web app hosted at www.domainpulse.app, no configuration or installation is required. The only
+In order to interact with the web app hosted at domainpulse.app, no configuration or installation is required. The only
 prerequisites are: a modern web browser (Brave, Firefox, or Google Chrome recommended) and a stable Internet connection. This is the
-intended and preferred approach for using the application. Simply use your browser to navigate to www.domainpulse.app, and make use of
-our User Manual (link provided at end of document) and in-app help page to familiarise yourself with the application. Please note that
+intended and preferred approach for using the application. Simply use your browser to navigate to domainpulse.app, and make use of
+our User Manual (link provided at end of document) and in-app help page to familiarize yourself with the application. Please note that
 the web app is built for a standard laptop or desktop display and consequently the app may not render correctly on a mobile viewport.
 
 
@@ -157,7 +157,7 @@ This will install all the necessary dependencies into a local virtual environmen
 
 Note: Some of the dependencies are fairly sizable. Depending on Internet speeds, this process may take a few minutes.
 
-The full list of dependencies that will be installed can be found in the the file backend/Pipfile. Furthemore, to see the specific versions you may issue the CLI command:\\
+The full list of dependencies that will be installed can be found in the the file backend/Pipfile. Furthermore, to see the specific versions you may issue the CLI command:\\
 \texttt{pipenv graph} 
 
 Note that each dependency may have its own sub-dependencies. These too will be installed via \texttt{pipenv install}
@@ -170,7 +170,7 @@ A list of the dependencies that will be installed (along with their appropriate 
 
 
 \subsection{Configuring the application for local deployment}
-Domain Pulse is a web application deployed to a private virtual machine provded by our industry client. Consequently, the default
+Domain Pulse is a web application deployed to a private virtual machine provided by our industry client. Consequently, the default
 configuration of the application is set to interact with this server via secure channels. For security reasons, this guide details how to configure
 the application for local deployment only, and no credentials will be provided.
 
@@ -222,7 +222,7 @@ regarding service ports and external service API keys.
 
 \section{Deployment and Running}
 Once all previous steps have been followed and completed, and PostgreSQL and MongoDB are running, the application may be run locally. To do so,
-the depolyment of the backend and frontend is done separately.
+the deployment of the backend and frontend is done separately.
 \subsection{Backend}
 In terminal, navigate to the 'backend' directory. To deploy the backend, issue the following commands:\\ \texttt{pipenv shell}
 \\Next: \texttt{cd scripts}\\
@@ -235,7 +235,7 @@ The web app will be deployed locally to localhost:4200
 
 \subsection{Using the app}
 Using your chosen web browser, enter localhost:4200 into the browser. Welcome to Domain Pulse! Now that you've got our application
-up and running locally, feel free to consult our User Manual or make use of our in-app help page to familiarise yourself with the application.
+up and running locally, feel free to consult our User Manual or make use of our in-app help page to familiarize yourself with the application.
 
 \section{Link to User Manual}
 The Domain Pulse User Manual can be found at: \url{https://drive.google.com/file/d/1RfX-JaYZYNz132iGOhiku9E_y4466YqW/view?usp=sharing}
