@@ -232,7 +232,7 @@ export class GraphSelectorComponent implements OnInit {
           stacked: true,
           events: {
             selection: function (chart: any, e: any) {
-              console.log(new Date(e.xaxis.min));
+              // console.log(new Date(e.xaxis.min));
             },
           },
         },
@@ -795,7 +795,7 @@ export class GraphSelectorComponent implements OnInit {
   }
 
   public processOverallSentiment(data: any) {
-    console.log(data);
+    // console.log(data);
     if (data) {
       if (data.aggregated_metrics.general.category != 'No data') {
         this.updatedGraphArray = this.assignGraphData(
@@ -804,7 +804,7 @@ export class GraphSelectorComponent implements OnInit {
           this.chartOptionsArray
         );
         setTimeout(() => {
-          console.log('rendering graph after fetching data');
+          // console.log('rendering graph after fetching data');
           this.renderGraph();
         }, 300);
       }
@@ -879,14 +879,14 @@ processOverallSetniment(data) {
     const aggregatedMetrics = aggregated_metrics;
     const timeseriesData = timeseries;
 
-    console.log('timeseries data');
-    console.log(timeseriesData);
+    // console.log('timeseries data');
+    // console.log(timeseriesData);
 
-    console.log('aggregated metrics');
-    console.log(aggregatedMetrics);
+    // console.log('aggregated metrics');
+    // console.log(aggregatedMetrics);
 
-    console.log('graph array');
-    console.log(graphArray);
+    // console.log('graph array');
+    // console.log(graphArray);
 
     const score = aggregatedMetrics.general.score * 100;
     graphArray[0][0].series = [score];
@@ -941,8 +941,8 @@ processOverallSetniment(data) {
       tempArray.push([timeseriesData.num_records[timeseriesData.num_records.length - 1][0], timeseriesData.toxicity[timeseriesData.toxicity.length - 1][1]]);
     } 
     
-    console.log('temp array');
-    console.log(tempArray);
+    // console.log('temp array');
+    // console.log(tempArray);
 
     graphArray[3][1].series[1].data = tempArray;
 
@@ -984,12 +984,12 @@ processOverallSetniment(data) {
   }
 
   renderGraph() {
-    console.log(
-      'rendering graph at stat index: ' +
-        this.currentStatisticIndex +
-        ' and graph index: ' +
-        this.currentGraphIndex
-    );
+    // console.log(
+    //   'rendering graph at stat index: ' +
+    //     this.currentStatisticIndex +
+    //     ' and graph index: ' +
+    //     this.currentGraphIndex
+    // );
 
     const container = this.chartContainer.nativeElement;
     const containerHeight = container.offsetHeight;

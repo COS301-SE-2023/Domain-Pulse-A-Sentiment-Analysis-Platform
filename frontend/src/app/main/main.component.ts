@@ -271,8 +271,8 @@ export class MainComponent implements OnInit {
   checkForData() {
     //loop through and print all the domain sources
     this.selectedDomain?.sources.forEach((source) => {
-      console.log('source here');
-      console.log(source);
+      // console.log('source here');
+      // console.log(source);
     });
   }
 

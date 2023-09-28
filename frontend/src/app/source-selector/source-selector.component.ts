@@ -65,8 +65,8 @@ export class SourceSelectorComponent implements OnInit {
 
   uploadFile(event: any) {
     this.newCSVFile = event.target.files[0];
-    console.log('this.newCSVFile: ')
-    console.log(this.newCSVFile)
+    // console.log('this.newCSVFile: ')
+    // console.log(this.newCSVFile)
   }
 
   copyToClipboard() {
@@ -81,9 +81,9 @@ export class SourceSelectorComponent implements OnInit {
     this.store.dispatch(new SetAllSourcesSelected(false));
     this.store.dispatch(new SetSourceIsLoading(true));
     this.store.dispatch(new SetSource(source));
-    console.log('source: ' + source.id);
-    console.log('source: ' + source.name);
-    console.log(source.params);
+    // console.log('source: ' + source.id);
+    // console.log('source: ' + source.name);
+    // console.log(source.params);
 
   }
 
@@ -95,9 +95,9 @@ export class SourceSelectorComponent implements OnInit {
 
   addNewSource() {
     var params = this.determineSourceParams();
-    console.log('params: ' + params);
-    console.log('platform: ' + this.newSourcePlatform);
-    console.log('name: ' + this.newSourceName);
+    // console.log('params: ' + params);
+    // console.log('platform: ' + this.newSourcePlatform);
+    // console.log('name: ' + this.newSourceName);
 
     if ((this.newSourcePlatform != 'livereview' && this.newSourcePlatform != 'csv') && this.newSourceUrl == '') {
       this.store.dispatch(new ToastError('Please add a URL'));
@@ -205,10 +205,10 @@ export class SourceSelectorComponent implements OnInit {
             video_id: url,
           };
         }
-        console.log('url: ' + url);
+        // console.log('url: ' + url);
         const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|watch\?&v=)([^#&?]+).*/;
         const match = url.match(regExp);
-        console.log('match: ' + match);
+        // console.log('match: ' + match);
 
         return {
           source_type: 'youtube',
@@ -423,7 +423,7 @@ export class SourceSelectorComponent implements OnInit {
   }
 
   toggleActive(event: any) {
-    console.log('onValueChange', event);
+    // console.log('onValueChange', event);
     const selectedSource = this.store.selectSnapshot(AppState.selectedSource);
     
     this.store.dispatch(new SetIsActive(!selectedSource?.params));

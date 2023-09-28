@@ -128,7 +128,7 @@ export class SidebarComponent implements OnInit {
   logoState = 'small';
   _expanded = false;
   @Input() set expanded(value: boolean) {
-    console.log('lets be serious');
+    // console.log('lets be serious');
 
     if (value) {
       this.smallLogoState = 'out';
@@ -533,12 +533,12 @@ export class SidebarComponent implements OnInit {
   }
 
   selectIcon(icon: string) {
-    console.log('domain icon:' + icon);
+    // console.log('domain icon:' + icon);
     this.newDomainImageName = icon;
   }
 
   selectIconEdit(icon: string) {
-    console.log('domain icon:' + icon);
+    // console.log('domain icon:' + icon);
     this.editDomainImageName = icon;
   }
 
@@ -653,7 +653,7 @@ export class SidebarComponent implements OnInit {
       this.selectedFile,
       filename,
       () => {
-        console.log('Image uploaded successfully.');
+        // console.log('Image uploaded successfully.');
       }
     );
 
@@ -714,7 +714,7 @@ export class SidebarComponent implements OnInit {
       this.selectedFileDomain,
       filename,
       () => {
-        console.log('Image uploaded successfully.');
+        // console.log('Image uploaded successfully.');
       }
     );
 
@@ -756,7 +756,7 @@ export class SidebarComponent implements OnInit {
       this.selectedFileDomainEdit,
       filename,
       () => {
-        console.log('Image uploaded successfully.');
+        // console.log('Image uploaded successfully.');
       }
     );
 

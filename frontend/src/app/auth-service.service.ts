@@ -11,8 +11,8 @@ export class AuthService {
   isAuthenticated(): Observable<boolean> {
     return this.appApi.checkAuthenticate().pipe(
       map((res) => {
-        console.log('in auth service');
-        console.log(res);
+        // console.log('in auth service');
+        // console.log(res);
         return res['status'] === 'SUCCESS';
       })
     );
