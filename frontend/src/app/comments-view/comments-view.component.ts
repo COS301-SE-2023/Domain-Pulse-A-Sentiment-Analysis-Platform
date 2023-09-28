@@ -119,8 +119,6 @@ export class CommentsViewComponent{
 
   // Categorize the non-toxic comments
   nonToxicComments.forEach((comment) => {
-    console.log('comment:');
-    console.log(comment);
 
     if (comment.ratings[1].includes('positive')) {
       this.positiveComments.push(comment);
@@ -263,8 +261,6 @@ export class CommentsViewComponent{
 
   filterAccordionByText() {
 
-    console.log('filtering accordion by text:' + this.searchTerm)
-
     const textToFilter = this.searchTerm;
     const shownCategories = new Set();
 
@@ -276,11 +272,8 @@ export class CommentsViewComponent{
       }
 
     if (!this.accordionItems) return;
-    console.log('accordion items:')
-    console.log(this.accordionItems)
 
     if (!textToFilter) {
-      console.log('no text to filter')
       this.showInitialCommentsPositive = 10;
       this.showInitialCommentsNegative = 10;
       this.showInitialCommentsNeutral = 10;
@@ -320,10 +313,6 @@ export class CommentsViewComponent{
 
       atleastOne = arr[0];
       accordionHasMatchingComment = arr[1];
-      console.log('text to filter: ' + textToFilter)
-
-      console.log('showComments returned:')
-      console.log(arr)
 
     });
 
@@ -338,7 +327,6 @@ export class CommentsViewComponent{
     comments.forEach((comment: any) => {
       const commentText = comment.innerText.toLowerCase();
       if (commentText.includes(textToFilter.toLowerCase())) {
-        console.log('comment text includes text to filter:' + commentText + ' ' + textToFilter)
         atleastOne = true;
         comment.classList.remove('hide-element');
         accordionHasMatchingComment = true;

@@ -1629,8 +1629,11 @@ export class AppState {
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
+    console.log('formatting response sources')
+
 
     for (let responseSource of responseSources) {
+      console.log(responseSource);
       let sourceUrl: any = '';
       if (responseSource.params.video_id) {
         sourceUrl = responseSource.params.video_id;
@@ -1640,6 +1643,8 @@ export class AppState {
         sourceUrl = responseSource.params.tripadvisor_url;
       } else if (responseSource.params.is_active){
         sourceUrl = responseSource.params.is_active;
+      } else if(responseSource.params.query_url){
+        sourceUrl = 'https://www.trustpilot.com/review/' + responseSource.params.query_url;
       }
 
       console.log(responseSource);

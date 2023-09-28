@@ -83,6 +83,8 @@ export class SourceSelectorComponent implements OnInit {
     this.store.dispatch(new SetSource(source));
     console.log('source: ' + source.id);
     console.log('source: ' + source.name);
+    console.log(source.params);
+
   }
 
   selectAllSources(){
