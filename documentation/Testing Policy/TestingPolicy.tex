@@ -190,13 +190,27 @@ Scalability refers to the capability for our system to work under heavier loads.
 The following metrics are used to quantify the scalability of the system.
 \begin{itemize}
     \item \textbf{Load Tested Response Time} - Similarly to testing response time in the testing of performance, we will measure the average time taken for the system to respond to main requests made within the system. However, unlike our performance testing, we will be testing these endpoints under many different loads, such as while processing 50, 100 or 1000 concurrent requests.
+          The way in which we will achieve this is by sending varying numbers of concurrent reviews to a live source, and measuring the response time of each request. These results need to have a maximum response time, under the minimum requirement.
 \end{itemize}
 \subsubsection{Results}
 The following results have been collected from the system, and are used to determine the scalability of the system:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Scalability.png}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Average Time vs Maximum Required Time.png}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Maximum Time vs Maximum Required Time.png}
+\end{figure}
+It is clear from the above graphs that the system is sufficiently scalable, as the average response time of the system is well below the requirement, and the maximum response time is also well below the minimum requirement, with the gradient of the graph allowing for larger loads to meet their respective requirement.
 
 \newpage
 \subsection{Modifiability}
-Modifiability is an important quality requirement within our project, due to the need for multiple services that perform semi-independent functions, and the need for these services to be easily maintained and extinsible.
+Modifiability is an important quality requirement within our project, due to the need for multiple services that perform semi-independent functions, and the need for these services to be easily maintained and extensible.
 \subsubsection{Quantification}
 The metric used to quantify the Modifiability of the system will be the Maintainability index and Cyclomatic Complexity values. Cyclomatic Complexity refers to the complexity of a program and uses the number of linearly-independent paths through a program module to determine how risky, understandable and simple to modify a codebase is, where the equation is:
 \begin{equation}
