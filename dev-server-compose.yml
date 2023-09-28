@@ -16,7 +16,7 @@ services:
       - "7000:8000"
     restart: always
     command: >
-      sh -c "python manage.py runserver"
+      sh -c "uwsgi --ini domains.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
@@ -37,7 +37,7 @@ services:
       - "7001:8001"
     restart: always
     command: >
-      sh -c "python manage.py runserver"
+      sh -c "uwsgi --ini engine.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
@@ -58,7 +58,7 @@ services:
       - "7002:8002"
     restart: always
     command: >
-      sh -c "python manage.py runserver"
+      sh -c "uwsgi --ini profiles.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
@@ -79,7 +79,7 @@ services:
       - "7003:8003"
     restart: always
     command: >
-      sh -c "python manage.py runserver"
+      sh -c "uwsgi --ini sourceconnector.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
@@ -100,7 +100,7 @@ services:
       - "7004:8004"
     restart: always
     command: >
-      sh -c "python manage.py runserver"
+      sh -c "uwsgi --ini warehouse.uwsgi.ini"
     volumes:
       - uwsgi_data:/tmp/uwsgi/
     networks:
