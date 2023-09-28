@@ -13,6 +13,20 @@
     <a href="https://github.com/orgs/COS301-SE-2023/projects/6"><strong>📌Our Project Board »</strong></a>
     
   </p>
+  Documentation
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/User%20Manual/Version%201/Domain_Pulse_User_Manual_2.pdf"><strong>User Manual</strong></a>
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Coding%20Standards/CodingStandards.pdf"><strong>Coding Standards</strong></a>
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Testing%20Policy/TestingPolicy.pdf"><strong>Testing Policy Doc</strong></a>
+  <br />
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/SRS/Version%204%20(Demo%204)/SRS.pdf"><strong>SRS</strong></a>
+  <br />
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf"><strong>Technical Installation Manual</strong></a>
+  <br />
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Sentiment_Analysis_Breakdown.pdf">Sentiment Analysis Explanation</strong></a>
+
 </div>
 
 ![Asset 4@1x](https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/d5a6490c-aa2c-4747-9efa-3f5e0e779fe2)
