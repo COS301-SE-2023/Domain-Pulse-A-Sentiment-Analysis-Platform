@@ -1283,6 +1283,14 @@ export class AppState {
       .pipe(
         switchMap((res) => {
           if (res.status === 'SUCCESS') {
+            let canEdit = localStorage.getItem('canEdit');
+            if(canEdit != null) {
+              ctx.patchState({
+                canEdit: true
+              });
+              localStorage.setItem('canEdit', 'true');
+            }
+
             this.store.dispatch(new ToggleTutorialModal());
             localStorage.setItem('JWT', res.JWT);
             this.store.dispatch(new ToastSuccess('Account created successfully!'));
