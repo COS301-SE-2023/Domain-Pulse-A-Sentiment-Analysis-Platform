@@ -23,13 +23,19 @@ def handle_request(file):
         return {"status": "FAILURE", "details": "Invalid CSV file provided"}
 
     for row in csv_reader:
-        datetime_object = datetime.strptime(row["time"], "%Y-%m-%dT%H:%M:%SZ")
-        last_updated_timestamp = datetime_object.timestamp()
-        # Preprocessing here
-        row["reviews"] = unidecode(row["reviews"])
-        review_text = bleach.clean(row["reviews"])
+        try:
+            datetime_object = datetime.strptime(row["time"], "%Y-%m-%dT%H:%M:%SZ")
 
-        reviews.append({"text": review_text, "timestamp": int(last_updated_timestamp)})
+            last_updated_timestamp = datetime_object.timestamp()
+            # Preprocessing here
+            row["reviews"] = unidecode(row["reviews"])
+            review_text = bleach.clean(row["reviews"])
+
+            reviews.append(
+                {"text": review_text, "timestamp": int(last_updated_timestamp)}
+            )
+        except:
+            return {"status": "FAILURE", "details": "Invalid date format"}
 
     return {
         "status": "SUCCESS",
