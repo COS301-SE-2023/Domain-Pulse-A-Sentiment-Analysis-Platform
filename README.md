@@ -29,7 +29,7 @@
   <br />
 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/ADD/ArchitecturalDesignDocument.pdf">Architectural Design Document</strong></a>
   <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/ADD/ArchitecturalDesignDocument.pdf">Architectural Design Document</strong></a>
+
 </div>
 
 
