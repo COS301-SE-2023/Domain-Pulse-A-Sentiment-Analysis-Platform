@@ -1,5 +1,11 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { Actions, NgxsModule, StateContext, Store, ofActionDispatched } from '@ngxs/store';
+import {
+  Actions,
+  NgxsModule,
+  StateContext,
+  Store,
+  ofActionDispatched,
+} from '@ngxs/store';
 import {
   AppState,
   DisplayDomain,
@@ -268,7 +274,7 @@ describe('AppState', () => {
 
     const actualDomains = store.selectSnapshot(AppState.domains);
     expect(actualDomains).toEqual(expectedDomains);
-  }); 
+  });
 
   it('should dispatch ToastError when no selected source to edit', (done: DoneFn) => {
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
@@ -367,16 +373,15 @@ describe('AppState', () => {
 
     store.dispatch(new SetSource(mockSources[1]));
 
-    
     store.select(AppState.sources).subscribe((sources) => {
-      if(!sources) return;
+      if (!sources) return;
 
-      if(sources[1].selected) {
+      if (sources[1].selected) {
         expect(sources[0].selected).toEqual(false);
         done();
       }
     });
-    
+
     // setTimeout(() => {
     //   const actualSelectedSource = store.selectSnapshot(
     //     AppState.selectedSource
@@ -401,7 +406,7 @@ describe('AppState', () => {
       sourceIds: [],
       sources: [],
     };
-  
+
     const mockSuccessfullResponse: any = {
       status: 'SUCCESS',
       domain: {
@@ -424,10 +429,10 @@ describe('AppState', () => {
         new_source_id: '2',
       },
     };
-  
+
     // Reset the state with a selected domain
     store.reset({ app: { selectedDomain: mockDomain, domains: [mockDomain] } });
-  
+
     // Mock an array of domains for ctx.getState().domains
     const mockDomains: DisplayDomain[] = [
       {
@@ -449,11 +454,11 @@ describe('AppState', () => {
         sources: [],
       },
     ];
-  
+
     apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
     apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
-  
+
     actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
       const actualSources = store.selectSnapshot(AppState.sources);
       if (!actualSources) {
@@ -461,20 +466,24 @@ describe('AppState', () => {
         return;
       }
       expect(actualSources.length).toEqual(1);
-  
-      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+
+      const actaulSelectredomain = store.selectSnapshot(
+        AppState.selectedDomain
+      );
       if (!actaulSelectredomain) {
         fail();
         return;
       }
       expect(actaulSelectredomain.sourceIds.length).toEqual(1);
-  
+
       // Now, let's mock a state update with domains so that the uncovered lines are executed
-      store.reset({ app: { selectedDomain: mockDomain, domains: mockDomains } });
-  
+      store.reset({
+        app: { selectedDomain: mockDomain, domains: mockDomains },
+      });
+
       done();
     });
-  
+
     store.dispatch(
       new AddNewSource('newSourceName', 'newSOurcePlatform', {
         platform: 'youtube',
@@ -551,9 +560,15 @@ describe('AppState', () => {
       ],
     };
 
-    const expectedPatchedDomains: DisplayDomain[] = [selectedDomain, mockDomain2]; // The selectedDomain should replace mockDomain1
+    const expectedPatchedDomains: DisplayDomain[] = [
+      selectedDomain,
+      mockDomain2,
+    ]; // The selectedDomain should replace mockDomain1
 
-    const patchedDomains = AppState.findPatchDomain(mockDomains, selectedDomain);
+    const patchedDomains = AppState.findPatchDomain(
+      mockDomains,
+      selectedDomain
+    );
 
     // Ensure that the patchedDomains array matches the expectedPatchedDomains
     expect(patchedDomains).toEqual(expectedPatchedDomains);
@@ -610,12 +625,14 @@ describe('AppState', () => {
       sources: [],
     };
 
-    const patchedDomains = AppState.findPatchDomain(mockDomains, selectedDomain);
+    const patchedDomains = AppState.findPatchDomain(
+      mockDomains,
+      selectedDomain
+    );
 
     // Ensure that the function returns undefined when the selected domain is not found
     expect(patchedDomains).toBeUndefined();
   });
-  
 
   it('should react correctly to successful "AddNewSource" event', (done: DoneFn) => {
     const mockDomain: DisplayDomain = {
@@ -683,7 +700,6 @@ describe('AppState', () => {
     );
   });
 
-
   it('should react correctly to successful "AddNewSource" event with defined domains', (done: DoneFn) => {
     const mockDomain: DisplayDomain = {
       id: '1',
@@ -694,7 +710,7 @@ describe('AppState', () => {
       sourceIds: [],
       sources: [],
     };
-  
+
     const mockSuccessfullResponse: any = {
       status: 'SUCCESS',
       domain: {
@@ -717,7 +733,7 @@ describe('AppState', () => {
         new_source_id: '2',
       },
     };
-  
+
     // Mock an array of domains for ctx.getState().domains
     const mockDomains: DisplayDomain[] = [
       {
@@ -739,14 +755,14 @@ describe('AppState', () => {
         sources: [],
       },
     ];
-  
+
     // Reset the state with a selected domain and defined domains
     store.reset({ app: { selectedDomain: mockDomain, domains: mockDomains } });
-  
+
     apiSpy.addSource.and.returnValue(of(mockSuccessfullResponse));
     apiSpy.getSourceSentimentData.and.returnValue(of({ status: 'FAILURE' }));
     apiSpy.refreshSourceInfo.and.returnValue(of({ status: 'FAILURE' }));
-  
+
     actions$.pipe(ofActionDispatched(RefreshSourceData)).subscribe(() => {
       const actualSources = store.selectSnapshot(AppState.sources);
       if (!actualSources) {
@@ -754,17 +770,19 @@ describe('AppState', () => {
         return;
       }
       expect(actualSources.length).toEqual(1);
-  
-      const actaulSelectredomain = store.selectSnapshot(AppState.selectedDomain);
+
+      const actaulSelectredomain = store.selectSnapshot(
+        AppState.selectedDomain
+      );
       if (!actaulSelectredomain) {
         fail();
         return;
       }
       expect(actaulSelectredomain.sourceIds.length).toEqual(1);
-  
+
       done();
     });
-  
+
     store.dispatch(
       new AddNewSource('newSourceName', 'newSOurcePlatform', {
         platform: 'youtube',
@@ -824,9 +842,6 @@ describe('AppState', () => {
 
     store.dispatch(new RefreshSourceData());
   });
-
-  
-
 
   it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
     const mockSource: DisplaySource = {
@@ -889,7 +904,6 @@ describe('AppState', () => {
     };
     store.reset({ app: { selectedSource: mockSource } });
 
-
     actions$.pipe(ofActionDispatched(ToggleIsRefreshing)).subscribe(() => {
       expect(true).toBe(true);
     });
@@ -907,11 +921,11 @@ describe('AppState', () => {
     });
 
     done();
-    
+
     store.dispatch(new RefreshSourceData());
   });
 
-/*   it("should correctly refresh source successful 'RefreshSourceData' event", () => {
+  /*   it("should correctly refresh source successful 'RefreshSourceData' event", () => {
     const mockSource: DisplaySource = {
       id: '1',
       name: 'test',
@@ -928,7 +942,7 @@ describe('AppState', () => {
 
   }); */
 
- /*  it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
+  /*  it("should correctly refresh source successful 'RefreshSourceData' event", (done: DoneFn) => {
     const mockSource: DisplaySource = {
       id: '1',
       name: 'test',
@@ -986,7 +1000,7 @@ describe('AppState', () => {
     expect(actions$.dispatchedAction).toEqual(expectedActions);
   }); */
 
-  it("should handle an error and log it", () => {
+  it('should handle an error and log it', () => {
     const state = new TryRefresh('sourceId');
 
     // Configure the API service spy to return an error
@@ -1009,8 +1023,7 @@ describe('AppState', () => {
     expect(console.error).toHaveBeenCalledWith('Error:', 'Some error');
   });
 
-
-  it("should handle an error and log it", () => {
+  it('should handle an error and log it', () => {
     const state = new TryRefresh('sourceId');
 
     // Configure the API service spy to return an error
@@ -1026,7 +1039,6 @@ describe('AppState', () => {
   });
 
   it("should correctly toggle 'isRefreshing' property for a source", () => {
-
     const mockSource: DisplaySource = {
       id: '1',
       name: 'test',
@@ -1037,39 +1049,33 @@ describe('AppState', () => {
     };
     store.reset({ app: { selectedSource: mockSource } });
     const initialState = [
-        {
-          id: 'domain1',
-          sources: [
-            { id: 'source1', isRefreshing: false },
-            { id: 'source2', isRefreshing: false },
-          ],
-        },
-        {
-          id: 'domain2',
-          sources: [{ id: 'source3', isRefreshing: false }],
-        },
-      ];
+      {
+        id: 'domain1',
+        sources: [
+          { id: 'source1', isRefreshing: false },
+          { id: 'source2', isRefreshing: false },
+        ],
+      },
+      {
+        id: 'domain2',
+        sources: [{ id: 'source3', isRefreshing: false }],
+      },
+    ];
 
     store.reset({ app: { domains: initialState } });
 
     store.dispatch(new ToggleIsRefreshing(true, 'source1'));
 
-    const actualDomains = store.selectSnapshot(
-      AppState.domains
-    );
-
+    const actualDomains = store.selectSnapshot(AppState.domains);
 
     /* onst source1 = newState.domains[0].sources.find((s:any) => s.id === 'source1');
     const source2 = newState.domains[0].sources.find((s:any) => s.id === 'source2');
     const source3 = newState.domains[1].sources.find((s:any) => s.id === 'source3'); */
 
     expect(actualDomains![0].sources[0].isRefreshing).toBe(true);
-
   });
 
-
   it('should correctly get stats on a source', (done: DoneFn) => {
-
     // test above that correctly reacts to not having a selected source
 
     const mockSource: DisplaySource = {
@@ -1086,14 +1092,13 @@ describe('AppState', () => {
 
     store.dispatch(new GetSourceDashBoardInfo()).subscribe(() => {
       // Ensure that the state is updated correctly
-      const appState = store.selectSnapshot(state => state.app);
+      const appState = store.selectSnapshot((state) => state.app);
       expect(true).toBe(true);
       done();
     });
-    
   });
 
- /*  it('should correctly get stats on a source on SUCCESS', (done: DoneFn) => {
+  /*  it('should correctly get stats on a source on SUCCESS', (done: DoneFn) => {
 
 
     const mockSource: DisplaySource = {
@@ -1168,16 +1173,16 @@ describe('AppState', () => {
         },
       },
     };
-  
+
     apiSpy.getSourceSentimentData.and.returnValue(of(mockResponse));
-  
+
     // Set the selected source URL to trigger "No data" scenario
     store.reset({ app: { selectedSource: { url: 'live-review-logo.png' } } });
-  
+
     // Call the method
     store.dispatch(new GetSourceDashBoardInfo()).subscribe(() => {
       // Ensure that the state is updated correctly
-      const appState = store.selectSnapshot(state => state.app);
+      const appState = store.selectSnapshot((state) => state.app);
       expect(appState.noData).toBe(true);
       done();
     });
@@ -1193,21 +1198,21 @@ describe('AppState', () => {
         },
       },
     };
-  
+
     apiSpy.getSourceSentimentData.and.returnValue(of(mockResponse));
-  
+
     // Set the selected source URL to trigger "No data" scenario
     store.reset({ app: { selectedSource: { url: 'csv-logo.png' } } });
-  
+
     // Call the method
     store.dispatch(new GetSourceDashBoardInfo()).subscribe(() => {
       // Ensure that the state is updated correctly
-      const appState = store.selectSnapshot(state => state.app);
+      const appState = store.selectSnapshot((state) => state.app);
       expect(appState.noData).toBe(true);
       done();
     });
   });
-  
+
   it('should handle the "SUCCESS" scenario correctly', (done: DoneFn) => {
     // Mock the necessary data
     const mockResponse = {
@@ -1219,20 +1224,18 @@ describe('AppState', () => {
         // Other response properties as needed
       },
     };
-  
+
     apiSpy.getSourceSentimentData.and.returnValue(of(mockResponse));
-  
+
     // Call the method
     store.dispatch(new GetSourceDashBoardInfo()).subscribe(() => {
       // Ensure that the state is updated correctly
-      const appState = store.selectSnapshot(state => state.app);
+      const appState = store.selectSnapshot((state) => state.app);
       expect(appState.noData).toBe(false);
       // Add more assertions as needed for the updated state
       done();
     });
   });
-
-  
 
   it('React correctly positive "AttempPsswdLogin"  event', (done: DoneFn) => {
     apiSpy.attemptPsswdLogin.and.returnValue(of({ status: 'SUCCESS' }));
@@ -1619,45 +1622,45 @@ describe('AppState', () => {
 
     store.reset({ app: { selectedSource: mockSource, sources: [mockSource] } });
 
-
     store.dispatch(new UplaodCVSFile(mockFile));
   });
   it('should handle successful report generation', (done: DoneFn) => {
     const domainId = '650579d05ce2576d38fcd99a';
 
     apiSpy.generateReport.and.returnValue(
-      of({ status: 'SUCCESS', url: 'https://example.com/report.pdf',})
+      of({ status: 'SUCCESS', url: 'https://example.com/report.pdf' })
     );
 
     // set the profile
 
-    store.reset({ app: { pdfLoading: true, pdfUrl: 'empty', showReportGeneratorModal: true} });
+    store.reset({
+      app: {
+        pdfLoading: true,
+        pdfUrl: 'empty',
+        showReportGeneratorModal: true,
+      },
+    });
 
     actions$.pipe(ofActionDispatched(ToastSuccess)).subscribe(() => {
       const pdfLoading = store.selectSnapshot(AppState.pdfLoading);
-      const pdfUrl= store.selectSnapshot(AppState.pdfUrl);
+      const pdfUrl = store.selectSnapshot(AppState.pdfUrl);
       expect(pdfLoading).toEqual(false);
-      expect(pdfUrl).toEqual(
-        'https://example.com/report.pdf'
-      );
+      expect(pdfUrl).toEqual('https://example.com/report.pdf');
 
       done();
     });
 
     store.dispatch(new GenerateReport(domainId));
-
   });
-
-  
-
 
   it('should handle failed report generation', (done: DoneFn) => {
     const domainId = '650579d05ce2576d38fcd99a';
 
-    apiSpy.generateReport.and.returnValue(of({ status: 'FAILURE', details: "Report could not be generated" }));
+    apiSpy.generateReport.and.returnValue(
+      of({ status: 'FAILURE', details: 'Report could not be generated' })
+    );
 
-    store.reset({ app: { showReportGeneratorModal: true} });
-
+    store.reset({ app: { showReportGeneratorModal: true } });
 
     actions$.pipe(ofActionDispatched(ToastError)).subscribe(() => {
       const state = store.selectSnapshot((state) => state);
@@ -1669,7 +1672,6 @@ describe('AppState', () => {
 
     store.dispatch(new GenerateReport(domainId));
   });
-
 
   it('should correctly format the response from the server to a DisplaySOurce', () => {
     let mockResponseSources: any[] = [
@@ -1713,6 +1715,16 @@ describe('AppState', () => {
           is_active: true,
         },
       },
+      {
+        source_id: '64b940ec9bbccdb7731b81f9',
+        source_name: 'Primegen survey',
+        source_icon: 'trustpilot-logo.png',
+        last_refresh_timestamp: 1689878247.0,
+        params: {
+          query_url: 'takealot.com',
+          source_type: 'trustpilot',
+        },
+      },
     ];
 
     let expected: DisplaySource[] = [
@@ -1748,6 +1760,14 @@ describe('AppState', () => {
         selected: false,
         isRefreshing: false,
       },
+      {
+        id: '64b940ec9bbccdb7731b81f9',
+        name: 'Primegen survey',
+        url: 'trustpilot-logo.png',
+        params: 'https://www.trustpilot.com/review/takealot.com',
+        selected: false,
+        isRefreshing: false,
+      },
     ];
 
     let actual = AppState.formatResponseSources(mockResponseSources);
@@ -1766,9 +1786,7 @@ describe('AppState', () => {
       'tripadvisor-logo.png'
     );
     expect(AppState.platformToIcon('youtube')).toEqual('youtube-logo.png');
-    expect(AppState.platformToIcon('googlereviews')).toEqual(
-      'google-logo.png'
-    );
+    expect(AppState.platformToIcon('googlereviews')).toEqual('google-logo.png');
     expect(AppState.platformToIcon('livereview')).toEqual(
       'live-review-logo.png'
     );
@@ -1830,18 +1848,18 @@ describe('AppState', () => {
 
   it('should dispatch ToastError and GetDomains actions on API failure', (done: DoneFn) => {
     const domainID = 'your-domain-id';
-  
+
     apiSpy.removeDomain.and.returnValue(of({ status: 'FAILURE' }));
-  
+
     // Create observables for ToastError and GetDomains actions
     const toastError$ = actions$.pipe(ofActionDispatched(ToastError));
     const getDomains$ = actions$.pipe(ofActionDispatched(GetDomains));
-  
+
     combineLatest([toastError$, getDomains$]).subscribe(() => {
       expect(true).toBe(true);
       done();
     });
-  
+
     store.dispatch(new DeleteDomain(domainID));
   });
 
@@ -1930,7 +1948,9 @@ describe('AppState', () => {
 
     store.dispatch(new GuestModalChange(false));
 
-    const guestModal = store.selectSnapshot((state) => state.app.showMakAccountModal);
+    const guestModal = store.selectSnapshot(
+      (state) => state.app.showMakAccountModal
+    );
     expect(guestModal).toBe(false);
   });
 
@@ -1962,5 +1982,4 @@ describe('AppState', () => {
 
     store.dispatch(new AttempGuestLogin());
   });
-
 });

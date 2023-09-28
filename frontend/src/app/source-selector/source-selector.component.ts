@@ -83,6 +83,8 @@ export class SourceSelectorComponent implements OnInit {
     this.store.dispatch(new SetSource(source));
     console.log('source: ' + source.id);
     console.log('source: ' + source.name);
+    console.log(source.params);
+
   }
 
   selectAllSources(){
@@ -143,6 +145,12 @@ export class SourceSelectorComponent implements OnInit {
     /* this.newSourceName = '';
     this.newSourceUrl = '';
     this.showAddSourcesModal = false; */
+  }
+  
+  transformURL(): string {
+    let url= this.getLiveReviewLink();
+    url = url.replace(/\s+/g, '-').toLowerCase();
+    return url;
   }
 
   /* elif type_of_source.lower() == "livereview":

@@ -1190,6 +1190,7 @@ export class AppState {
   attempGuestLogin(ctx: StateContext<AppStateModel>, state: AttempGuestLogin) {
     this.appApi.attemptGuestLogin().subscribe((res) => {
       if(res.status === "SUCCESS") {
+        localStorage.setItem('wasGuest', 'true');
         this.store.dispatch(new AttempPsswdLogin('guest', res.guest_token));
       } else {
         this.store.dispatch(new ToastError('Preview disabled, please try again later'));
@@ -1282,6 +1283,14 @@ export class AppState {
       .pipe(
         switchMap((res) => {
           if (res.status === 'SUCCESS') {
+            let canEdit = localStorage.getItem('canEdit');
+            if(canEdit != null) {
+              ctx.patchState({
+                canEdit: true
+              });
+              localStorage.setItem('canEdit', 'true');
+            }
+
             this.store.dispatch(new ToggleTutorialModal());
             localStorage.setItem('JWT', res.JWT);
             this.store.dispatch(new ToastSuccess('Account created successfully!'));
@@ -1629,8 +1638,11 @@ export class AppState {
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
+    console.log('formatting response sources')
+
 
     for (let responseSource of responseSources) {
+      console.log(responseSource);
       let sourceUrl: any = '';
       if (responseSource.params.video_id) {
         sourceUrl = responseSource.params.video_id;
@@ -1640,6 +1652,8 @@ export class AppState {
         sourceUrl = responseSource.params.tripadvisor_url;
       } else if (responseSource.params.is_active){
         sourceUrl = responseSource.params.is_active;
+      } else if(responseSource.params.query_url){
+        sourceUrl = 'https://www.trustpilot.com/review/' + responseSource.params.query_url;
       }
 
       console.log(responseSource);
