@@ -742,8 +742,43 @@ Git will be used for version control, using a clear and simple branching strateg
 \subsection{Programming Languages}
 Within our team, all members have a high proficiency in coding in Python. Python is considered one of the best programming languages for Machine Learning and data analysis, which are aspects on which our system will heavily rely. Therefore, Python is our backend programming language of choice - along with the appropriate libraries for NLP, importing models, and other utility tasks. Frontend development will make use of standard languages: Typescript, CSS and HTML.
 
-\subsection{Frameworks and Libraries}
+\subsection{Frameworks}
 We have decided to use Django as our web framework for the creation of our app due to its simplicity, efficiency, and secure data transmission capabilities. Within our Django project, we will be utilizing Python's proficiency in data analysis and machine learning by using a variety of powerful libraries for sentiment analysis and Natural Language Processing. For the front-end development, we will be using Angular due to its versatility and ability to create high-quality user interfaces.
+
+\subsection{Libraries}
+A number of libraries will be employed throughout the application for various purposes, these are as follows:
+
+\subsubsection{Frontend (Angular)}
+\begin{itemize}
+  \item Apex Charts is a Javascript library that will be used to plot visuals and graphs. This library is able to easily construct attractive graphs with minimal code, and thus we will be making use of this graphing library rather than implementing our own graphing functions.
+  \item NGXS state management is used to predictably manage the state of our app's user interface. In modern applications, the use of state is is considered industry standard and hence we will make use of this library.
+\end{itemize}
+
+\subsubsection{Backend (Django)}
+\begin{itemize}
+  \item Python's 'NLTK' (Natural Language ToolKit) will be used to aid in the handling and preprocessing of textual data. This library will be employed for it's performance, convenience, and power regarding NLP.
+  \item 'vadersentiment' is a Python library that implements the VADER sentiment analysis model which is used as part of the sentiment analysis process in our application. This library is used as it would be infeasible, too costly, and too time-consuming to implement VADER or a similar lexicon-based sentiment analysis tool ourselves. 
+  \item The 'transformers' and 'torch' (Pytorch) libraries are required to import, construct, and implement the DistilBERT models that are used by our application. It would not be feasible to build neural network models of this complexity and scale ourselves. Furthermore, the need the expense associated with collecting sufficiently substantial and general training data, in addition to the computational expense associated with training a state of the art sentiment analysis mode, is outside the scale and scope of our project. Hence, libraries are used to implement this functionality.
+  \item 'djangorestframework-simplejwt' is a Django that allows us to generate secure JWTs - this is needed for the authorization and security aspect of our project and hence we are inclined to make use of a secure and extensively tested library for this purpose.
+  \item 'matplotlib' is a Python library used for plotting graphs in Python. Creating our own graph plotting library is outside the scope of our project, and thus a graphing library is far more suitable.
+  \item 'numpy' is a Python library that enable performance and powerful operations on large sets of data - this library is used to improve the slickness with which data is handled and does not implement major functionality.
+  \item 'pdfkit' is used for rendering HTML documents as PDFs. HTML to pdf conversion from first principles is a tedious task that falls outsides the project scope - hence we use this library to convert the HTML pages we construct into PDF reports.
+  \item 'bleach' is a highly tested and trusted library for input sanitization in Python - since this is a critical security function, we prefer to trust this functionality to a library rather than implement our own sanitization techniques.
+  \item The following libraries are required for simple utilities that would be grossly impractical to implement ourselves from first principles: \begin{itemize}
+    \item 'mock' - to mock out functions during unit testing
+    \item 'coverage' - to track code coverage
+    \item 'django-cors-headers'- for constructing cors headers
+    \item 'pymongo' - for connecting to a MongoDB instance from Python code
+    \item 'python-dotenv' - accessing .env file data
+    \item 'outscraper'- a library for integration with Outscraper's API (see 'Webscraping' below)
+    \item 'pytz' - Used for performing timezone conversions
+    \item 'psycopg2-binary' - general utilities for connecting to a Postgres database
+    \item 'azure-storage-blob' for connecting to Azure storage
+    \item 'shortuuid' - generating unique ID codes for documents
+    \item 'unidecode' - for decoding unsupported ASCII characters
+  \end{itemize}
+\end{itemize}
+
 
 \subsection{Database Systems}
 For our database systems, we will be using MongoDB as a document-based NoSQL database for data collection of comments, posts, and other content related to user data. Additionally, PostgreSQL will be used as an SQL database for storing user profiles and authentication data for ease of access and querying.
@@ -770,7 +805,7 @@ We will utilize CI/CD technologies such as Codecov and GitHub Actions to ensure 
 Our clients, Southern Cross Solutions, have provisioned a virtual machine for us to host our application. Furthermore, we will be making use of Microsoft Azure cloud services for resource hosting and backup application hosting.
 
 \subsection{Web Scraping}
-In order to comply with the terms of service of the platforms from which Domain Pulse collects data, we will make use of Outscraper, a third party web scraping tool, to perform scraping on various review platforms such as Google Reviews and Tripadvisor. To retrieve data from Youtube, we will make use of the freely available Youtube Data v3 API, which allows us to retrieve comments on videos. 
+In order to comply with the terms of service of the platforms from which Domain Pulse collects data, we will make use of Outscraper, a third party web scraping tool, to perform scraping on various review platforms such as Google Reviews and Tripadvisor. Furthermore, implementing a performant and secure webscraper that does not violate the terms of service of any online platform is a massive task that falls outside the scope of Domain Pulse - motivating the use of Outscraper. To retrieve data from Youtube, we will make use of the freely available Youtube Data v3 API, which allows us to retrieve comments on videos. 
 
 \newpage
 
