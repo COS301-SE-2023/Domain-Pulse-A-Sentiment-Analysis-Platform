@@ -16,7 +16,7 @@ export class GuestGuard implements CanActivate {
     | UrlTree {
     // Perform the redirection
     const currHost = window.location.host;
-    this.redirect(`${window.location.protocol}//${currHost}/login?u=guest`)
+    this.redirect(`${window.location.protocol}//${currHost}/login?u=guest`);
     // Return false to prevent the route from being activated as the redirection will handle it
     return false;
   }

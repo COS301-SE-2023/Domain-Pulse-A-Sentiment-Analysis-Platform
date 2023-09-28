@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { AttempPsswdLogin, RegisterUser, ToastSuccess } from '../app.actions';
+import { AttempPsswdLogin, Logout, RegisterUser, ToastSuccess } from '../app.actions';
 
 @Component({
   selector: 'app-register-page',
@@ -17,7 +17,17 @@ export class RegisterPageComponent {
   passwordVisible = false;
   confirmPasswordVisible = false;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store) {
+    const wasGuest = localStorage.getItem('wasGuest');
+    this.logoutIfSet(wasGuest);
+  }
+
+  logoutIfSet(wasGuest: string | null) {
+    if(wasGuest != null) {
+      localStorage.removeItem('wasGuest');
+      this.store.dispatch(new Logout());
+    }
+  }
 
   register() {
     // validate password and confirmPasswrod

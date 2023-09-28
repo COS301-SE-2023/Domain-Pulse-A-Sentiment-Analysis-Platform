@@ -21,12 +21,13 @@ export class LoginPageComponent {
     const u = this.activatedRoute.snapshot.queryParamMap.get('u');
     this.evaluateUser(u);
 
-    const c = this.activatedRoute.snapshot.queryParamMap.get('c');
-    this.logoutIfSet(c);
+    const wasGuest = localStorage.getItem('wasGuest');
+    this.logoutIfSet(wasGuest);
   }
 
-  logoutIfSet(c: string | null) {
-    if (c && c === 'clear') {
+  logoutIfSet(wasGuest: string | null) {
+    if(wasGuest != null) {
+      localStorage.removeItem('wasGuest');
       this.store.dispatch(new Logout());
     }
   }

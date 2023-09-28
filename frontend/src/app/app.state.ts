@@ -1190,6 +1190,7 @@ export class AppState {
   attempGuestLogin(ctx: StateContext<AppStateModel>, state: AttempGuestLogin) {
     this.appApi.attemptGuestLogin().subscribe((res) => {
       if(res.status === "SUCCESS") {
+        localStorage.setItem('wasGuest', 'true');
         this.store.dispatch(new AttempPsswdLogin('guest', res.guest_token));
       } else {
         this.store.dispatch(new ToastError('Preview disabled, please try again later'));
