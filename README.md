@@ -8,7 +8,7 @@
   Ctrl Alt Defeat - COS301 Capstone 2023
   <p align="center">
     <br />
-    <a href="https://drive.google.com/drive/folders/1zSW-OuHIACNZl0y2a_v52V0VZf3TP5I-?usp=sharing"><strong>📄Explore the docs»</strong></a>
+    <a href="https://drive.google.com/drive/folders/1s10aE2hZZ3AxrYnmbpiI-6pTMuPrP52z?usp=share_link"><strong>📄Explore the docs»</strong></a>
     <br />
     <a href="https://github.com/orgs/COS301-SE-2023/projects/6"><strong>📌Our Project Board »</strong></a>
     
