@@ -53,7 +53,7 @@
         <div class="flex-row" style="gap: 1rem">
           <button (click)="login()" class="button clickable-item" data-cy="logInButton">Log In <div [ngClass]="{ 'button-spinner': isSpinning }"></div></button>
           <p class="center" style="align-items: center; margin-top:auto; margin-bottom:auto; color:black;"> or </p>
-          <button onclick="window.open('../preview', '_blank')" class="button-2 clickable-item">Use as Guest</button>
+          <button onclick="window.open('../preview')" class="button-2 clickable-item">Use as Guest</button>
         </div>
         <div class="alternative-option">
           <p class="clickable-item"  routerLink="/register" data-cy="switchForNoAcc">Don't have an account?</p>
