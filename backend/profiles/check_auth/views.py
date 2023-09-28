@@ -276,6 +276,14 @@ def check_logged_in(request):
         else:
             return JsonResponse({"status": "FAILURE"})
 
+@csrf_exempt
+def try_guest_login(request):
+    if request.method == "POST":
+        guest_enabled = str(os.getenv("PREVIEW_ENABLED")) == "True"
+        if not guest_enabled:
+            return JsonResponse({"status": "FAILURE", "message": "Guest login is disabled"})
+        else:
+            return JsonResponse({"status": "SUCCESS", "guest_token": str(os.getenv("GUEST_PASS"))})
 
 def get_address(request):
     return request.META.get("REMOTE_ADDR")

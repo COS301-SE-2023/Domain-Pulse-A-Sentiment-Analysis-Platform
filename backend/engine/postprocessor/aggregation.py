@@ -5,9 +5,11 @@ import pytz
 def get_new_ema(current, old_ema, smoothing_factor):
     SMOOTHING_FACTOR = smoothing_factor
     if old_ema == -1:
-        return current
+        return current * 100
     else:
-        return round(current * SMOOTHING_FACTOR + old_ema * (1 - SMOOTHING_FACTOR), 4)
+        return round(
+            (current * 100) * SMOOTHING_FACTOR + old_ema * (1 - SMOOTHING_FACTOR), 4
+        )
 
 
 def produce_timeseries(individual_data: list):
@@ -24,13 +26,13 @@ def produce_timeseries(individual_data: list):
 
     overall_data_points = []
     num_sentiments = []
-    toxic_data_points = []
+    # toxic_data_points = {"toxic_count": [], "overall_helper": []}
     ratios_time_series = {"pos": [], "neu": [], "neg": []}
     emotions_time_series = {
         "anger": [],
         "sadness": [],
         "joy": [],
-        "digust": [],
+        "disgust": [],
         "fear": [],
         "surprise": [],
     }
@@ -40,7 +42,7 @@ def produce_timeseries(individual_data: list):
         "anger": -1,
         "sadness": -1,
         "joy": -1,
-        "digust": -1,
+        "disgust": -1,
         "fear": -1,
         "surprise": -1,
         "pos": -1,
@@ -51,21 +53,23 @@ def produce_timeseries(individual_data: list):
     # Lower = more smooth, less responsive
     # Higher = more erratic, very responsive
     SMOOTHING_FACTORS = {
-        "overall": 0.3,
-        "emotions_hit": 0.5,
-        "ratios": 0.3,
-        "emotions_miss": 0.2,
+        "overall": 0.15,
+        "emotions_hit": 0.18,
+        "ratios": 0.15,
+        "emotions_miss": 0.05,
     }
     cumulative_num_sentiments = 0
 
-    toxicity_tracker = {}
+    toxicity_tracker = []
+    total_toxic_count = 0
 
     for record in individual_data:
         stamp_unix = int(record["timestamp"])
-        timestamp = datetime.datetime.fromtimestamp(stamp_unix)
+        # timestamp = datetime.datetime.fromtimestamp(stamp_unix)
+        timestamp = datetime.datetime.utcfromtimestamp(stamp_unix)
         timestamp = timestamp.astimezone(pytz.timezone("Africa/Johannesburg"))
         stamp = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
-        day_stamp = timestamp.strftime("%Y-%m-%d")
+        # day_stamp = timestamp.strftime("%Y-%m-%d")
 
         # Overall
         if record["general"]["category"] != "UNDECIDED":
@@ -106,10 +110,8 @@ def produce_timeseries(individual_data: list):
 
         # Toxicity
         if record["toxicity"]["level_of_toxic"] == "Toxic":
-            if day_stamp in toxicity_tracker:
-                toxicity_tracker[day_stamp] = toxicity_tracker[day_stamp] + 1
-            else:
-                toxicity_tracker[day_stamp] = 1
+            total_toxic_count += 1
+            toxicity_tracker.append([stamp, total_toxic_count])
 
         # Ratios
         # Pos
@@ -141,11 +143,14 @@ def produce_timeseries(individual_data: list):
         ema_tracker["neg"] = new_neg_ema
 
     # Formatting toxicity
-    for day, count in toxicity_tracker.items():
-        toxic_data_points.append({"x": day, "y": count})
+    # for day, count in toxicity_tracker.items():
+    #     toxic_data_points["toxic_count"].append({"x": day, "y": count})
+    # toxic_data_points["overall_helper"] = [
+    #     {"x": ts, "y": sc} for ts, sc in overall_data_points
+    # ]
 
     retData["overall"] = overall_data_points
-    retData["toxicity"] = toxic_data_points
+    retData["toxicity"] = toxicity_tracker
     retData["num_records"] = num_sentiments
     retData["emotions"] = emotions_time_series
     retData["ratios"] = ratios_time_series

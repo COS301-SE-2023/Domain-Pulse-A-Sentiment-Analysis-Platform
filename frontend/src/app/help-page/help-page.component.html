@@ -1,0 +1,985 @@
+<div class="flex-column align-center" style="height: 100vh">
+  <div class="top-bar flex-column center">
+    <a
+      href="/"
+      class="flex-row center clickable-item"
+      style="
+        gap: 0.1rem;
+        text-decoration: none;
+        color: inherit;
+        margin-top: 2rem;
+      "
+      target="_blank"
+    >
+      <img
+        src="../../assets/logos/logo-small-white.png"
+        alt="domain pulse logo"
+        style="height: 3rem"
+      />
+      <p class="title">Help Page</p>
+    </a>
+    <!-- <h2><div class="dp-logo"></div>What do you need help with?</h2> -->
+    <div class="flex-row center" style="margin-top: 2rem; width: 50%">
+      <div class="search-container flex-row center">
+        <input
+          class="search-bar"
+          type="text"
+          placeholder="Search.."
+          name="search"
+          [(ngModel)]="searchTerm"
+          (keyup)="filterAccordionByText()"
+        />
+        <img
+          src="../../assets/icons/search.png"
+          alt="domain pulse logo"
+          style="height: 1rem"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="scroll-div"
+    style="flex-basis: 70%; overflow-y: scroll; width: 60%; padding-top: 1rem"
+    id="scrollFrFr"
+  >
+    <div class="flex-column" style="width: 40%" style="gap: 0.7rem">
+      <div
+        class="flex-row center"
+        id="noResults"
+        style="display: none; opacity: 0.6; margin-top: 1.3rem"
+      >
+        <img
+          src="../../assets/noResults.png"
+          alt="No Results"
+          style="width: 60%"
+        />
+      </div>
+
+      <div class="flex-row section-heading">
+        <h4 class="heading" data-catID="0">Account Creation</h4>
+      </div>
+      <accordion
+        [collapsing]="collapsing"
+        data-catID="0"
+        class="clickable-item-slight"
+      >
+        <accordion-item title="How to log into the Application">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to login?</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help16.png"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <h3>While you are on the login page:</h3>
+                <li>
+                  Simply add your username and password with which you
+                  registered with and click on the blue <i>'login'</i> button.
+                </li>
+                <li>
+                  If you have forgotten your password, click on the
+                  <i>'forgot password?'</i> link and follow the instructions.
+                </li>
+                <li>
+                  If you do not have an account, click on the
+                  <i>'Don't have an account'</i> link and register for an
+                  account using your chosen details.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="0">
+        <accordion-item title="How to register for an account">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to Register?</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help15.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <h3>
+                  To register for an account the following information will be
+                  required:
+                </h3>
+                <ul style="margin-bottom: 1rem">
+                  <li>Username</li>
+                  <li>Email Address</li>
+                  <li>Password</li>
+                  <li>Confirmation of password</li>
+                </ul>
+                <li>
+                  Please enter the required information specified above in the
+                  relevant fields.
+                </li>
+                <li style="margin-bottom: 1rem">
+                  Click on the blue <i>'Register'</i> button
+                </li>
+                <p>
+                  If you already have an account, click on the
+                  <i>'Already have an account?'</i> link and login with your
+                  registered details.
+                </p>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+      <div class="flex-row section-heading">
+        <h4 class="heading" data-catID="1">Domain Management</h4>
+      </div>
+      <accordion [collapsing]="collapsing" data-catID="1">
+        <accordion-item title="How to add a Domain">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to add a Domain</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help13.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <p style="margin-bottom: 1rem; margin-top: 1rem">
+                  To add a domain, navigate to the sidebar and click on the
+                  <i>'Add a Domain'</i> button.
+                </p>
+
+                <li>
+                  The add domain modal will appear, enter a domain name of your
+                  choice in the text field.
+                </li>
+                <li>Add a description for your domain.</li>
+                <li style="margin-bottom: 1rem">
+                  Choose an image for your domain
+                </li>
+                <p>
+                  Domains will act as a 'folder' for your sources, so you can
+                  group sources together for a specific domain.
+                </p>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="1">
+        <accordion-item title="How to remove a Domain">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to remove a Domain</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help14.png"
+                    alt="stock"
+                    style="width: auto; height: 400px"
+                  />
+                </div>
+
+                <li style="margin-top: 1rem">
+                  To remove a domain expand the sidebar (by clicking on the
+                  expand button on the top of the sidebar), click on the
+                  <i>'bin'</i> icon.
+                </li>
+                <li>Confirm that you do want to delete the domain</li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="1">
+        <accordion-item title="How to edit a Domain">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to edit a Domain</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help12.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <p style="margin-top: 1rem">
+                  To edit a Domain, expand the sidebar.
+                </p>
+                <li>Click on the <i>'pencil'</i> button to start editing</li>
+                <li>Edit the name of the domain</li>
+                <li>Edit the description of the domain</li>
+                <li>Change the image of the domain</li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <div class="flex-row section-heading">
+        <h4 class="heading" data-catID="2">Source Management</h4>
+      </div>
+      <accordion [collapsing]="collapsing" data-catID="2">
+        <accordion-item title="How to add a Source">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to add a Source</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help11.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <h3 style="margin-bottom: 1rem">
+                  Navigate to the source-selector bar at the top of the
+                  dashboard
+                </h3>
+                <li>Click on the blue '+' button to begin adding a Source.</li>
+                <li>Add the source name.</li>
+                <li>Select a source type</li>
+                <li>Add an appropriate URL for your chosen source</li>
+                <li>Click <i>confirm</i> to save the Source.</li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="2">
+        <accordion-item title="How to remove a Source">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to delete a Source</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help10.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <h3 style="margin-bottom: 1rem">
+                  Navigate to the source-selector bar at the top of the
+                  dashboard
+                </h3>
+                <li>
+                  To delete a Source, click on the source you would like to
+                  delete and click on the red <i>'bin'</i> button on the right.
+                </li>
+                <li>Confirm that you want to delete/remove the source</li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="2">
+        <accordion-item title="How to refresh a Source">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to refresh a Source</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help8.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <h3 style="margin-bottom: 1rem">
+                  Navigate to the source-selector bar at the top of the
+                  dashboard
+                </h3>
+                <li>
+                  To refresh a source's data, click on the green refresh button
+                  on the right hand side of the dashboard.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="2">
+        <accordion-item title="How to edit a Source">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to edit a Source</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help7.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <p style="margin-top: 1rem">
+                  To edit a Source, click on the source you would like to edit
+                  and click on the <i>'info'</i> icon that is on your source's
+                  card.
+                </p>
+                <li style="margin-top: 1rem">Edit the name of the source.</li>
+                <li>Edit the source URL of a chosen source.</li>
+                <li>
+                  Once you have edited the relevant information, click on the
+                  blue <i>'confirm'</i> button to save the changes.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <div class="flex-row section-heading">
+        <h4 class="heading" data-catID="3">Profile Management</h4>
+      </div>
+      <accordion [collapsing]="collapsing" data-catID="3">
+        <accordion-item title="How to toggle theme">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to toggle theme</h3>
+                <p>
+                  To toggle a theme, click on the profile icon at the bottom of
+                  the sidebar to access the profile section.
+                </p>
+                <li>
+                  Click on the <i>'Toggle Theme'</i> button to toggle between a
+                  light and dark theme.
+                </li>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help6.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="3">
+        <accordion-item title="How to log out">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to log out</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help5.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <li>
+                  To log out click on the profile icon at the bottom of the
+                  sidebar to access the profile section, click on the
+                  <i>'Log Out'</i>
+                  button to log out of the app.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="3">
+        <accordion-item title="How to delete your account">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to delete account</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help4.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <p>
+                  To delete your account click on the profile icon at the bottom
+                  of the sidebar to access the profile section.
+                </p>
+                <li>Click on the <i>'Delete Account'</i> button.</li>
+                <li>Enter your password to confirm account deletion.</li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="3">
+        <accordion-item title="How to update profile picture">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to update profile picture</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help3.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <p>
+                  To update your profile picture click on the profile icon at
+                  the bottom of the sidebar to access the profile section.
+                </p>
+                <li>
+                  Click on the profile picture itself to update your profile
+                  picture, upload a new picture, and then click the
+                  <i>'Confirm'</i> button to save the changes.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <div class="flex-row section-heading">
+        <h4 class="heading" data-catID="4">Dashboard Configuration</h4>
+      </div>
+      <accordion [collapsing]="collapsing" data-catID="4">
+        <accordion-item title="Explanation of Center console">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>Explanation of center console</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help2.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <li>
+                  <b>Overall score</b> is a metric calculated from numerous
+                  statistics. The higher the score the more positive the
+                  sentiment data and vice versa.
+                </li>
+                <li>
+                  <b>The amount of positive, negative and neutral </b>sentiment.
+                  The higher the percentage the more that sentiment is present
+                  in the chosen domain.
+                </li>
+                <li>
+                  <b>The Emotion statistic</b> is the most prevalent emotion of
+                  a chosen domain, the emotions detectable are anger, disgust,
+                  fear, joy, neutral, sadness and finally surprise.
+                </li>
+                <li>
+                  <b>The toxicity statistic</b> represents the level of
+                  harmfulness or offensiveness in the text and classifies it
+                  accordingly.
+                </li>
+                <li>
+                  <b>The analysed statistic</b> shows the number of sentiments
+                  that have been analysed.
+                </li>
+                <li>
+                  <b>The range statistic</b> is the timeframe over which the
+                  data has been collected.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="4">
+        <accordion-item title="Explanation of Graphs and charts console">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>Explanation of Graphs and charts console</h3>
+                <!-- <div class="flex-row center">
+                    <img
+                    src="../../assets/stock-profile-pic.jpg"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                    />
+                </div> -->
+                <li>
+                  The graphs shown are graphical representations of the
+                  statistics and insights shown in the center console of the
+                  page.
+                </li>
+                <li>
+                  Clicking on the arrows on the left and right of the graphs
+                  will allow you to view the graphs of the previous and next
+                  statistic respectively. Additionally, you can naviagte the
+                  graphs by clicking on the dots on the bottom of the graph.
+                </li>
+                <li>
+                  To view the statistics for different graphs, click on
+                  different statiistics in the statistics center console.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="4">
+        <accordion-item title="Explanation of the sample data/reviews/comments">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help1.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <h3>
+                  This is where you can view sample data (reviews/comments) of a
+                  chosen domain.
+                </h3>
+                <li>The first metric is the overall score statistic.</li>
+                <li>
+                  The second metric is the overall categorisation of the
+                  sentiment.
+                </li>
+                <li>The most prevalent emotion found within review.</li>
+                <li>A classification of the toxicity of the review.</li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <div class="flex-row section-heading">
+        <h4 class="heading" data-catID="5">Source Creation</h4>
+      </div>
+      <accordion [collapsing]="collapsing" data-catID="5">
+        <accordion-item title="How to find a Youtube video URL">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to find a Youtube video URL</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help21.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <li style="margin-top: 1rem">
+                  Navigate to a browser of your choice.
+                </li>
+                <li>
+                  Navigate to <a href="https://www.youtube.com/">Youtube.</a>
+                </li>
+                <li>
+                  Search for a video of your choice that you would want to be
+                  used as a source.
+                </li>
+                <li>Copy the URL from the search bar.</li>
+                <li>
+                  Paste the URL into the URL field of the add source modal.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="5">
+        <accordion-item title="How to find a Google reviews URL">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to find a Google reviews URL</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help20.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <li style="margin-top: 1rem">
+                  Navigate to a browser of your choice.
+                </li>
+                <li>
+                  Navigate to
+                  <a href="https://maps.google.com/">Google Maps.</a>
+                </li>
+                <li>
+                  Search for a location of your choice that you would like to
+                  use as a source.
+                </li>
+                <li>Click on the share button and copy the URL (link)</li>
+                <li>
+                  Paste the URL into the URL field of the add source menu.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="5">
+        <accordion-item title="How to find a Trip-Advisor URL">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to find a Trip-Advisor URL</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help18.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <li style="margin-top: 1rem">
+                  Navigate to a browser of your choice.
+                </li>
+                <li>
+                  Navigate to
+                  <a href="https://www.tripadvisor.co.za/">Trip-Advisor.</a>
+                </li>
+                <li>
+                  Search for a location of your choice that you would like to
+                  use as a source.
+                </li>
+                <li>
+                  Copy the URL from the search bar at the top of the page.
+                </li>
+                <li>
+                  Paste the URL into the URL field of the add source modal.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="5">
+        <accordion-item title="How to find a TrustPilot URL">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to find a TrustPilot URL</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help19.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <li style="margin-top: 1rem">
+                  Navigate to a browser of your choice.
+                </li>
+                <li>
+                  Navigate to
+                  <a href="https://www.trustpilot.com/">Trust Pilot.</a>
+                </li>
+                <li>
+                  Search for a company or category of your choice that you would
+                  like to use as a source.
+                </li>
+                <li>
+                  Copy the URL from the search bar at the top of the page.
+                </li>
+                <li>
+                  Paste the URL into the URL field of the add source modal.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="5">
+        <accordion-item title="How to add a csv as a source">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How to add a csv as a source</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help23.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <li style="margin-top: 1rem">
+                  The csv file has to follow the specific format in which the
+                  example file shows below:
+                </li>
+                <ul>
+                  <li>
+                    <a href="../../assets/test.csv" download
+                      >Example csv file</a
+                    >
+                  </li>
+                  <li>
+                    The columns must have the same headings as the example file
+                    and the date format must be the same.
+                  </li>
+                  <li>
+                    Ensure that your review test is contained within quotation
+                    marks ("")
+                  </li>
+                  <li>
+                    If you have followed the above guidelines, but it still does
+                    not work, ensure that you're .csv is encoded using UTF-8
+                  </li>
+                </ul>
+                <li>
+                  To add a csv file as a source , navigate to the add source
+                  menu.
+                </li>
+                <li>Add your csv file to use it as a source.</li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="5">
+        <accordion-item title="How do live reviews work?">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How do live reviews work?</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help22.png"
+                    alt="stock"
+                    style="width: 600px; height: auto"
+                  />
+                </div>
+                <p style="margin-top: 1rem; margin-bottom: 1rem">
+                  Live review is as an anonymous review platform that analyses
+                  reviews from people in real time.
+                </p>
+                <li>Create a live reviews source.</li>
+                <li>Navigate to the information regarding the live source.</li>
+                <li>Share the link or QR code.</li>
+                <li>
+                  The availability of the link can be changed to the preference
+                  of the user who started the live review source.
+                </li>
+                <li>Start collecting live data!</li>
+                <li>
+                  Whenever you want to see new data, hit the refresh button in
+                  the top right corner
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <div class="flex-row section-heading">
+        <h4 class="heading" data-catID="6">Other</h4>
+      </div>
+      <accordion [collapsing]="collapsing" data-catID="6">
+        <accordion-item title="How to reset forgotten password">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>How do I reset my password?</h3>
+                <li>
+                  If you forgot your password, please contact support at
+                  <a
+                    href="mailto:domainpulse.help@gmail.com"
+                    class="clickable-item"
+                    style="color: #037fff"
+                    ><b style="color: #037fff">domainpulse.help@gmail.com</b></a
+                  >
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="6">
+        <accordion-item title="Unresponsive website">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>What to do if the website is not responding?</h3>
+                <li>Try to refresh the website.</li>
+                <li>
+                  If the above step does not help then try clearing cookies and
+                  refreshing the page after cookies have been cleared.
+                </li>
+                <li>
+                  Make sure that your internet connection is stable and that you
+                  are indeed connected to the internet.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="6">
+        <accordion-item
+          title="What to do if i would like to remove comments from my source?"
+        >
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>Remove unwanted reviews from source</h3>
+                <li>
+                  If you have comments/reviews that you would like to remove for
+                  any of the following reasons:
+                </li>
+                <ul>
+                  <li>
+                    The review does not hold any importance/relevance to your
+                    source
+                  </li>
+                  <li>The review was made with malicious purposes</li>
+                  <li>
+                    The review is completely obscene or contains hate speech
+                  </li>
+                </ul>
+                <li>
+                  Contact
+                  <a
+                    href="mailto:domainpulse.help@gmail.com"
+                    class="clickable-item"
+                    style="color: #037fff"
+                    ><b style="color: #037fff">domainpulse.help@gmail.com</b></a
+                  >
+                  with the name of your domain, the name of your source and the
+                  comment text.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="6">
+        <accordion-item title="How to generate a report">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>Generating a report</h3>
+                <div class="flex-row center">
+                  <img
+                    src="https://domainpulseblob.blob.core.windows.net/blob/help17.png"
+                    alt="stock"
+                    style="width: auto; height: 300px"
+                  />
+                </div>
+                <li>
+                  Before generating a report you have to ensure that you have at
+                  least 1 domain with at least 1 source present on your profile.
+                </li>
+                <li>Click on the report button as shown above.</li>
+                <li>
+                  Please wait patiently while your report is being generated.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="6">
+        <accordion-item title="How to export visualisations">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <h3>Exporting visualisations</h3>
+                <li>
+                  Click on the menu button in the top right of the graphs
+                  section and select one of the options:
+                </li>
+                <ul>
+                  <li>Export as PNG</li>
+                  <li>Export as SVG</li>
+                  <li>Export as CSV</li>
+                </ul>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="6">
+        <accordion-item title="Unsupported languages">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <li>
+                  If the language of the reviews in your source is not english,
+                  note that we do not support any other language yet.
+                </li>
+                <li>
+                  If you would still like to use domain pulse you can take the
+                  following approach
+                </li>
+                <ul>
+                  <li>
+                    Translate all your reviews using a chosen online tool from
+                    your language to english
+                  </li>
+                  <li>
+                    Add your english reviews into our .csv format document
+                  </li>
+                  <li>Add the .csv as a source</li>
+                </ul>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+
+      <accordion [collapsing]="collapsing" data-catID="6">
+        <accordion-item title="Disclaimer for time series analysis">
+          <ng-template accordionContent>
+            <div class="accord-container">
+              <ol type="1">
+                <li>
+                  Please be warned that each of the models used by Domain Pulse
+                  suffers from its own biases and limitations, and that the
+                  results of analysis produced by the platform are by no means
+                  meant to be regarded as the truth. Domain Pulse is meant to
+                  provide general guidance and summary analysis, and does not
+                  guarantee true or factual representations of people, places,
+                  organisations, or events.
+                </li>
+                <br>
+                <li>
+                  In particular, the models underpinning Domain Pulse may
+                  produce biassed or incorrect predictions for input data that
+                  reference underrepresented populations or particular identify
+                  subgroups, incorrectly flagging these sentiments as negative
+                  and/or toxic. Additionally, note that the models are not aware
+                  of all possible contexts of word usage, and benign data may be
+                  incorrectly categorised should the text contain words that
+                  have alternative meanings in different contexts.
+                </li>
+              </ol>
+            </div>
+          </ng-template>
+        </accordion-item>
+      </accordion>
+    </div>
+
+    <div id="detectorDiv"></div>
+  </div>
+</div>

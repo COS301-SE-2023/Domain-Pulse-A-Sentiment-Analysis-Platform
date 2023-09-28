@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import StringIO
 import json
 from django.test import TestCase
@@ -42,12 +43,8 @@ def mocked_analyser_request(dummy1, **kwargs):
 
 
 def mocked_down_analyser_request(dummy1, json=None, headers=None, data=None):
-    ANALYSER_ENDPOINT = (
-        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
-    )
-    GET_SOURCE_ENDPOINT = (
-        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
-    )
+    ANALYSER_ENDPOINT = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    GET_SOURCE_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     DOMAINS_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/verify_live_source"
     if dummy1 == ANALYSER_ENDPOINT:
         mock_response = MagicMock()
@@ -92,7 +89,7 @@ def mocked_handle_request(dummy1):
     return {
         "status": "SUCCESS",
         "newdata": [{"text": "some text", "timestamp": 1234567890}],
-        "latest_retrieval": "2021-01-01T00:00:00Z",
+        "latest_retrieval": datetime.now().timestamp(),
     }
 
 
@@ -101,6 +98,10 @@ def mocked_handle_request_fail(dummy1):
 
 
 class LiveIngestionTests(TestCase):
+    def test_ping(self):
+        response = self.client.get(path="/avail_ping/")
+        self.assertEqual(200, response.status_code)
+
     def setUp(self):
         self.factory = RequestFactory()
 
@@ -241,7 +242,7 @@ class LiveIngestionTests(TestCase):
             placeholder="Write your review here..."
           ></textarea>
           <input type="hidden" name="source_id" value="{{source_id}}" />
-          <button type="submit" value="Submit" class="button center clickable-item">
+          <button type="submit" value="Submit" class="flex-row button center clickable-item">
             submit
             <div class="button-spinner"></div>
           </button>
@@ -502,6 +503,15 @@ class LiveIngestionTests(TestCase):
 
         self.assertEqual(result["status"], "FAILURE")
         self.assertEqual(result["details"], "Invalid CSV file provided")
+
+    def test_invalid_csv_date(self):
+        csv_data = (
+            "reviews,time\nReview 1,2023-09-05T12:00:00\nReview 2,2023-09-05T13:00:00"
+        )
+        file = SimpleUploadedFile("test.csv", csv_data.encode("utf-8"))
+        result = csv_connector.handle_request(file)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "Invalid date format")
 
     def test_empty_csv(self):
         valid_csv_data = ""

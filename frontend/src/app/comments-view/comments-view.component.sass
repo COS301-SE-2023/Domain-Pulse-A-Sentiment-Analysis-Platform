@@ -4,7 +4,6 @@
   background-color: var(--main-div)
   border-radius: 25px
   flex-basis: 98%
-  padding: 1rem 2.8rem
   overflow-y: scroll
   overflow-x: hidden
   scrollbar-width: 5px
@@ -12,20 +11,24 @@
   scrollbar-color: var(--grey-subtle)
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
   border-right: solid transparent 0.5rem
-  border-top: solid transparent 1.5rem
-  border-bottom: solid transparent 1.5rem
-  padding: 40px
+  border-top: solid transparent 0.5rem
+  border-bottom: solid transparent 0.5rem
+  padding: 1rem
   padding-top: 0px
 
+
+
   &::-webkit-scrollbar
-    width: 6px
+    width: 7px
 
   &::-webkit-scrollbar-track
     background-color: transparent
 
   &::-webkit-scrollbar-thumb
     background-color: var(--grey-subtle)
-    border-radius: 3px
+    border-radius: 5px
+    min-height: 40px
+
 
   &::-webkit-scrollbar-thumb:hover
     background-color: var(--grey-item)
@@ -39,17 +42,17 @@
   flex-direction: row
 
 .tag-container
-  display: flex
   gap: 5px
 
 .tag
   display: inline-block
-  padding: 4px 8px
+  padding: 4px 12px
   margin-right: 5px
   border-radius: 20px
   color: white
   font-size: 12px
   font-family: 'Source Sans 3'
+  margin-top: 0.2rem
   //box-shadow: 0 0 5px rgba(0, 0, 0, 0.1)
 
 
@@ -70,10 +73,10 @@ hr
   background-color: #00ac28
 
 .positive-color 
-  background-color: #5cac00
+  background-color: #00ac28
 
 .somewhat-positive-color 
-  background-color: #9bac00
+  background-color: #c2b800
 
 .negative-color 
   background-color: #e24a45
@@ -82,16 +85,22 @@ hr
   background-color: #d42c3c
 
 .somewhat-negative-color 
-  background-color: #d4862c
+  background-color: #e07800
 
+.surprise-color
+  background-color: #b027e4
 
 
 .neutral-color 
-  background-color: #ffc107
+  background-color: #ebd800
 
 
 .sad-color 
   background-color: #5382d8
+
+.date
+  background-color: #32478d
+
 
 
 
@@ -129,3 +138,65 @@ h2
 
 .loading-spinner 
   height: 50%
+
+.accordion-container
+  padding: 1rem
+
+.search-container
+    background-color: var(--search-bar)
+    border-radius: 45px
+    padding: 0.2rem 1rem 0.2rem 1rem
+    border: 0.5px solid rgba(3, 127, 255, 0.5)
+    width: auto
+    margin-left: auto
+
+
+.search-bar
+    width: 100%
+    padding: 0rem 2rem 0rem 0rem
+    border-radius: 0px
+    border: none
+    outline: none
+    height: 25px
+    background: none
+    color: var(--text-color)
+
+.search-bar::placeholder 
+    color: var(--text-color)
+
+.button
+    background-color: var(--primary)
+    color: white
+    border: none
+    text-align: center
+    text-decoration: none
+    display: inline-block
+    font-size: 90%
+    border-radius: 100px
+    padding: 0.3rem 1rem 0.3rem 1rem
+    text-overflow: nowrap
+
+.hide-element 
+  display: none
+
+:host:hover .logo
+    opacity: 0
+
+:host:hover .icon
+    opacity: 1
+
+.icon 
+    opacity: 0
+    width: 1.5rem
+
+.logo
+    width: 2rem
+
+.transition-icon 
+    position: absolute
+    transition: opacity 0.3s ease-in-out
+    margin-top: auto
+    margin-bottom: auto
+
+.logo-container
+    position: relative

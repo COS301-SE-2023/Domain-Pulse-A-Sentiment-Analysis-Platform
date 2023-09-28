@@ -24,6 +24,12 @@ import { AppApi } from './app.api';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { SourceSelectorComponent } from './source-selector/source-selector.component';
 import { ApiInterceptor } from './api.interceptor';
+import { HelpPageComponent } from './help-page/help-page.component';
+import { TooltipDirective } from './tooltip.directive';
+import { AccordionModule } from './accordion-card/accordion.module';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { CommentsAccordionModule } from './comments-accordion-card/comments-accordion.module';
+
 
 @NgModule({
   declarations: [
@@ -37,13 +43,18 @@ import { ApiInterceptor } from './api.interceptor';
     RegisterPageComponent,
     MainComponent,
     SourceSelectorComponent,
+    HelpPageComponent,
+    TooltipDirective,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
+    AccordionModule,
+    CommentsAccordionModule,
     HttpClientModule,
+    NgApexchartsModule,
     NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({
       collapsed: false,

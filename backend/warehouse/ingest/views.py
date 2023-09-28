@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from datamanager import sentiment_record_model
 import json
@@ -9,6 +9,8 @@ import os
 import bleach
 from CSV import csv_connector
 from datetime import datetime
+from unidecode import unidecode
+from urllib.parse import unquote
 
 
 # Create your views here.
@@ -29,10 +31,21 @@ from datetime import datetime
 #         )
 
 
+def ping(request: HttpRequest):
+    RETURN_CODE = 200
+    RETURN_MESSAGE = "Hi I'm available!"
+    response = HttpResponse()
+    response.content = RETURN_MESSAGE
+    response.status_code = RETURN_CODE
+    return response
+
+
 @csrf_exempt
 def ingest_live_review(request: HttpRequest):
     if request.method == "POST":
         original_review_text = request.POST.get("review_text")
+        # Preprocessing here
+        original_review_text = unidecode(original_review_text)
         review_text = bleach.clean(original_review_text)
         source_id_raw = request.POST.get("source_id")
         timestamp = datetime.now().timestamp()
@@ -59,9 +72,7 @@ def ingest_live_review(request: HttpRequest):
             )
         # --------------------------------------------------
 
-        ANALYSER_ENDPOINT = (
-            f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
-        )
+        ANALYSER_ENDPOINT = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
         request_to_engine_body = {"data": [review_text]}
         response_from_analyser = requests.post(
             ANALYSER_ENDPOINT, data=json.dumps(request_to_engine_body)
@@ -69,7 +80,8 @@ def ingest_live_review(request: HttpRequest):
 
         if response_from_analyser.status_code == 200:
             new_record = response_from_analyser.json()["metrics"][0]
-            new_record["timestamp"] = int(timestamp)
+            TIMEZONE_ADJUSTMENT = 0
+            new_record["timestamp"] = int(timestamp) + TIMEZONE_ADJUSTMENT
             new_record["source_id"] = source_id_raw
 
             sentiment_record_model.add_record(new_record)
@@ -94,19 +106,19 @@ def ingest_live_review(request: HttpRequest):
 
 
 def make_live_review(request: HttpRequest, source_id, source_name):
+    decoded_source_name = unquote(source_name)
+
     return render(
-        request, "form.html", {"source_id": source_id, "source_name": source_name}
+        request,
+        "form.html",
+        {"source_id": source_id, "source_name": decoded_source_name.replace("-", " ")},
     )
 
 
 @csrf_exempt
 def ingest_CSV_file(request: HttpRequest):
-    ANALYSER_ENDPOINT = (
-        f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
-    )
-    GET_SOURCE_ENDPOINT = (
-        f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
-    )
+    ANALYSER_ENDPOINT = f"http://{os.getenv('ENGINE_HOST')}:{str(os.getenv('DJANGO_ENGINE_PORT'))}/analyser/compute/"
+    GET_SOURCE_ENDPOINT = f"http://{os.getenv('DOMAINS_HOST')}:{str(os.getenv('DJANGO_DOMAINS_PORT'))}/domains/get_source"
     originalRequest = request
     if request.method == "POST":
         source_id_raw = request.POST.get("source_id")

@@ -1,92 +1,92 @@
 @use "styles"
 
 :host
-    display: flex
-    justify-content: center
-    align-items: center
-    height: inherit
-    width: inherit
-    background-color: var(--background)
+  display: flex
+  justify-content: center
+  align-items: center
+  height: inherit
+  width: inherit
+  background-color: var(--background)
 
 .app-container
-    width: 97%
-    height: 96%
-    display: flex
-    gap: 2rem
+  width: 97%
+  height: 96%
+  display: flex
+  gap: 2rem
 
 .header
-    display: flex
-    justify-content: left
-    align-items: left
-    height: 15%
+  display: flex
+  justify-content: left
+  align-items: left
+  height: 15%
 
 .centered
-    flex-direction: row
-    align-items: center
+  flex-direction: row
+  align-items: center
 
 .domainTitle
-    margin-top: 0
-    margin-bottom: 0
-    font-family: Open Sans
-    font-weight: 700
-    font-size: 30pt
+  margin-top: 0
+  margin-bottom: 0
+  font-family: Open Sans
+  font-weight: 700
+  font-size: 30pt
 
 .domainSubtitle
-    margin-top: 0
-    margin-bottom: 0
-    font-family: 'Source Sans 3'
-    font-weight: 400
-    font-size: 15pt
+  margin-top: 0
+  margin-bottom: 0
+  font-family: 'Source Sans 3'
+  font-weight: 400
+  font-size: 15pt
 
 .source-selector
-    background-color: var(--main-div)
-    border-radius: 25px
-    height: 16%
-    gap: 1.4rem
-    padding-left: 1.2rem
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+  background-color: var(--main-div)
+  border-radius: 25px
+  height: 16%
+  gap: 1.4rem
+  padding-left: 1.2rem
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
 
 .source-cat
-    border-radius: 25px
-    height: 80%
-    width: 180px
-    background-color: var(--highlight)
+  border-radius: 25px
+  height: 80%
+  width: 180px
+  background-color: var(--highlight)
 
 .statistic-selector
 
 // below is where the styles for the modal are
 .default-input
-    border: solid var(--highlight) 2px
-    height: 30px
-    border-radius: 10px
+  border: solid var(--highlight) 2px
+  height: 30px
+  border-radius: 10px
 
 .new-source-btn
-    width: 130px
-    height: 40px
-    border-radius: 25px
-    background-color: var(--primary)
-    color: white
-    font-family: 'Source Sans 3'
-    font-size: 14pt
-    font-weight: 700
-    margin-top: 1rem
-    border: none
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+  width: 130px
+  height: 40px
+  border-radius: 25px
+  background-color: var(--primary)
+  color: white
+  font-family: 'Source Sans 3'
+  font-size: 14pt
+  font-weight: 700
+  margin-top: 1rem
+  border: none
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
 
 .modal-heading
-    font-family: 'Open Sans'
-    font-weight: 700
-    font-size: 20pt
-    color: var(--primary)
+  font-family: 'Open Sans'
+  font-weight: 700
+  font-size: 1.5rem
+  color: var(--primary)
 
-.heading-container 
-    text-align: left
-    width: 80%
-    display: flex
-    align-items: center
-    align-self: flex-start
-    margin-top: 4%
-    margin-left: 10%
+.heading-container
+  text-align: left
+  width: 80%
+  display: flex
+  align-items: center
+  align-self: flex-start
+  margin-top: 4%
+  margin-left: 10%
 
 .content
   flex-grow: 1
@@ -102,63 +102,187 @@
   justify-content: center
   margin-bottom: 6%
 
-.heading-container 
+.heading-container
   text-align: left
   width: 80%
   display: flex
   align-items: center
 
-.back-arrow 
+.back-arrow
   width: 25px
   margin-right: 10px
 
 .modal-step-tag
-    font-size: 50px
-    font-weight: 700
-    font-family: 'Open Sans'
-    color: var(--grey-subtle)
-    padding-right: 10px
+  font-size: 50px
+  font-weight: 700
+  font-family: 'Open Sans'
+  color: var(--grey-subtle)
+  padding-right: 10px
 
 .step-heading
-    font-family: 'Source Sans 3'
-    font-weight: 300
-    font-size: 15px
-    color: var(--text-color)
+  font-family: 'Source Sans 3'
+  font-weight: 300
+  font-size: 15px
+  color: var(--text-color)
 
 .picture
-    flex-basis: 45%
-    background-color: blue
-    border-top-right-radius: 59px
-    border-bottom-right-radius: 59px
-    background-image: url("../../assets/stock-bg.png")
-    background-repeat: no-repeat
-    background-size: cover
-    width:100%
+  flex-basis: 45%
+  background-color: blue
+  border-top-right-radius: 2vw
+  border-bottom-right-radius: 2vw
+  background-image: url("../../assets/stock-bg.png")
+  background-repeat: no-repeat
+  background-size: cover
+  width: 100%
 
-.loading-container 
+.loading-container
   display: flex
   justify-content: center
   align-items: center
   width: 100%
   height: 100%
 
-.loading-spinner 
+.loading-spinner
   height: 50%
 
 .circle-wrapper-domain
-    width: 6vw
-    height: 6vw
-    border-radius: 100px
-    background-color: white
-    overflow: hidden
-    border: solid 2px white
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
-    justify-content: center
-    align-items: center
+  width: 6vw
+  height: 6vw
+  border-radius: 100px
+  background-color: white
+  overflow: hidden
+  border: solid 2px white
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+  justify-content: center
+  align-items: center
 
 .circle-wrapper-domain img
-    width: 100%
-    height: 100%
-    object-fit: cover
-   
+  width: 100%
+  height: 100%
+  object-fit: cover
 
+.top-icons
+  height: 2.4rem
+
+.pdf-spinner
+  width: 30%
+
+.loading
+  display: inline-block
+  width: 5vw
+  height: 5vw
+  border: 8px solid rgba(142, 163, 255, 0.651)
+  border-radius: 50%
+  border-top-color: var(--primary)
+  animation: spin 1s ease-in-out infinite
+  -webkit-animation: spin 1s ease-in-out infinite
+
+@keyframes spin
+  to
+    -webkit-transform: rotate(360deg)
+
+@-webkit-keyframes spin
+  to
+  -webkit-transform: rotate(360deg)
+
+.copy-icon
+  width: 1.2rem
+  height: 1.2rem
+  padding-left: 1rem
+  filter: var(--icon-filter)
+
+.load-text
+  color: var(--text-color)
+
+.close-button
+  width: 100px
+  height: 30px
+  border-radius: 25px
+  background-color: var(--primary)
+  color: white
+  font-family: 'Source Sans 3'
+  font-size: 10pt
+  font-weight: 500
+  margin-top: 1rem
+  border: none
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+
+.close-button-tut
+  width: 120px
+  height: 40px
+  border-radius: 25px
+  background-color: var(--primary)
+  color: white
+  font-family: 'Source Sans 3'
+  font-size: 12pt
+  font-weight: 500
+  border: none
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+
+.variable-text
+  color: var(--text-color)
+  font-size: 1.1rem
+
+.modal-container
+  position: relative
+  width: 100%
+  height: 100%
+
+.modal-screen
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  opacity: 0
+  transition: opacity 0.3s ease
+
+.modal-screen.active
+  opacity: 1
+  z-index: 50
+
+.emoji
+  font-size: 3rem
+
+.modal-heading-tutorial
+  font-family: 'Open Sans'
+  font-weight: 800
+  font-size: 2rem
+  color: var(--primary)
+
+.tutorial-text
+  font-family: 'Open Sans'
+  font-weight: 400
+  font-size: 1.2rem
+  color: var(--text-color)
+
+.tutorial-text-head
+  font-family: 'Open Sans'
+  font-weight: 400
+  font-size: 1.4rem
+  color: var(--text-color)
+  font-weight: bold
+
+.scroll-div
+  scrollbar-width: 5px
+  scrollbar-height: 90%
+  scrollbar-color: var(--grey-subtle)
+  border-right: solid transparent 0.5rem
+  padding-top: 0px
+
+
+
+  &::-webkit-scrollbar
+    width: 7px
+
+  &::-webkit-scrollbar-track
+    background-color: transparent
+
+  &::-webkit-scrollbar-thumb
+    background-color: var(--grey-subtle)
+    border-radius: 5px
+    min-height: 40px
+
+
+  &::-webkit-scrollbar-thumb:hover
+    background-color: var(--grey-item)

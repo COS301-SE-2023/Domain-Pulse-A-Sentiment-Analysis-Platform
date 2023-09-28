@@ -1,0 +1,87 @@
+@use 'styles'
+
+:host
+  --accordion-header-height: 50px
+  --accordion-header-bg: hsl(0, 0%, 95%)
+  --accordion-disabled: hsl(0, 0%, 60%)
+  --accordion-border-radius: 20px
+  width: 100%
+  
+
+.accordion-container
+  padding: 1rem
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.accordion
+  //border-radius: var(--accordion-border-radius)
+  //background-color: var(--secondary-div)
+  //box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+  
+
+.accordion__item:first-child .accordion__header
+  border-radius: var(--accordion-border-radius) var(--accordion-border-radius) var(--accordion-border-radius) var(--accordion-border-radius)
+
+.accordion__item:last-child .accordion__header
+  border-radius: var(--accordion-border-radius) var(--accordion-border-radius) var(--accordion-border-radius) var(--accordion-border-radius)
+
+.accordion__header
+  display: flex
+  padding: 0 0 0 1rem
+  justify-content: space-between
+  align-items: center
+  border: 2px solid transparent
+  height: auto
+  cursor: pointer
+  background: var(--highlight)
+  font-family: 'Open Sans'
+  font-weight: 800
+  color: var(--primary)
+  transition: transform 0.4s ease 
+  will-change: transform
+
+
+.accordion__header:not(:active)
+    animation: slight-click-animation 0.4s ease 
+
+.accordion__header:hover
+    transform: scale(1.03)
+
+@keyframes slight-click-animation
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(1.03)
+    100%
+        transform: scale(1)
+  
+
+.accordion__toggle-btn
+  border: none
+  transition: transform 0.3s ease-in
+  background: none
+
+.accordion__item.disabled .accordion__header
+  color: var(--text-color)
+  cursor: not-allowed
+
+.accordion__toggle-btn:disabled
+  cursor: not-allowed
+
+.accordion__toggle-btn:disabled svg path:nth-child(2)
+  fill: var(--accordion-disabled)
+
+.accordion__item.active .accordion__toggle-btn
+  transform: rotate(180deg)
+
+.accordion__item .accordion__header:focus-within
+  border-color: var(--primary)
+  border-radius: var(--accordion-border-radius)
+
+.accordion__toggle-btn:focus
+  outline: none
+
+.arrow-icon
+  fill: var(--primary)
+

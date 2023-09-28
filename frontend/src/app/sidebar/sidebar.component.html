@@ -1,10 +1,9 @@
 <div
-  class="flex-column center"
+  class="flex-column center sidebar"
   style="gap: 1rem; height: 98%"
-  (click)="clickSidebar(); $event.stopPropagation()"
 >
   <!-- [@logoSwitch]="logoState" -->
-  <div class="flex-column center" style="height: 86px" 
+  <div class="flex-column center logo-container" style="height: 86px" 
   data-cy="sidebar">
     <img
       [@smallLogoSwitch]="smallLogoState"
@@ -14,7 +13,21 @@
       height="auto"
       width="50%"
       style="margin-top: 2rem; margin-bottom: 0.8rem"
+      (click)="openSidebarClicked()"
+      class="sidebarLogo image1"
     />
+
+    <img
+      [@smallLogoSwitch]="smallLogoState"
+      *ngIf="showSmallLogo"
+      src="../assets/icons/openSidebar.svg"
+      alt="Domain Pulse Logo"
+      height="auto"
+      style="margin-top: 2rem; margin-bottom: 0.8rem"
+      class="sidebarLogoSmall1 image2 clickable-item"
+      (click)="openSidebarClicked()"
+      />
+
     <img
       [@fullLogoSwitch]="fullLogoState"
       *ngIf="showFullLogo"
@@ -23,11 +36,24 @@
       height="auto"
       width="85%"
       style="margin-top: 2rem; margin-bottom: 0.8rem"
+      class="sidebarLogoeLarge image1"
+      (click)="closeSidebarClicked()"
+
+    />
+
+    <img
+      [@fullLogoSwitch]="fullLogoState"
+      *ngIf="showFullLogo"
+      src="../assets/icons/closeSidebar.svg"
+      alt="Domain Pulse Logo"
+      style="margin-top: 2rem; margin-bottom: 0.8rem"
+      class="sidebarLogoSmall image2 clickable-item"
+      (click)="closeSidebarClicked()"
     />
   </div>
   <div
     *ngFor="let domain of domains$ | async"
-    (click)="selectDomain(domain); $event.stopPropagation()"
+    (click)="selectDomain(domain)"
     class="domain flex-row align-center clickable-item"
     [ngClass]="{
       'selected-domain': domain.selected,
@@ -57,17 +83,23 @@
       class="icons-container flex-row align-center"
     >
       <img
-        (click)="toggleEditDomainModal(); $event.stopPropagation()"
+        (click)="toggleEditDomainModal()"
         src="../assets/icons/pen-solid.svg"
+        [mul]="0.9"
+        [tooltip]="'Edit existing domain'"
+        [searchTerm]="'edit a domain'"
         height="15px"
         class="clickable-item"
         data-cy="editDomainModalToggle"
       />
       <img
         src="../assets/icons/grey-trash.svg"
+        [mul]="0.9"
+        [tooltip]="'Removes the domain from your list'"
+        [searchTerm]="'remove'"
         height="15px"
         (click)="
-          toggleConfirmDeleteDomainModal(domain.id); $event.stopPropagation()
+          toggleConfirmDeleteDomainModal(domain.id); 
         "
         class="clickable-item"
         data-cy="deleteDomain"
@@ -78,7 +110,7 @@
   <!-- </div> -->
 
   <div
-    (click)="toggleDomainModal(); $event.stopPropagation()"
+    (click)="toggleDomainModalOn()"
     class="domain add-domain-plus flex-row align-center clickable-item"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
@@ -96,7 +128,7 @@
 
   <div
     class="domain flex-row align-center clickable-item"
-    (click)="toggleProfileModal(); $event.stopPropagation()"
+    (click)="toggleProfileModal();"
     data-cy="profileModalToggle"
     [ngStyle]="{
       padding: expanded ? '0 0rem' : '0px',
@@ -125,9 +157,9 @@
 
 <dp-modal-container
   [modalDisplay]="showAddDomainModal"
-  (close)="toggleDomainModal()"
+  (close)="toggleDomainModalOff()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="addDomainModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -137,7 +169,7 @@
           src="../assets/icons/back-arrow-right-light.svg"
           alt="Back Arrow"
           class="icon back-arrow clickable-item"
-          (click)="toggleDomainModal()"
+          (click)="toggleDomainModalOff()"
         />
 
         <p class="modal-heading">Add a Domain</p>
@@ -252,7 +284,7 @@
   [modalDisplay]="showEditDomainModal"
   (close)="toggleEditDomainModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="editDomainModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -379,7 +411,7 @@
   [modalDisplay]="showProfileModal"
   (close)="toggleProfileModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="profileModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -445,7 +477,7 @@
         </div>
         <div
           class="button clickable-item"
-          (click)="toggleConfirmDeleteAccountModal()"
+          (click)="toggleDeleteAccountModal()"
           data-cy="openDeleteAccount"
         >
           <img
@@ -465,7 +497,7 @@
   [modalDisplay]="showChangePasswordModal"
   (close)="toggleChangePasswordModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="changePasswordModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -524,7 +556,7 @@
   [modalDisplay]="showProfileEditModal"
   (close)="toggleProfileEditModal()"
 >
-  <div class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
+  <div id="profileEditModal" class="flex-row modal" style="width: 70vw; height: 70vh; color: black">
     <div
       class="flex-column center modal-contents"
       style="flex-basis: 55%; gap: 0.7rem"
@@ -579,9 +611,10 @@
 
 <dp-modal-container
   [modalDisplay]="showConfirmDeleteDomainModal"
-  (close)="toggleConfirmDeleteDomainModal()"
+  (close)="toggleConfirmDeleteDomainModal();"
 >
   <div
+  id="confirmDeleteDomainModal"
     class="flex-row modal"
     style="width: 30vw; height: 25vh; color: black; border-radius: 10px"
   >
@@ -609,47 +642,14 @@
   </div>
 </dp-modal-container>
 
-<dp-modal-container
-  [modalDisplay]="showConfirmDeleteAccountModal"
-  (close)="toggleConfirmDeleteAccountModal()"
->
-  <div
-    class="flex-row modal"
-    style="width: 30vw; height: 25vh; color: black; border-radius: 10px"
-  >
-    <div class="flex-row center" style="width: 100%">
-      <div class="flex-column center" style="gap: 2rem">
-        <p class="confirm-text">
-          Are you sure you want to delete your account?
-        </p>
-        <div class="button-div">
-          <div
-            class="confirm-button clickable-item green center"
-            (click)="toggleDeleteAccountModal()"
-            data-cy="yesDeleteAccount"
-          >
-            <img class="button-icon" src="../assets/icons/yes.svg" alt="Icon" />
-            <span class="button-text" style="margin-left: 0">Yes</span>
-          </div>
-          <div
-            class="confirm-button clickable-item red center"
-            (click)="toggleConfirmDeleteAccountModal()"
-            data-cy="noDeleteAccount"
-          >
-            <img class="button-icon" src="../assets/icons/no.svg" alt="Icon" />
-            <span class="button-text" style="margin-left: 0">No</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</dp-modal-container>
+
 
 <dp-modal-container
   [modalDisplay]="showDeleteAccountModal"
   (close)="toggleDeleteAccountModal()"
 >
   <div
+  id="deleteAccountModal"
     class="flex-row modal"
     style="width: 30vw; height: 25vh; color: black; border-radius: 10px"
   >

@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
+from unidecode import unidecode
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -13,7 +14,7 @@ GOOGLE_REVIEWS_API_KEY = os.getenv("GOOGLE_REVIEWS_API_KEY")
 
 client = ApiClient(api_key=GOOGLE_REVIEWS_API_KEY)
 
-REVIEWS_LIMIT = 15  # number of reviews to return (please keep this to a small number, around 1-10 ideally)
+REVIEWS_LIMIT = 50  # number of reviews to return (please keep this to a small number, around 1-10 ideally)
 LIMIT = 1  # pls DO NOT change this
 SORT = "newest"  # options: "most_relevant", "newest" "highest_rating" "lowest_rating"
 IGNORE_EMPTY = True  # ignores reviews with no text (please don't change this)
@@ -43,7 +44,8 @@ def get_google_reviews(maps_url, last_refreshed_timestamp):
 
     ret_data = []
     for review in reviews:
-        review_text = review["review_text"]
+        # Decoding unsupported characters
+        review_text = unidecode(review["review_text"])
         review_timestamp = int(review["review_timestamp"])
 
         if review_timestamp > latest_retrieval:

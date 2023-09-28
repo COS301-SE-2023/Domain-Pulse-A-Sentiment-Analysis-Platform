@@ -16,10 +16,12 @@ from dotenv import load_dotenv
 import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
+BACKEND_DIR = BASE_DIR.parent.parent
+ASSETS_DIR = BASE_DIR.parent / "assets"
 
-ENV_FILE = BASE_DIR.parent / ".env"
-DATABASE_ENV_FILE = BASE_DIR.parent / ".postgresql.env"
+ENV_FILE = BACKEND_DIR / ".env"
+DATABASE_ENV_FILE = BACKEND_DIR / ".postgresql.env"
 load_dotenv(ENV_FILE)
 load_dotenv(DATABASE_ENV_FILE)
 
@@ -31,10 +33,10 @@ RUNSERVER_PORT = os.getenv("DJANGO_PROFILES_PORT")
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
+    "127.0.0.1",
     "localhost",
     "154.73.32.89",
     ".domainpulse.app",
@@ -76,10 +78,29 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "profileservice",
     "check_auth",
+    "reportgenerator",
     "corsheaders",
 ]
 
+
+def append_installed_apps(enabled):
+    if enabled == "True":
+        INSTALLED_APPS.append("elasticapm.contrib.django")
+
+
+APM_ENABLED = os.getenv("APM_ENABLED")
+append_installed_apps(APM_ENABLED)
+
+ELASTIC_APM = {
+    "DEBUG": True,
+    "LOG_LEVEL": "debug",
+    "SERVER_URL": os.getenv("APM_SERVER_URL"),
+    "SERVICE_NAME": "profiles",
+    "SECRET_TOKEN": os.getenv("APM_TOKEN"),
+}
+
 MIDDLEWARE = [
+    'elasticapm.contrib.django.middleware.Catch404Middleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -118,7 +139,6 @@ from sshtunnel import SSHTunnelForwarder
 
 local_port_to_connect_to = -1
 if os.getenv("USE_TUNNEL") != "False":
-
     # setup ssh tunnel
     ssh_tunnel = SSHTunnelForwarder(
         os.getenv("DB_TUNNEL_HOST"),

@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from django.http import JsonResponse, HttpRequest, HttpResponse
+from unidecode import unidecode
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
@@ -13,7 +14,7 @@ TRUSTPILOT_API_KEY = os.getenv("TRUSTPILOT_API_KEY")
 ENDPOINT = "https://api.app.outscraper.com/trustpilot/reviews"
 # url of the place that is reviewed - not the url of the TrustPilot page (performance). This url can be found as the last part of the TrustPilot URL
 # number of reviews to return (please keep this to a small number, around 1-10 ideally)
-REVIEWS_LIMIT = 5
+REVIEWS_LIMIT = 40
 
 HEADERS = {"X-API-KEY": TRUSTPILOT_API_KEY}
 
@@ -46,7 +47,10 @@ def get_trustpilot_reviews(query_url: str, last_refreshed_timestamp):
         reviews = results["data"][0]
         review_item = {}
         for r in reviews:
-            review_item = {"text": r["review_text"], "timestamp": r["review_date"]}
+            review_item = {
+                "text": unidecode(r["review_text"]),  # Decoding unsupported characters
+                "timestamp": r["review_date"],
+            }
 
             if r["review_date"] > latest_retrieval:
                 latest_retrieval = r["review_date"]
