@@ -146,6 +146,12 @@ export class SourceSelectorComponent implements OnInit {
     this.newSourceUrl = '';
     this.showAddSourcesModal = false; */
   }
+  
+  transformURL(): string {
+    let url= this.getLiveReviewLink();
+    url = url.replace(/\s+/g, '-').toLowerCase();
+    return url;
+  }
 
   /* elif type_of_source.lower() == "livereview":
         if "is_active" not in params:

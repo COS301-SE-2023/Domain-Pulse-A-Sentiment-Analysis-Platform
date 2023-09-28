@@ -1004,6 +1004,18 @@ describe('SourceSelectorComponent', () => {
 
   });
 
+  it('should transform a URL with spaces to a URL with dashes', async () => {
+
+    // Spy on the getLiveReviewLink() function so that we can return a controlled URL.
+    spyOn(component, 'getLiveReviewLink').and.returnValue('https://example.com/path/with spaces');
+
+    // Call the transformURL() function and get the transformed URL.
+    const transformedURL = component.transformURL();
+
+    // Expect the transformed URL to be a URL with dashes.
+    expect(transformedURL).toBe('https://example.com/path/with-spaces');
+  });
+
 
   afterEach(() => {
     fixture.destroy();
