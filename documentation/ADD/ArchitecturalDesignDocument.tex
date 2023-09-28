@@ -125,6 +125,8 @@ Note that no pattern directly addresses the quality requirement of security. Thi
 \section{Technology Choices}
 
 \subsection{Deployment Technology}
+
+
 To deploy our application we use docker and its accompanying set of technologies.
 \subsubsection{Docker Engine}
     For each of our backend services we define a Dockerfile which defines the python environment and dependencies needed for the service to run.
@@ -138,14 +140,21 @@ To deploy our application we use docker and its accompanying set of technologies
     \newline For each of the services there is a workflows defined that does the following
     \begin{itemize}
         \item Inject the repository secrets needed to connect to our servers into the action runner
-        \item use a cache of the dependencies needed to run tests to decrease ci/cd times
-        \item run tests on the service
-        \item build the docker image for the service and push to docker hub
+        \item Use a cache of the dependencies needed to run tests to decrease CI/CD times
+        \item Run tests on the service
+        \item Build the docker image for the service and push to docker hub
     \end{itemize}
     It is inefficient to always build the docker image and push that because the docker image would only change when the code in the specific service changes.
-    \newline So what we do to speed up the ci/cd process is use git diff to see whether code in the specific folder of the service has changed, only then does the image get built and pushed to docker hub.
-    \newline IMAGE OF GITHUB WORKFLOWS PROCESS
-    \newline IMAGE OF DEPLOYMENT DIAGRAM (showing all the services, where they live and what they run on)
+    \newline What we do to speed up the CI/CD process is use git diff to see whether code in the specific folder of the service has changed, only then does the image get built and pushed to docker hub.
+    \newpage
+    \begin{figure}[ht]
+        \begin{center}
+            \includegraphics[width=1\textwidth]{images/domain-pulse-deployment.drawio.png}
+        \end{center}
+        \caption{Deployment Diagram}
+    \end{figure}
+
+    \newpage
 
 \subsection{Frontend Technology}
 Our frontend consists of the use of Angular which is an open source web application development framework that was developed by google. Angular is used to build dynamic and responsive applications.
