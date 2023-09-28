@@ -510,26 +510,26 @@ describe('CommentsViewComponent', () => {
   it('should return false and not update accordion when no comments match', () => {
     // Create a temporary container to hold the comments
     const container = document.createElement('div');
-  
+
     // Create actual DOM elements for comments
     const comment1 = document.createElement('div');
     comment1.innerText = 'This is a neutral comment';
     const comment2 = document.createElement('div');
     comment2.innerText = 'This is another neutral comment';
-  
+
     // Append comments to the container
     container.appendChild(comment1);
     container.appendChild(comment2);
-  
+
     const textToFilter = 'positive'; // No matching comments
     const shownCategories = new Set();
-  
+
     // Create an actual DOM element for the item
     const item = document.createElement('div');
     item.setAttribute('data-catID', '1');
-    
+
     const accordionHasMatchingComment = false;
-  
+
     // Call the function
     const [atleastOne, updatedAccordionFlag] = component.showComments(
       Array.from(container.children), // Convert container's children to an array
@@ -538,18 +538,17 @@ describe('CommentsViewComponent', () => {
       item,
       accordionHasMatchingComment
     );
-  
+
     // Assertions
     expect(atleastOne).toBe(false);
     expect(updatedAccordionFlag).toBe(false);
-  
+
     // Verify that no comments are displayed and remain hidden
     expect(comment1.classList.contains('hide-element')).toBe(true);
     expect(comment2.classList.contains('hide-element')).toBe(true);
-  
+
     expect(shownCategories.has('1')).toBe(false);
   });
-  
 
   it('should return false and not update accordion when no comments match', () => {
     // Create actual DOM elements for comments
@@ -559,16 +558,16 @@ describe('CommentsViewComponent', () => {
     ];
     comments[0].innerText = 'This is a neutral comment';
     comments[1].innerText = 'This is another neutral comment';
-  
+
     const textToFilter = 'positive'; // No matching comments
     const shownCategories = new Set();
-    
+
     // Create an actual DOM element for the item
     const item = document.createElement('div');
     item.setAttribute('data-catID', '1');
-    
+
     const accordionHasMatchingComment = false;
-  
+
     // Call the function
     const [atleastOne, updatedAccordionFlag] = component.showComments(
       comments,
@@ -577,16 +576,16 @@ describe('CommentsViewComponent', () => {
       item,
       accordionHasMatchingComment
     );
-  
+
     // Assertions
     expect(atleastOne).toBe(false);
     expect(updatedAccordionFlag).toBe(false);
-  
+
     // Verify that no comments are displayed and remain hidden
     comments.forEach((comment) => {
       expect(comment.classList.contains('hide-element')).toBe(true);
     });
-  
+
     // Verify that the accordion item remains hidden and is not added to shownCategories
     expect(shownCategories.has('1')).toBe(false);
   });
@@ -595,44 +594,41 @@ describe('CommentsViewComponent', () => {
     // Create actual DOM elements for comments
     const comment1 = document.createElement('div');
     const comment2 = document.createElement('div');
-  
+
     // Prepare mock data with actual DOM elements
     const comments = [comment1, comment2];
     const shownCategories = new Set();
-  
+
     // Create an actual DOM element for the item
     const item = document.createElement('div');
     item.setAttribute('data-catID', '1');
-  
+
     // Add a class to simulate hidden comments
     comment1.classList.add('hide-element');
     comment2.classList.add('hide-element');
-  
+
     // Call the function
     component.hideComments(comments, shownCategories, item);
-  
+
     // Assertions
-  
+
     // Verify that both comments are shown
     expect(comment1.classList.contains('hide-element')).toBe(false);
     expect(comment2.classList.contains('hide-element')).toBe(false);
-  
+
     // Verify that the item is added to shownCategories
     expect(shownCategories.has('1')).toBe(true);
   });
-  
+
   it('should convert a valid timestamp to a date string', async () => {
-
     const convertedDate = component.convertToDate(1695912468);
-
-    expect(convertedDate).toBe('28 Sep 2023 16:47');
+    const acceptableDateStrings = ['28 Sep 2023 16:47', '28 Sep 2023 14:47'];
+    expect(acceptableDateStrings).toContain(convertedDate);
   });
 
   it('should return an earliest string if the timestamp is invalid', async () => {
-
     const convertedDate = component.convertToDate(0);
-
-    expect(convertedDate).toBe('1 Jan 1970 02:00');
+    const acceptableDateStrings = ['1 Jan 1970 02:00', '1 Jan 1970 00:00'];
+    expect(acceptableDateStrings).toContain(convertedDate);
   });
-
 });

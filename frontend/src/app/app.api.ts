@@ -296,7 +296,7 @@ export class AppApi {
 
   setIsActive(sourceID: string, isActive: boolean): Observable<any> {
     const setIsActiveUrl = this.domainBaseUrl + 'domains/toggle_is_active';
-    console.log("log here: " + isActive)
+    // console.log("log here: " + isActive)
     const body = {
       source_id: sourceID,
       is_active: isActive,
@@ -306,7 +306,7 @@ export class AppApi {
 
   generateReport(domain_id: string): Observable<any> {
     const generateReportUrl = this.profilesBaseUrl + 'report/generate_report';
-    console.log("log here: " + domain_id) 
+    // console.log("log here: " + domain_id) 
     const body = {
       domain_id: domain_id,
     };

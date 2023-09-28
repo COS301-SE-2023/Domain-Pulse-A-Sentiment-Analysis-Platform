@@ -132,7 +132,7 @@ export class TooltipDirective {
 
 
       const link = this.renderer.createElement('a');
-      console.log(this.currHost);
+      // console.log(this.currHost);
       this.renderer.setAttribute(link, 'href', 'http://' + this.currHost + '/help' + (this.searchTerm? (`?q=${this.searchTerm}`): ""));
       this.renderer.setAttribute(link, 'target', '_blank'); 
       this.renderer.setStyle(link, 'color', 'white');

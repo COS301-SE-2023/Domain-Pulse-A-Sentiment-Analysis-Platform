@@ -525,7 +525,7 @@ export class AppState {
 
           this.store.dispatch(new SetSource(null));
 
-          console.log(ctx.getState().domains);
+          // console.log(ctx.getState().domains);
         });
       });
     });
@@ -648,8 +648,8 @@ export class AppState {
           return of(res);
         } else {
 
-          console.log("added this source: ");
-          console.log(res)
+          // console.log("added this source: ");
+          // console.log(res)
           let domainRes = res.domain;
           let domainsIDs = domainRes.sources.map(
             (source: any) => source.source_id
@@ -683,16 +683,16 @@ export class AppState {
   
           this.store.dispatch(new SetSourceIsLoading(true));
           this.store.dispatch(new SetSource(lastSource));
-          console.log("identifier3: " + state.platform)
+          // console.log("identifier3: " + state.platform)
           if(state.platform == "livereview" || state.platform == "csv"){
-            console.log("live review here")
+            // console.log("live review here")
             this.store.dispatch(new GetSourceDashBoardInfo());
           }
           else{
             lastSource.isRefreshing = true;
             this.store.dispatch(new RefreshSourceData(res.domain.new_source_id));
           }
-          console.log("identifier4: " + res.domain.new_source_id)
+          // console.log("identifier4: " + res.domain.new_source_id)
           return of(res.domain.new_source_id);
         }
       })
@@ -853,9 +853,9 @@ export class AppState {
     state: RefreshSourceData
   ) {
     let selectedSource = ctx.getState().selectedSource;
-    console.log(selectedSource)
-    console.log(selectedSource?.params)
-    console.log(selectedSource?.params?.source_type)
+    // console.log(selectedSource)
+    // console.log(selectedSource?.params)
+    // console.log(selectedSource?.params?.source_type)
     if(selectedSource?.url == "live-review-logo.png" || selectedSource?.url == "csv-logo.png"){
 
       this.store.dispatch(new ToggleIsRefreshing(true, selectedSource?.id));
@@ -908,7 +908,7 @@ export class AppState {
         return;
       }
 
-      console.log("calling try refresh in yt")
+      // console.log("calling try refresh in yt")
       this.store.dispatch(
         new TryRefresh(sourceID)
       ).subscribe(() => {
@@ -930,7 +930,7 @@ export class AppState {
       repeatWhen((completed) => completed),
       takeWhile((result) => !(result.status === 'FAILURE' || result.is_done), true), 
       tap((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.status === 'FAILURE' || result.is_done) {
           if (state.sourceId == ctx.getState().selectedSource?.id) {
             this.store.dispatch(new GetSourceDashBoardInfo());
@@ -962,11 +962,11 @@ export class AppState {
   @Action(ToggleIsRefreshing)
   toggleIsRefreshing(ctx: StateContext<AppStateModel>, state: ToggleIsRefreshing) {
     let domains = ctx.getState().domains;
-    console.log("domains")
-    console.log(domains)
+    // console.log("domains")
+    // console.log(domains)
     if (!domains) return;
 
-    console.log("1")
+    // console.log("1")
 
     for (let i = 0; i < domains.length; i++) {
 
@@ -990,7 +990,7 @@ export class AppState {
 
   @Action(AddNewDomain)
   addNewDomain(ctx: StateContext<AppStateModel>, state: AddNewDomain) {
-    console.log(state);
+    // console.log(state);
 
     return this.appApi
       .addDomain(state.domainName, state.description, state.domainImagUrl)
@@ -1112,14 +1112,14 @@ export class AppState {
   getSourceDashBoardInfo(ctx: StateContext<AppStateModel>) {
     let selectedSource = ctx.getState().selectedSource;
     if (!selectedSource) {
-      console.log("getting stuff1")
+      // console.log("getting stuff1")
 
       let selectedDomain = ctx.getState().selectedDomain;
       if (!selectedDomain) return;
       const sourceIds = selectedDomain.sourceIds;
-      console.log("getting stuff")
+      // console.log("getting stuff")
       this.appApi.getAggregatedDomainData(sourceIds).subscribe((res) => {
-        console.log(res)
+        // console.log(res)
         if (res.status == 'SUCCESS') {
           ctx.patchState({
             overallSentimentScores: {
@@ -1138,7 +1138,7 @@ export class AppState {
     let selectedSourceID = selectedSource.id;
 
     this.appApi.getSourceSentimentData(selectedSourceID).subscribe((res) => {
-      console.log("getting stuff2")
+      // console.log("getting stuff2")
 
       if (res.status === 'FAILURE') {
         this.store.dispatch(new ToastError('Source data could not be loaded'));
@@ -1147,7 +1147,7 @@ export class AppState {
 
       if (res.aggregated_metrics)
         if (res.aggregated_metrics.general.category == 'No data') {
-          console.log("no data")
+          // console.log("no data")
           if(ctx.getState().selectedSource?.url == "live-review-logo.png" || ctx.getState().selectedSource?.url == "csv-logo.png"){
             ctx.patchState({
               noData: true,
@@ -1451,8 +1451,8 @@ export class AppState {
     return this.appApi.changeProfileIcon(profileId, profileIcon).pipe(
       switchMap((res) => {
         if (res.status === 'SUCCESS') {
-          console.log('profile icon changed');
-          console.log(res.profileIcon);
+          // console.log('profile icon changed');
+          // console.log(res.profileIcon);
           const profileDetails: ProfileDetails = {
             profileId: res.id,
             profileIcon: res.profileIcon,
@@ -1614,7 +1614,7 @@ export class AppState {
       map((res) => {
         if(ctx.getState().showReportGeneratorModal){
           if (res.status === 'FAILURE') {
-            console.log(res)
+            // console.log(res)
           
             this.store.dispatch(new ToastError('Your report could not be generated: ' + res.details));
             ctx.patchState({
@@ -1638,11 +1638,11 @@ export class AppState {
 
   static formatResponseSources(responseSources: any[]): DisplaySource[] {
     let displaySources: DisplaySource[] = [];
-    console.log('formatting response sources')
+    // console.log('formatting response sources')
 
 
     for (let responseSource of responseSources) {
-      console.log(responseSource);
+      // console.log(responseSource);
       let sourceUrl: any = '';
       if (responseSource.params.video_id) {
         sourceUrl = responseSource.params.video_id;
@@ -1656,7 +1656,7 @@ export class AppState {
         sourceUrl = 'https://www.trustpilot.com/review/' + responseSource.params.query_url;
       }
 
-      console.log(responseSource);
+      // console.log(responseSource);
 
       let displaySource: DisplaySource = {
         id: responseSource.source_id,
@@ -1668,8 +1668,8 @@ export class AppState {
       };
       displaySources.push(displaySource);
     }
-    console.log('returning display sources');
-    console.log(displaySources);
+    // console.log('returning display sources');
+    // console.log(displaySources);
     return displaySources;
   }
 

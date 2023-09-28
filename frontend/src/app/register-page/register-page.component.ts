@@ -52,7 +52,7 @@ export class RegisterPageComponent {
             this.isSpinning = false;
         },
         error: (error) => {
-          console.log(error);
+          // console.log(error);
           this.isSpinning = false;
         },
       });
