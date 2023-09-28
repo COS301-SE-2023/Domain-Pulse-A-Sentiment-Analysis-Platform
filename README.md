@@ -58,14 +58,11 @@
 │   │   ├── authchecker
 │   │   ├── domains
 │   │   ├── domainservice
-│   │   │   └── migrations
 │   │   ├── sourcevalidator
 │   │   └── utils
 │   ├── engine
 │   │   ├── aggregator
-│   │   │   └── migrations
 │   │   ├── analyser
-│   │   │   └── migrations
 │   │   ├── engine
 │   │   ├── postprocessor
 │   │   ├── preprocessor
@@ -74,26 +71,30 @@
 │   ├── live_update
 │   ├── mockdata
 │   ├── profiles
+│   │   ├── assets
 │   │   ├── check_auth
-│   │   │   └── migrations
 │   │   ├── profiles
 │   │   ├── profileservice
-│   │   │   └── migrations
+│   │   ├── reportgenerator
 │   │   └── utils
 │   ├── scripts
 │   ├── sourceconnector
 │   │   ├── googlereviews
 │   │   ├── refresh
-│   │   │   └── migrations
 │   │   ├── sourceconnector
 │   │   ├── tripadvisor
+│   │   ├── trustpilot
 │   │   ├── utils
 │   │   └── youtube
 │   └── warehouse
+│       ├── CSV
 │       ├── authchecker
 │       ├── datamanager
+│       ├── ingest
+│       │   ├── migrations
+│       │   ├── static
+│       │   └── templates
 │       ├── query
-│       │   └── migrations
 │       ├── utils
 │       └── warehouse
 ├── documentation
@@ -101,11 +102,9 @@
 │   ├── Coding Standards
 │   ├── Images
 │   ├── SRS
-│   │   ├── Version 1
-│   │   └── Version 2
 │   ├── Technical Installation Manual
+│   ├── Testing Policy
 │   └── User Manual
-│       └── Version 1
 ├── frontend
 │   ├── cypress
 │   │   ├── e2e
@@ -113,18 +112,26 @@
 │   │   └── support
 │   └── src
 │       ├── app
+│       │   ├── accordion-card
+│       │   │   └── directives
+│       │   ├── comments-accordion-card
+│       │   │   └── directives
 │       │   ├── comments-view
 │       │   ├── graph-selector
+│       │   ├── help-page
 │       │   ├── login-page
 │       │   ├── main
 │       │   ├── modal-container
 │       │   ├── register-page
 │       │   ├── sidebar
 │       │   ├── source-selector
-│       │   └── statistic-selector
+│       │   ├── statistic-selector
+│       │   └── tooltip
 │       └── assets
+│           ├── helpPage
 │           ├── icons
 │           └── logos
+├── nginx
 └── notebooks
 ```
 
