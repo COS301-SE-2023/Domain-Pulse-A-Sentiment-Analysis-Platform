@@ -260,12 +260,12 @@ A Maintainability index of 30 is considered the minimum requirement, as it is co
     \includegraphics[width=0.9\textwidth]{Cyclomatic.png}
 \end{figure}
 Similarly to the minimum Maintainability index value, 3 is considered the maximum value for our Cyclomatic Complexity to ensure a simple and readable codebase, for ease of development.
-\\Therefore all tests have passed, and the system is considered to be highly modifiable.
+\\\\Therefore all tests have passed, and the system is considered to be highly modifiable.
 \newpage
 \section{Code Coverage}
 Any commit made to a branch causes automated tests to be run on the codebase of that branch, thereafter the code coverage of said branch is calculated.
 Any branch being merged via pull request into the development branch (dev) needs to have the coverage of changes to the codebase to match or better the coverage of the development branch.
-Furthermore, the coverage of the newly committed code (ie: patch) must match or exceed the coverage percentage of the project.
+\\\\Furthermore, the coverage of the newly committed code (ie: patch) must match or exceed the coverage percentage of the project.
 This ensures that the coverage of the codebase is never decreasing, and that sufficient testing is being done on the codebase.
 Furthermore any time the development branch is merged into the master branch, the coverage of the development branch must match or be higher than that of the master branch, ensuring an increasing coverage and sufficient testing.
 \begin{itemize}
