@@ -66,6 +66,7 @@ describe('Logging In - Basic Auth', function () {
     cy.wait(2000);
     cy.reload();
     cy.wait(2000);
+    cy.get('[data-cy=sidebar]').click();
     cy.get('[data-cy=profileModalToggle]').click();
     cy.get('[data-cy=openDeleteAccount]').click();
     cy.get('[data-cy=passwordDeleteAccount]').type('cypress');
