@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { AttempGuestLogin, AttempPsswdLogin } from '../app.actions';
+import { AttempGuestLogin, AttempPsswdLogin, Logout } from '../app.actions';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -20,6 +20,15 @@ export class LoginPageComponent {
     // if the parameter u is present, check if it equals guest
     const u = this.activatedRoute.snapshot.queryParamMap.get('u');
     this.evaluateUser(u);
+
+    const c = this.activatedRoute.snapshot.queryParamMap.get('c');
+    this.logoutIfSet(c);
+  }
+
+  logoutIfSet(c: string | null) {
+    if (c && c === 'clear') {
+      this.store.dispatch(new Logout());
+    }
   }
 
   evaluateUser(u: string | null) {
