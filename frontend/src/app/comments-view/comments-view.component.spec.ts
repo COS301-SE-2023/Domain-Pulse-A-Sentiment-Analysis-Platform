@@ -13,6 +13,7 @@ const mockCommentData = [
   {
     id: 'comment-1',
     data: 'When a Coffee shop serves gluten-free cake they get a 110% review from me. The gluten-free orange almond cake is delicious. Thank you, Goddess Café. This is a really feel-good place for anyone. I visited them a few times now. The service is exceptional and I feel like a goddess when eating there. The Brooklyn Goddess Café is just as good. Difficult to choose, but Soutpansberg is more spacious',
+    date: 1695908174,
     general: {
       category: 'VERY_POSITIVE',
       score: 0.9998,
@@ -36,6 +37,7 @@ const mockCommentData = [
   {
     id: 'comment-2',
     data: 'Lovely place, fantastic atmosphere, very delicious food and Rosy helped us, very friendly and beautiful woman who cares for her Clients',
+    date: 1695908174,
     general: {
       category: 'VERY_POSITIVE',
       score: 0.9999,
@@ -59,6 +61,7 @@ const mockCommentData = [
   {
     id: 'comment-3',
     data: "Extremely overated, coffee was mediocre and the pink white chocolate was seriously bad, could not finish the drink. The service was so bad we didn't even order food. Why bother.",
+    date: 1695908174,
     general: {
       category: 'VERY_NEGATIVE',
       score: 0.0001,
@@ -82,6 +85,7 @@ const mockCommentData = [
   {
     id: 'comment-4',
     data: 'Stopped for a quick sandwich. Sliced way to thick. Dry. Not tasty. Will not come back.',
+    date: 1695908174,
     general: {
       category: 'VERY_NEGATIVE',
       score: 0.0002,
@@ -105,6 +109,7 @@ const mockCommentData = [
   {
     id: 'comment-5',
     data: "Beautifully decorated restaurant ideal for the girly girl in you. Pink and flowers are everywhere.The atmosphere is relaxed and tranquil. What I like about this one in Rietondale is that it is spacious. Enjoy a comfortable outing with friends with a variety of 'scene settings' to take photo's. I had the Persian Love Spice cake that was really delicious but it contains quite a number of hard cardamom seeds which is a put-off. I suggest using cardamom powder instead. Overall a great experience.",
+    date: 1695908174,
     general: {
       category: 'VERY_POSITIVE',
       score: 0.9998,
@@ -128,6 +133,7 @@ const mockCommentData = [
   {
     id: 'comment-6',
     data: 'The place is truly beautiful with a lot of dedicated sites for pictures. We had pink water to cool us down from the hit that was very thoughtful. Food was delicious as well as well presented. I like the fact that the waiter(Charles) had good suggestions it is not often that you get those. I will definitely come back for the cakes they are delicious.',
+    date: 1695908174,
     general: {
       category: 'VERY_POSITIVE',
       score: 0.9999,
@@ -151,6 +157,7 @@ const mockCommentData = [
   {
     id: 'comment-7',
     data: 'It’s bigger than the Waterkloof one, more spacious and pink fully decorated. One thing I enjoyed was the cappuccino 😍 the cup was big enough to not want a refill. I ordered a croissant with eggs and my friend ordered salmon Benedict something. The dishes looked beautiful for the pictures but the salmon was actually not good. The waitress who was helping us was nice and friendly. I complained about parking but there’s a space outside by the municipal park and there’s a car guard. Overall experience was okay. I’ll go back again just for the cappuccino.',
+    date: 1695908174,
     general: {
       category: 'VERY_POSITIVE',
       score: 0.998,
@@ -246,6 +253,7 @@ describe('CommentsViewComponent', () => {
   it('getEmotionColor() function should correctly classify the emotion', () => {
     expect(component.getEmotionColor('anger')).toBe('negative-color');
     expect(component.getEmotionColor('joy')).toBe('very-positive-color');
+    expect(component.getEmotionColor('surprise')).toBe('surprise-color');
     expect(component.getEmotionColor('sadness')).toBe('sad-color');
     expect(component.getEmotionColor('neutral')).toBe('neutral-color');
     expect(component.getEmotionColor('')).toBe('neutral-color');
@@ -613,5 +621,18 @@ describe('CommentsViewComponent', () => {
     expect(shownCategories.has('1')).toBe(true);
   });
   
+  it('should convert a valid timestamp to a date string', async () => {
+
+    const convertedDate = component.convertToDate(1695912468);
+
+    expect(convertedDate).toBe('28 Sep 2023 16:47');
+  });
+
+  it('should return an earliest string if the timestamp is invalid', async () => {
+
+    const convertedDate = component.convertToDate(0);
+
+    expect(convertedDate).toBe('1 Jan 1970 02:00');
+  });
 
 });
