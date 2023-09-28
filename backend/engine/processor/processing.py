@@ -23,7 +23,7 @@ def summarize_general(general_metrics, vader):
     vader_compound = round((vader_compound + 1) / 2, 4)
 
     diff = intensity - vader_compound
-    if diff <= -0.6 or diff >= 0.6:
+    if diff <= -0.66 or diff >= 0.66:
         fineCat = "UNDECIDED"
         score = 0.5
     else:
