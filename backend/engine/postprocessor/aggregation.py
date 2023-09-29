@@ -26,7 +26,7 @@ def produce_timeseries(individual_data: list):
 
     overall_data_points = []
     num_sentiments = []
-    toxic_data_points = {"toxic_count": [], "overall_helper": []}
+    # toxic_data_points = {"toxic_count": [], "overall_helper": []}
     ratios_time_series = {"pos": [], "neu": [], "neg": []}
     emotions_time_series = {
         "anger": [],
@@ -60,14 +60,16 @@ def produce_timeseries(individual_data: list):
     }
     cumulative_num_sentiments = 0
 
-    toxicity_tracker = {}
+    toxicity_tracker = []
+    total_toxic_count = 0
 
     for record in individual_data:
         stamp_unix = int(record["timestamp"])
-        timestamp = datetime.datetime.fromtimestamp(stamp_unix)
+        # timestamp = datetime.datetime.fromtimestamp(stamp_unix)
+        timestamp = datetime.datetime.utcfromtimestamp(stamp_unix)
         timestamp = timestamp.astimezone(pytz.timezone("Africa/Johannesburg"))
         stamp = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
-        day_stamp = timestamp.strftime("%Y-%m-%d")
+        # day_stamp = timestamp.strftime("%Y-%m-%d")
 
         # Overall
         if record["general"]["category"] != "UNDECIDED":
@@ -108,10 +110,8 @@ def produce_timeseries(individual_data: list):
 
         # Toxicity
         if record["toxicity"]["level_of_toxic"] == "Toxic":
-            if day_stamp in toxicity_tracker:
-                toxicity_tracker[day_stamp] = toxicity_tracker[day_stamp] + 1
-            else:
-                toxicity_tracker[day_stamp] = 1
+            total_toxic_count += 1
+            toxicity_tracker.append([stamp, total_toxic_count])
 
         # Ratios
         # Pos
@@ -143,14 +143,14 @@ def produce_timeseries(individual_data: list):
         ema_tracker["neg"] = new_neg_ema
 
     # Formatting toxicity
-    for day, count in toxicity_tracker.items():
-        toxic_data_points["toxic_count"].append({"x": day, "y": count})
-    toxic_data_points["overall_helper"] = [
-        {"x": ts, "y": sc} for ts, sc in overall_data_points
-    ]
+    # for day, count in toxicity_tracker.items():
+    #     toxic_data_points["toxic_count"].append({"x": day, "y": count})
+    # toxic_data_points["overall_helper"] = [
+    #     {"x": ts, "y": sc} for ts, sc in overall_data_points
+    # ]
 
     retData["overall"] = overall_data_points
-    retData["toxicity"] = toxic_data_points
+    retData["toxicity"] = toxicity_tracker
     retData["num_records"] = num_sentiments
     retData["emotions"] = emotions_time_series
     retData["ratios"] = ratios_time_series

@@ -550,6 +550,36 @@ describe('AppApi', () => {
     req.flush(expectedResponse);
   });
 
+  /* attemptGuestLogin(): Observable<any> {
+    const attemptPsswdLoginUrl = this.profilesBaseUrl + 'check/try_guest_login/';
+    // send with credentials enabled
+    return this.http.post(attemptPsswdLoginUrl, {}, {
+      withCredentials: true,
+    });
+  } */
+
+  it('should make a POST request for guest login', () => {
+    const username = 'testuser';
+    const password = 'testpassword';
+  
+    const expectedResponse = {
+
+    }
+      
+    appApi.attemptGuestLogin().subscribe((response) => {
+      expect(response).toEqual(expectedResponse);
+    });
+  
+    const expectedUrl = '/api/profiles/check/try_guest_login/';
+    const expectedMethod = 'POST';
+  
+    const req = httpTestingController.expectOne(expectedUrl);
+    expect(req.request.method).toEqual(expectedMethod);
+    expect(req.request.body).toEqual({});
+  
+    req.flush(expectedResponse);
+  });
+
   it('should make a POST request to get a user by ID', () => {
     const userID = 456;
   
@@ -699,6 +729,31 @@ describe('AppApi', () => {
   
       req.flush(expectedResponse);
     });
+
+  it('should send a POST request to try refresh a source', () => {
+    const sourceID = '123';
+
+    const expectedResponse = {status: 'SUCCESS', is_done: false,
+    num_remaining: jasmine.stringMatching(
+      /[0-9]+/
+    ),};
+
+    appApi.tryRefresh(sourceID).subscribe((response) => {
+      expect(response).toEqual(expectedResponse);
+    });
+
+    const expectedUrl = '/api/warehouse/query/try_refresh/';
+    const expectedMethod = 'POST';
+    const expectedBody = {
+      source_id: sourceID,
+    };
+
+    const req = httpTestingController.expectOne(expectedUrl);
+    expect(req.request.method).toEqual(expectedMethod);
+    expect(req.request.body).toEqual(expectedBody);
+
+    req.flush(expectedResponse);
+  });
   
   // put this in the api file btw
   // it('should send a file with sourceID when sendFile is called', () => {

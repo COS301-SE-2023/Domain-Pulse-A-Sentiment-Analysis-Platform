@@ -242,7 +242,7 @@ class LiveIngestionTests(TestCase):
             placeholder="Write your review here..."
           ></textarea>
           <input type="hidden" name="source_id" value="{{source_id}}" />
-          <button type="submit" value="Submit" class="button center clickable-item">
+          <button type="submit" value="Submit" class="flex-row button center clickable-item">
             submit
             <div class="button-spinner"></div>
           </button>
@@ -503,6 +503,15 @@ class LiveIngestionTests(TestCase):
 
         self.assertEqual(result["status"], "FAILURE")
         self.assertEqual(result["details"], "Invalid CSV file provided")
+
+    def test_invalid_csv_date(self):
+        csv_data = (
+            "reviews,time\nReview 1,2023-09-05T12:00:00\nReview 2,2023-09-05T13:00:00"
+        )
+        file = SimpleUploadedFile("test.csv", csv_data.encode("utf-8"))
+        result = csv_connector.handle_request(file)
+        self.assertEqual(result["status"], "FAILURE")
+        self.assertEqual(result["details"], "Invalid date format")
 
     def test_empty_csv(self):
         valid_csv_data = ""

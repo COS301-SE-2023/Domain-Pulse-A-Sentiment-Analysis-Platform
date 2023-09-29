@@ -622,3 +622,31 @@ class ProfileChecksTests(TestCase):
         flag, token = check_views.extract_token(request2)
         self.assertEqual(flag, False)
         self.assertEqual(token, "Invalid token format")
+
+@patch("os.getenv")
+def test_try_guest_login(self, mock_env):
+    mock_env.return_value = "True"
+    request = HttpRequest()
+    request.method = "POST"
+    response = check_views.try_guest_login(request)
+    data = json.loads(response.content)
+    self.assertEqual(data["status"], "SUCCESS")
+    self.assertEqual(data["guest_token"], "True")
+
+def test_try_guest_login_invalid(self):
+    request = HttpRequest()
+    request.method = "GET"
+    response = check_views.try_guest_login(request)
+    data = json.loads(response.content)
+    self.assertEqual(data["status"], "FAILURE")
+    self.assertEqual(data["message"], "Invalid request")
+
+@patch("os.getenv")
+def test_try_guest_login_false(self, mock_env):
+    mock_env.return_value = "False"
+    request = HttpRequest()
+    request.method = "POST"
+    response = check_views.try_guest_login(request)
+    data = json.loads(response.content)
+    self.assertEqual(data["status"], "FAILURE")
+    self.assertEqual(data["message"], "Guest login is disabled")

@@ -232,7 +232,7 @@ export class GraphSelectorComponent implements OnInit {
           stacked: true,
           events: {
             selection: function (chart: any, e: any) {
-              console.log(new Date(e.xaxis.min));
+              // console.log(new Date(e.xaxis.min));
             },
           },
         },
@@ -316,7 +316,7 @@ export class GraphSelectorComponent implements OnInit {
         colors: [
           'rgba(255, 88, 88, 0.8)',
           'rgba(212, 116, 78, 0.8)',
-          'rgba(42, 45, 54, 0.8)',
+          'rgba(53, 92, 209, 0.8)',
           'rgba(119, 228, 105, 0.8)',
           'rgba(224, 101, 187, 0.8)',
           'rgba(60, 113, 211, 0.8)',
@@ -396,7 +396,7 @@ export class GraphSelectorComponent implements OnInit {
         colors: [
           'rgba(255, 88, 88, 0.8)',
           'rgba(212, 116, 78, 0.8)',
-          'rgba(42, 45, 54, 0.8)',
+          'rgba(53, 92, 209, 0.8)',
           'rgba(119, 228, 105, 0.8)',
           'rgba(224, 101, 187, 0.8)',
           'rgba(60, 113, 211, 0.8)',
@@ -520,8 +520,70 @@ export class GraphSelectorComponent implements OnInit {
         },
         labels: ['Toxicity'],
       },
-
       {
+        //3.2emotional ratios time series
+        series: [
+          {
+            name: 'Total Reviews',
+            data: [
+              ['2023-08-20T00:00', 10],
+              ['2023-08-21T03:00', 10],
+              ['2023-08-22T06:00', 40],
+              ['2023-08-23T00:00', 0],
+              ['2023-08-23T03:00', 10],
+            ],
+          },
+          {
+            name: 'Toxic Reviews',
+            data: [
+              ['2023-08-20T00:00', 5],
+              ['2023-08-21T03:00', 6],
+              ['2023-08-22T06:00', 7],
+              ['2023-08-23T00:00', 8],
+              ['2023-08-23T03:00', 9],
+            ],
+          },
+          
+        ],
+        chart: {
+          height: '100%',
+          type: 'area',
+        },
+        title: {
+          text: 'Proportion of Toxic Reviews over time',
+        },
+        colors: [
+          'rgba(48, 168, 0, 0.8)',
+          'rgba(251, 38, 0, 0.8)',
+        ],
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            opacityFrom: 0.6,
+            opacityTo: 0.8,
+          },
+        },
+        legend: {
+          position: 'bottom',
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+        yaxis: [
+          {
+            labels: {
+              formatter: function (val: any) {
+                return val.toFixed(0);
+              },
+            },
+          },
+        ],
+      },
+
+      /* {
         series: [
           {
             name: 'toxicity',
@@ -535,7 +597,7 @@ export class GraphSelectorComponent implements OnInit {
   
   
               { x: '2023-08-31', y: 2 },
-              { x: '2023-08-31', y: 1 }, */
+              { x: '2023-08-31', y: 1 }, 
             ],
           },
           {
@@ -640,7 +702,7 @@ export class GraphSelectorComponent implements OnInit {
             },
           },
         ],
-      },
+      }, */
     ],
     [
       {
@@ -733,7 +795,7 @@ export class GraphSelectorComponent implements OnInit {
   }
 
   public processOverallSentiment(data: any) {
-    console.log(data);
+    // console.log(data);
     if (data) {
       if (data.aggregated_metrics.general.category != 'No data') {
         this.updatedGraphArray = this.assignGraphData(
@@ -742,7 +804,7 @@ export class GraphSelectorComponent implements OnInit {
           this.chartOptionsArray
         );
         setTimeout(() => {
-          console.log('rendering graph after fetching data');
+          // console.log('rendering graph after fetching data');
           this.renderGraph();
         }, 300);
       }
@@ -817,14 +879,14 @@ processOverallSetniment(data) {
     const aggregatedMetrics = aggregated_metrics;
     const timeseriesData = timeseries;
 
-    console.log('timeseries data');
-    console.log(timeseriesData);
+    // console.log('timeseries data');
+    // console.log(timeseriesData);
 
-    console.log('aggregated metrics');
-    console.log(aggregatedMetrics);
+    // console.log('aggregated metrics');
+    // console.log(aggregatedMetrics);
 
-    console.log('graph array');
-    console.log(graphArray);
+    // console.log('graph array');
+    // console.log(graphArray);
 
     const score = aggregatedMetrics.general.score * 100;
     graphArray[0][0].series = [score];
@@ -871,8 +933,18 @@ processOverallSetniment(data) {
     graphArray[2][1].series[4].data = timeseriesData.emotions.surprise;
     graphArray[2][1].series[5].data = timeseriesData.emotions.sadness;
 
-    graphArray[3][1].series[0].data = timeseriesData.toxicity.toxic_count;
-    graphArray[3][1].series[1].data = timeseriesData.toxicity.overall_helper;
+    graphArray[3][1].series[0].data = timeseriesData.num_records;
+
+    let tempArray = timeseriesData.toxicity;
+    if(timeseriesData.toxicity.length > 1){
+      tempArray.unshift([timeseriesData.num_records[0][0], 0]);
+      tempArray.push([timeseriesData.num_records[timeseriesData.num_records.length - 1][0], timeseriesData.toxicity[timeseriesData.toxicity.length - 1][1]]);
+    } 
+    
+    // console.log('temp array');
+    // console.log(tempArray);
+
+    graphArray[3][1].series[1].data = tempArray;
 
     graphArray[4][0].series[0].data = timeseriesData.num_records;
 
@@ -912,12 +984,12 @@ processOverallSetniment(data) {
   }
 
   renderGraph() {
-    console.log(
-      'rendering graph at stat index: ' +
-        this.currentStatisticIndex +
-        ' and graph index: ' +
-        this.currentGraphIndex
-    );
+    // console.log(
+    //   'rendering graph at stat index: ' +
+    //     this.currentStatisticIndex +
+    //     ' and graph index: ' +
+    //     this.currentGraphIndex
+    // );
 
     const container = this.chartContainer.nativeElement;
     const containerHeight = container.offsetHeight;
