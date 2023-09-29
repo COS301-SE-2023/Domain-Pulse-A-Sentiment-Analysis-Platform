@@ -64,6 +64,8 @@
   <br />
 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
   <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Deployment_diagram.pdf">📈Deployment Diagram</a>
+  <br />
 <br>
 <br>
 
