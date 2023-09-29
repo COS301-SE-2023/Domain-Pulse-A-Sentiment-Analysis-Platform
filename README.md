@@ -50,21 +50,21 @@
 
 # 📄**Documentation (Demo 4)**
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/User%20Manual/Version%201/Domain_Pulse_User_Manual_2.pdf">📖User Manual</a>
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/User%20Manual/Version%201/Domain_Pulse_User_Manual_2.pdf">📖User Manual</a>
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Coding%20Standards/CodingStandards.pdf">💻Coding Standards</a>
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Coding%20Standards/CodingStandards.pdf">💻Coding Standards</a>
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Testing%20Policy/TestingPolicy.pdf">🧪Testing Policy Document</a>
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Testing%20Policy/TestingPolicy.pdf">🧪Testing Policy Document</a>
   <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/SRS/Version%204%20(Demo%204)/SRS.pdf">📋SRS (Software Requirements Specification)</a>
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/SRS/Version%204%20(Demo%204)/SRS.pdf">📋SRS (Software Requirements Specification)</a>
   <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">🛠️Technical Installation Manual</a>
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">🛠️Technical Installation Manual</a>
   <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Sentiment_Analysis_Breakdown.pdf">📊Sentiment Analysis Explanation</a>
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Sentiment_Analysis_Breakdown.pdf">📊Sentiment Analysis Explanation</a>
   <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Deployment_diagram.pdf">📈Deployment Diagram</a>
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Deployment_diagram.pdf">📈Deployment Diagram</a>
   <br />
 <br>
 <br>
