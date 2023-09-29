@@ -15,7 +15,7 @@
   </p>
   Documentation
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/User%20Manual/Version%201/Domain_Pulse_User_Manual_2.pdf"><strong>User Manual</strong></a>
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf"><strong>User Manual</strong></a>
   <br />
   <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Coding%20Standards/CodingStandards.pdf"><strong>Coding Standards</strong></a>
   <br />
