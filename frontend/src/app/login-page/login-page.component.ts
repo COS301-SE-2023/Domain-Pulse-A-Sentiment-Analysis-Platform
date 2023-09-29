@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { AttempPsswdLogin } from '../app.actions';
+import { AttempGuestLogin, AttempPsswdLogin, Logout } from '../app.actions';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -13,12 +14,35 @@ export class LoginPageComponent {
   username = '';
   password = '';
 
-  constructor(private store: Store) {}
+  passwordVisible = false;
+
+  constructor(private store: Store, private activatedRoute: ActivatedRoute) {
+    // if the parameter u is present, check if it equals guest
+    const u = this.activatedRoute.snapshot.queryParamMap.get('u');
+    this.evaluateUser(u);
+
+    const wasGuest = localStorage.getItem('wasGuest');
+    this.logoutIfSet(wasGuest);
+  }
+
+  logoutIfSet(wasGuest: string | null) {
+    if(wasGuest != null) {
+      localStorage.removeItem('wasGuest');
+      this.store.dispatch(new Logout());
+    }
+  }
+
+  evaluateUser(u: string | null) {
+    if (u && u === 'guest') {
+      this.store.dispatch(new AttempGuestLogin());
+    }
+  }
 
   login() {
     this.isSpinning = true;
-    
-    this.store.dispatch(new AttempPsswdLogin(this.username, this.password))
+
+    this.store
+      .dispatch(new AttempPsswdLogin(this.username, this.password))
       .subscribe({
         next: (res) => {
           this.isSpinning = false;
@@ -28,11 +52,19 @@ export class LoginPageComponent {
         },
         complete: () => {
           this.isSpinning = false;
-        }
+        },
       });
   }
 
   toggleForgotPasswordModal() {
     this.showForgotPasswordModal = !this.showForgotPasswordModal;
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+  getPasswordType() {
+    return this.passwordVisible ? 'text' : 'password';
   }
 }

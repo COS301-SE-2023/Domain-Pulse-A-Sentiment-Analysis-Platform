@@ -15,7 +15,7 @@ load_dotenv(ENV_FILE)
 TRIPADVISOR_API_KEY = os.getenv("TRIPADVISOR_API_KEY")
 
 ENDPOINT = "https://api.app.outscraper.com/tripadvisor/reviews"
-REVIEWS_LIMIT = 15  # number of reviews to return (please keep this to a small number, around 1-10 ideally)
+REVIEWS_LIMIT = 35  # number of reviews to return (please keep this to a small number, around 1-10 ideally)
 
 HEADERS = {"X-API-KEY": TRIPADVISOR_API_KEY}
 

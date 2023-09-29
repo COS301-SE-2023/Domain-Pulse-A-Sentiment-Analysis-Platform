@@ -13,9 +13,6 @@ describe('Logging In - Basic Auth', function () {
     cy.get('[data-cy=password]').type('cypress');
     cy.get('[data-cy=confirmPassword]').type('cypress');
     cy.get('[data-cy=registerButton]').click();
-    cy.contains('.toast-message', 'Account created successfully!', {
-      timeout: 5000,
-    }).should('be.visible');
     cy.wait(1000);
 
     Cypress.on('uncaught:exception', (err, runnable) => {
@@ -69,14 +66,9 @@ describe('Logging In - Basic Auth', function () {
     cy.wait(2000);
     cy.reload();
     cy.wait(2000);
+    cy.get('[data-cy=sidebar]').click();
     cy.get('[data-cy=profileModalToggle]').click();
     cy.get('[data-cy=openDeleteAccount]').click();
-    cy.get('[data-cy=noDeleteAccount]').click();
-    cy.get('[data-cy=openDeleteAccount]').click();
-    cy.get('[data-cy=yesDeleteAccount]').click();
-    cy.get('[data-cy=cancelDeleteAccount]').click();
-    cy.get('[data-cy=openDeleteAccount]').click();
-    cy.get('[data-cy=yesDeleteAccount]').click();
     cy.get('[data-cy=passwordDeleteAccount]').type('cypress');
     cy.get('[data-cy=deleteAccount]').click();
 

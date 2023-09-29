@@ -30,7 +30,7 @@ def mocked_requests_post_correct(url, json, **kwargs):
     mock_response = MagicMock()
     if (
         url
-        == "http://localhost:"
+        == f"http://{str(os.getenv('DOMAINS_HOST')) }:"
         + str(os.getenv("DJANGO_DOMAINS_PORT"))
         + "/domains/get_domain"
     ):
@@ -62,7 +62,7 @@ def mocked_requests_post_correct(url, json, **kwargs):
         }
     elif (
         url
-        == f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+        == f"http://{str(os.getenv('WAREHOUSE_HOST'))}:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
     ):
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -278,7 +278,7 @@ def mocked_requests_post_failed_warehouse(url, **kwargs):
     mock_response = MagicMock()
     if (
         url
-        == "http://localhost:"
+        == f"http://{str(os.getenv('DOMAINS_HOST')) }:"
         + str(os.getenv("DJANGO_DOMAINS_PORT"))
         + "/domains/get_domain"
     ):
@@ -303,7 +303,7 @@ def mocked_requests_post_failed_warehouse(url, **kwargs):
         }
     elif (
         url
-        == f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+        == f"http://{str(os.getenv('WAREHOUSE_HOST'))}:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
     ):
         mock_response.status_code = 400
 
@@ -314,7 +314,7 @@ def mocked_requests_post_invalid_warehouse(url, **kwargs):
     mock_response = MagicMock()
     if (
         url
-        == "http://localhost:"
+        == f"http://{str(os.getenv('DOMAINS_HOST')) }:"
         + str(os.getenv("DJANGO_DOMAINS_PORT"))
         + "/domains/get_domain"
     ):
@@ -339,7 +339,7 @@ def mocked_requests_post_invalid_warehouse(url, **kwargs):
         }
     elif (
         url
-        == f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+        == f"http://{str(os.getenv('WAREHOUSE_HOST'))}:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
     ):
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -353,7 +353,7 @@ def mocked_requests_post_warehouse_empty(url, **kwargs):
     mock_response = MagicMock()
     if (
         url
-        == "http://localhost:"
+        == f"http://{str(os.getenv('DOMAINS_HOST')) }:"
         + str(os.getenv("DJANGO_DOMAINS_PORT"))
         + "/domains/get_domain"
     ):
@@ -378,7 +378,7 @@ def mocked_requests_post_warehouse_empty(url, **kwargs):
         }
     elif (
         url
-        == f"http://localhost:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+        == f"http://{str(os.getenv('WAREHOUSE_HOST'))}:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
     ):
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -447,6 +447,257 @@ def mocked_requests_post_warehouse_empty(url, **kwargs):
                 },
             },
         }
+    return mock_response
+
+
+def mocked_requests_post_empty_source(url, json, **kwargs):
+    source_type = "csv"
+
+    key = ""
+    if (list(json.values()))[0].__contains__("youtube"):
+        source_type = "youtube"
+        key = "video_id"
+    elif (list(json.values()))[0].__contains__("googlereviews"):
+        source_type = "googlereviews"
+        key = "maps_url"
+    elif (list(json.values()))[0].__contains__("tripadvisor"):
+        source_type = "tripadvisor"
+        key = "tripadvisor_url"
+    elif (list(json.values()))[0].__contains__("trustpilot"):
+        source_type = "trustpilot"
+        key = "query_url"
+
+    mock_response = MagicMock()
+    if (
+        url
+        == f"http://{str(os.getenv('DOMAINS_HOST')) }:"
+        + str(os.getenv("DJANGO_DOMAINS_PORT"))
+        + "/domains/get_domain"
+    ):
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "status": "SUCCESS",
+            "domain": {
+                "_id": "64e245de5da9ebd795ec574e",
+                "name": "Testing",
+                "icon": "https://domainpulseblob.blob.core.windows.net/blob/defaultDomain1.png",
+                "description": "Testing",
+                "sources": [
+                    {
+                        "source_id": "testSouceID",
+                        "source_name": "Youtube Video",
+                        "source_icon": "youtube-logo.png",
+                        "last_refresh_timestamp": 1694119695,
+                        "params": {"source_type": source_type, key: "VQjPKqE39No"},
+                    },
+                    {
+                        "source_id": "testSouceID2",
+                        "source_name": "Youtube Video",
+                        "source_icon": "youtube-logo.png",
+                        "last_refresh_timestamp": 1694119695,
+                        "params": {"source_type": source_type, key: "asdasdad2"},
+                    },
+                ],
+            },
+        }
+    elif (
+        url
+        == f"http://{str(os.getenv('WAREHOUSE_HOST'))}:{str(os.getenv('DJANGO_WAREHOUSE_PORT'))}/query/get_report_data_internal/"
+    ):
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "status": "SUCCESS",
+            "domain": {
+                "aggregated_metrics": {
+                    "general": {"category": "No data", "score": 0},
+                    "emotions": {
+                        "anger": 0,
+                        "disgust": 0,
+                        "fear": 0,
+                        "joy": 0,
+                        "neutral": 0,
+                        "sadness": 0,
+                        "surprise": 0,
+                    },
+                    "toxicity": {
+                        "level_of_toxic": "No data",
+                        "score": 0,
+                    },
+                    "ratios": {
+                        "positive": 0,
+                        "neutral": 0,
+                        "negative": 0,
+                    },
+                },
+                "meta_data": {
+                    "num_analysed": 1,
+                    "earliest_record": (
+                        (datetime.today()) - timedelta(days=1)
+                    ).strftime("%d %B %Y"),
+                    "latest_record": (datetime.now()).strftime("%d %B %Y"),
+                },
+                "individual_metrics": [
+                    {
+                        "_id": "64d5fc4a094459b793def2eb",
+                        "data": "Test data.",
+                        "general": {"category": "Positive", "score": 0.7},
+                        "emotions": {
+                            "surprise": 0.9775,
+                            "sadness": 0.0087,
+                            "joy": 0.0138,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
+                        "ratios": {"positive": 0.38, "neutral": 0.36, "negative": 0.25},
+                        "timestamp": 1691745104,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    },
+                    {
+                        "_id": "64d5fc4a094459b793def2ed",
+                        "data": "nice haircut dawg",
+                        "general": {"category": "POSITIVE", "score": 0.8552},
+                        "emotions": {
+                            "surprise": 0.5332,
+                            "sadness": 0.3991,
+                            "joy": 0.0677,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0057},
+                        "ratios": {"positive": 0.76, "neutral": 0.21, "negative": 0.03},
+                        "timestamp": 1691745057,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    },
+                ],
+                "timeseries": {
+                    "overall": [[(datetime.now()).strftime("%Y-%m-%dT%H:%M:%S"), 0.6]]
+                },
+            },
+            "testSouceID": {
+                "aggregated_metrics": {
+                    "general": {"category": "No data", "score": 0},
+                    "emotions": {
+                        "anger": 0,
+                        "disgust": 0,
+                        "fear": 0,
+                        "joy": 0,
+                        "neutral": 0,
+                        "sadness": 0,
+                        "surprise": 0,
+                    },
+                    "toxicity": {
+                        "level_of_toxic": "No data",
+                        "score": 0,
+                    },
+                    "ratios": {
+                        "positive": 0,
+                        "neutral": 0,
+                        "negative": 0,
+                    },
+                },
+                "meta_data": {
+                    "num_analysed": 0,
+                    "earliest_record": (
+                        (datetime.today()) - timedelta(days=1)
+                    ).strftime("%d %B %Y"),
+                    "latest_record": (datetime.now()).strftime("%d %B %Y"),
+                },
+                "individual_metrics": [
+                    {
+                        "_id": "64d5fc4a094459b793def2eb",
+                        "data": "Test data.",
+                        "general": {"category": "UNDECIDED", "score": 0.5},
+                        "emotions": {
+                            "surprise": 0.9775,
+                            "sadness": 0.0087,
+                            "joy": 0.0138,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
+                        "ratios": {"positive": 0.38, "neutral": 0.36, "negative": 0.25},
+                        "timestamp": 1691745104,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    },
+                    {
+                        "_id": "64d5fc4a094459b793def2ed",
+                        "data": "nice haircut dawg",
+                        "general": {"category": "POSITIVE", "score": 0.8552},
+                        "emotions": {
+                            "surprise": 0.5332,
+                            "sadness": 0.3991,
+                            "joy": 0.0677,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0057},
+                        "ratios": {"positive": 0.76, "neutral": 0.21, "negative": 0.03},
+                        "timestamp": 1691745057,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    },
+                ],
+                "timeseries": {
+                    "overall": [[(datetime.now()).strftime("%Y-%m-%dT%H:%M:%S"), 0.6]]
+                },
+            },
+            "testSouceID2": {
+                "aggregated_metrics": {
+                    "general": {"category": "No data", "score": 0},
+                    "emotions": {
+                        "anger": 0,
+                        "disgust": 0,
+                        "fear": 0,
+                        "joy": 0,
+                        "neutral": 0,
+                        "sadness": 0,
+                        "surprise": 0,
+                    },
+                    "toxicity": {
+                        "level_of_toxic": "No data",
+                        "score": 0,
+                    },
+                    "ratios": {
+                        "positive": 0,
+                        "neutral": 0,
+                        "negative": 0,
+                    },
+                },
+                "meta_data": {
+                    "num_analysed": 1,
+                    "earliest_record": (
+                        (datetime.today()) - timedelta(days=1)
+                    ).strftime("%d %B %Y"),
+                    "latest_record": (datetime.now()).strftime("%d %B %Y"),
+                },
+                "individual_metrics": [
+                    {
+                        "_id": "64d5fc4a094459b793def2eb",
+                        "data": "Test data.",
+                        "general": {"category": "UNDECIDED", "score": 0.5},
+                        "emotions": {
+                            "surprise": 0.9775,
+                            "sadness": 0.0087,
+                            "joy": 0.0138,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
+                        "ratios": {"positive": 0.38, "neutral": 0.36, "negative": 0.25},
+                        "timestamp": 1691745104,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    },
+                    {
+                        "_id": "64d5fc4a094459b793def2ed",
+                        "data": "nice haircut dawg",
+                        "general": {"category": "POSITIVE", "score": 0.8552},
+                        "emotions": {
+                            "surprise": 0.5332,
+                            "sadness": 0.3991,
+                            "joy": 0.0677,
+                        },
+                        "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0057},
+                        "ratios": {"positive": 0.76, "neutral": 0.21, "negative": 0.03},
+                        "timestamp": 1691745057,
+                        "source_id": "64d5fb86521cb3711dea36bb",
+                    },
+                ],
+                "timeseries": {
+                    "overall": [[(datetime.now()).strftime("%Y-%m-%dT%H:%M:%S"), 0.6]]
+                },
+            },
+        }
+
     return mock_response
 
 
@@ -1132,4 +1383,19 @@ class TestGenerateReport(TestCase):
         self.assertEqual(
             response,
             "testSource,1,0,1,0,0,0,0,0,0,0,0,0,0," + time_2 + "," + time_2 + ",3,4\n",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post_empty_source)
+    def test_empty_data(self, mocked_request):
+        request = HttpRequest()
+        request.method = "POST"
+        request._body = json.dumps({"domain_id": "12345"})
+
+        response = report_views.generate_report(request)
+
+        response_data = json.loads(response.content)
+
+        self.assertEqual(
+            response_data,
+            {"status": "FAILURE", "details": "No data available in a source"},
         )

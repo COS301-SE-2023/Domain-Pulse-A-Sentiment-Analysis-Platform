@@ -29,7 +29,7 @@ RUNSERVER_PORT = os.getenv("DJANGO_WAREHOUSE_PORT")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -87,6 +87,7 @@ APM_ENABLED = os.getenv("APM_ENABLED")
 append_installed_apps(APM_ENABLED)
 
 ELASTIC_APM = {
+    "DEBUG": True,
     "LOG_LEVEL": "debug",
     "SERVER_URL": os.getenv("APM_SERVER_URL"),
     "SERVICE_NAME": "warehouse",
@@ -94,6 +95,7 @@ ELASTIC_APM = {
 }
 
 MIDDLEWARE = [
+    'elasticapm.contrib.django.middleware.Catch404Middleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

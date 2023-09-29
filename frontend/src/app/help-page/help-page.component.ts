@@ -19,7 +19,7 @@ export class HelpPageComponent implements AfterViewInit {
 
     this.route.queryParams
       .subscribe(params => {
-        console.log(params);
+        // console.log(params);
         this.searchTerm = params['q'];
         this.filterAccordionByText();
       }
@@ -45,7 +45,7 @@ export class HelpPageComponent implements AfterViewInit {
       if (!headerTextT)
         return;
       const text = headerTextT.innerText;
-      console.log(headerTextT, text);
+      // console.log(headerTextT, text);
 
       if (text.toLowerCase().includes(textToFilter.toLowerCase())) {
         item.style.display = 'block';
@@ -64,7 +64,7 @@ export class HelpPageComponent implements AfterViewInit {
 
     const allCategoryElements = document.querySelectorAll('.heading');
 
-    console.log(shownCategories);
+    // console.log(shownCategories);
 
     allCategoryElements.forEach((categoryElement: any) => {
       const catID = categoryElement.getAttribute('data-catID');

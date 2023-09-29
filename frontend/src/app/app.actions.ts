@@ -112,9 +112,19 @@ export class GetSourceDashBoardInfo {
   static readonly type = '[App] Get Source DashBoard Info';
 }
 
+export class GuestModalChange {
+  static readonly type = '[App] Guest Modal Change';
+  constructor(public show: boolean) {}
+}
+
 export class AttempPsswdLogin {
   static readonly type = '[Auth] Attemp Login';
   constructor(public username: string, public password: string) {}
+}
+
+export class AttempGuestLogin {
+  static readonly type = '[Auth] Attemp Guest Login';
+  constructor() {}
 }
 
 export class DeleteUser {
@@ -174,3 +184,58 @@ export class GenerateReport{
   static readonly type = '[Source] Generate Report';
   constructor(public domainId: string) {}
 }
+
+export class ToggleAddDomainModal {
+  static readonly type = '[App] Toggle Add Domain Modal';
+}
+
+export class ToggleProfileModal {
+  static readonly type = '[App] Toggle Profile Modal';
+}
+
+export class ToggleEditDomainModal{
+  static readonly type = '[App] Toggle Edit Domain Modal';
+
+}
+
+export class ToggleConfirmDeleteDomainModal{
+  static readonly type = '[App] Toggle Confirm Delete Domain Modal';
+}
+
+export class ToggleChangePasswordModal {
+  static readonly type = '[App] Toggle Change Password Modal';
+}
+
+export class ToggleDeleteAccountModal {
+  static readonly type = '[App] Toggle Delete Account Modal';
+}
+
+export class ToggleProfileEditModal {
+  static readonly type = '[App] Toggle Profile Edit Modal';
+}
+
+export class ToggleReportGeneratorModal{
+  static readonly type = '[App] Toggle Report Generator Modal';
+}
+
+export class ToggleTutorialModal{
+  static readonly type = '[App] Toggle Tutorial Modal';
+}
+
+export class SwitchTutorialScreen{
+  static readonly type = '[App] Switch Tutorial Screen';
+  constructor(public screenIndex: number) {}
+}
+
+export class TryRefresh{
+  static readonly type = '[App] Try Refresh';
+  constructor(public sourceId: string) {}
+}
+
+export class ToggleIsRefreshing{
+  static readonly type = '[App] Toggle Is Refreshing';
+  constructor(public isRefreshing: boolean, public sourceId: string) {}
+}
+
+
+

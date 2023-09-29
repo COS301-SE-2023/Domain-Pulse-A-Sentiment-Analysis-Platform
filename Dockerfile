@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.14-alpine
 
 #copy static files
 COPY ./frontend/dist/domain-pulse /usr/share/nginx/html

@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { AppState } from '../app.state';
 import { Select } from '@ngxs/store';
@@ -9,30 +16,68 @@ import { Select } from '@ngxs/store';
   styleUrls: ['./comments-view.component.sass'],
 })
 export class CommentsViewComponent {
+  @Input() commentsExpanded = false;
+  @Output() commentsExpandedChange = new EventEmitter<boolean>();
+
   @Select(AppState.sampleData) sampleData!: Observable<any | null>;
   @Select(AppState.sourceIsLoading) sourceIsLoading$!: Observable<boolean>;
 
   comments?: any[];
   showComment: boolean[] = [];
+
+  showInitialCommentsPositive = 10;
+  showInitialCommentsNegative = 10;
+  showInitialCommentsNeutral = 10;
+  showInitialCommentsUndecided = 10;
+  showInitialCommentsToxic = 10;
+  showInitialCommentsTop10 = 10;
+  showInitialCommentsBottom10 = 10;
+  showInitialComments = 10;
+
+  showAdditionalComments = 10;
+
+  positiveComments: any[] = [];
+  negativeComments: any[] = [];
+  neutralComments: any[] = [];
+
+  undecidedComments: any[] = [];
+
+  top10Comments: any[] = [];
+  bottom10Comments: any[] = [];
+
+  toxicComments: any[] = [];
+
+  searchTerm = '';
+
+  accordionItems: NodeListOf<Element> | undefined;
+
   constructor() {
     this.sampleData.subscribe((newSampleData) => {
       this.reactToNewComents(newSampleData);
     });
-    this.initializeShowCommentArray();
+  }
+
+  changeCommentState() {
+    if (this.commentsExpanded) this.commentsExpandedChange.emit(false);
+    else this.commentsExpandedChange.emit(true);
   }
 
   reactToNewComents(newSampleData: any) {
     if (newSampleData) {
       this.comments = this.transformComments(newSampleData);
+      this.groupComments(this.comments);
+
+      this.initializeShowCommentArray();
+
+      this.searchTerm = '';
+      setTimeout(() => {
+        this.accordionItems = document.querySelectorAll('commentsAccordion');
+      }, 100);
     }
   }
 
   initializeShowCommentArray() {
-    if (this.comments) {
-      this.showComment = Array(this.comments.length).fill(false);
-    } else {
-      this.showComment = [];
-    }
+    this.showComment = Array(this.toxicComments.length).fill(false);
   }
 
   toggleShowComment(index: number) {
@@ -42,7 +87,8 @@ export class CommentsViewComponent {
   transformComments(jsonData: any): any[] {
     const individualMetrics = jsonData;
 
-    const temp = individualMetrics.map((metric: any) => ({
+    const temp = individualMetrics.map((metric: any, index: number) => ({
+      id: `comment-${index + 1}`,
       comment: metric.data,
       ratings: [
         `${Math.floor(metric.general.score * 100)}%`,
@@ -50,8 +96,9 @@ export class CommentsViewComponent {
         Object.keys(metric.emotions).reduce((a, b) =>
           metric.emotions[a] > metric.emotions[b] ? a : b
         ),
-        metric.toxicity.level_of_toxic,
+        metric.toxicity.level_of_toxic.toLowerCase(),
       ],
+      date: this.convertToDate(metric.timestamp),
       ratingColour: [],
     }));
 
@@ -62,6 +109,76 @@ export class CommentsViewComponent {
       }
       return comment;
     });
+  }
+
+  convertToDate(timestamp: number): string {
+    const date = new Date(timestamp * 1000);
+    const day = date.getDate();
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${day} ${month} ${year} ${hours}:${minutes}`;
+  }
+
+  groupComments(comments: any[]) {
+    const nonToxicComments = comments.filter(
+      (comment) => comment.ratings[3] !== 'toxic'
+    );
+    this.toxicComments = comments.filter(
+      (comment) => comment.ratings[3] === 'toxic'
+    );
+
+    this.positiveComments = [];
+    this.negativeComments = [];
+    this.neutralComments = [];
+    this.undecidedComments = [];
+
+    // Categorize the non-toxic comments
+    nonToxicComments.forEach((comment) => {
+      if (comment.ratings[1].includes('positive')) {
+        this.positiveComments.push(comment);
+      } else if (comment.ratings[1].includes('negative')) {
+        this.negativeComments.push(comment);
+      } else if (comment.ratings[1].includes('neutral')) {
+        this.neutralComments.push(comment);
+      } else {
+        this.undecidedComments.push(comment);
+      }
+    });
+
+    // Sort the non-toxic comments by overall scores in descending order
+    nonToxicComments.sort((a, b) => {
+      const scoreA = parseFloat(a.ratings[0].replace('%', ''));
+      const scoreB = parseFloat(b.ratings[0].replace('%', ''));
+      return scoreB - scoreA;
+    });
+
+    // Calculate the number of non-toxic comments in the top and bottom 10%
+    const totalNonToxicComments = nonToxicComments.length;
+    const top10PercentCount = Math.ceil(totalNonToxicComments * 0.1);
+    const bottom10PercentCount = Math.ceil(totalNonToxicComments * 0.1);
+
+    // Extract the top and bottom 10% of non-toxic comments
+    this.top10Comments = nonToxicComments.slice(0, top10PercentCount);
+    this.bottom10Comments = nonToxicComments
+      .slice(-bottom10PercentCount)
+      .reverse();
   }
 
   getRatingClass(index: number, score: string): string {
@@ -141,8 +258,10 @@ export class CommentsViewComponent {
         colorClass = 'negative-color';
         break;
       case 'joy':
+        colorClass = 'very-positive-color';
+        break;
       case 'surprise':
-        colorClass = 'positive-color';
+        colorClass = 'surprise-color';
         break;
       case 'sadness':
         colorClass = 'sad-color';
@@ -157,7 +276,6 @@ export class CommentsViewComponent {
     return colorClass;
   }
 
-  //Toxic, Non-toxic
   getToxicityColor(toxicity: string): string {
     let colorClass = '';
     toxicity = toxicity.toLowerCase();
@@ -173,5 +291,106 @@ export class CommentsViewComponent {
     }
 
     return colorClass;
+  }
+
+  filterAccordionByText() {
+    const textToFilter = this.searchTerm;
+    const shownCategories = new Set();
+
+    let atleastOne = false;
+
+    let noResultsIMG = document.querySelector('#noResults');
+    if (noResultsIMG) {
+      (noResultsIMG as any).style.display = 'none';
+    }
+
+    if (!this.accordionItems) return;
+
+    if (!textToFilter) {
+      this.showInitialCommentsPositive = 10;
+      this.showInitialCommentsNegative = 10;
+      this.showInitialCommentsNeutral = 10;
+      this.showInitialCommentsUndecided = 10;
+      this.showInitialCommentsToxic = 10;
+      this.showInitialCommentsTop10 = 10;
+      this.showInitialCommentsBottom10 = 10;
+
+      this.accordionItems.forEach((item: any) => {
+        item.classList.remove('hide-element');
+        const comments = item.querySelectorAll('.comment');
+        this.hideComments(comments, shownCategories, item);
+      });
+
+      return;
+    }
+
+    this.showInitialCommentsPositive = this.positiveComments.length;
+    this.showInitialCommentsNegative = this.negativeComments.length;
+    this.showInitialCommentsNeutral = this.neutralComments.length;
+    this.showInitialCommentsUndecided = this.undecidedComments.length;
+    this.showInitialCommentsToxic = this.toxicComments.length;
+    this.showInitialCommentsTop10 = this.top10Comments.length;
+    this.showInitialCommentsBottom10 = this.bottom10Comments.length;
+
+    this.accordionItems.forEach((item: any) => {
+      item.classList.add('hide-element');
+    });
+
+    this.accordionItems.forEach((item: any) => {
+      const comments = item.querySelectorAll('.comment');
+      let accordionHasMatchingComment = false;
+
+      let arr = this.showComments(
+        comments,
+        textToFilter,
+        shownCategories,
+        item,
+        accordionHasMatchingComment,
+        atleastOne
+      );
+
+      atleastOne = arr[0];
+      accordionHasMatchingComment = arr[1];
+    });
+
+    noResultsIMG = document.querySelector('#noResults');
+    if (noResultsIMG) {
+      (noResultsIMG as any).style.display = atleastOne ? 'none' : 'flex';
+    }
+  }
+
+  showComments(
+    comments: any,
+    textToFilter: string,
+    shownCategories: any,
+    item: any,
+    accordionHasMatchingComment: boolean,
+    atleastOne: boolean = false
+  ) {
+    comments.forEach((comment: any) => {
+      const commentText = comment.innerText.toLowerCase();
+      if (commentText.includes(textToFilter.toLowerCase())) {
+        atleastOne = true;
+        comment.classList.remove('hide-element');
+        accordionHasMatchingComment = true;
+        shownCategories.add(item.getAttribute('data-catID'));
+      } else {
+        comment.classList.add('hide-element');
+      }
+    });
+
+    if (accordionHasMatchingComment) {
+      item.classList.remove('hide-element');
+      shownCategories.add(item.getAttribute('data-catID'));
+    }
+
+    return [atleastOne, accordionHasMatchingComment];
+  }
+
+  hideComments(comments: any, shownCategories: any, item: any) {
+    comments.forEach((comment: any) => {
+      comment.classList.remove('hide-element');
+      shownCategories.add(item.getAttribute('data-catID'));
+    });
   }
 }
