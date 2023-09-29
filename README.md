@@ -50,7 +50,7 @@
 
 # 📄**Documentation (Demo 4)**
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%201/Domain_Pulse_User_Manual_2.pdf">📖User Manual</a>
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖User Manual</a>
   <br />
   <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Coding%20Standards/CodingStandards.pdf">💻Coding Standards</a>
   <br />
