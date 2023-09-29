@@ -1,34 +1,21 @@
 <div align="center">
-  <a href="https://github.com/LapseMP/lapse-grp3-2023">
+  <a">
     <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/fb923ead-1880-45b3-9795-5bcf6a3485d6" width='800'>
 
   </a>
 
-  <h3 align="center">A Sentiment Analysis Platform</h3>
+<a  align="center" href="https://domainpulse.app" target="_blank">A Sentiment Analysis Platform</a><br>
   Ctrl Alt Defeat - COS301 Capstone 2023
   <p align="center">
     <br />
     <a href="https://drive.google.com/drive/folders/1s10aE2hZZ3AxrYnmbpiI-6pTMuPrP52z?usp=share_link"><strong>📄Explore the docs»</strong></a>
     <br />
     <a href="https://github.com/orgs/COS301-SE-2023/projects/6"><strong>📌Our Project Board »</strong></a>
-    
+<br>
+    <a  align="center" href="https://domainpulse.app" target="_blank">🔗domainpulse.app</a><br>
+
   </p>
-  Documentation
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf"><strong>User Manual</strong></a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Coding%20Standards/CodingStandards.pdf"><strong>Coding Standards</strong></a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Testing%20Policy/TestingPolicy.pdf"><strong>Testing Policy Doc</strong></a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/SRS/Version%204%20(Demo%204)/SRS.pdf"><strong>SRS</strong></a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf"><strong>Technical Installation Manual</strong></a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/Sentiment_Analysis_Breakdown.pdf">Sentiment Analysis Explanation</strong></a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/Demo4Documentation/documentation/ADD/ArchitecturalDesignDocument.pdf">Architectural Design Document</strong></a>
-  <br />
+
 
 </div>
 
@@ -55,9 +42,30 @@
 # 📈**What is Domain Pulse?**
 
 - Domain Pulse is the ultimate sentiment analysis platform. It gathers and analyses online opinions about any domain, be it a business, a person, or more. With stunning visuals and easy-to-understand statistics, Domain Pulse helps you understand the online presence and sentiment for any domain.
-- 👨‍💻Created by: Ctrl Alt Defeat
+- 👨‍💻Created by: Ctrl Alt Defeat <br><br>
   <img style="padding-left:30px;" src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/67f2cbf5-e639-49ed-8510-755c5cb0f830" width='200'>
 
+<br>
+<br>
+
+# 📄**Documentation (Demo 4)**
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/User%20Manual/Version%201/Domain_Pulse_User_Manual_2.pdf">📖User Manual</a>
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Coding%20Standards/CodingStandards.pdf">💻Coding Standards</a>
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Testing%20Policy/TestingPolicy.pdf">🧪Testing Policy Document</a>
+  <br />
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/SRS/Version%204%20(Demo%204)/SRS.pdf">📋SRS (Software Requirements Specification)</a>
+  <br />
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">🛠️Technical Installation Manual</a>
+  <br />
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Sentiment_Analysis_Breakdown.pdf">📊Sentiment Analysis Explanation</a>
+  <br />
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/docs/main/documentation/Deployment_diagram.pdf">📈Deployment Diagram</a>
+  <br />
 <br>
 <br>
 

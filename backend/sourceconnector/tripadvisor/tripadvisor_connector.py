@@ -51,6 +51,9 @@ def month_name_to_number(month_name: str):
 def get_timestamp_from_date(date_str: str):
     num_spaces = date_str.count(" ")
 
+    # if num_spaces == 0:
+    #     return int(datetime.now().timestamp()) - 86400
+
     if num_spaces > 1 and "," not in date_str:
         day, month_name, year = date_str.split(" ")
         day = int(day)
