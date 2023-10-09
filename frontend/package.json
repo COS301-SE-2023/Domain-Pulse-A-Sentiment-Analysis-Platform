@@ -38,7 +38,7 @@
     "@azure/storage-blob": "^12.15.0",
     "@cypress/schematic": "^2.5.0",
     "@types/chart.js": "^2.9.37",
-    "@types/jasmine": "~4.3.0",
+    "@types/jasmine": "~5.1.0",
     "@types/lodash-es": "^4.17.9",
     "apexcharts": "^3.42.0",
     "cypress": "latest",
