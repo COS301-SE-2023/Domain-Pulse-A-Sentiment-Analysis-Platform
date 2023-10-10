@@ -11,7 +11,7 @@ LIGHT = False
 DARK = True
 
 
-def create_user(request, uname, email, pword):
+def create_user(request, uname, pword, email="*"):
     try:
         user = User.objects.get(username=uname)
         return {"status": "FAILURE", "details": "User already exists"}
