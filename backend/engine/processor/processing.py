@@ -139,7 +139,7 @@ def analyse_content(data):
     originalData = data
     data = preprocessing.process_data(data)
 
-    data = data[:512]
+    # data = data[:512]
 
     vader = ANALYSER.polarity_scores(data)
     emotions = EMOTION_CLASSIFIER(data)

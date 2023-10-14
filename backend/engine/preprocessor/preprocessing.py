@@ -43,6 +43,10 @@ def remove_newlines(data: str):
 #     return new_tokens[:512]
 
 
+def truncate_data(data: str):
+    return data[:512]
+
+
 # Lemmatization
 def lemmatize_word(word: str):
     # nltk.download("wordnet") - uncomment for first execution
@@ -54,11 +58,15 @@ def process_data(raw_text: str):
     new_data = remove_whitespace(raw_text)
     new_data = remove_newlines(new_data)
     new_data = remove_urls(new_data)
-    tokens = tokenize(new_data)
+    tokens = tokenize(
+        new_data
+    )  # such to be reconstructed in a standard way in terms of spacing
     # tokens = remove_stopwords(tokens)
-    for index, token in enumerate(tokens):
-        tokens[index] = lemmatize_word(token)
-    tokens = tokens[:512]
-    # print(tokens)
-    return " ".join(tokens)
+    # for index, token in enumerate(tokens):
+    #     tokens[index] = lemmatize_word(token)
+    tokens = tokens[:512]  # truncation of words
+    standard_spacing = " ".join(tokens)
+    truncated_data = truncate_data(standard_spacing)
+    return truncated_data
+
     # return tokens
