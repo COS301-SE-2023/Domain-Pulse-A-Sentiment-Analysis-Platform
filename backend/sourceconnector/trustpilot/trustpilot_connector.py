@@ -40,22 +40,28 @@ def call_outscraper(query_url: str, last_refreshed_timestamp):
 def get_trustpilot_reviews(query_url: str, last_refreshed_timestamp):
     results = call_outscraper(query_url, last_refreshed_timestamp)
 
-    latest_retrieval = -1
+    latest_retrieval = last_refreshed_timestamp
 
     ret_data = []
     if results["status"] == "Success":
         reviews = results["data"][0]
         review_item = {}
         for r in reviews:
-            review_item = {
-                "text": unidecode(r["review_text"]),  # Decoding unsupported characters
-                "timestamp": r["review_date"],
-            }
+            decoded_text = unidecode(
+                r["review_text"]
+            )  # Decoding unsupported characters
 
-            if r["review_date"] > latest_retrieval:
-                latest_retrieval = r["review_date"]
+            # Ignore empty reviews
+            if len(decoded_text.replace(" ", "")) != 0:
+                review_item = {
+                    "text": decoded_text,
+                    "timestamp": r["review_date"],
+                }
 
-            ret_data.append(review_item)
+                if r["review_date"] > latest_retrieval:
+                    latest_retrieval = r["review_date"]
+
+                ret_data.append(review_item)
     return ret_data, latest_retrieval
 
 

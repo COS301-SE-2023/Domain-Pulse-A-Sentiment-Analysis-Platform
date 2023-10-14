@@ -131,18 +131,22 @@ def get_tripadvisor_reviews(url, last_refresh_timestamp):
 
     for review in review_data:
         review_text = review["description"]
-        review_timestamp = int(get_timestamp_from_date(review["reviewed"]))
-
-        if review_timestamp <= last_refresh_timestamp:
-            continue
-
-        if review_timestamp > latest_retrieval:
-            latest_retrieval = review_timestamp
-
         # Decoding unsupported characters
-        item = {"text": unidecode(review_text), "timestamp": review_timestamp}
+        decoded_text = unidecode(review_text)
 
-        ret_data.append(item)
+        # Ignore empty reviews
+        if len(decoded_text.replace(" ", "")) != 0:
+            review_timestamp = int(get_timestamp_from_date(review["reviewed"]))
+
+            if review_timestamp <= last_refresh_timestamp:
+                continue
+
+            if review_timestamp > latest_retrieval:
+                latest_retrieval = review_timestamp
+
+            item = {"text": decoded_text, "timestamp": review_timestamp}
+
+            ret_data.append(item)
 
     return ret_data, latest_retrieval
 
