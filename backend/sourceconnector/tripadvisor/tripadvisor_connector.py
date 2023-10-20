@@ -51,6 +51,7 @@ def month_name_to_number(month_name: str):
 def get_timestamp_from_date(date_str: str):
     num_spaces = date_str.count(" ")
 
+
     try:
         if num_spaces > 1 and "," not in date_str:
             day, month_name, year = date_str.split(" ")
@@ -106,6 +107,7 @@ def get_timestamp_from_date(date_str: str):
             ).timestamp()
     except Exception:
         return int(datetime.now().timestamp()) - 86400
+
 
 
 def call_outscraper(url, last_refresh_timestamp):
