@@ -53,7 +53,7 @@ class ProfilesTests(TestCase):
         request.method = "POST"
 
         result = profilescrud.create_user(
-            request, testUsername, testEmail, testPassword
+            request, testUsername, testPassword, testEmail
         )
         if result["status"] == "SUCCESS":
             assert (
@@ -72,7 +72,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["profileID"]}
         request2 = HttpRequest()
         request2.method = "POST"
@@ -92,7 +92,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["profileID"]}
         request2 = HttpRequest()
         request2.method = "POST"
@@ -110,7 +110,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["profileID"]}
         request2 = HttpRequest()
         request2.method = "POST"
@@ -130,7 +130,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["profileID"]}
         request2 = HttpRequest()
         request2.method = "POST"
@@ -148,7 +148,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["profileID"]}
         request2 = HttpRequest()
         request2.method = "POST"
@@ -168,7 +168,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         incorrectID = user["profileID"] + 1
         data = {"id": incorrectID}
         request2 = HttpRequest()
@@ -187,7 +187,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
 
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testPictureURL = "test.com"
         data = {"id": user["id"], "pictureURL": testPictureURL}
         request2 = HttpRequest()
@@ -211,7 +211,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
 
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testPictureURL = "test.com"
         incorrectID = user["id"] + 1
         data = {"id": incorrectID, "pictureURL": testPictureURL}
@@ -235,7 +235,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["id"], "mode": testMode}
 
         request2 = HttpRequest()
@@ -260,7 +260,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         incorrectID = user["id"] + 1
         data = {"id": incorrectID, "mode": testMode}
 
@@ -281,7 +281,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         result = profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -301,7 +301,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         incorrectID = user["id"] + 1
         testDomainID = 3
 
@@ -317,7 +317,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -342,7 +342,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -362,7 +362,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -380,7 +380,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -407,7 +407,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -430,7 +430,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -454,7 +454,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = 3
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -471,7 +471,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -496,7 +496,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -519,7 +519,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -540,7 +540,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -567,7 +567,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -591,7 +591,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -613,7 +613,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -639,7 +639,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -661,7 +661,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -681,7 +681,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -706,7 +706,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)
@@ -726,7 +726,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testUsername = "test"
         testPassword = "test"
         data = {"username": "test", "password": "test"}
@@ -804,7 +804,7 @@ class ProfilesTests(TestCase):
         request1.method = "POST"
         request1._body = json.dumps(data)
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testId = user["id"]
         testOldPassword = "test"
         testNewPassword = "test2"
@@ -831,7 +831,7 @@ class ProfilesTests(TestCase):
         request1.method = "POST"
         request1._body = json.dumps(data)
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         incorrectID = user["id"] + 1
         testOldPassword = "test"
         testNewPassword = "test2"
@@ -864,7 +864,7 @@ class ProfilesTests(TestCase):
         request1.method = "POST"
         request1._body = json.dumps(data)
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test","t@test.com")
         testUsername = "test"
         testPassword = "test"
         data = {"username": user["id"], "oldpassword": "test", "newpassword": "test2"}
@@ -900,7 +900,7 @@ class ProfilesTests(TestCase):
         request1.method = "POST"
         request1._body = json.dumps(data)
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test","t@test.com")
         testUsername = "test"
         testPassword = "test"
         data = {"username": user["id"], "oldpassword": "test", "newpassword": "test2"}
@@ -936,7 +936,7 @@ class ProfilesTests(TestCase):
         request1.method = "POST"
         request1._body = json.dumps(data)
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testUsername = "test"
         testPassword = "test"
         data = {"username": user["id"], "oldpassword": "test", "newpassword": "test2"}
@@ -985,7 +985,7 @@ class ProfilesTests(TestCase):
         request1.method = "POST"
         request1._body = json.dumps(data)
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testUsername = "test"
         testPassword = "test"
 
@@ -1031,7 +1031,7 @@ class ProfilesTests(TestCase):
         request1.method = "POST"
         request1._body = json.dumps(data)
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testUsername = "test"
         testPassword = "test"
         data = {"username": user["id"], "oldpassword": "test", "newpassword": "test2"}
@@ -1051,9 +1051,8 @@ class ProfilesTests(TestCase):
 
     def test_create_profile_integration(self):
         testUsername = "test"
-        testEmail = "test@t.com"
         testPassword = "testP"
-        data = {"username": testUsername, "email": testEmail, "password": testPassword}
+        data = {"username": testUsername, "password": testPassword}
         request1 = HttpRequest()
         request1.method = "POST"
         request1._body = json.dumps(data)
@@ -1065,7 +1064,7 @@ class ProfilesTests(TestCase):
             assert (
                 result["profileID"] == result["id"]
                 and result["username"] == testUsername
-                and result["email"] == testEmail
+                and result["email"] == "*"
             )
         else:
             assert False
@@ -1074,7 +1073,7 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
+        data = {"username": "test", "password": "test"}
         self.client.login(username="test", password="test")
         request1 = HttpRequest()
         request1.method = "POST"
@@ -1100,7 +1099,7 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
+        data = {"username": "test", "password": "test"}
         request1 = HttpRequest()
         request1.method = "POST"
         request1._body = json.dumps(data)
@@ -1129,7 +1128,7 @@ class ProfilesTests(TestCase):
             is_authenticated = True
 
         testMode = True
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
+        data = {"username": "test", "password": "test"}
         request1 = HttpRequest()
         request1.method = "POST"
         request1._body = json.dumps(data)
@@ -1153,7 +1152,7 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
+        data = {"username": "test", "password": "test"}
         request1 = HttpRequest()
         request1.method = "POST"
         request1._body = json.dumps(data)
@@ -1185,7 +1184,7 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = False
 
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
+        data = {"username": "test", "password": "test"}
         request1 = HttpRequest()
         request1.method = "POST"
         request1._body = json.dumps(data)
@@ -1266,7 +1265,7 @@ class ProfilesTests(TestCase):
         class MockUser:
             is_authenticated = True
 
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
+        data = {"username": "test", "password": "test"}
         request1 = HttpRequest()
         request1.method = "POST"
         request1._body = json.dumps(data)
@@ -1297,7 +1296,7 @@ class ProfilesTests(TestCase):
         response.json.return_value = {"status": "SUCCESS"}
         mocked_post.return_value = response
 
-        data = {"username": "test", "email": "test@t.com", "password": "test"}
+        data = {"username": "test", "password": "test"}
         request1 = HttpRequest()
         request1.method = "POST"
         request1._body = json.dumps(data)
@@ -1331,7 +1330,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["profileID"]}
         request2 = HttpRequest()
         request2.method = "POST"
@@ -1356,7 +1355,7 @@ class ProfilesTests(TestCase):
 
         request1 = HttpRequest()
         request1.method = "POST"
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         data = {"id": user["profileID"]}
         request2 = HttpRequest()
         request2.method = "POST"
@@ -1382,7 +1381,7 @@ class ProfilesTests(TestCase):
         request1 = HttpRequest()
         request1.method = "POST"
         request1.user = MockUser()
-        user = profilescrud.create_user(request1, "test", "t@test.com", "test")
+        user = profilescrud.create_user(request1, "test", "test", "t@test.com")
         testDomainID = "3"
 
         profilescrud.add_domain_to_profile(user["id"], testDomainID)

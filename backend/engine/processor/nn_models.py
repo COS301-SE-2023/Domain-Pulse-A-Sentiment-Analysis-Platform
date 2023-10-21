@@ -2,7 +2,11 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from transformers import pipeline
 
 # VADER scores
+# Not a neural network, but is a model used for sentiment analysis so it is grouped with the others for the sake of consistency
 ANALYSER = SentimentIntensityAnalyzer()
+
+# DistilBERT neural network models below
+
 # To classify emotion
 EMOTION_CLASSIFIER = pipeline(
     "text-classification",

@@ -10,10 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR.parent / ".env"
 load_dotenv(ENV_FILE)
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+MAX_COMMENTS = 100
 
 
 def call_youtube_api(video_id: str, last_refresh_time):
-    URL = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={video_id}&maxResults=100&key={YOUTUBE_API_KEY}"
+    URL = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={video_id}&maxResults={MAX_COMMENTS}&key={YOUTUBE_API_KEY}"
 
     # response = requests.get(url=URL)
     # data = response.json()
@@ -31,22 +32,27 @@ def get_comments_by_video_id(video_id: str, last_refresh_time):
     if "items" in data:
         for item in data["items"]:
             snippet = item["snippet"]["topLevelComment"]["snippet"]
-            original_text = snippet["textOriginal"]
+            original_text = snippet["textDisplay"]
             last_updated_time = snippet["updatedAt"]
             datetime_object = datetime.strptime(last_updated_time, "%Y-%m-%dT%H:%M:%SZ")
             last_updated_timestamp = datetime_object.timestamp()
 
-            if last_updated_timestamp > last_refresh_time:
-                comments.append(
-                    {
-                        # Decoding unsupported characters
-                        "text": unidecode(str(original_text).replace('"', "")),
-                        "timestamp": int(last_updated_timestamp),
-                    }
-                )
+            # Decoding unsupported characters
+            decoded_text = unidecode(str(original_text).replace('"', ""))
 
-                if last_updated_timestamp > latest_retrieval:
-                    latest_retrieval = last_updated_timestamp
+            # Ignore empty comments
+            if len(decoded_text.replace(" ", "")) != 0:
+                if last_updated_timestamp > last_refresh_time:
+                    comments.append(
+                        {
+                            # Decoding unsupported characters
+                            "text": decoded_text,
+                            "timestamp": int(last_updated_timestamp),
+                        }
+                    )
+
+                    if last_updated_timestamp > latest_retrieval:
+                        latest_retrieval = last_updated_timestamp
 
     return comments, latest_retrieval
 

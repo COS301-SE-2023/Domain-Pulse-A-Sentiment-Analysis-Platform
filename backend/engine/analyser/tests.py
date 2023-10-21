@@ -243,7 +243,7 @@ class SentimentAnalysisTests(TestCase):
                 {
                     "data": "Lived up to the expectations. Grab and run... pleasant and fast service. Definitely a must visit again",
                     "general": {"category": "VERY_POSITIVE", "score": 0.9295},
-                    "emotions": {"surprise": 0.016, "sadness": 0.0073, "joy": 0.9767},
+                    "emotions": {"surprise": 0.0135, "sadness": 0.0065, "joy": 0.9801},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.6, "neutral": 0.38, "negative": 0.03},
                 },
@@ -258,9 +258,9 @@ class SentimentAnalysisTests(TestCase):
                     "data": "I just got looked at when I was at the wrong side of the line (not clear where the right side is) Could not spell my name correctly even though I spelt it out 3 times.",
                     "general": {"category": "VERY_NEGATIVE", "score": 0.0884},
                     "emotions": {
-                        "surprise": 0.5791,
-                        "disgust": 0.0491,
-                        "sadness": 0.3718,
+                        "surprise": 0.623,
+                        "disgust": 0.0672,
+                        "sadness": 0.3098,
                     },
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0004},
                     "ratios": {"positive": 0.04, "neutral": 0.44, "negative": 0.52},
@@ -268,7 +268,7 @@ class SentimentAnalysisTests(TestCase):
                 {
                     "data": "Everything is amazing about Starbucks The service is just so good The drinks are the absolute best Keep coming back ⭐️⭐️⭐️⭐️⭐️👍",
                     "general": {"category": "VERY_POSITIVE", "score": 0.9785},
-                    "emotions": {"anger": 0.0084, "surprise": 0.0573, "joy": 0.9343},
+                    "emotions": {"anger": 0.0085, "surprise": 0.0608, "joy": 0.9307},
                     "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
                     "ratios": {"positive": 0.66, "neutral": 0.34, "negative": 0.01},
                 },
@@ -286,8 +286,8 @@ class SentimentAnalysisTests(TestCase):
                 {
                     "data": "If I could live here, I would. i love Starbucks on Rosebank that much. The best blueberry muffins I have ever tasted. Great coffee as well :-)",
                     "general": {"category": "VERY_POSITIVE", "score": 0.9848},
-                    "emotions": {"surprise": 0.0402, "sadness": 0.0197, "joy": 0.9401},
-                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0006},
+                    "emotions": {"surprise": 0.0384, "sadness": 0.0198, "joy": 0.9418},
+                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0005},
                     "ratios": {"positive": 0.66, "neutral": 0.33, "negative": 0.01},
                 },
                 {
@@ -299,13 +299,15 @@ class SentimentAnalysisTests(TestCase):
                 },
                 {
                     "data": "We have just moved into Melrose and this Starbucks is our local coffee bar. You can get tickets (if resident) so that everytime you buy a coffee you get the fifth one free. Great staff that get to know your name and what you are drinking.",
-                    "general": {"category": "VERY_POSITIVE", "score": 0.9462},
-                    "emotions": {"anger": 0.0271, "surprise": 0.2946, "joy": 0.6783},
-                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0011},
+                    "general": {"category": "VERY_POSITIVE", "score": 0.9498},
+                    "emotions": {"anger": 0.0197, "surprise": 0.2553, "joy": 0.7249},
+                    "toxicity": {"level_of_toxic": "Non-toxic", "score": 0.0012},
                     "ratios": {"positive": 0.54, "neutral": 0.43, "negative": 0.02},
                 },
             ]
         }
+
+        # print(response.json())
 
         self.assertEqual(response.json(), expected_data)
 
