@@ -21,7 +21,7 @@ def create_user(request: HttpRequest):
         raw_data = json.loads(request.body)
         return JsonResponse(
             profilescrud.create_user(
-                request, raw_data["username"], raw_data["email"], raw_data["password"]
+                request, raw_data["username"], raw_data["password"]
             )
         )
     return JsonResponse({"status": "FAILURE", "details": "Invalid Request"})

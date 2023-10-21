@@ -51,61 +51,63 @@ def month_name_to_number(month_name: str):
 def get_timestamp_from_date(date_str: str):
     num_spaces = date_str.count(" ")
 
-    # if num_spaces == 0:
-    #     return int(datetime.now().timestamp()) - 86400
 
-    if num_spaces > 1 and "," not in date_str:
-        day, month_name, year = date_str.split(" ")
-        day = int(day)
-        month = month_long_name_to_number(month_name)
-        year = int(year)
+    try:
+        if num_spaces > 1 and "," not in date_str:
+            day, month_name, year = date_str.split(" ")
+            day = int(day)
+            month = month_long_name_to_number(month_name)
+            year = int(year)
 
-        return datetime(
-            year,
-            month,
-            day,
-            random.randint(0, 23),
-            random.randint(0, 59),
-            random.randint(0, 59),
-        ).timestamp()
+            return datetime(
+                year,
+                month,
+                day,
+                random.randint(0, 23),
+                random.randint(0, 59),
+                random.randint(0, 59),
+            ).timestamp()
 
-    if "," in date_str:
-        month_name, day_with_comma, year = date_str.split(" ")
-        day = day_with_comma[:-1]
+        if "," in date_str:
+            month_name, day_with_comma, year = date_str.split(" ")
+            day = day_with_comma[:-1]
 
-        day = int(day)
-        month = month_long_name_to_number(month_name)
-        year = int(year)
+            day = int(day)
+            month = month_long_name_to_number(month_name)
+            year = int(year)
 
-        return datetime(
-            year,
-            month,
-            day,
-            random.randint(0, 23),
-            random.randint(0, 59),
-            random.randint(0, 59),
-        ).timestamp()
+            return datetime(
+                year,
+                month,
+                day,
+                random.randint(0, 23),
+                random.randint(0, 59),
+                random.randint(0, 59),
+            ).timestamp()
 
-    first, second = date_str.split(" ")
+        first, second = date_str.split(" ")
 
-    if first.isnumeric():
-        return datetime(
-            datetime.now().year,
-            month_name_to_number(second),
-            int(first),
-            random.randint(0, 23),
-            random.randint(0, 59),
-            random.randint(0, 59),
-        ).timestamp()
-    else:
-        return datetime(
-            int(second),
-            month_name_to_number(first),
-            1,
-            random.randint(0, 23),
-            random.randint(0, 59),
-            random.randint(0, 59),
-        ).timestamp()
+        if first.isnumeric():
+            return datetime(
+                datetime.now().year,
+                month_name_to_number(second),
+                int(first),
+                random.randint(0, 23),
+                random.randint(0, 59),
+                random.randint(0, 59),
+            ).timestamp()
+        else:
+            return datetime(
+                int(second),
+                month_name_to_number(first),
+                1,
+                random.randint(0, 23),
+                random.randint(0, 59),
+                random.randint(0, 59),
+            ).timestamp()
+    except Exception:
+        return int(datetime.now().timestamp()) - 86400
+
 
 
 def call_outscraper(url, last_refresh_timestamp):
@@ -134,18 +136,22 @@ def get_tripadvisor_reviews(url, last_refresh_timestamp):
 
     for review in review_data:
         review_text = review["description"]
-        review_timestamp = int(get_timestamp_from_date(review["reviewed"]))
-
-        if review_timestamp <= last_refresh_timestamp:
-            continue
-
-        if review_timestamp > latest_retrieval:
-            latest_retrieval = review_timestamp
-
         # Decoding unsupported characters
-        item = {"text": unidecode(review_text), "timestamp": review_timestamp}
+        decoded_text = unidecode(review_text)
 
-        ret_data.append(item)
+        # Ignore empty reviews
+        if len(decoded_text.replace(" ", "")) != 0:
+            review_timestamp = int(get_timestamp_from_date(review["reviewed"]))
+
+            if review_timestamp <= last_refresh_timestamp:
+                continue
+
+            if review_timestamp > latest_retrieval:
+                latest_retrieval = review_timestamp
+
+            item = {"text": decoded_text, "timestamp": review_timestamp}
+
+            ret_data.append(item)
 
     return ret_data, latest_retrieval
 

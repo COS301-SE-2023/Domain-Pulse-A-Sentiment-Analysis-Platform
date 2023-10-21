@@ -499,7 +499,7 @@ def generate_report(request: HttpRequest):
             )
 
         for key in response_data:
-            if response_data[key]["meta_data"]["num_analysed"] == 0:
+            if int(response_data[key]["meta_data"]["num_analysed"]) == 0:
                 return JsonResponse(
                     {
                         "status": "FAILURE",

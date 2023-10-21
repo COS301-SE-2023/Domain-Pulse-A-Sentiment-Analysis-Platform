@@ -402,7 +402,7 @@ class TestingRefreshHandler(TestCase):
                     "snippet": {
                         "topLevelComment": {
                             "snippet": {
-                                "textOriginal": "Comment 1",
+                                "textDisplay": "Comment 1",
                                 "updatedAt": "2023-07-23T10:00:00Z",
                             }
                         }
@@ -412,7 +412,7 @@ class TestingRefreshHandler(TestCase):
                     "snippet": {
                         "topLevelComment": {
                             "snippet": {
-                                "textOriginal": "Comment 2",
+                                "textDisplay": "Comment 2",
                                 "updatedAt": "2023-07-25T15:30:00Z",
                             }
                         }
@@ -587,7 +587,7 @@ class TestingRefreshHandler(TestCase):
                     "snippet": {
                         "topLevelComment": {
                             "snippet": {
-                                "textOriginal": "Comment 1",
+                                "textDisplay": "Comment 1",
                                 "updatedAt": "2023-07-23T10:00:00Z",
                             }
                         }
@@ -597,7 +597,7 @@ class TestingRefreshHandler(TestCase):
                     "snippet": {
                         "topLevelComment": {
                             "snippet": {
-                                "textOriginal": "Comment 2",
+                                "textDisplay": "Comment 2",
                                 "updatedAt": "2023-07-25T15:30:00Z",
                             }
                         }
