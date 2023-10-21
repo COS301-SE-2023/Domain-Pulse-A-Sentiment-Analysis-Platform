@@ -97,6 +97,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Christiaan Lombard</b></h2>
+      <h3><b style="font-size: 16px;">...</b></h3> 
       I have a keen interest in machine learning, design and statistics, aswell as how they're amalgamation can result in something unexpectedly beautiful. I enjoy taking on a challenge and with industry experience in design and video editing, aswell as quantative analysis - I feel qualified to take on any project that comes my way.
       <br><br>
       <a href="https://github.com/chrislom12" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
@@ -113,6 +114,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Luke Lawson</b></h2> 
+      <h3><b style="font-size: 16px;">Data and ML Engineer, Backend Developer</b></h3> 
       I am an avid problem and puzzle solver – with my academic interests including AI, statistics, data science, and cyber security. I love being able to put what I know into practice by building something cool - especially if it means I get to challenge myself or learn something new. I consider it 'mission-critical' to hold on to a sense of humour no matter what! I'm particularly interested in machine learning - especially when applied to novel and fascinating domains such as sentiment analysis.
       <br><br>
       <a href="https://github.com/LukeLawsonSoftware" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
@@ -129,6 +131,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
+        <h3><b style="font-size: 16px;">...</b></h3> 
       I am a software developer and graphic designer with a passion for creating intuitive and visually stunning designs. I am a hardworking and dedicated individual who is always willing to learn and improve. I am also a team player and enjoy working with others to achieve a common goal. I am currently working towards being a Cloud Architect. I consider the 2 areas of knowledge i specialize in to be the angular framework and the rust programming language. I also know how to use the adobe suite of products to create presentable media.
       <br><br>
       <a href="https://github.com/thuthuka111" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
@@ -148,6 +151,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Caden Dobson</b></h2>
+      <h3><b style="font-size: 16px;">...</b></h3> 
       I am an ambitious, resilient and driven individual who always strives to succeed in any given task. My interests are Computer science,           Quantitative Finance, Big data analytics, Artificial intelligence and Statistics. I am inventive and incorporate creative thinking into           achieving logical solutions to problems. I am an avid learner who endeavours to deepen my knowledge in any field possible. I work well in         high pressure environments and always ensure that I put my best foot forward.
       <br><br>
       <a href="https://github.com/cadendobson" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
@@ -164,6 +168,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Thomas Blendulf</b></h2>
+      <h3><b style="font-size: 16px;">...</b></h3> 
       I'm a computer science student with a passion and dedication to the work that I do. Whenever I am faced with a challenge I always give my best attempt at completing, learning about and mastering the problem at hand. What drives me to create projects such as that of Domain Pulse is a love for the creation of software and solutions that have meaningful and visible usage and effect for those it is made for.
       <br><br>
       <a href="https://github.com/TomBlendSoftware" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
