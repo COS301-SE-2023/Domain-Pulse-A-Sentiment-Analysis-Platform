@@ -1,4 +1,3 @@
-
 <div align="center">
   <a">
     <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/fb923ead-1880-45b3-9795-5bcf6a3485d6" width='800'>
@@ -9,7 +8,7 @@
   Ctrl Alt Defeat - COS301 Capstone 2023
   <p align="center">
     <br />
-    <a href="https://drive.google.com/drive/folders/1s10aE2hZZ3AxrYnmbpiI-6pTMuPrP52z?usp=share_link"><strong>📄Explore the docs»</strong></a>
+    <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/tree/readme-updates-project-day#documentation"><strong>📄Explore the docs»</strong></a>
     <br />
     <a href="https://github.com/orgs/COS301-SE-2023/projects/6"><strong>📌Our Project Board »</strong></a>
 <br>
@@ -33,6 +32,12 @@
 <img alt="" src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white">
 <img alt="" src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green">
 <img alt="" src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white">
+<img alt="" src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white">
+<img alt="" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
+<img alt="" src="https://img.shields.io/badge/SASS-CC6699?style=for-the-badge&logo=sass&logoColor=white">
+
+
+
 
 </div>
 
@@ -40,7 +45,14 @@
 
 <br>
 
-# 📈**What is Domain Pulse?**
+
+
+https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/63a66974-9c46-4434-b9d5-7f3fac24e556
+
+
+
+
+# 🤔**What is Domain Pulse?**
 
 - Domain Pulse is the ultimate sentiment analysis platform. It gathers and analyses online opinions about any domain, be it a business, a person, or more. With stunning visuals and easy-to-understand statistics, Domain Pulse helps you understand the online presence and sentiment for any domain.
 - 👨‍💻Created by: Ctrl Alt Defeat <br><br>
@@ -49,39 +61,27 @@
 <br>
 <br>
 
-# 📄**Documentation (Demo 4)**
+# 📄**Documentation**
+
+**Click on any of these links to explore:** 
+    <br />
+📖 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/readme-updates-project-day/general-readme.md"> General Overview of our Application</a>
+    <br />
+  🧪 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/readme-updates-project-day/technical-details-readme.md">Technical Documents</a>
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖User Manual</a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Coding%20Standards/CodingStandards.pdf">💻Coding Standards</a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Testing%20Policy/TestingPolicy.pdf">🧪Testing Policy Document</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/SRS/Version%204%20(Demo%204)/SRS.pdf">📋SRS (Software Requirements Specification)</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">🛠️Technical Installation Manual</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Sentiment_Analysis_Breakdown.pdf">📊Sentiment Analysis Explanation</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Deployment_diagram.pdf">📈Deployment Diagram</a>
-  <br />
+  👨‍💻 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/readme-updates-project-day/team-info-readme.md">How We Worked</a>
+
+<br/>
+  
+
 <br>
 <br>
 
-# ⏯️Recorded Demos
-
-- 🔗<a href="https://drive.google.com/file/d/1k016Gz-6wZjXX7A0ueJmnEw9Xr93X7sK/view?usp=share_link">Demo 1</a>
-- Demo 4:
+# ⏯️See the app in action!
 
 
-https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/9f2b9b45-ebf7-4383-be3b-e9ac30614c2b
 
-https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/370c7eb9-a31b-4601-b462-4676afe49b74
-
-🔗<a href="https://www.canva.com/design/DAFvq6zwoeY/k5RsVbX9O0CG2zW4lKG-Lg/view?utm_content=DAFvq6zwoeY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink">Presentation Link</a>
-
+https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/e9abb059-a17e-485a-9f27-a6fd8e9d42a7
 
 
 <br>
@@ -97,8 +97,8 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Christiaan Lombard</b></h2>
-      <b style="font-size: 16px;">...</b><br>
-      I have a keen interest in machine learning, design and statistics, aswell as how they're amalgamation can result in something unexpectedly beautiful. I enjoy taking on a challenge and with industry experience in design and video editing, aswell as quantative analysis - I feel qualified to take on any project that comes my way.
+      <b style="font-size: 16px;">Project Manager, Frontend Designer and Developer</b><br>
+      I have a keen interest in machine learning, design and statistics, as well as how their amalgamation can result in something unexpectedly beautiful. I enjoy taking on a challenge and with industry experience in design and video editing, as well as quantitative analysis - I feel qualified to take on any project that comes my way.
       <br><br>
       <a href="https://github.com/chrislom12" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
@@ -115,7 +115,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Luke Lawson</b></h2> 
       <b style="font-size: 16px;">Data and ML Engineer, Backend Developer</b><br>
-      I am an avid problem and puzzle solver – with my academic interests including AI, statistics, data science, and cyber security. I love being able to put what I know into practice by building something cool - especially if it means I get to challenge myself or learn something new. I consider it 'mission-critical' to hold on to a sense of humour no matter what! I'm particularly interested in machine learning - especially when applied to novel and fascinating domains such as sentiment analysis.
+      I am an avid problem and puzzle solver – with my academic interests including AI, statistics, data science, and cyber security. I love being able to put what I know into practice by building something cool - especially if it means I get to challenge myself or learn something new. I consider it crucial to hold on to a sense of humour no matter what! I'm particularly interested in machine learning - especially when applied to novel and fascinating domains such as sentiment analysis.
       <br><br>
       <a href="https://github.com/LukeLawsonSoftware" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
@@ -131,8 +131,8 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
-      <b style="font-size: 16px;">...</b><br>
-      I am a software developer and graphic designer with a passion for creating intuitive and visually stunning designs. I am a hardworking and dedicated individual who is always willing to learn and improve. I am also a team player and enjoy working with others to achieve a common goal. I am currently working towards being a Cloud Architect. I consider the 2 areas of knowledge i specialize in to be the angular framework and the rust programming language. I also know how to use the adobe suite of products to create presentable media.
+      <b style="font-size: 16px;">DevOps, Frontend Developer</b><br>
+      I am a software developer and graphic designer with a passion for creating intuitive and visually stunning designs. I am a hardworking and dedicated individual who is always willing to learn and improve. I am also a team player and enjoy working with others to achieve a common goal. I am currently working towards being a Cloud Architect. Two areas of knowledge I consider myself to specialize in are the Angular framework and the Rust programming language. I also know how to utilize the Adobe suite of products to create presentable media.
       <br><br>
       <a href="https://github.com/thuthuka111" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
@@ -151,8 +151,8 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Caden Dobson</b></h2>
-      <b style="font-size: 16px;">Development Operations, Frontend Developer</b><br>
-      I am an ambitious, resilient and driven individual who always strives to succeed in any given task. My interests are Computer science,           Quantitative Finance, Big data analytics, Artificial intelligence and Statistics. I am inventive and incorporate creative thinking into           achieving logical solutions to problems. I am an avid learner who endeavours to deepen my knowledge in any field possible. I work well in         high pressure environments and always ensure that I put my best foot forward.
+      <b style="font-size: 16px;">DevOps, Frontend Developer</b><br>
+      I am an ambitious, resilient and driven individual who always strives to succeed in any given task. My interests are Computer Science, Quantitative Finance, Big Data Analytics, Artificial Intelligence, and Statistics. I am inventive and incorporate creative thinking into achieving logical solutions to problems. I am an avid learner who endeavours to deepen my knowledge in any field. I work well in high pressure environments and always ensure that I put my best foot forward.
       <br><br>
       <a href="https://github.com/cadendobson" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
@@ -169,7 +169,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Thomas Blendulf</b></h2>
       <b style="font-size: 16px;">Backend Developer</b><br>
-      I'm a computer science student with a passion and dedication to the work that I do. Whenever I am faced with a challenge I always give my best attempt at completing, learning about and mastering the problem at hand. What drives me to create projects such as that of Domain Pulse is a love for the creation of software and solutions that have meaningful and visible usage and effect for those it is made for.
+      I'm a computer science student with a passion and dedication for the work that I do. Whenever I am faced with a challenge I always give my best attempt at completing, learning about and mastering the problem at hand. What drives me to create projects such as  Domain Pulse is a love for the creation of software and solutions that have meaningful and visible usage and impact for those it is made for.
       <br><br>
       <a href="https://github.com/TomBlendSoftware" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
         <img src="https://img.icons8.com/material-rounded/24/000000/github.png" width="30" height="30">
@@ -182,98 +182,30 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
   
 </table>
 
-# Repository Breakdown
-
-```
-├── backend
-│   ├── domains
-│   │   ├── authchecker
-│   │   ├── domains
-│   │   ├── domainservice
-  │   ├── sourcevalidator
-│   │   └── utils
-│   ├── engine
-│   │   ├── aggregator
-│   │   ├── analyser
-│   │   ├── engine
-│   │   ├── postprocessor
-│   │   ├── preprocessor
-│   │   ├── processor
-│   │   └── utils
-│   ├── live_update
-│   ├── mockdata
-│   ├── profiles
-│   │   ├── assets
-│   │   ├── check_auth
-│   │   ├── profiles
-│   │   ├── profileservice
-│   │   ├── reportgenerator
-│   │   └── utils
-│   ├── scripts
-│   ├── sourceconnector
-│   │   ├── googlereviews
-│   │   ├── refresh
-│   │   ├── sourceconnector
-│   │   ├── tripadvisor
-│   │   ├── trustpilot
-│   │   ├── utils
-│   │   └── youtube
-│   └── warehouse
-│       ├── CSV
-│       ├── authchecker
-│       ├── datamanager
-│       ├── ingest
-│       │   ├── migrations
-│       │   ├── static
-│       │   └── templates
-│       ├── query
-│       ├── utils
-│       └── warehouse
-├── documentation
-│   ├── ADD
-│   ├── Coding Standards
-│   ├── Images
-│   ├── SRS
-│   ├── Technical Installation Manual
-│   ├── Testing Policy
-│   └── User Manual
-├── frontend
-│   ├── cypress
-│   │   ├── e2e
-│   │   ├── fixtures
-│   │   └── support
-│   └── src
-│       ├── app
-│       │   ├── accordion-card
-│       │   │   └── directives
-│       │   ├── comments-accordion-card
-│       │   │   └── directives
-│       │   ├── comments-view
-│       │   ├── graph-selector
-│       │   ├── help-page
-│       │   ├── login-page
-│       │   ├── main
-│       │   ├── modal-container
-│       │   ├── register-page
-│       │   ├── sidebar
-│       │   ├── source-selector
-│       │   ├── statistic-selector
-│       │   └── tooltip
-│       └── assets
-│           ├── helpPage
-│           ├── icons
-│           └── logos
-├── nginx
-└── notebooks
-```
-
 <br>
 <br>
 
-# Branching Strategy
+# **🛠How to install locally**
+Note that Domain Pulse is a web application and the preferred means of using the application is to access it via a web browser at <a href="https://domainpulse.app/">️domainpulse.app</a>. However, should you require to install and run the application locally, please consult our <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">️Technical Installation Manual</a> which details the local installation process.
+ 
 
-<h3><b> Git Feature Workflow with Develop Branch </b></h3>
-<p>Within this strategy, master (main) branch will always contain a system state that is ready to be deployed and used in production. A seperate development (dev) branch is created from the master branch and is what all developers will branch off of to create components and features within the system. This ensures a production-ready and stable branch is always available and is protected by ensuring developers push to a development branch as opposed to altering said master branch. Once the system is deemed ready to deploy the development branch shall be merged into the master branch.</p>
+<br>
+
+# **🚀How to Contribute**
+
+Thank you for your interest in Domain Pulse! Should you want to contribute to the project, please feel free to contact us at ctrlaltdefeat301@gmail.com at share your idea for the project. 
+<br>
+<br>
+After contacting us, please feel free to clone the repo, create a branch off of 'dev' and implement your feature or bug fix. Please consult our <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">️Technical Installation Manual<a> for instructios on how to get the app up and running. Once you have implemented your changes, you can create a pull request back to 'dev' which we will review. 
+<br>
+<br>
+In order to be considered, your changes: 1) must be verified to be correct and non-malicious by a member of the Ctrl Alt Defeat Team, 2) pass all of the build and test checks, and 3) meet code coverage requirements in terms of both patch and project coverage. 
+<br>
+<br>
+Once the above requirements are met, we will consider your changes and reach out to you regarding the approval, rejection, or feedback on your proposed changes.
+
+
+<br/>
 
 
 [issues-shield]: https://img.shields.io/github/issues/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform
