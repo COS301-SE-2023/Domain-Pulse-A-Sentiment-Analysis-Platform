@@ -9,6 +9,9 @@ Here is a little bit more info about how we worked as a team and organised our d
   - Facilitating discussions and communication
   - Weekly meetings
   - Group member acitvity tracking through integrating github notifications into discord
+- **Hyperperform:**
+  - Team contribution tracking
+  - Team performance and velocity tracking
 - **Notion:**
   - Organising documentation
   - Meetings and minutes
