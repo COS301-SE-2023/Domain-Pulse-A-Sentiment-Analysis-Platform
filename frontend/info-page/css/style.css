@@ -55,7 +55,8 @@
 
 /* ================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;1,200;1,300;1,400;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 /* ================================================== */
 
@@ -84,7 +85,7 @@ html {
 	background: #fff;
 }
 body {
-	font-family:"Nunito", Helvetica, Arial, sans-serif;
+	font-family:"Source Sans 3", Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	font-weight: 400;
 	color: #8492a6;
@@ -201,7 +202,7 @@ header.autoshow.scrollOff {
 header div#logo {
 	display: inline-block;
 	height: 100%;
-	font-family: "Oswald", sans-serif;
+	font-family: "Open Sans", sans-serif;
 	color: white;
 	line-height:86px;
 	-webkit-transition: all 0.3s;
@@ -217,7 +218,7 @@ header .logo-scroll {
 	display: none;
 }
 header .logo, header .logo-2{
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	color:#fff;
 	font-size:40px;
 	font-weight:300;
@@ -381,7 +382,7 @@ header .header-col.mid .social-icons{
 	margin: 0;
 	float: none;
 	text-align: center;
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	letter-spacing: 5px;
 	font-size: 14px;
 	padding: 0;
@@ -497,7 +498,7 @@ header .header-col.mid .social-icons{
 
 #mainmenu {
 	display:inline-block;
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-size: 16px;
 	margin:0 auto;
 	float:none;
@@ -1166,13 +1167,13 @@ header.header-light .logo-2{
 	font-size: 14px;
 }
 .blog-list .date-box .day {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	color: #222222;
 	font-weight: bold;
 	font-size: 28px;
 }
 .blog-list .date-box .month {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	color: #fff;
 	font-size: 13px;
 	letter-spacing: 3px;
@@ -1317,7 +1318,7 @@ header.header-light .logo-2{
 	margin-right:20px;
 	font-size: 13px;
 	color:#999;
-	font-family:"Nunito";
+	font-family:"Open Sans";
 }
 .post-author{
 	color:#777;
@@ -2069,7 +2070,7 @@ a.btn-text-light {
 	left: 20px;
 }
 a.btn-custom, .btn-custom, a.btn-slider, .btn-slider {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-size: 12px;
 	min-width: 120px;
 }
@@ -2439,7 +2440,7 @@ h1, h2, h4, h3, h5, h6,
 .h1,.h2,.h3,.h4,.h5,.h6,
 footer.footer-light h5 {
 	margin-top:0;
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-weight: bold;
 	color: #35404e;
 }
@@ -2587,7 +2588,7 @@ h4.s1{
 	font-size:16px;
 }
 h4.s2{
-	font-family: "Nunito", Arial, Helvetica, sans-serif;
+	font-family: "Open Sans", Arial, Helvetica, sans-serif;
 	font-weight:200;
 	line-height:1.8em;
 }
@@ -2597,7 +2598,7 @@ h4.s3 {
 	font-weight: lighter;
 }
 h4.s3 {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-weight: 300;
 	font-size: 12px;
 	letter-spacing: 15px;
@@ -2642,7 +2643,7 @@ h2.subtitle {
 	margin-top: 0;
 }
 h2.name {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	color: #fff;
 	font-size: 84px;
 	line-height: 50px;
@@ -2652,7 +2653,7 @@ h2.name span {
 	font-size: 32px;
 }
 h2.name-s1 {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	color: #fff;
 	font-size: 84px;
 	font-weight: 700;
@@ -2670,7 +2671,7 @@ h2.hw {
 	font-weight: lighter;
 }
 h2.deco {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	text-align: center;
 	font-weight: 600;
 	font-size: 20px;
@@ -2695,7 +2696,7 @@ h2.deco span:after {
 	margin-left: 15px;
 }
 h2.hs1 {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-size: 40px;
 }
 h2.hs1 i {
@@ -2720,7 +2721,7 @@ h2 .de_light .text-light h2 {
 	border-top: 1px solid rgba(255, 255, 255, .5);
 }
 h2.s2 {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-weight: 400;
 }
 h2.s3{
@@ -2740,7 +2741,7 @@ h4.title {
 	margin-bottom: 20px;
 }
 h5.s2 {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	letter-spacing: 1px;
 	font-size: 14px;
 }
@@ -3675,7 +3676,7 @@ transform: scale(1.2);
 }
 .pricing-s1 .top .price b {
 	color: #fff;
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	font-weight:500;
 }
 .pricing-s1 .top .price .month {
@@ -3849,7 +3850,7 @@ transform: scale(1.2);
 }
 .pricing-s2 .top .price b {
 	font-size: 40px;
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	font-weight:500;
 }
 .pricing-s2 .top .price .month {
@@ -4209,7 +4210,7 @@ transform: scale(1.2);
 }
 .accordion-section-title
 {
-		font-family:"Nunito";
+		font-family:"Open Sans";
 	    color:#111111;
         width: 100%;
         padding: 15px;
@@ -4372,7 +4373,7 @@ transform: scale(1.2);
 	padding: 30px 0 30px 0;
 	border-radius: 120px;
 	color: #222;
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-size: 16px;
 	-moz-border-radius: 120px;
 	-webkit-border-radius: 120px;
@@ -4501,7 +4502,7 @@ transform: scale(1.2);
 		display:inline-block;
 	}
 	.de_tab.tab_steps.style-2 .de_nav li span {
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	background:rgba(255,255,255,.1);
 	border-radius:0px;
 	font-size:16px;
@@ -4803,7 +4804,7 @@ transform: scale(1.2);
 	background: none;
 	border: none;
 	margin-top: 20px;
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-size: 14px;
 	text-transform: uppercase;
 	letter-spacing: 2px;
@@ -4845,7 +4846,7 @@ transform: scale(1.2);
 	border: solid 1px rgba(255, 255, 255, .2);
 	padding: 10px 20px 10px 20px;
 	margin: 5px;
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	text-transform: uppercase;
 	letter-spacing: 5px;
 }
@@ -5030,7 +5031,7 @@ a.btn-left, a.btn-right {
 	padding-top: 20px;
 }
 .de_testi.opt-2 blockquote {
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	border:none;
 	color: #35404e;
 	font-weight:300;
@@ -5058,7 +5059,7 @@ a.btn-left, a.btn-right {
 	background:rgba(20,20,20,.5);
 }
 .de_testi.opt-2 blockquote p{
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	font-size:16px;
 	padding:40px 0 0 0;
 }
@@ -6042,7 +6043,7 @@ img.img-rounded {
 }
 
 .label {
-	font-family: "Nunito", Arial, Helvetica, sans-serif;
+	font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 table thead {
 	font-weight: bold;
@@ -6089,7 +6090,7 @@ p.sub{
 	border: solid 1px #202220;
 }
 blockquote {
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	font-size: 24px;
 	font-style: normal;
 	font-weight: 500;
@@ -6100,7 +6101,7 @@ blockquote {
 	color:#35404e;
 }
 blockquote span {
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	display: block;
 	font-size: 14px;
 	font-style: normal;
@@ -6248,7 +6249,7 @@ blockquote.s1:before{
 	color: #555;
 	font-size: 16px;
 	line-height: 20px;
-	font-family: "Nunito", Arial, Helvetica, sans-serifr;
+	font-family: "Open Sans", Arial, Helvetica, sans-serifr;
 	padding: 10px 20px 0px 60px;
 	font-weight: 700;
 	display: block;
@@ -6606,7 +6607,7 @@ a, a:hover, .test-column, .test-column:hover {
 	font-weight: bold;
 }
 span.overlay {
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	text-align: center;
 	display: block;
 	width: 100px;
@@ -7808,7 +7809,7 @@ section .color-overlay {
 	margin-bottom: 60px;
 }
 .teaser-text {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-size: 18px;
 	color: rgba(255, 255, 255, .5);
 	line-height: normal;
@@ -8821,7 +8822,7 @@ animation: blink 0.7s infinite;
 	margin-bottom:5px;
 }
 .style-2 .date-box .m{
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	font-size:13px;
 	text-transform:uppercase;
 	letter-spacing:8px;
@@ -9210,7 +9211,7 @@ animation: blink 0.7s infinite;
 }
 .de_review blockquote {
 	border: none;
-	font-family: "Nunito", Georgia, "Times New Roman", Times, serif;
+	font-family: "Open Sans", Georgia, "Times New Roman", Times, serif;
 }
 .de_review .de_nav li span {
 	border: 1px solid #202220;
@@ -9332,7 +9333,7 @@ animation: blink 0.7s infinite;
 	letter-spacing: 6px;
 }
 .very-big-white {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	font-size: 64px;
 	color: #fff;
 	margin: 0;
@@ -9400,7 +9401,7 @@ a.btn-slider:hover {
 	transition-duration: 0s;
 }
 #filters {
-	font-family:"Nunito";
+	font-family:"Open Sans";
 	padding: 0;
 	margin: 0;
 	margin-bottom: 20px;
@@ -9664,7 +9665,7 @@ a.btn-slider:hover {
 }
 blockquote.very-big {
 	border: none;
-	font-family: "Nunito";
+	font-family: "Open Sans";
 	text-align: center;
 	border: none;
 	font-size: 32px;
@@ -9673,7 +9674,7 @@ blockquote.very-big {
 	font-style: normal;
 }
 blockquote.very-big span {
-	font-family: "Nunito";
+	font-family: "Open Sans";
 }
 a, img {
 	outline: 0;
