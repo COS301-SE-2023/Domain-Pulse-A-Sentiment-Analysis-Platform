@@ -32,7 +32,7 @@ def get_comments_by_video_id(video_id: str, last_refresh_time):
     if "items" in data:
         for item in data["items"]:
             snippet = item["snippet"]["topLevelComment"]["snippet"]
-            original_text = snippet["textDisplay"]
+            original_text = snippet["textOriginal"]
             last_updated_time = snippet["updatedAt"]
             datetime_object = datetime.strptime(last_updated_time, "%Y-%m-%dT%H:%M:%SZ")
             last_updated_timestamp = datetime_object.timestamp()
