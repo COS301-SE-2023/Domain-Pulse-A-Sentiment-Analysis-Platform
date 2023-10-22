@@ -26,7 +26,7 @@ Here is a little bit more info about how we worked as a team and organised our d
 │   │   ├── authchecker
 │   │   ├── domains
 │   │   ├── domainservice
-  │   ├── sourcevalidator
+│   ├── sourcevalidator
 │   │   └── utils
 │   ├── engine
 │   │   ├── aggregator
