@@ -83,6 +83,7 @@ html {
 	padding: 0;
 	margin: 0;
 	background: #fff;
+	scroll-behavior: smooth;
 }
 body {
 	font-family:"Source Sans 3", Helvetica, Arial, sans-serif;
@@ -92,6 +93,10 @@ body {
 	line-height: 1.7em;
 	padding: 0;
 	display: none;
+}
+
+p{
+	font-family: "Source Sans 3";
 }
 body.boxed {
 	margin: 30px;
@@ -6052,7 +6057,7 @@ p.lead {
 	font-size: 17px;
 	line-height:1.7em;
 	margin-top: 0;
-	font-weight: 600;
+	font-weight: 400;
 }
 
 p.sub{
