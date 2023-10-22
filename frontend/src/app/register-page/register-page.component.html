@@ -1,7 +1,9 @@
 <div class="container">
   <div class="left-side flex-column center" style="gap: 1rem">
     <div class="flex-row content">
-      <img src="../assets/dp-logo-blue.png" style="width: 70%" />
+      <a href="/info/index.html" class="clickable-item">
+        <img src="../assets/dp-logo-blue.png" style="width: 70%" />
+      </a>
     </div>
 
     <div
@@ -32,9 +34,18 @@
             name="password"
             data-cy="password"
           />
-          <img src="../assets/icons/show-password.svg" *ngIf="!passwordVisible" class="eye clickable-item" (click)="togglePasswordVisibility()">
-          <img src="../assets/icons/hide-password.svg" *ngIf="passwordVisible" class="eye clickable-item" (click)="togglePasswordVisibility()">
-
+          <img
+            src="../assets/icons/show-password.svg"
+            *ngIf="!passwordVisible"
+            class="eye clickable-item"
+            (click)="togglePasswordVisibility()"
+          />
+          <img
+            src="../assets/icons/hide-password.svg"
+            *ngIf="passwordVisible"
+            class="eye clickable-item"
+            (click)="togglePasswordVisibility()"
+          />
         </div>
 
         <label for="password" class="password">Confirm Password</label>
@@ -46,9 +57,18 @@
             name="password"
             data-cy="confirmPassword"
           />
-          <img src="../assets/icons/show-password.svg" *ngIf="!confirmPasswordVisible" class="eye clickable-item" (click)="toggleConfirmPasswordVisibility()">
-          <img src="../assets/icons/hide-password.svg" *ngIf="confirmPasswordVisible" class="eye clickable-item" (click)="toggleConfirmPasswordVisibility()">
-
+          <img
+            src="../assets/icons/show-password.svg"
+            *ngIf="!confirmPasswordVisible"
+            class="eye clickable-item"
+            (click)="toggleConfirmPasswordVisibility()"
+          />
+          <img
+            src="../assets/icons/hide-password.svg"
+            *ngIf="confirmPasswordVisible"
+            class="eye clickable-item"
+            (click)="toggleConfirmPasswordVisibility()"
+          />
         </div>
 
         <div class="flex-row" style="margin-top: 12px">
