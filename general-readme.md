@@ -1,7 +1,9 @@
 # 📽️ A summary of our project
 
 
-https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/e32eb57d-7644-427c-ba2b-4a286eae5704
+
+https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/22ba3df6-910f-40e2-ac3c-9e5a658bbe81
+
 
 🔗<a href="https://www.canva.com/design/DAFx5VnujIA/fJwP7W7GTCTukBqrh_i_Vw/view?utm_content=DAFx5VnujIA&utm_campaign=designshare&utm_medium=link&utm_source=editor">Presentation Link</a>
 
