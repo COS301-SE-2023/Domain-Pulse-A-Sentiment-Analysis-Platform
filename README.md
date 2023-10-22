@@ -8,7 +8,7 @@
   Ctrl Alt Defeat - COS301 Capstone 2023
   <p align="center">
     <br />
-    <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform#documentation"><strong>📄Explore the docs»</strong></a>
+    <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/tree/readme-updates-project-day#documentation"><strong>📄Explore the docs»</strong></a>
     <br />
     <a href="https://github.com/orgs/COS301-SE-2023/projects/6"><strong>📌Our Project Board »</strong></a>
 <br>
