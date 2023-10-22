@@ -1,4 +1,3 @@
-
 <div align="center">
   <a">
     <img src="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/fb923ead-1880-45b3-9795-5bcf6a3485d6" width='800'>
@@ -33,6 +32,12 @@
 <img alt="" src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white">
 <img alt="" src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green">
 <img alt="" src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white">
+<img alt="" src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white">
+<img alt="" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
+<img alt="" src="https://img.shields.io/badge/SASS-CC6699?style=for-the-badge&logo=sass&logoColor=white">
+
+
+
 
 </div>
 
@@ -42,11 +47,8 @@
 
 
 
-Uploading Domain Pulse Advert.mp4…
+https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/63a66974-9c46-4434-b9d5-7f3fac24e556
 
-
-
-Uploading Domain Pulse Advert.mp4…
 
 
 
@@ -94,9 +96,17 @@ Click on any of these links to explore:
 
 # ⏯️See the app in action!
 
+
+
+
+
+Uploading Domain Pulse App Demo.mp4…
+
+
+
+
 - 🔗<a href="https://drive.google.com/file/d/1k016Gz-6wZjXX7A0ueJmnEw9Xr93X7sK/view?usp=share_link">Demo 1</a>
 - Demo 4:
-
 
 https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/9f2b9b45-ebf7-4383-be3b-e9ac30614c2b
 
@@ -104,6 +114,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
 
 🔗<a href="https://www.canva.com/design/DAFvq6zwoeY/k5RsVbX9O0CG2zW4lKG-Lg/view?utm_content=DAFvq6zwoeY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink">Presentation Link</a>
 
+[![Video Title](https://img.youtube.com/vi/dTHvaU74sYc/0.jpg)](https://www.youtube.com/watch?v=dTHvaU74sYc)
 
 
 <br>
