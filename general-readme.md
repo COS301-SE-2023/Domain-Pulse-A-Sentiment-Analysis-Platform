@@ -13,7 +13,12 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
 - See how the app works **in this demo:**
 
 https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/533a0ca2-0c1b-490a-a305-ee8438aa8438
+- Here is our **user manual**, for some extra help: <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖User Manual</a>
 
 - Here is a **tutorial** if you get stuck:
 
-- Here is our **user manual**, for some extra help: <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖User Manual</a>
+
+https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/fc07caed-9660-4e75-a1f2-3d424262019b
+
+
+
