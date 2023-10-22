@@ -8,12 +8,18 @@ import { AuthGuardService } from './auth.guard';
 import { HelpPageComponent } from './help-page/help-page.component';
 import { SurveyRedirectGuard } from './survey-redirect.guard';
 import { GuestGuard } from './guest.guard';
+import { InfoGaurd } from './info.guard';
 
 const routes: Routes = [
   {
     path: 'preview',
     component: MainComponent,
     canActivate: [GuestGuard],
+  },
+  {
+    path: 'info',
+    component: RegisterPageComponent,
+    canActivate: [InfoGaurd],
   },
   { path: 'login', component: LoginPageComponent },
   { path: 'help', component: HelpPageComponent},
@@ -24,7 +30,7 @@ const routes: Routes = [
     canActivate: [SurveyRedirectGuard],
   },
   { path: '', component: MainComponent, canActivate: [AuthGuardService] },
-  { path: '**', redirectTo: 'register' },
+  { path: '**', redirectTo: 'info' },
 ];
 
 @NgModule({
