@@ -1,7 +1,8 @@
 FROM nginx:1.14-alpine
 
 #copy static files
-COPY ./frontend/dist/domain-pulse /usr/share/nginx/html
+COPY ./frontend/dist/domain-pulse /usr/share/nginx/html/domain-pulse
+COPY ./frontend/info-page /usr/share/nginx/html/info-page
 
 #copy nginx conf files
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
