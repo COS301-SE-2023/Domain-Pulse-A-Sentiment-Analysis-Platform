@@ -8,7 +8,7 @@
   Ctrl Alt Defeat - COS301 Capstone 2023
   <p align="center">
     <br />
-    <a href="https://drive.google.com/drive/folders/1s10aE2hZZ3AxrYnmbpiI-6pTMuPrP52z?usp=share_link"><strong>📄Explore the docs»</strong></a>
+    <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform#documentation"><strong>📄Explore the docs»</strong></a>
     <br />
     <a href="https://github.com/orgs/COS301-SE-2023/projects/6"><strong>📌Our Project Board »</strong></a>
 <br>
@@ -52,7 +52,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
 
 
 
-# 📈**What is Domain Pulse?**
+# 🤔**What is Domain Pulse?**
 
 - Domain Pulse is the ultimate sentiment analysis platform. It gathers and analyses online opinions about any domain, be it a business, a person, or more. With stunning visuals and easy-to-understand statistics, Domain Pulse helps you understand the online presence and sentiment for any domain.
 - 👨‍💻Created by: Ctrl Alt Defeat <br><br>
@@ -61,36 +61,19 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
 <br>
 <br>
 
-# 📄**Documentation (Demo 4)**
+# 📄**Documentation**
 
-Click on any of these links to explore:
-
-<br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖 General Overview of our application</a>
+**Click on any of these links to explore:** 
     <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Testing%20Policy/TestingPolicy.pdf">🧪Technical Documents</a>
+📖 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf"> General Overview of our Application</a>
+    <br />
+  🧪 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Testing%20Policy/TestingPolicy.pdf">Technical Documents</a>
   <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Coding%20Standards/CodingStandards.pdf">💻How we worked</a>
+  👨‍💻 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Coding%20Standards/CodingStandards.pdf">How We Worked</a>
 
 <br/>
   
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖User Manual</a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Coding%20Standards/CodingStandards.pdf">💻Coding Standards</a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Testing%20Policy/TestingPolicy.pdf">🧪Testing Policy Document</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/SRS/Version%204%20(Demo%204)/SRS.pdf">📋SRS (Software Requirements Specification)</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">🛠️Technical Installation Manual</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Sentiment_Analysis_Breakdown.pdf">📊Sentiment Analysis Explanation</a>
-  <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
-  <br />
-  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Deployment_diagram.pdf">📈Deployment Diagram</a>
-  <br />
+
 <br>
 <br>
 
@@ -98,25 +81,7 @@ Click on any of these links to explore:
 
 
 
-
-
-Uploading Domain Pulse App Demo.mp4…
-
-
-
-Uploading Domain Pulse App Demo.mp4…
-
-
-
-
-- 🔗<a href="https://drive.google.com/file/d/1k016Gz-6wZjXX7A0ueJmnEw9Xr93X7sK/view?usp=share_link">Demo 1</a>
-- Demo 4:
-
-https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/9f2b9b45-ebf7-4383-be3b-e9ac30614c2b
-
-https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/370c7eb9-a31b-4601-b462-4676afe49b74
-
-🔗<a href="https://www.canva.com/design/DAFvq6zwoeY/k5RsVbX9O0CG2zW4lKG-Lg/view?utm_content=DAFvq6zwoeY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink">Presentation Link</a>
+https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/assets/105363824/e9abb059-a17e-485a-9f27-a6fd8e9d42a7
 
 
 <br>
@@ -216,99 +181,6 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
   </tr>
   
 </table>
-
-# Repository Breakdown
-
-```
-├── backend
-│   ├── domains
-│   │   ├── authchecker
-│   │   ├── domains
-│   │   ├── domainservice
-  │   ├── sourcevalidator
-│   │   └── utils
-│   ├── engine
-│   │   ├── aggregator
-│   │   ├── analyser
-│   │   ├── engine
-│   │   ├── postprocessor
-│   │   ├── preprocessor
-│   │   ├── processor
-│   │   └── utils
-│   ├── live_update
-│   ├── mockdata
-│   ├── profiles
-│   │   ├── assets
-│   │   ├── check_auth
-│   │   ├── profiles
-│   │   ├── profileservice
-│   │   ├── reportgenerator
-│   │   └── utils
-│   ├── scripts
-│   ├── sourceconnector
-│   │   ├── googlereviews
-│   │   ├── refresh
-│   │   ├── sourceconnector
-│   │   ├── tripadvisor
-│   │   ├── trustpilot
-│   │   ├── utils
-│   │   └── youtube
-│   └── warehouse
-│       ├── CSV
-│       ├── authchecker
-│       ├── datamanager
-│       ├── ingest
-│       │   ├── migrations
-│       │   ├── static
-│       │   └── templates
-│       ├── query
-│       ├── utils
-│       └── warehouse
-├── documentation
-│   ├── ADD
-│   ├── Coding Standards
-│   ├── Images
-│   ├── SRS
-│   ├── Technical Installation Manual
-│   ├── Testing Policy
-│   └── User Manual
-├── frontend
-│   ├── cypress
-│   │   ├── e2e
-│   │   ├── fixtures
-│   │   └── support
-│   └── src
-│       ├── app
-│       │   ├── accordion-card
-│       │   │   └── directives
-│       │   ├── comments-accordion-card
-│       │   │   └── directives
-│       │   ├── comments-view
-│       │   ├── graph-selector
-│       │   ├── help-page
-│       │   ├── login-page
-│       │   ├── main
-│       │   ├── modal-container
-│       │   ├── register-page
-│       │   ├── sidebar
-│       │   ├── source-selector
-│       │   ├── statistic-selector
-│       │   └── tooltip
-│       └── assets
-│           ├── helpPage
-│           ├── icons
-│           └── logos
-├── nginx
-└── notebooks
-```
-
-<br>
-<br>
-
-# Branching Strategy
-
-<h3><b> Git Feature Workflow with Develop Branch </b></h3>
-<p>Within this strategy, master (main) branch will always contain a system state that is ready to be deployed and used in production. A seperate development (dev) branch is created from the master branch and is what all developers will branch off of to create components and features within the system. This ensures a production-ready and stable branch is always available and is protected by ensuring developers push to a development branch as opposed to altering said master branch. Once the system is deemed ready to deploy the development branch shall be merged into the master branch.</p>
 
 
 [issues-shield]: https://img.shields.io/github/issues/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform
