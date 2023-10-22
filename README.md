@@ -40,6 +40,16 @@
 
 <br>
 
+
+
+Uploading Domain Pulse Advert.mp4…
+
+
+
+Uploading Domain Pulse Advert.mp4…
+
+
+
 # 📈**What is Domain Pulse?**
 
 - Domain Pulse is the ultimate sentiment analysis platform. It gathers and analyses online opinions about any domain, be it a business, a person, or more. With stunning visuals and easy-to-understand statistics, Domain Pulse helps you understand the online presence and sentiment for any domain.
@@ -50,6 +60,18 @@
 <br>
 
 # 📄**Documentation (Demo 4)**
+
+Click on any of these links to explore:
+
+<br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖 General Overview of our application</a>
+    <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Testing%20Policy/TestingPolicy.pdf">🧪Technical Documents</a>
+  <br />
+  <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Coding%20Standards/CodingStandards.pdf">💻How we worked</a>
+
+<br/>
+  
   <br />
   <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/User%20Manual/Version%203%20(Demo%204)/Domain_Pulse_User_Manual_V3.pdf">📖User Manual</a>
   <br />
@@ -70,7 +92,7 @@
 <br>
 <br>
 
-# ⏯️Recorded Demos
+# ⏯️See the app in action!
 
 - 🔗<a href="https://drive.google.com/file/d/1k016Gz-6wZjXX7A0ueJmnEw9Xr93X7sK/view?usp=share_link">Demo 1</a>
 - Demo 4:
@@ -97,7 +119,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Christiaan Lombard</b></h2>
-      <b style="font-size: 16px;">...</b><br>
+      <b style="font-size: 16px;">Project Manager, Frontend Designer and Developer</b><br>
       I have a keen interest in machine learning, design and statistics, aswell as how they're amalgamation can result in something unexpectedly beautiful. I enjoy taking on a challenge and with industry experience in design and video editing, aswell as quantative analysis - I feel qualified to take on any project that comes my way.
       <br><br>
       <a href="https://github.com/chrislom12" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
@@ -131,7 +153,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 23px;">Thuthuka Khumalo</h2></b>
-      <b style="font-size: 16px;">...</b><br>
+      <b style="font-size: 16px;">DevOps, Frontend Developer</b><br>
       I am a software developer and graphic designer with a passion for creating intuitive and visually stunning designs. I am a hardworking and dedicated individual who is always willing to learn and improve. I am also a team player and enjoy working with others to achieve a common goal. I am currently working towards being a Cloud Architect. I consider the 2 areas of knowledge i specialize in to be the angular framework and the rust programming language. I also know how to use the adobe suite of products to create presentable media.
       <br><br>
       <a href="https://github.com/thuthuka111" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
@@ -151,7 +173,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
     </td>
     <td style="vertical-align: top; width: auto; border: 0; padding: 10px;">
       <h2><b style="font-size: 18px;">Caden Dobson</b></h2>
-      <b style="font-size: 16px;">Development Operations, Frontend Developer</b><br>
+      <b style="font-size: 16px;">DevOps, Frontend Developer</b><br>
       I am an ambitious, resilient and driven individual who always strives to succeed in any given task. My interests are Computer science,           Quantitative Finance, Big data analytics, Artificial intelligence and Statistics. I am inventive and incorporate creative thinking into           achieving logical solutions to problems. I am an avid learner who endeavours to deepen my knowledge in any field possible. I work well in         high pressure environments and always ensure that I put my best foot forward.
       <br><br>
       <a href="https://github.com/cadendobson" style="text-decoration: none; margin-right: 10px; display: inline-block; vertical-align: middle;">
