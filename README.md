@@ -186,7 +186,7 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
 <br>
 
 # **🛠How to install locally**
-Note that Domain Pulse is a web application and the preferred means of using the application is to access it via a web browser at <a href="domainpulse.app">️domainpulse.app</a>. However, should you require to install and run the application locally, please consult our <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">️Technical Installation Manual</a> which details the local installation process.
+Note that Domain Pulse is a web application and the preferred means of using the application is to access it via a web browser at <a href="https://domainpulse.app/">️domainpulse.app</a>. However, should you require to install and run the application locally, please consult our <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">️Technical Installation Manual</a> which details the local installation process.
  
 
 <br>
