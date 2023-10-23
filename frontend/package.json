@@ -40,7 +40,7 @@
     "@types/chart.js": "^2.9.37",
     "@types/jasmine": "~4.3.0",
     "@types/lodash-es": "^4.17.9",
-    "apexcharts": "^3.42.0",
+    "apexcharts": "^3.44.0",
     "cypress": "latest",
     "dotenv": "^16.3.1",
     "jasmine-core": "~4.5.0",
