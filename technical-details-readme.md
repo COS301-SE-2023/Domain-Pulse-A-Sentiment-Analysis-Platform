@@ -9,7 +9,7 @@
   <br />
 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">🛠️Technical Installation Manual</a>
   <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Research_Domain_Pulse.pdf">📊Research Document</a>
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Research_Domain_Pulse.pdf">📊Research Document and Sentiment Analysis Pipeline</a>
   <br />
 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/dev/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
   <br />
