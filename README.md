@@ -70,7 +70,8 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
   🧪 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/technical-details-readme.md">Technical Documents</a>
   <br />
   👨‍💻 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/team-info-readme.md">How We Worked</a>
-
+  <br />
+    🏆 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/prize-submission-readme.md">Prize Motivations</a>
 <br/>
   
 
