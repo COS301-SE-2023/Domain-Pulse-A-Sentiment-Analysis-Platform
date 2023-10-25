@@ -65,11 +65,11 @@ https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/ass
 
 **Click on any of these links to explore:** 
     <br />
-📖 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/readme-updates-project-day/general-readme.md"> General Overview of our Application</a>
+📖 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/general-readme.md"> General Overview of our Application</a>
     <br />
-  🧪 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/readme-updates-project-day/technical-details-readme.md">Technical Documents</a>
+  🧪 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/technical-details-readme.md">Technical Documents</a>
   <br />
-  👨‍💻 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/readme-updates-project-day/team-info-readme.md">How We Worked</a>
+  👨‍💻 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/team-info-readme.md">How We Worked</a>
 
 <br/>
   
