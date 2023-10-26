@@ -25,7 +25,7 @@ export class AuthGuardService {
     const result: Observable<boolean> = this.auth.isAuthenticated();
     result.pipe().subscribe((res) => {
       if (!res) {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/info/index.html']);
       }
     });
     return result;

@@ -11,7 +11,7 @@
   <br />
 <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Research_Domain_Pulse.pdf">📊Research Document and Sentiment Analysis Pipeline</a>
   <br />
-<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/dev/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
+<a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/ADD/ArchitecturalDesignDocument.pdf">🏛️Architectural Design Document</a>
   <br />
   <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Deployment_diagram.pdf">📈Deployment Diagram</a>
   <br />
