@@ -1,11 +1,10 @@
 <div class="container">
-
-    <div class="left-side flex-column center" style="gap: 5%;">
-        <div class="flex-row content" >
-            <img src="../assets/dp-logo-blue.png" style="width: 70%;" >
-        </div>
-
-        
+  <div class="left-side flex-column center" style="gap: 5%">
+    <div class="flex-row content">
+      <a href="/info/index.html" class="clickable-item">
+        <img src="../assets/dp-logo-blue.png" style="width: 70%" />
+      </a>
+    </div>
 
     <div
       class="flex-row content"
@@ -26,21 +25,39 @@
         />
 
         <label for="password" class="password">Password</label>
-        <div class="flex-row" style="gap:0.5rem">
+        <div class="flex-row" style="gap: 0.5rem">
           <input
-          [(ngModel)]="password"
-          [type]="getPasswordType()"
-          class="inputBar2"
-          name="password"
-          data-cy="password"
-        />
-        <img src="../assets/icons/show-password.svg" *ngIf="!passwordVisible" class="eye clickable-item" (click)="togglePasswordVisibility()">
-        <img src="../assets/icons/hide-password.svg" *ngIf="passwordVisible" class="eye clickable-item" (click)="togglePasswordVisibility()">
-
+            [(ngModel)]="password"
+            [type]="getPasswordType()"
+            class="inputBar2"
+            name="password"
+            data-cy="password"
+          />
+          <img
+            src="../assets/icons/show-password.svg"
+            *ngIf="!passwordVisible"
+            class="eye clickable-item"
+            (click)="togglePasswordVisibility()"
+          />
+          <img
+            src="../assets/icons/hide-password.svg"
+            *ngIf="passwordVisible"
+            class="eye clickable-item"
+            (click)="togglePasswordVisibility()"
+          />
         </div>
-        
+
         <div class="forgot">
-          <p class="clickable-item" style="width: fit-content;" [mul]="0.9" [tooltipPosition]="'right'" [searchTerm]="'forgot password'" [tooltip]="'contact domainpulse.help@gmail.com for assistance'" >Forgot your password?</p>
+          <p
+            class="clickable-item"
+            style="width: fit-content"
+            [mul]="0.9"
+            [tooltipPosition]="'right'"
+            [searchTerm]="'forgot password'"
+            [tooltip]="'contact domainpulse.help@gmail.com for assistance'"
+          >
+            Forgot your password?
+          </p>
         </div>
       </div>
     </div>
@@ -51,12 +68,40 @@
     >
       <div class="flex-column" style="width: 100%">
         <div class="flex-row" style="gap: 1rem">
-          <button (click)="login()" class="button clickable-item" data-cy="logInButton">Log In <div [ngClass]="{ 'button-spinner': isSpinning }"></div></button>
-          <p class="center" style="align-items: center; margin-top:auto; margin-bottom:auto; color:black;"> or </p>
-          <button onclick="window.open('../preview')" class="button-2 clickable-item">Use as Guest</button>
+          <button
+            (click)="login()"
+            class="button clickable-item"
+            data-cy="logInButton"
+          >
+            Log In
+            <div [ngClass]="{ 'button-spinner': isSpinning }"></div>
+          </button>
+          <p
+            class="center"
+            style="
+              align-items: center;
+              margin-top: auto;
+              margin-bottom: auto;
+              color: black;
+            "
+          >
+            or
+          </p>
+          <button
+            onclick="window.open('../preview')"
+            class="button-2 clickable-item"
+          >
+            Use as Guest
+          </button>
         </div>
         <div class="alternative-option">
-          <p class="clickable-item"  routerLink="/register" data-cy="switchForNoAcc">Don't have an account?</p>
+          <p
+            class="clickable-item"
+            routerLink="/register"
+            data-cy="switchForNoAcc"
+          >
+            Don't have an account?
+          </p>
         </div>
         <!-- <div>
           <button class="button2">Sign in with Google</button>
@@ -65,5 +110,5 @@
     </div>
   </div>
   <div class="right-side"></div>
-  <img class="wave-art" src="../assets/wave-squished.svg" alt="Wave Art">
+  <img class="wave-art" src="../assets/wave-squished.svg" alt="Wave Art" />
 </div>
