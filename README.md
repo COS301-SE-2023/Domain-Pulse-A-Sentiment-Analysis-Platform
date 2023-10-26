@@ -194,10 +194,10 @@ Note that Domain Pulse is a web application and the preferred means of using the
 
 # **🚀How to Contribute**
 
-Thank you for your interest in Domain Pulse! Should you want to contribute to the project, please feel free to contact us at ctrlaltdefeat301@gmail.com at share your idea for the project. 
+Thank you for your interest in Domain Pulse! Should you want to contribute to the project, please feel free to contact us at ctrlaltdefeat301@gmail.com to share your idea for the project. 
 <br>
 <br>
-After contacting us, please feel free to clone the repo, create a branch off of 'dev' and implement your feature or bug fix. Please consult our <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">️Technical Installation Manual<a> for instructios on how to get the app up and running. Once you have implemented your changes, you can create a pull request back to 'dev' which we will review. 
+After contacting us, please feel free to clone the repo, create a branch off of 'dev' and implement your feature or bug fix. Please consult our <a href="https://github.com/COS301-SE-2023/Domain-Pulse-A-Sentiment-Analysis-Platform/blob/main/documentation/Technical%20Installation%20Manual/technical-installation-manual.pdf">️Technical Installation Manual<a> for instructions on how to get the app up and running. Once you have implemented your changes, you can create a pull request back to 'dev' which we will review. 
 <br>
 <br>
 In order to be considered, your changes: 1) must be verified to be correct and non-malicious by a member of the Ctrl Alt Defeat Team, 2) pass all of the build and test checks, and 3) meet code coverage requirements in terms of both patch and project coverage. 
