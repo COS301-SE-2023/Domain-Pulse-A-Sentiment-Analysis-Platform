@@ -13,6 +13,9 @@ db.sqlite3
 media/
 staticfiles/
 
+# docker compse mounts
+mounts
+
 #env
 *.env
 environment.ts

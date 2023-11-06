@@ -1,6 +1,28 @@
 version: "3.9"
 
 services:
+  postgres-db:
+    image: postgres:12
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./mounts/postgressql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+
+  mongodb:
+    image: mongo:latest
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./mounts/mongodb:/data/db
+    ports:
+      - "27019:27017"
+    networks:
+      - default
+
   domains:
     build:
       context: ./backend/domains/
