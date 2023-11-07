@@ -1,6 +1,28 @@
 version: "3.9"
 
 services:
+    postgres-db:
+    image: postgres:12
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./mounts/postgressql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+
+  mongodb:
+    image: mongo:latest
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./mounts/mongodb:/data/db
+    ports:
+      - "27019:27017"
+    networks:
+      - default
+
   prod-domains:
     image: thuthuka111/domain-pulse-domains:latest
     env_file:
@@ -15,6 +37,8 @@ services:
     ports:
       - "8000:8000"
     restart: always
+    depends_on:
+      - mongodb
     command: >
       sh -c "uwsgi --ini domains.uwsgi.ini"
     volumes:
@@ -57,6 +81,8 @@ services:
     ports:
       - "8002:8002"
     restart: always
+    depends_on:
+      - postgres-db
     command: >
       sh -c "uwsgi --ini profiles.uwsgi.ini"
     volumes:
@@ -99,6 +125,8 @@ services:
     ports:
       - "8004:8004"
     restart: always
+    depends_on:
+      - mongodb
     command: >
       sh -c "uwsgi --ini warehouse.uwsgi.ini"
     volumes:
