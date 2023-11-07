@@ -36,7 +36,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "154.73.32.89",
     ".domainpulse.app",
-    ".dp.cos301.thuthuka.me",
+    ".thuthuka.me",
     "dev-domains",
     "dev-engine",
     "dev-profiles",
