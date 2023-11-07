@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - default
+      - prod-network
 
   mongodb:
     image: mongo:latest
@@ -21,7 +21,7 @@ services:
     ports:
       - "27019:27017"
     networks:
-      - default
+      - prod-network
 
   prod-domains:
     image: thuthuka111/domain-pulse-domains:latest
