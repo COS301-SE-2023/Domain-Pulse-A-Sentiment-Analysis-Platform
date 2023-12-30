@@ -1,3 +1,4 @@
+import base64
 import os
 import logging
 import sys
@@ -30,7 +31,17 @@ def analyze(event, context):
     print("Received event.")
     print(json.dumps(event, indent=2))
 
-    if event["lambda_key"] != lambda_key:
+    if "body" in event:
+        if event["isBase64Encoded"]:
+            body = json.loads(base64.b64decode(event["body"]))
+        else:
+            body = json.loads(event["body"])
+    else:
+        body = event
+
+    data = body["data"]
+
+    if body["lambda_key"] != lambda_key:
         return {"statusCode": 401, "body": "Unauthorized"}
 
     global ANALYSER, EMOTION_CLASSIFIER, TOXIC_CLASSIFIER, GENERAL_CLASSIFIER, initialized
@@ -44,8 +55,6 @@ def analyze(event, context):
         ) = initializeModels()
         initialized = True
         print("Models initialized")
-
-    data = event["data"]
 
     originalData = data
     data = preprocessing.process_data(data)

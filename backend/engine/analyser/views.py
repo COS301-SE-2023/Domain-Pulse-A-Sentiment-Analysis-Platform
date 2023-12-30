@@ -48,17 +48,19 @@ def perform_analysis(request: HttpRequest):
         scores = []
         
         lambda_key = os.environ["LAMBDA_KEY"]
+        lambda_endpoint = os.environ["ANALYZE_FUNCTION_ENDPOINT"]
+
         for item in new_records:
             response = requests.post(
-                "http://localhost:9000/2015-03-31/functions/function/invocations",
+                lambda_endpoint,
                 json={"data": item, "lambda_key": lambda_key},
             )
 
             if response.status_code >= 200 and response.status_code < 300:
-                response = response.json()
-                metric = response["body"]
-
-                scores.append(metric)
+                metrics = response.json()
+                scores.append(metrics)
+            else:
+                print("Error with lambda: ", response.status_code, response.text)
 
         return JsonResponse({"metrics": scores})
     return JsonResponse({"status": "FAILURE"})
