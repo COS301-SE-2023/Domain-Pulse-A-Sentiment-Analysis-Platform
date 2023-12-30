@@ -1,10 +1,73 @@
+import os
+import logging
+import sys
+
+# import uuid
+# import requests
+import json
+
 from preprocessor import preprocessing
-from processor.nn_models import (
-    ANALYSER,
-    EMOTION_CLASSIFIER,
-    GENERAL_CLASSIFIER,
-    TOXIC_CLASSIFIER,
+from processor.nn_models import initializeModels
+
+print("Initializing handler")
+
+ANALYSER = None
+EMOTION_CLASSIFIER = None
+GENERAL_CLASSIFIER = None
+TOXIC_CLASSIFIER = None
+initialized = False
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
+
+lambda_key = os.environ["LAMBDA_KEY"]
+
+def analyze(event, context):
+
+    print("Received event.")
+    print(json.dumps(event, indent=2))
+
+    if event["lambda_key"] != lambda_key:
+        return {"statusCode": 401, "body": "Unauthorized"}
+
+    global ANALYSER, EMOTION_CLASSIFIER, TOXIC_CLASSIFIER, GENERAL_CLASSIFIER, initialized
+    if not initialized:
+        print("Initializing models")
+        (
+            ANALYSER,
+            EMOTION_CLASSIFIER,
+            TOXIC_CLASSIFIER,
+            GENERAL_CLASSIFIER,
+        ) = initializeModels()
+        initialized = True
+        print("Models initialized")
+
+    data = event["data"]
+
+    originalData = data
+    data = preprocessing.process_data(data)
+
+    vader = ANALYSER.polarity_scores(data)
+    emotions = EMOTION_CLASSIFIER(data)
+    toxicity = TOXIC_CLASSIFIER(data)
+    general = GENERAL_CLASSIFIER(data)
+
+    general_summary = summarize_general(general, vader)
+    category = general_summary["category"]
+    score = general_summary["score"]
+
+    metrics = {
+        "data": originalData,
+        "general": general_summary,
+        "emotions": summarize_emotions(emotions, category),
+        "toxicity": summarize_toxicity(toxicity),
+        "ratios": summarize_vader(vader, score),
+    }
+
+    return {"statusCode": 200, "body": metrics}
 
 
 def summarize_general(general_metrics, vader):
@@ -98,24 +161,6 @@ def summarize_emotions(emotions, category):
     return retDict
 
 
-def have_better(top_three, curr_score):
-    for i in top_three:
-        if i["score"] < curr_score:
-            return True
-    return False
-
-
-def replace_worst(top_three, new_emotion_name, new_score):
-    index_of_worst = -1
-    curr_worst_score = 2
-    for index, i in enumerate(top_three):
-        if i["score"] < curr_worst_score:
-            index_of_worst = index
-            curr_worst_score = i["score"]
-    top_three[index_of_worst] = {"label": new_emotion_name, "score": new_score}
-    return top_three
-
-
 def summarize_toxicity(toxicity):
     label = toxicity[0]["label"]
     score = toxicity[0]["score"]
@@ -135,27 +180,19 @@ def summarize_toxicity(toxicity):
     return {"level_of_toxic": new_label, "score": score}
 
 
-def analyse_content(data):
-    originalData = data
-    data = preprocessing.process_data(data)
+def have_better(top_three, curr_score):
+    for i in top_three:
+        if i["score"] < curr_score:
+            return True
+    return False
 
-    # data = data[:512]
 
-    vader = ANALYSER.polarity_scores(data)
-    emotions = EMOTION_CLASSIFIER(data)
-    toxicity = TOXIC_CLASSIFIER(data)
-    general = GENERAL_CLASSIFIER(data)
-
-    general_summary = summarize_general(general, vader)
-    category = general_summary["category"]
-    score = general_summary["score"]
-
-    metrics = {
-        "data": originalData,
-        "general": general_summary,
-        "emotions": summarize_emotions(emotions, category),
-        "toxicity": summarize_toxicity(toxicity),
-        "ratios": summarize_vader(vader, score),
-    }
-
-    return metrics
+def replace_worst(top_three, new_emotion_name, new_score):
+    index_of_worst = -1
+    curr_worst_score = 2
+    for index, i in enumerate(top_three):
+        if i["score"] < curr_worst_score:
+            index_of_worst = index
+            curr_worst_score = i["score"]
+    top_three[index_of_worst] = {"label": new_emotion_name, "score": new_score}
+    return top_three

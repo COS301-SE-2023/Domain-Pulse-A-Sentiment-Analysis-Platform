@@ -2,13 +2,11 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from utils import mock_data
 from django.views.decorators.csrf import csrf_exempt
-from processor import processing
-from postprocessor import aggregation
 import json
-import socketio
+import requests
+import os
 
 # Create your views here.
-
 
 def ping(request: HttpRequest):
     RETURN_CODE = 200
@@ -48,33 +46,19 @@ def perform_analysis(request: HttpRequest):
         new_records = raw_data["data"]
 
         scores = []
+        
+        lambda_key = os.environ["LAMBDA_KEY"]
+        for item in new_records:
+            response = requests.post(
+                "http://localhost:9000/2015-03-31/functions/function/invocations",
+                json={"data": item, "lambda_key": lambda_key},
+            )
 
-        if "room_id" in raw_data:
-            sio = socketio.Client()
-            sio.connect("http://localhost:5000")
+            if response.status_code >= 200 and response.status_code < 300:
+                response = response.json()
+                metric = response["body"]
 
-            room_id = raw_data["room_id"]
-
-            for item, timestamp in zip(new_records, raw_data["data_timestamps"]):
-                new_score = processing.analyse_content(item)
-                new_score["timestamp"] = timestamp
-
-                # compute aggregated metrics
-                aggregated_metrics = aggregation.aggregate_sentiment_data(scores)
-                new_data_to_send = {
-                    "new_individual_metrics": new_score,
-                    "aggregated_metrics": aggregated_metrics,
-                    "room_id": room_id,
-                }
-
-                sio.emit("new_source_data", new_data_to_send)
-
-                scores.append(new_score)
-
-            sio.disconnect()
-        else:
-            for item in new_records:
-                scores.append(processing.analyse_content(item))
+                scores.append(metric)
 
         return JsonResponse({"metrics": scores})
     return JsonResponse({"status": "FAILURE"})

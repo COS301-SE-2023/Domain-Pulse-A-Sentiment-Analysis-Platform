@@ -137,6 +137,17 @@ services:
     networks:
       - default
 
+  mock_analyzer: #aws analyzer 
+    build:
+      context: ./backend/aws_analyzer
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/aws_analyzer:/var/task
+    ports:
+      - 9000:8080
+
 volumes:
   uwsgi_data:
 

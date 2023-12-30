@@ -4,10 +4,12 @@ django-cors-headers
 python-dotenv
 
 # app specific packages
-torch
-transformers
-vadersentiment
-nltk
+# the below 4 have been moved to the aws_analyzer service
+# torch
+# transformers
+# vadersentiment
+# nltk
+requests
 python-socketio
 pytz
 

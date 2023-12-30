@@ -22,11 +22,15 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir uwsgi
 RUN pip install --no-cache-dir -r requirements.txt
 
-#install the huggingface models to the docker image
-RUN python /code/processor/nn_models.py
+# all the below has been moved to the aws_analyzer service
+# ======== START OF DEPRECATION ========
+# #install the huggingface models to the docker image
+# RUN python /code/processor/nn_models.py
 
 #install the nltk data to the docker image 
-RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet')"
+# RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet')"
+# ======== END OF DEPRECATION ========
+
 
 # Start uWSGI with the specified configuration file
 CMD ["uwsgi", "--ini", "/code/engine.uwsgi.ini"]
